@@ -98,18 +98,19 @@ function FaqPage() {
           <div className="mx-auto max-w-3xl px-6 py-20">
             <Accordion type="single" collapsible className="space-y-3">
               {faqs.map((f, i) => (
-                <AccordionItem
-                  key={f.q}
-                  value={`item-${i}`}
-                  className="bg-background border border-white/5 rounded-2xl px-5 data-[state=open]:border-brand-gold/30 transition-colors"
-                >
-                  <AccordionTrigger className="font-display text-lg text-foreground text-left hover:no-underline">
-                    {f.q}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-sm text-foreground/65 leading-relaxed">
-                    {f.a}
-                  </AccordionContent>
-                </AccordionItem>
+                <RevealOnScroll key={f.q} delay={i * 60}>
+                  <AccordionItem
+                    value={`item-${i}`}
+                    className="bg-background border border-white/5 rounded-2xl px-5 data-[state=open]:border-brand-gold/30 transition-colors"
+                  >
+                    <AccordionTrigger className="font-display text-lg text-foreground text-left hover:no-underline">
+                      {f.q}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-sm text-foreground/65 leading-relaxed">
+                      {f.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                </RevealOnScroll>
               ))}
             </Accordion>
           </div>

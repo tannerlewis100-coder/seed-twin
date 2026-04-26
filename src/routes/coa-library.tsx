@@ -54,11 +54,12 @@ function CoaLibraryPage() {
 
         <section className="bg-card border-b border-white/5">
           <div className="mx-auto max-w-7xl px-6 py-16 space-y-5">
-            {peptides.map((p) => {
+            {peptides.map((p, idx) => {
               const rows = sampleCoa(p);
               return (
-                <div
+                <RevealOnScroll
                   key={p.slug}
+                  delay={idx * 70}
                   className="group relative bg-background rounded-3xl border border-white/5 hover:border-brand-gold/25 transition-colors overflow-hidden"
                 >
                   <div className="grid lg:grid-cols-[1fr_2fr] gap-0">
@@ -99,7 +100,7 @@ function CoaLibraryPage() {
                       ))}
                     </div>
                   </div>
-                </div>
+                </RevealOnScroll>
               );
             })}
           </div>
