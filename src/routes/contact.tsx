@@ -1,0 +1,198 @@
+import { useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Mail, Clock, MapPin, Send } from "lucide-react";
+import { toast } from "sonner";
+import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { Toaster } from "@/components/ui/sonner";
+
+export const Route = createFileRoute("/contact")({
+  component: ContactPage,
+  head: () => ({
+    meta: [
+      { title: "Contact Clarum — Support, COAs & Bulk Inquiries | CLARUM" },
+      {
+        name: "description",
+        content:
+          "Reach Clarum for product questions, COA requests, bulk research orders, or compliance inquiries. Mon–Fri 9–5 EST.",
+      },
+      { property: "og:title", content: "Contact Clarum" },
+      {
+        property: "og:description",
+        content: "Get in touch for product, COA, and bulk research inquiries.",
+      },
+    ],
+  }),
+});
+
+const contactInfo = [
+  { icon: Mail, label: "Email", value: "support@clarum.com" },
+  { icon: MapPin, label: "Location", value: "United States" },
+  { icon: Clock, label: "Hours", value: "Mon – Fri · 9AM – 5PM EST" },
+];
+
+function ContactPage() {
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+    };
+    if (!trimmed.name || !trimmed.email || !trimmed.subject || !trimmed.message) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+    setSending(true);
+    setTimeout(() => {
+      toast.success("Message sent! We'll be in touch soon.");
+      setForm({ name: "", email: "", subject: "", message: "" });
+      setSending(false);
+    }, 600);
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <AnnouncementBar />
+      <SiteHeader />
+      <Toaster />
+      <main>
+        <section className="relative bg-background border-b border-white/5 overflow-hidden">
+          <div className="absolute inset-0 gold-line-texture pointer-events-none" />
+          <div className="relative mx-auto max-w-3xl px-6 pt-20 pb-14 text-center">
+            <div className="inline-flex items-center gap-2 mb-4 justify-center">
+              <span className="h-px w-8 bg-brand-gold/40" />
+              <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
+                Contact
+              </span>
+              <span className="h-px w-8 bg-brand-gold/40" />
+            </div>
+            <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
+              Get in <span className="italic text-brand-gold">touch.</span>
+            </h1>
+            <p className="mt-5 text-foreground/55">
+              Questions about a compound, a COA, or a bulk research order — we're here.
+            </p>
+          </div>
+        </section>
+
+        <section className="bg-card border-b border-white/5">
+          <div className="mx-auto max-w-7xl px-6 py-20 grid lg:grid-cols-[1fr_1.6fr] gap-10">
+            <aside className="space-y-4">
+              {contactInfo.map((c) => (
+                <div
+                  key={c.label}
+                  className="flex items-start gap-4 bg-background rounded-2xl border border-white/5 p-5"
+                >
+                  <div className="w-10 h-10 rounded-full bg-brand-gold/10 border border-brand-gold/25 flex items-center justify-center shrink-0">
+                    <c.icon className="h-4 w-4 text-brand-gold" />
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-foreground/45">
+                      {c.label}
+                    </div>
+                    <div className="text-sm text-foreground mt-0.5">{c.value}</div>
+                  </div>
+                </div>
+              ))}
+              <div className="bg-background rounded-2xl border border-white/5 p-5">
+                <div className="text-[10px] uppercase tracking-wider text-foreground/45 mb-2">
+                  Quick Links
+                </div>
+                <ul className="space-y-1.5 text-sm">
+                  <li>
+                    <Link to="/faq" className="text-foreground/75 hover:text-brand-gold">
+                      Frequently Asked Questions
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/coa-library" className="text-foreground/75 hover:text-brand-gold">
+                      Browse the COA Library
+                    </Link>
+                  </li>
+                  <li>
+                    <Link to="/shop" className="text-foreground/75 hover:text-brand-gold">
+                      Shop the Catalog
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </aside>
+
+            <form
+              onSubmit={handleSubmit}
+              className="bg-background rounded-3xl border border-white/5 p-7 space-y-4"
+            >
+              <div className="grid sm:grid-cols-2 gap-4">
+                <Field
+                  label="Name"
+                  value={form.name}
+                  onChange={(v) => setForm((f) => ({ ...f, name: v }))}
+                />
+                <Field
+                  label="Email"
+                  type="email"
+                  value={form.email}
+                  onChange={(v) => setForm((f) => ({ ...f, email: v }))}
+                />
+              </div>
+              <Field
+                label="Subject"
+                value={form.subject}
+                onChange={(v) => setForm((f) => ({ ...f, subject: v }))}
+              />
+              <div>
+                <label className="text-[10px] uppercase tracking-wider text-foreground/55">
+                  Message
+                </label>
+                <textarea
+                  value={form.message}
+                  onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                  rows={6}
+                  className="mt-1.5 w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-brand-gold/50 transition-colors resize-none"
+                  placeholder="Tell us what you need…"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={sending}
+                className="inline-flex items-center gap-2 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors disabled:opacity-60"
+              >
+                <Send className="h-4 w-4" /> {sending ? "Sending…" : "Send Message"}
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  type = "text",
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+}) {
+  return (
+    <div>
+      <label className="text-[10px] uppercase tracking-wider text-foreground/55">{label}</label>
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-1.5 w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-brand-gold/50 transition-colors"
+      />
+    </div>
+  );
+}

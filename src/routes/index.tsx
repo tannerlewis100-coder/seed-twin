@@ -1,252 +1,230 @@
-import { createFileRoute } from "@tanstack/react-router";
-import heroCapsule from "@/assets/hero-capsule.jpg";
-import duoJars from "@/assets/duo-jars.jpg";
-import capsuleMacro from "@/assets/capsule-macro.jpg";
-import lifestylePour from "@/assets/lifestyle-pour.jpg";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Check, FlaskConical, Atom, Shield, Bug, Syringe } from "lucide-react";
+import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import CoaCard from "@/components/CoaCard";
 import island from "@/assets/island.jpg";
+import lifestylePour from "@/assets/lifestyle-pour.jpg";
+import { peptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Sprout — Daily Synbiotic for Gut Health" },
+      {
+        title: "CLARUM — Batch-Tested Research Peptides | Nothing Hidden. Everything Tested.",
+      },
       {
         name: "description",
         content:
-          "Clinically-studied daily synbiotic with capsule-in-capsule technology. Supports digestion, regularity, and whole-body health.",
+          "Analytically tested research peptides with full 5-panel independent lab testing — HPLC, mass spec, heavy metals, microbial, and endotoxin. Every batch documented. For in vitro laboratory research use only.",
+      },
+      {
+        property: "og:title",
+        content: "CLARUM — Nothing Hidden. Everything Tested.",
+      },
+      {
+        property: "og:description",
+        content:
+          "Full-panel tested research peptides. Every batch ships with a public Certificate of Analysis.",
       },
     ],
   }),
 });
 
-function AnnouncementBar() {
-  return (
-    <div className="bg-brand-lime text-brand-forest text-sm">
-      <div className="mx-auto max-w-7xl px-6 py-2.5 text-center">
-        Is SP-01® Daily Synbiotic right for you? <span aria-hidden>→</span>
-      </div>
-    </div>
-  );
-}
+const heroStats = [
+  "8 Compounds",
+  "5 Tests Per Batch",
+  "100% COA Documented",
+  "≥99% HPLC Purity",
+];
 
-function Header() {
-  return (
-    <header className="sticky top-0 z-40 bg-background/85 backdrop-blur-md border-b border-border/40">
-      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-10">
-          <a href="/" className="flex items-center gap-1.5 font-display text-2xl text-brand-forest">
-            sprout
-            <span className="inline-block w-2 h-2 rounded-full bg-brand-forest" />
-          </a>
-          <nav className="hidden md:flex items-center gap-8 text-sm text-brand-forest">
-            <a href="#shop" className="hover:opacity-70">Shop</a>
-            <a href="#science" className="hover:opacity-70">Science</a>
-            <a href="#learn" className="hover:opacity-70">Learn</a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-5">
-          <a href="#" className="hidden sm:inline text-sm text-brand-forest hover:opacity-70">
-            Sign in
-          </a>
-          <a
-            href="#shop"
-            className="inline-flex items-center rounded-full bg-brand-forest text-primary-foreground px-5 py-2.5 text-sm font-medium hover:bg-brand-forest-deep transition-colors"
-          >
-            Get Started
-          </a>
-        </div>
-      </div>
-    </header>
-  );
-}
+const testingPanels = [
+  {
+    icon: FlaskConical,
+    num: "01",
+    title: "HPLC Purity",
+    desc: "Confirms ≥99% purity. You see the exact percentage, not a range.",
+  },
+  {
+    icon: Atom,
+    num: "02",
+    title: "Mass Spectrometry",
+    desc: "LC-MS confirms molecular identity down to the atomic level. No substitutions.",
+  },
+  {
+    icon: Shield,
+    num: "03",
+    title: "Heavy Metals",
+    desc: "ICP-MS screens arsenic, lead, mercury, and cadmium. Reported ND or flagged.",
+  },
+  {
+    icon: Bug,
+    num: "04",
+    title: "Microbial & Yeast",
+    desc: "Total aerobic count, yeast, and mold screened to lab-cleanliness standards.",
+  },
+  {
+    icon: Syringe,
+    num: "05",
+    title: "Endotoxin (LAL)",
+    desc: "The test most peptide vendors skip entirely. We run it on every batch.",
+  },
+];
 
 function Hero() {
+  const featured = peptides[0];
   return (
-    <section className="bg-background">
-      <div className="mx-auto max-w-7xl px-6 pt-12 pb-20 grid lg:grid-cols-2 gap-10 items-center">
+    <section className="relative bg-background overflow-hidden border-b border-white/5">
+      <div className="absolute inset-0 gold-line-texture pointer-events-none" />
+      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full bg-brand-gold/[0.04] blur-[120px]" />
+      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] rounded-full bg-brand-gold/[0.05] blur-[100px]" />
+      <div className="relative mx-auto max-w-7xl px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-12 items-center">
         <div className="order-2 lg:order-1">
-          <span className="inline-block rounded-full border border-brand-forest/30 px-3 py-1 text-xs text-brand-forest mb-6">
-            SP-01® Daily Synbiotic
-          </span>
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl leading-[1.05] text-brand-forest">
-            A healthy gut can change your life.
+          <div className="inline-flex items-center gap-2 mb-7">
+            <span className="h-px w-8 bg-brand-gold/60" />
+            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
+              Batch-Tested Research Peptides
+            </span>
+          </div>
+          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl leading-[1.05] text-foreground">
+            Nothing Hidden.
+            <br />
+            <span className="italic text-gold-gradient">Everything Tested.</span>
           </h1>
-          <p className="mt-6 text-lg text-brand-forest/80 max-w-md">
-            Our capsule-in-capsule technology delivers targeted probiotic strains where they're
-            needed most — easing bloat, gas, and irregularity.*
+          <p className="mt-7 text-base lg:text-lg text-foreground/55 leading-relaxed max-w-xl">
+            Full-panel tested peptides — HPLC purity, mass spec identity, heavy metals, microbial,
+            and endotoxin. The only research peptide brand that shows you the data.
           </p>
-          <div className="mt-8 flex items-center gap-6">
-            <a
-              href="#shop"
-              className="inline-flex items-center rounded-full bg-brand-forest text-primary-foreground px-7 py-3.5 text-sm font-medium hover:bg-brand-forest-deep transition-colors"
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <Link
+              to="/shop"
+              className="inline-flex items-center rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors shadow-[0_0_30px_-5px_oklch(0.82_0.14_85_/_0.4)]"
             >
-              Shop SP-01®
-            </a>
-            <a
-              href="#quiz"
-              className="text-sm text-brand-forest underline underline-offset-4 hover:opacity-70"
+              Shop the Catalog
+            </Link>
+            <Link
+              to="/coa-library"
+              className="inline-flex items-center gap-1 rounded-full border border-brand-gold/40 text-brand-gold px-7 py-3.5 text-sm font-medium hover:bg-brand-gold/10 transition-colors"
             >
-              Take the quiz →
-            </a>
+              View COA Library <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+          <div className="mt-10 flex flex-wrap gap-2.5">
+            {heroStats.map((s) => (
+              <span
+                key={s}
+                className="text-[11px] font-medium text-foreground/50 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur-sm bg-white/[0.02]"
+              >
+                {s}
+              </span>
+            ))}
           </div>
         </div>
         <div className="order-1 lg:order-2 flex justify-center">
-          <img
-            src={heroCapsule}
-            alt="Dark green capsule surrounded by a halo of prebiotic powder"
-            width={1280}
-            height={1280}
-            className="w-full max-w-xl h-auto"
-          />
+          <CoaCard peptide={featured} />
         </div>
       </div>
     </section>
   );
 }
 
-function Products() {
-  const products = [
-    { tag: "Bestseller", code: "SP–01®", name: "Daily Synbiotic", price: "49.99" },
-    { tag: "New", code: "MV–02™", name: "Daily Multivitamin", price: "39.99" },
-    { tag: "New", code: "AM–02™", name: "Energy + Focus", price: "34.99" },
-    { tag: "New", code: "PM–02™", name: "Sleep + Restore", price: "34.99" },
-  ];
+function FeaturedProducts() {
+  const featured = peptides.slice(0, 3);
   return (
-    <section id="shop" className="bg-brand-forest text-primary-foreground">
+    <section className="bg-card border-b border-white/5">
       <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="max-w-2xl mb-14">
-          <p className="text-sm uppercase tracking-widest opacity-70 mb-4">
-            Whole body health starts in the gut.
-          </p>
-          <h2 className="font-display text-4xl md:text-5xl leading-tight">
-            Formulations built on clinically-studied ingredients for sustained support.
+          <div className="inline-flex items-center gap-2 mb-4">
+            <span className="h-px w-8 bg-brand-gold/40" />
+            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
+              Catalog
+            </span>
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl leading-tight text-foreground">
+            Featured Compounds
           </h2>
-          <a
-            href="#all"
-            className="inline-block mt-6 text-sm underline underline-offset-4 opacity-90 hover:opacity-100"
-          >
-            Shop all →
-          </a>
+          <p className="mt-4 text-foreground/55 max-w-md">
+            High-purity research peptides, analytically tested. Every product ships with a
+            batch-specific COA.
+          </p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {products.map((p) => (
-            <a
-              key={p.code}
-              href="#"
-              className="group bg-brand-cream text-brand-forest rounded-3xl p-6 flex flex-col aspect-[3/4] hover:-translate-y-1 transition-transform"
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {featured.map((p) => (
+            <Link
+              key={p.slug}
+              to="/shop"
+              className="group bg-background rounded-3xl p-6 flex flex-col border border-white/5 hover:border-brand-gold/30 hover:-translate-y-1 transition-all duration-300"
             >
-              <span className="text-xs uppercase tracking-wider opacity-70">{p.tag}</span>
-              <div className="flex-1 flex items-center justify-center my-4">
-                <img
-                  src={capsuleMacro}
-                  alt={p.name}
-                  loading="lazy"
-                  width={1024}
-                  height={1024}
-                  className="w-40 h-40 object-contain"
-                />
+              {p.tag && (
+                <span className="text-[10px] uppercase tracking-wider font-bold text-brand-gold/80">
+                  {p.tag}
+                </span>
+              )}
+              <div className="my-6">
+                <CoaCard peptide={p} variant="mini" />
               </div>
-              <div className="font-display text-2xl">{p.code}</div>
-              <div className="text-sm opacity-80">{p.name}</div>
-              <div className="mt-3 flex items-center justify-between text-sm">
-                <span className="opacity-70">From ${p.price}/mo</span>
-                <span className="rounded-full border border-brand-forest/30 px-3 py-1 group-hover:bg-brand-forest group-hover:text-brand-cream transition-colors">
-                  Shop
+              <div className="font-display text-2xl text-foreground">
+                {p.name} <span className="text-foreground/50 text-base">({p.size})</span>
+              </div>
+              <div className="text-sm text-foreground/55 mt-1">{p.category}</div>
+              <div className="mt-5 flex items-center justify-between text-sm">
+                <span className="text-foreground/70">${p.price.toFixed(2)}</span>
+                <span className="rounded-full border border-brand-gold/30 text-brand-gold px-3 py-1 group-hover:bg-brand-gold group-hover:text-brand-forest transition-colors">
+                  View COA
                 </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
-
-function Bundle() {
-  return (
-    <section className="bg-background">
-      <div className="mx-auto max-w-7xl px-6 py-24 grid lg:grid-cols-2 gap-12 items-center">
-        <img
-          src={duoJars}
-          alt="Synbiotic and multivitamin jars"
-          loading="lazy"
-          width={1280}
-          height={960}
-          className="w-full rounded-3xl"
-        />
-        <div>
-          <span className="inline-block rounded-full bg-brand-lime text-brand-forest px-3 py-1 text-xs mb-6">
-            Bundle + Save 25%
-          </span>
-          <h2 className="font-display text-4xl md:text-5xl text-brand-forest leading-tight">
-            Daily essentials for nutrition and digestive health.
-          </h2>
-          <p className="mt-6 text-brand-forest/80 max-w-lg">
-            Our clinically-studied daily synbiotic paired with a complete multivitamin to reduce
-            bloat, support regularity, and cover everyday nutrient gaps.
-          </p>
-          <a
-            href="#"
-            className="inline-flex items-center mt-8 rounded-full bg-brand-forest text-primary-foreground px-7 py-3.5 text-sm font-medium hover:bg-brand-forest-deep transition-colors"
+        <div className="text-center mt-12">
+          <Link
+            to="/shop"
+            className="inline-flex items-center gap-1 rounded-full border border-brand-gold/40 text-brand-gold px-7 py-3.5 text-sm font-medium hover:bg-brand-gold/10 transition-colors"
           >
-            Shop the Daily Duo
-          </a>
+            View Full Catalog <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-function ViaCap() {
+function Testing() {
   return (
-    <section id="science" className="bg-brand-cream">
-      <div className="mx-auto max-w-7xl px-6 py-24">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="text-xs uppercase tracking-widest text-brand-forest mb-4">
-            ● ViaCap® Technology
-          </p>
-          <h2 className="font-display text-4xl md:text-5xl text-brand-forest leading-tight">
-            Most probiotics don't survive digestion. Ours do.
+    <section className="relative bg-background gold-grid-texture overflow-hidden border-b border-white/5">
+      <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full bg-brand-gold/[0.03] blur-[100px]" />
+      <div className="relative mx-auto max-w-7xl px-6 py-24">
+        <div className="text-center mb-16 max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <span className="h-px w-8 bg-brand-gold/40" />
+            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
+              Quality & Transparency
+            </span>
+            <span className="h-px w-8 bg-brand-gold/40" />
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl leading-tight text-foreground">
+            We Test What Others <span className="italic text-brand-gold">Skip</span>
           </h2>
+          <p className="mt-4 text-foreground/55">
+            Every batch undergoes 5 independent lab tests. Full COAs published publicly — no login
+            required.
+          </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-10 items-center">
-          <div className="space-y-2 text-right">
-            <h3 className="font-display text-2xl text-brand-forest">Outer Capsule</h3>
-            <p className="text-sm text-brand-forest/75">
-              Shields probiotics from stomach acid while delivering prebiotics to nourish beneficial
-              bacteria along the way.
-            </p>
-          </div>
-          <div className="flex justify-center">
-            <div className="relative aspect-square w-full max-w-sm rounded-full bg-background flex items-center justify-center">
-              <img
-                src={capsuleMacro}
-                alt="Capsule cross section"
-                loading="lazy"
-                width={1024}
-                height={1024}
-                className="w-3/4 rotate-90"
-              />
-            </div>
-          </div>
-          <div className="space-y-2 text-left">
-            <h3 className="font-display text-2xl text-brand-forest">Inner Capsule</h3>
-            <p className="text-sm text-brand-forest/75">
-              Delivers 24 live strains of probiotics directly to the colon — exactly where they're
-              needed most.
-            </p>
-          </div>
-        </div>
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            ["38T", "microbes call you home"],
-            ["24", "clinically-studied strains"],
-            ["53.6B", "AFU per dose"],
-            ["1M+", "members and counting"],
-          ].map(([n, l]) => (
-            <div key={l}>
-              <div className="font-display text-4xl text-brand-forest">{n}</div>
-              <div className="text-xs uppercase tracking-wider text-brand-forest/70 mt-2">{l}</div>
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
+          {testingPanels.map((card) => (
+            <div key={card.title} className="group relative">
+              <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-brand-gold/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+              <div className="relative bg-card border border-white/5 rounded-2xl p-6 text-center h-full transition-all duration-300 group-hover:border-brand-gold/30 group-hover:-translate-y-1">
+                <span className="text-[10px] font-bold text-brand-gold/40 tracking-widest">
+                  {card.num}
+                </span>
+                <div className="w-14 h-14 mx-auto my-4 rounded-full border border-brand-gold/30 flex items-center justify-center group-hover:border-brand-gold transition-colors">
+                  <card.icon className="h-6 w-6 text-brand-gold/80 group-hover:text-brand-gold transition-colors" />
+                </div>
+                <h3 className="font-display text-lg text-foreground mb-2">{card.title}</h3>
+                <p className="text-[11px] text-foreground/50 leading-relaxed">{card.desc}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -255,63 +233,98 @@ function ViaCap() {
   );
 }
 
-function MoreThanHuman() {
+function CoaBand() {
+  const samplePeptide = peptides.find((p) => p.slug === "ghk-cu-50mg") ?? peptides[0];
+  const checks = [
+    "Batch-specific COA, not generic certificates",
+    "Independent third-party laboratory",
+    "Full 5-panel results, published publicly",
+    "Heavy metals and endotoxin — tests most vendors skip",
+    "QR code on every order links to your batch's COA",
+  ];
   return (
-    <section id="learn" className="bg-brand-forest-deep text-primary-foreground">
-      <div className="mx-auto max-w-7xl px-6 py-24 grid lg:grid-cols-2 gap-12 items-center">
+    <section className="relative bg-card overflow-hidden border-b border-white/5">
+      <img
+        src={lifestylePour}
+        alt=""
+        loading="lazy"
+        className="absolute inset-0 w-full h-full object-cover opacity-[0.07] mix-blend-luminosity"
+      />
+      <div className="absolute inset-0 bg-gradient-to-r from-card via-card/90 to-card/60" />
+      <div className="relative mx-auto max-w-7xl px-6 py-24 grid lg:grid-cols-2 gap-14 items-center">
         <div>
-          <p className="text-xs uppercase tracking-widest opacity-70 mb-4">Sprout 【 】</p>
-          <h2 className="font-display text-5xl md:text-6xl leading-[1.05]">
-            You are more than human.
+          <div className="inline-flex items-center gap-2 mb-5">
+            <span className="h-px w-8 bg-brand-gold/60" />
+            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
+              The COA Library
+            </span>
+          </div>
+          <h2 className="font-display text-4xl md:text-5xl text-foreground leading-tight">
+            Every Batch Has a COA.
+            <br />
+            <span className="italic text-brand-gold">No Exceptions.</span>
           </h2>
-          <p className="mt-6 opacity-85 max-w-lg">
-            Your body isn't yours alone — it's home to 38 trillion microbes that power digestion,
-            immunity, and more. Discover how their health shapes yours.
+          <p className="mt-6 text-foreground/55 max-w-lg">
+            We don't just claim "third-party tested." We publish the actual data — batch-specific
+            Certificates of Analysis with full 5-panel results — publicly available, no login
+            required.
           </p>
-          <a
-            href="#"
-            className="inline-flex items-center mt-8 rounded-full bg-brand-cream text-brand-forest px-7 py-3.5 text-sm font-medium hover:opacity-90"
+          <ul className="mt-8 space-y-3.5">
+            {checks.map((item) => (
+              <li key={item} className="flex items-start gap-3">
+                <span className="mt-0.5 w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
+                  <Check className="h-3 w-3 text-emerald-400" />
+                </span>
+                <span className="text-sm text-foreground/75 leading-relaxed">{item}</span>
+              </li>
+            ))}
+          </ul>
+          <Link
+            to="/coa-library"
+            className="inline-flex items-center mt-10 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors"
           >
-            ▶ Discover Microbiome 101
-          </a>
+            View the COA Library
+          </Link>
         </div>
-        <img
-          src={lifestylePour}
-          alt="Pouring capsules into hand"
-          loading="lazy"
-          width={1024}
-          height={1280}
-          className="w-full rounded-3xl"
-        />
+        <div className="flex justify-center">
+          <CoaCard peptide={samplePeptide} showLink={false} />
+        </div>
       </div>
     </section>
   );
 }
 
-function SeedLabs() {
+function LabStandards() {
   return (
-    <section className="relative bg-brand-forest text-primary-foreground overflow-hidden">
+    <section className="relative bg-brand-forest-deep overflow-hidden border-b border-white/5">
       <img
         src={island}
-        alt="Aerial view of remote island"
+        alt=""
         loading="lazy"
-        width={1600}
-        height={900}
-        className="absolute inset-0 w-full h-full object-cover opacity-60"
+        className="absolute inset-0 w-full h-full object-cover opacity-25"
       />
-      <div className="relative mx-auto max-w-7xl px-6 py-32 text-center">
-        <p className="text-xs uppercase tracking-widest mb-4">● Lipari, Panarea — Italy</p>
-        <h2 className="font-display text-5xl md:text-6xl mb-6">SproutLabs</h2>
-        <p className="max-w-xl mx-auto opacity-90">
-          Because health is not just human. Pioneering microbial science for people, animals, and
-          our planet.
+      <div className="absolute inset-0 bg-gradient-to-t from-brand-forest-deep via-brand-forest-deep/85 to-brand-forest-deep/70" />
+      <div className="relative mx-auto max-w-7xl px-6 py-28 text-center">
+        <div className="inline-flex items-center gap-2 mb-5 justify-center">
+          <span className="h-px w-8 bg-brand-gold/60" />
+          <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
+            Lab Standards
+          </span>
+          <span className="h-px w-8 bg-brand-gold/60" />
+        </div>
+        <h2 className="font-display text-5xl md:text-6xl text-foreground mb-5">
+          ISO/IEC 17025 Tested
+        </h2>
+        <p className="max-w-xl mx-auto text-foreground/65 leading-relaxed">
+          Every Clarum batch is sent to an accredited, independent laboratory. Identity, purity,
+          contaminants, and endotoxin — the full picture, not just a number.
         </p>
-        <a
-          href="#"
-          className="inline-flex items-center mt-8 rounded-full bg-brand-cream text-brand-forest px-7 py-3.5 text-sm font-medium hover:opacity-90"
+        <Link
+          to="/about"
+          className="inline-flex items-center gap-1 mt-9 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors"
         >
-          Read more
-        </a>
+          Read our story <ArrowRight className="h-4 w-4" />
+        </Link>
       </div>
     </section>
   );
@@ -321,57 +334,28 @@ function FinalCta() {
   return (
     <section className="bg-background">
       <div className="mx-auto max-w-5xl px-6 py-28 text-center">
-        <h2 className="font-display text-5xl md:text-6xl text-brand-forest leading-[1.05]">
-          Change your gut health for good.*
+        <h2 className="font-display text-5xl md:text-6xl text-foreground leading-[1.05]">
+          Research deserves <span className="italic text-brand-gold">real data.</span>
         </h2>
-        <p className="mt-6 text-brand-forest/80">Feel lasting relief with SP-01®*</p>
-        <a
-          href="#shop"
-          className="inline-flex items-center mt-10 rounded-full bg-brand-forest text-primary-foreground px-8 py-4 text-base font-medium hover:bg-brand-forest-deep transition-colors"
-        >
-          Shop now
-        </a>
+        <p className="mt-6 text-foreground/60 max-w-xl mx-auto">
+          Verify every batch before you order. Browse the catalog or open the COA Library.
+        </p>
+        <div className="mt-10 flex flex-wrap justify-center gap-4">
+          <Link
+            to="/shop"
+            className="inline-flex items-center rounded-full bg-brand-gold text-brand-forest px-8 py-4 text-base font-medium hover:bg-brand-gold-light transition-colors"
+          >
+            Shop the Catalog
+          </Link>
+          <Link
+            to="/coa-library"
+            className="inline-flex items-center rounded-full border border-brand-gold/40 text-brand-gold px-8 py-4 text-base font-medium hover:bg-brand-gold/10 transition-colors"
+          >
+            Open the COA Library
+          </Link>
+        </div>
       </div>
     </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="bg-brand-forest-deep text-primary-foreground/80">
-      <div className="mx-auto max-w-7xl px-6 py-16 grid md:grid-cols-4 gap-10 text-sm">
-        <div>
-          <div className="font-display text-2xl text-primary-foreground flex items-center gap-1.5">
-            sprout <span className="inline-block w-2 h-2 rounded-full bg-brand-cream" />
-          </div>
-          <p className="mt-4 opacity-70 max-w-xs">
-            Microbial science for whole-body health.
-          </p>
-        </div>
-        {[
-          ["Shop", ["Daily Synbiotic", "Multivitamin", "Energy + Focus", "Sleep + Restore"]],
-          ["Science", ["Our Approach", "Studies", "Strains", "ViaCap®"]],
-          ["Company", ["About", "SproutLabs", "Careers", "Contact"]],
-        ].map(([title, items]) => (
-          <div key={title as string}>
-            <div className="text-primary-foreground font-medium mb-4">{title}</div>
-            <ul className="space-y-2.5 opacity-80">
-              {(items as string[]).map((i) => (
-                <li key={i}>
-                  <a href="#" className="hover:opacity-100">{i}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-      <div className="border-t border-primary-foreground/10">
-        <div className="mx-auto max-w-7xl px-6 py-6 text-xs opacity-60 flex flex-col sm:flex-row justify-between gap-2">
-          <span>© {new Date().getFullYear()} Sprout Health. All rights reserved.</span>
-          <span>*These statements have not been evaluated by the FDA.</span>
-        </div>
-      </div>
-    </footer>
   );
 }
 
@@ -379,17 +363,16 @@ function Index() {
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
-      <Header />
+      <SiteHeader />
       <main>
         <Hero />
-        <Products />
-        <Bundle />
-        <ViaCap />
-        <MoreThanHuman />
-        <SeedLabs />
+        <FeaturedProducts />
+        <Testing />
+        <CoaBand />
+        <LabStandards />
         <FinalCta />
       </main>
-      <Footer />
+      <SiteFooter />
     </div>
   );
 }
