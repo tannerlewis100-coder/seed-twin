@@ -236,6 +236,20 @@ export function SiteHeader() {
           </Link>
         </div>
       </div>
+      {/* Left-anchored mega-menu panel */}
+      <div
+        className={`absolute left-0 top-full transition-all duration-200 ease-out ${
+          openMenu
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-1 pointer-events-none"
+        }`}
+      >
+        <div className="pl-6 lg:pl-10 pt-3 pb-6">
+          <div className="rounded-3xl bg-background/95 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.85)] overflow-hidden">
+            {ActiveMenu && <ActiveMenu />}
+          </div>
+        </div>
+      </div>
     </header>
   );
 }
