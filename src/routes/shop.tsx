@@ -54,35 +54,36 @@ function ShopPage() {
         <section className="bg-card border-b border-white/5">
           <div className="mx-auto max-w-7xl px-6 py-16">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {peptides.map((p) => (
-                <Link
-                  key={p.slug}
-                  to="/coa-library"
-                  className="group bg-background rounded-3xl p-6 flex flex-col border border-white/5 hover:border-brand-gold/30 hover:-translate-y-1 transition-all duration-300"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] uppercase tracking-wider text-brand-gold/80 font-bold">
-                      {p.tag ?? p.category}
-                    </span>
-                    <span className="text-[10px] text-foreground/40">{p.purity} HPLC</span>
-                  </div>
-                  <div className="my-6">
-                    <CoaCard peptide={p} variant="mini" />
-                  </div>
-                  <div className="font-display text-2xl text-foreground">
-                    {p.name}{" "}
-                    <span className="text-foreground/50 text-base">({p.size})</span>
-                  </div>
-                  <p className="text-xs text-foreground/55 mt-2 leading-relaxed line-clamp-2">
-                    {p.description}
-                  </p>
-                  <div className="mt-5 flex items-center justify-between text-sm">
-                    <span className="text-foreground/80 font-medium">${p.price.toFixed(2)}</span>
-                    <span className="rounded-full border border-brand-gold/30 text-brand-gold px-3 py-1 group-hover:bg-brand-gold group-hover:text-brand-forest transition-colors">
-                      View COA
-                    </span>
-                  </div>
-                </Link>
+              {peptides.map((p, i) => (
+                <RevealOnScroll key={p.slug} delay={i * 60}>
+                  <Link
+                    to="/coa-library"
+                    className="group bg-background rounded-3xl p-6 flex flex-col border border-white/5 hover:border-brand-gold/30 hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-wider text-brand-gold/80 font-bold">
+                        {p.tag ?? p.category}
+                      </span>
+                      <span className="text-[10px] text-foreground/40">{p.purity} HPLC</span>
+                    </div>
+                    <div className="my-6">
+                      <CoaCard peptide={p} variant="mini" />
+                    </div>
+                    <div className="font-display text-2xl text-foreground">
+                      {p.name}{" "}
+                      <span className="text-foreground/50 text-base">({p.size})</span>
+                    </div>
+                    <p className="text-xs text-foreground/55 mt-2 leading-relaxed line-clamp-2">
+                      {p.description}
+                    </p>
+                    <div className="mt-5 flex items-center justify-between text-sm">
+                      <span className="text-foreground/80 font-medium">${p.price.toFixed(2)}</span>
+                      <span className="rounded-full border border-brand-gold/30 text-brand-gold px-3 py-1 group-hover:bg-brand-gold group-hover:text-brand-forest transition-colors">
+                        View COA
+                      </span>
+                    </div>
+                  </Link>
+                </RevealOnScroll>
               ))}
             </div>
             <p className="mt-12 text-center text-xs text-foreground/40 max-w-2xl mx-auto">
