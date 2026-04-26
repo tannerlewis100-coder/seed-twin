@@ -132,15 +132,15 @@ function StatsBand() {
   return (
     <section className="bg-brand-forest-deep border-y border-white/5">
       <div className="mx-auto max-w-7xl px-6 lg:px-10 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-        {heroStats.map((s) => {
+        {heroStats.map((s, i) => {
           const [num, ...rest] = s.split(" ");
           return (
-            <div key={s} className="text-center md:text-left">
+            <RevealOnScroll key={s} delay={i * 100} className="text-center md:text-left">
               <div className="font-display text-3xl md:text-4xl text-brand-gold">{num}</div>
               <div className="text-[12px] uppercase tracking-[0.18em] text-foreground/55 mt-1">
                 {rest.join(" ")}
               </div>
-            </div>
+            </RevealOnScroll>
           );
         })}
       </div>
@@ -280,8 +280,8 @@ function Testing() {
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
-          {testingPanels.map((card) => (
-            <div key={card.title} className="group relative">
+          {testingPanels.map((card, i) => (
+            <RevealOnScroll key={card.title} delay={i * 80} className="group relative">
               <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-brand-gold/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
               <div className="relative bg-card border border-white/5 rounded-2xl p-6 text-center h-full transition-all duration-300 group-hover:border-brand-gold/30 group-hover:-translate-y-1">
                 <span className="text-[10px] font-bold text-brand-gold/40 tracking-widest">
@@ -293,7 +293,7 @@ function Testing() {
                 <h3 className="font-display text-lg text-foreground mb-2">{card.title}</h3>
                 <p className="text-[11px] text-foreground/50 leading-relaxed">{card.desc}</p>
               </div>
-            </div>
+            </RevealOnScroll>
           ))}
         </div>
       </div>
