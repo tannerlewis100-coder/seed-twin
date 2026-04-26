@@ -169,6 +169,36 @@
   }
 }
 
+@layer utilities {
+  .gold-line-texture {
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent 0,
+      transparent 38px,
+      oklch(0.82 0.14 85 / 0.04) 38px,
+      oklch(0.82 0.14 85 / 0.04) 39px
+    );
+  }
+  .gold-grid-texture {
+    background-image:
+      linear-gradient(oklch(0.82 0.14 85 / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, oklch(0.82 0.14 85 / 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .text-gold-gradient {
+    background: linear-gradient(90deg, var(--brand-gold), var(--brand-gold-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  @keyframes grow-bar {
+    from { width: 0%; }
+  }
+  .animate-grow-bar {
+    animation: grow-bar 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+}
+
 @font-face {
   font-family: "Fraunces";
   font-style: normal;
