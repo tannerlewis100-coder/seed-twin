@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import RevealText from "@/components/RevealText";
 
 export const Route = createFileRoute("/disclaimer")({
   component: DisclaimerPage,
@@ -37,7 +38,7 @@ function DisclaimerPage() {
               </span>
             </div>
             <h1 className="font-display text-4xl md:text-5xl text-foreground leading-tight">
-              For In Vitro Laboratory <span className="italic text-brand-gold">Research Use Only.</span>
+              <RevealText text="For in vitro laboratory research use only." />
             </h1>
           </div>
         </section>

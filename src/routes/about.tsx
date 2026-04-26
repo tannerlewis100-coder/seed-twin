@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, FlaskConical, Atom, Shield, Bug, Syringe } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import RevealText from "@/components/RevealText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -55,12 +57,11 @@ function AboutPage() {
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground leading-[1.1] mb-5">
-              We Saw an Industry Built on{" "}
-              <span className="italic text-gold-gradient">Shortcuts</span>
+              <RevealText text="We saw an industry built on shortcuts" />
             </h1>
-            <p className="text-foreground/55 leading-relaxed text-lg">
+            <RevealOnScroll as="p" delay={300} className="text-foreground/55 leading-relaxed text-lg">
               So we built the company we wished existed.
-            </p>
+            </RevealOnScroll>
           </div>
         </section>
 

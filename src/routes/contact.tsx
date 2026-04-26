@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
+import RevealText from "@/components/RevealText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 
 export const Route = createFileRoute("/contact")({
   component: ContactPage,
@@ -72,11 +74,11 @@ function ContactPage() {
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
             <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
-              Get in <span className="italic text-brand-gold">touch.</span>
+              <RevealText text="Get in touch." />
             </h1>
-            <p className="mt-5 text-foreground/55">
+            <RevealOnScroll as="p" delay={180} className="mt-5 text-foreground/55">
               Questions about a compound, a COA, or a bulk research order — we're here.
-            </p>
+            </RevealOnScroll>
           </div>
         </section>
 

@@ -7,6 +7,8 @@ import {
 } from "@/components/ui/accordion";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import RevealText from "@/components/RevealText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
@@ -84,11 +86,11 @@ function FaqPage() {
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
             <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
-              Questions, <span className="italic text-brand-gold">answered.</span>
+              <RevealText text="Questions, answered." />
             </h1>
-            <p className="mt-5 text-foreground/55">
+            <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55">
               Research peptides, our 5-panel COA process, shipping, storage, and compliance.
-            </p>
+            </RevealOnScroll>
           </div>
         </section>
 

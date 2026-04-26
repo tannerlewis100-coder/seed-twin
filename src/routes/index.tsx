@@ -3,6 +3,8 @@ import { ArrowRight, Check, FlaskConical, Atom, Shield, Bug, Syringe } from "luc
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
+import RevealText from "@/components/RevealText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 import island from "@/assets/island.jpg";
 import lifestylePour from "@/assets/lifestyle-pour.jpg";
 import { peptides } from "@/data/peptides";
@@ -85,14 +87,16 @@ function Hero() {
             BPC-157<sup className="text-[8px]">®</sup>  Research Peptide
           </span>
           <h1 className="font-display text-[44px] md:text-6xl lg:text-[76px] leading-[1.02] text-foreground">
-            Nothing hidden.
-            <br />
-            <span className="italic">Everything tested.</span>
+            <RevealText text={"Nothing hidden.\nEverything tested."} stagger={55} />
           </h1>
-          <p className="mt-7 text-[15px] lg:text-[17px] text-foreground/60 leading-relaxed max-w-md">
+          <RevealOnScroll
+            as="p"
+            delay={250}
+            className="mt-7 text-[15px] lg:text-[17px] text-foreground/60 leading-relaxed max-w-md"
+          >
             Our 5-panel independent lab testing verifies purity, identity, and safety on every
             single batch — published publicly in our COA Library.
-          </p>
+          </RevealOnScroll>
           <div className="mt-9 flex items-center gap-7">
             <Link
               to="/shop"
@@ -176,17 +180,15 @@ function FeaturedProducts() {
         <div className="grid lg:grid-cols-12 gap-10 mb-14 items-end">
           <div className="lg:col-span-7">
             <h2 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-foreground">
-              Verified purity starts
-              <br />
-              in the <span className="italic text-brand-gold">vial.</span>
+              <RevealText text={"Verified purity starts\nin the vial."} />
             </h2>
           </div>
           <div className="lg:col-span-5 lg:pb-2 flex lg:justify-end">
             <div className="max-w-sm">
-              <p className="text-foreground/60 leading-relaxed">
+              <RevealOnScroll as="p" delay={120} className="text-foreground/60 leading-relaxed">
                 Formulations backed by independent 5-panel lab testing — HPLC, mass spec, heavy
                 metals, microbial, and endotoxin.
-              </p>
+              </RevealOnScroll>
               <Link
                 to="/shop"
                 className="inline-flex items-center gap-1.5 mt-5 text-sm font-medium text-brand-gold border-b border-brand-gold/50 hover:border-brand-gold pb-0.5 transition-colors"
