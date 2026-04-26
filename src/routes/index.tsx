@@ -75,55 +75,70 @@ const testingPanels = [
 function Hero() {
   const featured = peptides[0];
   return (
-    <section className="relative bg-background overflow-hidden border-b border-white/5">
-      <div className="absolute inset-0 gold-line-texture pointer-events-none" />
-      <div className="absolute top-1/4 -left-32 w-[500px] h-[500px] rounded-full bg-brand-gold/[0.04] blur-[120px]" />
-      <div className="absolute bottom-1/4 -right-32 w-[400px] h-[400px] rounded-full bg-brand-gold/[0.05] blur-[100px]" />
-      <div className="relative mx-auto max-w-7xl px-6 pt-20 pb-24 grid lg:grid-cols-2 gap-12 items-center">
-        <div className="order-2 lg:order-1">
-          <div className="inline-flex items-center gap-2 mb-7">
-            <span className="h-px w-8 bg-brand-gold/60" />
-            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
-              Batch-Tested Research Peptides
-            </span>
-          </div>
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl leading-[1.05] text-foreground">
-            Nothing Hidden.
+    <section className="relative bg-background overflow-hidden">
+      <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-60" />
+      <div className="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full bg-brand-gold/[0.05] blur-[140px]" />
+      <div className="absolute bottom-0 -right-40 w-[500px] h-[500px] rounded-full bg-brand-gold/[0.04] blur-[120px]" />
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-16 lg:pt-24 pb-28 lg:pb-36 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="order-2 lg:order-1 max-w-xl">
+          <span className="inline-block rounded-full border border-brand-gold/40 px-3.5 py-1 text-[12px] tracking-wide text-brand-gold/90 mb-7">
+            BPC-157<sup className="text-[8px]">®</sup>  Research Peptide
+          </span>
+          <h1 className="font-display text-[44px] md:text-6xl lg:text-[76px] leading-[1.02] text-foreground">
+            Nothing hidden.
             <br />
-            <span className="italic text-gold-gradient">Everything Tested.</span>
+            <span className="italic">Everything tested.</span>
           </h1>
-          <p className="mt-7 text-base lg:text-lg text-foreground/55 leading-relaxed max-w-xl">
-            Full-panel tested peptides — HPLC purity, mass spec identity, heavy metals, microbial,
-            and endotoxin. The only research peptide brand that shows you the data.
+          <p className="mt-7 text-[15px] lg:text-[17px] text-foreground/60 leading-relaxed max-w-md">
+            Our 5-panel independent lab testing verifies purity, identity, and safety on every
+            single batch — published publicly in our COA Library.
           </p>
-          <div className="mt-9 flex flex-wrap items-center gap-4">
+          <div className="mt-9 flex items-center gap-7">
             <Link
               to="/shop"
-              className="inline-flex items-center rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors shadow-[0_0_30px_-5px_oklch(0.82_0.14_85_/_0.4)]"
+              className="inline-flex items-center rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-[14px] font-medium hover:bg-brand-gold-light transition-colors"
             >
               Shop the Catalog
             </Link>
             <Link
               to="/coa-library"
-              className="inline-flex items-center gap-1 rounded-full border border-brand-gold/40 text-brand-gold px-7 py-3.5 text-sm font-medium hover:bg-brand-gold/10 transition-colors"
+              className="inline-flex items-center gap-1.5 text-[14px] font-medium text-foreground hover:text-brand-gold transition-colors border-b border-foreground/30 hover:border-brand-gold pb-0.5"
             >
               View COA Library <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-          <div className="mt-10 flex flex-wrap gap-2.5">
-            {heroStats.map((s) => (
-              <span
-                key={s}
-                className="text-[11px] font-medium text-foreground/50 border border-white/10 rounded-full px-4 py-1.5 backdrop-blur-sm bg-white/[0.02]"
-              >
-                {s}
-              </span>
-            ))}
+        </div>
+        <div className="order-1 lg:order-2 flex justify-center relative">
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-[420px] h-[420px] rounded-full border border-brand-gold/20" />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-[520px] h-[520px] rounded-full border border-brand-gold/10" />
+          </div>
+          <div className="relative">
+            <CoaCard peptide={featured} />
           </div>
         </div>
-        <div className="order-1 lg:order-2 flex justify-center">
-          <CoaCard peptide={featured} />
-        </div>
+      </div>
+    </section>
+  );
+}
+
+function StatsBand() {
+  return (
+    <section className="bg-brand-forest-deep border-y border-white/5">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+        {heroStats.map((s) => {
+          const [num, ...rest] = s.split(" ");
+          return (
+            <div key={s} className="text-center md:text-left">
+              <div className="font-display text-3xl md:text-4xl text-brand-gold">{num}</div>
+              <div className="text-[12px] uppercase tracking-[0.18em] text-foreground/55 mt-1">
+                {rest.join(" ")}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -366,6 +381,7 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
+        <StatsBand />
         <FeaturedProducts />
         <Testing />
         <CoaBand />
