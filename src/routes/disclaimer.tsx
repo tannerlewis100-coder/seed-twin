@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import RevealText from "@/components/RevealText";
 
 export const Route = createFileRoute("/disclaimer")({
   component: DisclaimerPage,
