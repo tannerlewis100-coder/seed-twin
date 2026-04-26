@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
+import RevealText from "@/components/RevealText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 import { peptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/shop")({
@@ -40,12 +42,12 @@ function ShopPage() {
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
             <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
-              Research Peptides
+              <RevealText text="Research Peptides" />
             </h1>
-            <p className="mt-5 text-foreground/55 max-w-xl mx-auto">
+            <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55 max-w-xl mx-auto">
               Every compound below is batch-tested across HPLC, mass spec, heavy metals, microbial,
               and endotoxin panels. Tap any card to view its current COA.
-            </p>
+            </RevealOnScroll>
           </div>
         </section>
 

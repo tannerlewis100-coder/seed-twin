@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Check, Download } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import RevealText from "@/components/RevealText";
+import RevealOnScroll from "@/components/RevealOnScroll";
 import { peptides, sampleCoa } from "@/data/peptides";
 
 export const Route = createFileRoute("/coa-library")({
@@ -41,12 +43,12 @@ function CoaLibraryPage() {
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
             <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
-              The COA <span className="italic text-brand-gold">Library</span>
+              <RevealText text="The COA Library" />
             </h1>
-            <p className="mt-5 text-foreground/55 max-w-2xl mx-auto">
+            <RevealOnScroll as="p" delay={220} className="mt-5 text-foreground/55 max-w-2xl mx-auto">
               Every batch we ship has a Certificate of Analysis. Every COA lives here, openly —
               no login, no email, no paywall.
-            </p>
+            </RevealOnScroll>
           </div>
         </section>
 
