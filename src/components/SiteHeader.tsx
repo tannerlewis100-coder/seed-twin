@@ -162,23 +162,38 @@ export function SiteHeader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const navItem = (key: MenuKey, label: string) => (
-    <button
-      type="button"
-      onMouseEnter={() => setOpenMenu(key)}
-      onFocus={() => setOpenMenu(key)}
-      className={`relative h-full inline-flex items-center text-[15px] transition-colors ${
-        openMenu === key ? "text-brand-gold" : "text-foreground/85 hover:text-brand-gold"
-      }`}
-    >
-      {label}
-      <span
-        className={`absolute left-0 right-0 -bottom-px h-px bg-brand-gold transition-opacity ${
-          openMenu === key ? "opacity-100" : "opacity-0"
-        }`}
-      />
-    </button>
-  );
+  const navItem = (key: Exclude<MenuKey, null>, label: string) => {
+    const isOpen = openMenu === key;
+    const Menu = key === "shop" ? ShopMenu : key === "coa" ? CoaMenu : AboutMenu;
+    return (
+      <div
+        className="relative h-full flex items-center"
+        onMouseEnter={() => setOpenMenu(key)}
+      >
+        <button
+          type="button"
+          onFocus={() => setOpenMenu(key)}
+          className={`relative h-full inline-flex items-center text-[15px] transition-colors ${
+            isOpen ? "text-brand-gold" : "text-foreground/85 hover:text-brand-gold"
+          }`}
+        >
+          {label}
+        </button>
+        {/* Floating left-anchored dropdown card */}
+        <div
+          className={`absolute left-0 top-full pt-3 transition-all duration-200 ease-out ${
+            isOpen
+              ? "opacity-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 -translate-y-1 pointer-events-none"
+          }`}
+        >
+          <div className="rounded-3xl bg-background/85 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.8)] overflow-hidden">
+            <Menu />
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <header
@@ -193,6 +208,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-12 h-full">
           <Link
             to="/"
+            onMouseEnter={() => setOpenMenu(null)}
             className="flex items-center gap-1.5 font-display text-[26px] tracking-tight text-foreground"
           >
             clarum
@@ -228,21 +244,6 @@ export function SiteHeader() {
           >
             Get Started
           </Link>
-        </div>
-      </div>
-
-      {/* Dropdown panel */}
-      <div
-        className={`absolute left-0 right-0 top-full overflow-hidden transition-all duration-300 ease-out ${
-          openMenu ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
-        }`}
-      >
-        <div className="bg-background/98 backdrop-blur-xl border-b border-white/10 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.7)]">
-          <div className="mx-auto max-w-7xl">
-            {openMenu === "shop" && <ShopMenu />}
-            {openMenu === "coa" && <CoaMenu />}
-            {openMenu === "about" && <AboutMenu />}
-          </div>
         </div>
       </div>
     </header>
