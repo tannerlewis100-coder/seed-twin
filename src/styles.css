@@ -28,6 +28,12 @@
   --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-cream: var(--brand-cream);
+  --color-brand-forest: var(--brand-forest);
+  --color-brand-forest-deep: var(--brand-forest-deep);
+  --color-brand-lime: var(--brand-lime);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
   --color-popover: var(--popover);
