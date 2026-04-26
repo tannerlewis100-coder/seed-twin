@@ -164,10 +164,9 @@ export function SiteHeader() {
 
   const navItem = (key: Exclude<MenuKey, null>, label: string) => {
     const isOpen = openMenu === key;
-    const Menu = key === "shop" ? ShopMenu : key === "coa" ? CoaMenu : AboutMenu;
     return (
       <div
-        className="relative h-full flex items-center"
+        className="h-full flex items-center"
         onMouseEnter={() => setOpenMenu(key)}
       >
         <button
@@ -179,26 +178,17 @@ export function SiteHeader() {
         >
           {label}
         </button>
-        {/* Floating left-anchored dropdown card */}
-        <div
-          className={`absolute left-0 top-full pt-3 transition-all duration-200 ease-out ${
-            isOpen
-              ? "opacity-100 translate-y-0 pointer-events-auto"
-              : "opacity-0 -translate-y-1 pointer-events-none"
-          }`}
-        >
-          <div className="rounded-3xl bg-background/85 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.8)] overflow-hidden">
-            <Menu />
-          </div>
-        </div>
       </div>
     );
   };
 
+  const ActiveMenu =
+    openMenu === "shop" ? ShopMenu : openMenu === "coa" ? CoaMenu : openMenu === "about" ? AboutMenu : null;
+
   return (
     <header
       onMouseLeave={() => setOpenMenu(null)}
-      className={`sticky top-0 z-40 transition-all duration-300 ${
+      className={`sticky top-0 z-40 relative transition-all duration-300 ${
         scrolled || openMenu
           ? "bg-background/95 backdrop-blur-md border-b border-white/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
           : "bg-background/60 backdrop-blur-sm border-b border-transparent"
@@ -244,6 +234,20 @@ export function SiteHeader() {
           >
             Get Started
           </Link>
+        </div>
+      </div>
+      {/* Left-anchored mega-menu panel */}
+      <div
+        className={`absolute left-0 top-full transition-all duration-200 ease-out ${
+          openMenu
+            ? "opacity-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 -translate-y-1 pointer-events-none"
+        }`}
+      >
+        <div className="pl-6 lg:pl-10 pt-3 pb-6">
+          <div className="rounded-3xl bg-background/95 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.85)] overflow-hidden">
+            {ActiveMenu && <ActiveMenu />}
+          </div>
         </div>
       </div>
     </header>
