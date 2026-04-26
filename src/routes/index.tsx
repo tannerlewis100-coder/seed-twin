@@ -271,12 +271,13 @@ function Testing() {
             <span className="h-px w-8 bg-brand-gold/40" />
           </div>
           <h2 className="font-display text-4xl md:text-5xl leading-tight text-foreground">
-            We Test What Others <span className="italic text-brand-gold">Skip</span>
+            <RevealText text="We Test What Others " />
+            <span className="italic text-brand-gold"><RevealText text="Skip" delay={250} /></span>
           </h2>
-          <p className="mt-4 text-foreground/55">
+          <RevealOnScroll as="p" delay={200} className="mt-4 text-foreground/55">
             Every batch undergoes 5 independent lab tests. Full COAs published publicly — no login
             required.
-          </p>
+          </RevealOnScroll>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
           {testingPanels.map((card) => (
@@ -327,15 +328,14 @@ function CoaBand() {
             </span>
           </div>
           <h2 className="font-display text-4xl md:text-5xl text-foreground leading-tight">
-            Every Batch Has a COA.
-            <br />
-            <span className="italic text-brand-gold">No Exceptions.</span>
+            <RevealText text={"Every Batch Has a COA.\n"} />
+            <span className="italic text-brand-gold"><RevealText text="No Exceptions." delay={300} /></span>
           </h2>
-          <p className="mt-6 text-foreground/55 max-w-lg">
+          <RevealOnScroll as="p" delay={250} className="mt-6 text-foreground/55 max-w-lg">
             We don't just claim "third-party tested." We publish the actual data — batch-specific
             Certificates of Analysis with full 5-panel results — publicly available, no login
             required.
-          </p>
+          </RevealOnScroll>
           <ul className="mt-8 space-y-3.5">
             {checks.map((item) => (
               <li key={item} className="flex items-start gap-3">
@@ -380,12 +380,12 @@ function LabStandards() {
           <span className="h-px w-8 bg-brand-gold/60" />
         </div>
         <h2 className="font-display text-5xl md:text-6xl text-foreground mb-5">
-          ISO/IEC 17025 Tested
+          <RevealText text="ISO/IEC 17025 Tested" />
         </h2>
-        <p className="max-w-xl mx-auto text-foreground/65 leading-relaxed">
+        <RevealOnScroll as="p" delay={220} className="max-w-xl mx-auto text-foreground/65 leading-relaxed">
           Every Clarum batch is sent to an accredited, independent laboratory. Identity, purity,
           contaminants, and endotoxin — the full picture, not just a number.
-        </p>
+        </RevealOnScroll>
         <Link
           to="/about"
           className="inline-flex items-center gap-1 mt-9 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors"
@@ -402,11 +402,12 @@ function FinalCta() {
     <section className="bg-background">
       <div className="mx-auto max-w-5xl px-6 py-28 text-center">
         <h2 className="font-display text-5xl md:text-6xl text-foreground leading-[1.05]">
-          Research deserves <span className="italic text-brand-gold">real data.</span>
+          <RevealText text="Research deserves " />
+          <span className="italic text-brand-gold"><RevealText text="real data." delay={300} /></span>
         </h2>
-        <p className="mt-6 text-foreground/60 max-w-xl mx-auto">
+        <RevealOnScroll as="p" delay={250} className="mt-6 text-foreground/60 max-w-xl mx-auto">
           Verify every batch before you order. Browse the catalog or open the COA Library.
-        </p>
+        </RevealOnScroll>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
           <Link
             to="/shop"
