@@ -431,7 +431,6 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
-        <StatsBand />
         <FeaturedProducts />
         <Testing />
         <CoaBand />
