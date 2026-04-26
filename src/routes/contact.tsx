@@ -85,9 +85,10 @@ function ContactPage() {
         <section className="bg-card border-b border-white/5">
           <div className="mx-auto max-w-7xl px-6 py-20 grid lg:grid-cols-[1fr_1.6fr] gap-10">
             <aside className="space-y-4">
-              {contactInfo.map((c) => (
-                <div
+              {contactInfo.map((c, i) => (
+                <RevealOnScroll
                   key={c.label}
+                  delay={i * 100}
                   className="flex items-start gap-4 bg-background rounded-2xl border border-white/5 p-5"
                 >
                   <div className="w-10 h-10 rounded-full bg-brand-gold/10 border border-brand-gold/25 flex items-center justify-center shrink-0">
@@ -99,7 +100,7 @@ function ContactPage() {
                     </div>
                     <div className="text-sm text-foreground mt-0.5">{c.value}</div>
                   </div>
-                </div>
+                </RevealOnScroll>
               ))}
               <div className="bg-background rounded-2xl border border-white/5 p-5">
                 <div className="text-[10px] uppercase tracking-wider text-foreground/45 mb-2">

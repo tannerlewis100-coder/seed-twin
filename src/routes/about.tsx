@@ -74,9 +74,9 @@ function AboutPage() {
               </span>
             </div>
             <h2 className="font-display text-3xl lg:text-4xl text-foreground mb-7 leading-tight">
-              An industry that stopped caring about the people it served.
+              <RevealText text="An industry that stopped caring about the people it served." />
             </h2>
-            <div className="space-y-5 text-foreground/60 leading-[1.8]">
+            <RevealOnScroll as="div" delay={200} className="space-y-5 text-foreground/60 leading-[1.8]">
               <p>
                 We spent years as researchers on the other side of the counter — ordering peptides
                 and hoping the label matched what was actually in the vial. For a while, a handful
@@ -94,7 +94,7 @@ function AboutPage() {
                 instead of quality. The COAs that did exist were vague, generic, or recycled across
                 batches.
               </p>
-            </div>
+            </RevealOnScroll>
 
             <div className="my-14 h-px bg-gradient-to-r from-transparent via-brand-gold/25 to-transparent" />
 
@@ -105,10 +105,10 @@ function AboutPage() {
               </span>
             </div>
             <h2 className="font-display text-3xl lg:text-4xl text-foreground mb-7 leading-tight">
-              We didn't build Clarum to fill a gap.{" "}
-              <span className="italic text-brand-gold">We built it to fix one.</span>
+              <RevealText text="We didn't build Clarum to fill a gap. " />
+              <span className="italic text-brand-gold"><RevealText text="We built it to fix one." delay={400} /></span>
             </h2>
-            <div className="space-y-5 text-foreground/60 leading-[1.8]">
+            <RevealOnScroll as="div" delay={300} className="space-y-5 text-foreground/60 leading-[1.8]">
               <p>
                 We refused to accept that "good enough" was the standard. We didn't want to be
                 another vendor selling vials with a purity number and a trust-me attitude.
@@ -126,7 +126,7 @@ function AboutPage() {
                 Analysis is publicly available, batch-specific, and linked via QR code on every
                 order. If you want to verify what you're buying before you buy it — you can.
               </p>
-            </div>
+            </RevealOnScroll>
           </div>
         </section>
 
@@ -137,18 +137,18 @@ function AboutPage() {
                 Methodology
               </span>
               <h2 className="font-display text-3xl lg:text-4xl text-foreground mt-2">
-                The 5-Panel Standard
+                <RevealText text="The 5-Panel Standard" />
               </h2>
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-6">
-              {panels.map((c) => (
-                <div key={c.title} className="text-center group">
+              {panels.map((c, i) => (
+                <RevealOnScroll key={c.title} delay={i * 80} className="text-center group">
                   <div className="w-14 h-14 mx-auto mb-3 rounded-full border-2 border-brand-gold/40 flex items-center justify-center group-hover:border-brand-gold transition-colors">
                     <c.icon className="h-6 w-6 text-brand-gold" />
                   </div>
                   <h3 className="font-display text-lg text-foreground mb-1">{c.title}</h3>
                   <p className="text-xs text-foreground/55">{c.desc}</p>
-                </div>
+                </RevealOnScroll>
               ))}
             </div>
           </div>
@@ -161,18 +161,19 @@ function AboutPage() {
                 Values
               </span>
               <h2 className="font-display text-3xl lg:text-4xl text-foreground mt-2">
-                What We Stand For
+                <RevealText text="What We Stand For" />
               </h2>
             </div>
             <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-              {values.map((v) => (
-                <div
+              {values.map((v, i) => (
+                <RevealOnScroll
                   key={v.title}
+                  delay={i * 100}
                   className="bg-background rounded-2xl border border-white/5 p-6 hover:border-brand-gold/25 transition-colors"
                 >
                   <h3 className="font-display text-xl text-foreground mb-2">{v.title}</h3>
                   <p className="text-sm text-foreground/55">{v.desc}</p>
-                </div>
+                </RevealOnScroll>
               ))}
             </div>
             <div className="text-center mt-10">
