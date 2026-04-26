@@ -21,52 +21,76 @@ export function AnnouncementBar() {
 
 type MenuKey = "shop" | "coa" | "about" | null;
 
-function ShopMenu() {
-  const featured = peptides.slice(0, 4);
+type MenuRow = {
+  to: "/shop" | "/coa-library" | "/about" | "/faq" | "/contact" | "/disclaimer";
+  eyebrow?: string;
+  title: string;
+  desc?: string;
+  badge?: string;
+  iconBg?: string;
+  icon: React.ComponentType<{ className?: string }>;
+};
+
+function MenuTile({ row }: { row: MenuRow }) {
+  const Icon = row.icon;
   return (
-    <div className="grid grid-cols-12 gap-10 p-10">
-      <div className="col-span-3">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">Catalog</div>
-        <ul className="space-y-3 text-[15px]">
-          <li><Link to="/shop" className="hover:text-brand-gold transition-colors">All Peptides</Link></li>
-          <li><Link to="/shop" className="hover:text-brand-gold transition-colors">Healing &amp; Recovery</Link></li>
-          <li><Link to="/shop" className="hover:text-brand-gold transition-colors">Cognitive</Link></li>
-          <li><Link to="/shop" className="hover:text-brand-gold transition-colors">Longevity</Link></li>
-          <li><Link to="/shop" className="hover:text-brand-gold transition-colors">Metabolic</Link></li>
-        </ul>
+    <Link
+      to={row.to}
+      className="group flex items-center gap-4 px-4 py-3 rounded-2xl hover:bg-white/[0.06] transition-colors"
+    >
+      <div
+        className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border border-brand-gold/20 ${
+          row.iconBg ?? "bg-brand-gold/10"
+        }`}
+      >
+        <Icon className="h-5 w-5 text-brand-gold" />
       </div>
-      <div className="col-span-6">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">Featured Compounds</div>
-        <div className="grid grid-cols-2 gap-3">
-          {featured.map((p) => (
-            <Link
-              key={p.slug}
-              to="/shop"
-              className="group flex items-center gap-3 rounded-xl p-3 hover:bg-white/5 transition-colors"
-            >
-              <div className="w-10 h-10 rounded-lg bg-brand-gold/10 border border-brand-gold/20 flex items-center justify-center shrink-0">
-                <FlaskConical className="h-4 w-4 text-brand-gold" />
-              </div>
-              <div className="min-w-0">
-                <div className="font-display text-[15px] text-foreground group-hover:text-brand-gold transition-colors truncate">
-                  {p.name} <span className="text-foreground/45 text-[12px]">{p.size}</span>
-                </div>
-                <div className="text-[12px] text-foreground/55 truncate">{p.category}</div>
-              </div>
-            </Link>
-          ))}
+      <div className="min-w-0">
+        {row.eyebrow && (
+          <div className="text-[12px] text-foreground/45 leading-tight">{row.eyebrow}</div>
+        )}
+        <div className="flex items-center gap-2">
+          {row.badge && (
+            <span className="inline-block rounded-full bg-brand-gold/20 text-brand-gold text-[10px] font-semibold px-2 py-0.5 uppercase tracking-wider">
+              {row.badge}
+            </span>
+          )}
+          <div className="font-display text-[18px] text-foreground leading-tight group-hover:text-brand-gold transition-colors">
+            {row.title}
+          </div>
         </div>
+        {row.desc && (
+          <div className="text-[13px] text-foreground/55 mt-0.5 leading-snug">{row.desc}</div>
+        )}
       </div>
-      <div className="col-span-3 border-l border-white/10 pl-8">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">New Here?</div>
-        <p className="text-[13px] text-foreground/65 leading-relaxed mb-5">
-          Every batch ships with its own published Certificate of Analysis. See the data first.
-        </p>
+    </Link>
+  );
+}
+
+function ShopMenu() {
+  const featured = peptides.slice(0, 5);
+  return (
+    <div className="p-4 w-[380px]">
+      <div className="flex flex-col">
+        {featured.map((p, i) => (
+          <MenuTile
+            key={p.slug}
+            row={{
+              to: "/shop",
+              eyebrow: p.tag ?? p.category,
+              title: `${p.name} ${p.size}`,
+              badge: i === 2 ? "Save 25%" : undefined,
+              icon: FlaskConical,
+            }}
+          />
+        ))}
+      </div>
+      <div className="border-t border-white/10 mt-2 pt-4 px-4 pb-2">
         <Link
-          to="/coa-library"
-          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-gold hover:text-brand-gold-light"
+          to="/shop"
+          className="inline-flex items-center gap-2 text-[14px] font-medium text-foreground hover:text-brand-gold border-b border-foreground/30 hover:border-brand-gold pb-0.5 transition-colors"
         >
-          Browse COAs <ArrowRight className="h-3.5 w-3.5" />
+          Shop All Products <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     </div>
@@ -74,71 +98,53 @@ function ShopMenu() {
 }
 
 function CoaMenu() {
+  const rows: MenuRow[] = [
+    { to: "/coa-library", title: "All Batch Reports", desc: "Every COA, every compound.", icon: FileCheck },
+    { to: "/coa-library", title: "HPLC Purity", desc: "≥99% verified by lab.", icon: Beaker },
+    { to: "/coa-library", title: "Mass Spectrometry", desc: "Molecular identity confirmed.", icon: Microscope },
+    { to: "/coa-library", title: "Heavy Metals & Endotoxin", desc: "The tests most vendors skip.", icon: ShieldCheck },
+  ];
   return (
-    <div className="grid grid-cols-12 gap-10 p-10">
-      <div className="col-span-4">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">The Library</div>
-        <ul className="space-y-3 text-[15px]">
-          <li><Link to="/coa-library" className="hover:text-brand-gold transition-colors">All Batch Reports</Link></li>
-          <li><Link to="/coa-library" className="hover:text-brand-gold transition-colors">Latest Batches</Link></li>
-          <li><Link to="/coa-library" className="hover:text-brand-gold transition-colors">Search by Compound</Link></li>
-          <li><Link to="/coa-library" className="hover:text-brand-gold transition-colors">Verify by Batch #</Link></li>
-        </ul>
+    <div className="p-4 w-[380px]">
+      <div className="flex flex-col">
+        {rows.map((r) => (
+          <MenuTile key={r.title} row={r} />
+        ))}
       </div>
-      <div className="col-span-8 border-l border-white/10 pl-10">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">5-Panel Tests</div>
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-[14px]">
-          {[
-            { icon: Beaker, label: "HPLC Purity", desc: "≥99% verified" },
-            { icon: Microscope, label: "Mass Spectrometry", desc: "Identity confirmed" },
-            { icon: ShieldCheck, label: "Heavy Metals", desc: "ICP-MS screen" },
-            { icon: FileCheck, label: "Microbial & Yeast", desc: "Cleanliness verified" },
-            { icon: FlaskConical, label: "Endotoxin (LAL)", desc: "Most skip this" },
-          ].map((t) => (
-            <Link key={t.label} to="/coa-library" className="group flex items-start gap-3 rounded-lg p-2 hover:bg-white/5 transition-colors">
-              <t.icon className="h-4 w-4 text-brand-gold/80 mt-0.5 shrink-0" />
-              <div>
-                <div className="text-foreground group-hover:text-brand-gold transition-colors">{t.label}</div>
-                <div className="text-[12px] text-foreground/55">{t.desc}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
+      <div className="border-t border-white/10 mt-2 pt-4 px-4 pb-2 space-y-1">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-foreground/40 mb-2">Reference</div>
+        <Link to="/coa-library" className="block text-[14px] text-foreground/80 hover:text-brand-gold py-1 transition-colors">
+          How to Read a COA
+        </Link>
+        <Link to="/coa-library" className="block text-[14px] text-foreground/80 hover:text-brand-gold py-1 transition-colors">
+          Verify by Batch #
+        </Link>
       </div>
     </div>
   );
 }
 
 function AboutMenu() {
+  const rows: MenuRow[] = [
+    { to: "/about", eyebrow: "Approach", title: "Our Story", desc: "Why we built Clarum.", icon: BookOpen },
+    { to: "/about", eyebrow: "Standards", title: "Lab Partners", desc: "ISO/IEC 17025 accredited testing.", icon: ShieldCheck },
+    { to: "/about", eyebrow: "Method", title: "5-Panel Testing", desc: "What we test on every batch.", icon: Microscope },
+    { to: "/contact", eyebrow: "Get in Touch", title: "Contact", desc: "Questions about a batch?", icon: BookOpen },
+  ];
   return (
-    <div className="grid grid-cols-12 gap-10 p-10">
-      <div className="col-span-4">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">Company</div>
-        <ul className="space-y-3 text-[15px]">
-          <li><Link to="/about" className="hover:text-brand-gold transition-colors">Our Story</Link></li>
-          <li><Link to="/about" className="hover:text-brand-gold transition-colors">Lab Standards</Link></li>
-          <li><Link to="/about" className="hover:text-brand-gold transition-colors">Why Clarum</Link></li>
-          <li><Link to="/contact" className="hover:text-brand-gold transition-colors">Contact</Link></li>
-        </ul>
+    <div className="p-4 w-[380px]">
+      <div className="flex flex-col">
+        {rows.map((r) => (
+          <MenuTile key={r.title} row={r} />
+        ))}
       </div>
-      <div className="col-span-4 border-l border-white/10 pl-8">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">Resources</div>
-        <ul className="space-y-3 text-[15px]">
-          <li><Link to="/faq" className="hover:text-brand-gold transition-colors flex items-center gap-2"><BookOpen className="h-4 w-4 text-brand-gold/70" /> FAQ</Link></li>
-          <li><Link to="/disclaimer" className="hover:text-brand-gold transition-colors">Research Disclaimer</Link></li>
-          <li><Link to="/coa-library" className="hover:text-brand-gold transition-colors">How to Read a COA</Link></li>
-        </ul>
-      </div>
-      <div className="col-span-4 border-l border-white/10 pl-8">
-        <div className="text-[11px] uppercase tracking-[0.22em] text-brand-gold/80 mb-4">Built for Researchers</div>
-        <p className="text-[13px] text-foreground/65 leading-relaxed mb-5">
-          ISO/IEC 17025 accredited testing partners. Full panel, every batch, public data.
-        </p>
-        <Link
-          to="/about"
-          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-brand-gold hover:text-brand-gold-light"
-        >
-          Read our story <ArrowRight className="h-3.5 w-3.5" />
+      <div className="border-t border-white/10 mt-2 pt-4 px-4 pb-2 space-y-1">
+        <div className="text-[11px] uppercase tracking-[0.22em] text-foreground/40 mb-2">Reference</div>
+        <Link to="/faq" className="block text-[14px] text-foreground/80 hover:text-brand-gold py-1 transition-colors">
+          Frequently Asked Questions
+        </Link>
+        <Link to="/disclaimer" className="block text-[14px] text-foreground/80 hover:text-brand-gold py-1 transition-colors">
+          Research Use Disclaimer
         </Link>
       </div>
     </div>
