@@ -188,7 +188,7 @@ export function SiteHeader() {
   return (
     <header
       onMouseLeave={() => setOpenMenu(null)}
-      className={`sticky top-0 z-40 transition-all duration-300 ${
+      className={`sticky top-0 z-40 relative transition-all duration-300 ${
         scrolled || openMenu
           ? "bg-background/95 backdrop-blur-md border-b border-white/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
           : "bg-background/60 backdrop-blur-sm border-b border-transparent"
