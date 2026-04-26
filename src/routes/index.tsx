@@ -7,7 +7,7 @@ import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import island from "@/assets/island.jpg";
 import lifestylePour from "@/assets/lifestyle-pour.jpg";
-import { peptides } from "@/data/peptides";
+import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -149,7 +149,7 @@ function StatsBand() {
 }
 
 function FeaturedProducts() {
-  const featured = peptides.slice(0, 4);
+  const featured = featuredPeptides.slice(0, 4);
   // Per-card accent + product code, mirroring the seed.com lineup pattern
   const cardMeta: Record<string, { code: string; accent: string; accentText: string }> = {
     "bpc-157-10mg": {
