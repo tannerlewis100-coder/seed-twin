@@ -188,65 +188,84 @@ export function SiteHeader() {
   return (
     <header
       onMouseLeave={() => setOpenMenu(null)}
-      className={`sticky top-0 z-40 relative transition-all duration-300 ${
-        scrolled || openMenu
-          ? "bg-background/95 backdrop-blur-md border-b border-white/10 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)]"
-          : "bg-background/60 backdrop-blur-sm border-b border-transparent"
-      }`}
+      className="sticky top-0 z-40"
     >
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 h-20 flex items-center justify-between">
-        <div className="flex items-center gap-12 h-full">
-          <Link
-            to="/"
-            onMouseEnter={() => setOpenMenu(null)}
-            className="flex items-center gap-1.5 font-display text-[26px] tracking-tight text-foreground"
-          >
-            clarum
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
-          </Link>
-          <nav className="hidden md:flex items-center gap-9 h-full">
-            {navItem("shop", "Shop")}
-            {navItem("coa", "COA Library")}
-            {navItem("about", "About")}
-            <Link
-              to="/faq"
-              onMouseEnter={() => setOpenMenu(null)}
-              className="text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
-              activeProps={{ className: "text-brand-gold" }}
-            >
-              FAQ
-            </Link>
-          </nav>
-        </div>
-        <div
-          className="flex items-center gap-6"
-          onMouseEnter={() => setOpenMenu(null)}
-        >
-          <Link
-            to="/contact"
-            className="hidden md:inline-flex text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
-          >
-            Sign in
-          </Link>
-          <Link
-            to="/shop"
-            className="inline-flex items-center rounded-full bg-brand-gold text-brand-forest px-6 py-2.5 text-[14px] font-medium hover:bg-brand-gold-light transition-colors"
-          >
-            Get Started
-          </Link>
-        </div>
-      </div>
-      {/* Left-anchored mega-menu panel */}
+      {/* Outer wrapper handles the top-of-page vs scrolled transition */}
       <div
-        className={`absolute left-0 top-full transition-all duration-200 ease-out ${
-          openMenu
-            ? "opacity-100 translate-y-0 pointer-events-auto"
-            : "opacity-0 -translate-y-1 pointer-events-none"
+        className={`relative transition-all duration-300 ease-out ${
+          scrolled || openMenu ? "px-3 sm:px-6 pt-3" : "px-0 pt-0"
         }`}
       >
-        <div className="pl-6 lg:pl-10 pt-3 pb-6">
-          <div className="rounded-3xl bg-background/95 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.85)] overflow-hidden">
-            {ActiveMenu && <ActiveMenu />}
+        <div
+          className={`relative mx-auto transition-all duration-300 ease-out ${
+            scrolled || openMenu
+              ? "max-w-5xl rounded-full bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
+              : "max-w-none rounded-none bg-background/70 backdrop-blur-sm border-b border-white/5"
+          }`}
+        >
+          <div
+            className={`flex items-center justify-between transition-all duration-300 ${
+              scrolled || openMenu
+                ? "h-14 px-5 sm:px-7"
+                : "h-20 px-6 lg:px-10 max-w-7xl mx-auto"
+            }`}
+          >
+            <div className="flex items-center gap-8 lg:gap-12 h-full">
+              <Link
+                to="/"
+                onMouseEnter={() => setOpenMenu(null)}
+                className="flex items-center gap-1.5 font-display text-[22px] lg:text-[26px] tracking-tight text-foreground"
+              >
+                clarum
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
+              </Link>
+              <nav className="hidden md:flex items-center gap-7 lg:gap-9 h-full">
+                {navItem("shop", "Shop")}
+                {navItem("coa", "COA Library")}
+                {navItem("about", "About")}
+                <Link
+                  to="/faq"
+                  onMouseEnter={() => setOpenMenu(null)}
+                  className="text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
+                  activeProps={{ className: "text-brand-gold" }}
+                >
+                  FAQ
+                </Link>
+              </nav>
+            </div>
+            <div
+              className="flex items-center gap-5 lg:gap-6"
+              onMouseEnter={() => setOpenMenu(null)}
+            >
+              <Link
+                to="/contact"
+                className="hidden md:inline-flex text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
+              >
+                Sign in
+              </Link>
+              <Link
+                to="/shop"
+                className={`inline-flex items-center rounded-full bg-brand-gold text-brand-forest text-[14px] font-medium hover:bg-brand-gold-light transition-all ${
+                  scrolled || openMenu ? "px-5 py-2" : "px-6 py-2.5"
+                }`}
+              >
+                Get Started
+              </Link>
+            </div>
+          </div>
+          {/* Left-anchored mega-menu panel */}
+          <div
+            className={`absolute left-0 top-full transition-all duration-200 ease-out ${
+              openMenu
+                ? "opacity-100 translate-y-0 pointer-events-auto"
+                : "opacity-0 -translate-y-1 pointer-events-none"
+            }`}
+          >
+            <div className="pl-4 sm:pl-6 pt-3 pb-6">
+              <div className="rounded-3xl bg-background/95 backdrop-blur-2xl border border-white/10 shadow-[0_24px_60px_-12px_rgba(0,0,0,0.85)] overflow-hidden">
+                {ActiveMenu && <ActiveMenu />}
+              </div>
+            </div>
           </div>
         </div>
       </div>
