@@ -1,63 +1,84 @@
 ## Goal
-Replicate the wgb.agency text-reveal-on-scroll effect: as a heading or paragraph enters the viewport, its words fade in (opacity 0 → 1) with a small upward translate, staggered word-by-word so the copy "writes itself in." Apply across all pages.
+Replace the current 8-product placeholder dataset with the full Clarum catalog (~70 products across 11 categories) from the sister project `Clarum Website Build`, and wire up real per-batch COA images into the existing COA Library layout.
 
-## Approach
-Pure CSS + IntersectionObserver — no animation library needed. Lightweight, SSR-safe, and respects `prefers-reduced-motion`.
+## 1. Expand the data layer (`src/data/peptides.ts`)
 
-## 1. New component: `src/components/RevealText.tsx`
-A reusable wrapper that splits its text content into spans per word and animates them on viewport entry.
+Rewrite this file to mirror the source-of-truth data model from the other project, while staying compatible with our current `shop.tsx`, `coa-library.tsx`, and `index.tsx` (Featured) consumers.
 
-- Props: `as` (h1/h2/p/span, default `span`), `text: string`, `className`, `stagger` (ms, default 35), `delay` (ms, default 0).
-- Splits `text` on whitespace; wraps each word in `<span class="reveal-word">` with inline `style={{ transitionDelay: ... }}`. Preserves whitespace via inline-block + space.
-- Wrapper span uses a `ref` + `IntersectionObserver` (threshold ~0.2, `rootMargin: "0px 0px -10% 0px"`). On intersect, adds `data-revealed="true"` and disconnects the observer (one-shot).
-- If `prefers-reduced-motion: reduce`, mounts already-revealed (no animation).
+New shape:
 
-## 2. Animation styles in `src/styles.css`
-Add inside `@layer utilities`:
+```ts
+export type CoaData = {
+  purity: string;       // e.g. "99.5%"
+  assay: string;        // e.g. "5.00mg"
+  identity: "Confirmed";
+  heavyMetals: "<20ppb";
+  tamc: "0 CFU";
+  tymc: "0 CFU";
+  sku: string;
+  date: string;
+  form: string;
+};
 
-```css
-.reveal-word {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(0.6em);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform;
-}
-[data-revealed="true"] > .reveal-word {
-  opacity: 1;
-  transform: translateY(0);
-}
-@media (prefers-reduced-motion: reduce) {
-  .reveal-word { opacity: 1; transform: none; transition: none; }
-}
+export type Peptide = {
+  slug: string;            // unique id (was `id` in the other project)
+  name: string;
+  size: string;            // dosage
+  category: string;        // "Recovery" | "Growth Hormone" | ... | "Supplies"
+  price: number;
+  badge?: string;          // "BEST SELLER", "NEW", etc.
+  batch: string;           // coaBatch
+  purity: string;          // mirrors coa.purity for backwards-compat
+  description: string;     // pulled from descriptions.ts (with sensible fallback)
+  coa: CoaData;
+  coaImage?: string;       // /coa/<file>.png — present when we have an image
+  coaUrl?: string;         // external Drive folder fallback
+};
 ```
 
-## 3. Optional helper: `RevealOnScroll`
-A thin wrapper for non-text blocks (cards, images, buttons) that applies the same fade+rise on intersect — uses a single `.reveal-block` class with the same `data-revealed` toggle. Useful so we don't have to split text inside complex children.
+Add the full ~70-product list (Recovery, Growth Hormone, Longevity, Skin, Cognitive, Immune, Weight Management, NAD+, Sexual Health, Blends, Supplies). Keep `slug` as the source `id` so existing routes and the `key={p.slug}` loops keep working.
 
-## 4. Adoption across pages
-Replace headings and lead paragraphs in:
-- `src/routes/index.tsx` — Hero headline, FeaturedProducts heading + intro paragraph, any remaining section headers.
-- `src/routes/shop.tsx`, `coa-library.tsx`, `about.tsx`, `contact.tsx`, `disclaimer.tsx`, `faq.tsx` — page H1 + lead paragraph.
-- `src/components/SiteFooter.tsx` — leave static (small text, would feel noisy).
-- `src/components/SiteHeader.tsx` — leave static (already has its own transitions).
+Also export:
+- `categories` — the 11-category list with display names + slugs (used for the new filter bar).
+- `featuredPeptides` — the 8 IDs already curated on the homepage of the other project: `bpc-157-10mg`, `tb-500-10mg`, `epitalon-10mg`, `mots-c-10mg`, `ghk-cu-50mg`, `nad-500mg`, `klow-blend`, `wolverine-10mg`.
+- Keep `sampleCoa(p)` returning the same 5 rows, but now derived from `p.coa` (HPLC Purity = `coa.purity`, Mass Spec ID = `coa.identity`, Heavy Metals = `coa.heavyMetals`, Microbial = `coa.tamc`, Endotoxin = `< 1 EU/mg` static).
 
-For section cards / product tiles on the homepage and shop, wrap the row in `RevealOnScroll` so the cards rise together as the section enters view.
+Long descriptions get pulled from the other project's `descriptions.ts` keyed by base slug (e.g. `bpc-157`, `ghk-cu`). Variants share their parent description. Anything missing falls back to the existing short blurb pattern.
 
-## 5. Performance / safety
-- Observer disconnects after first reveal (no perpetual listeners).
-- No layout thrash: only opacity + transform.
-- SSR: component renders the words immediately in markup (visible to crawlers); the hidden state is applied via class only after mount, so search engines and no-JS users still see the text.
-- Won't break existing fonts, line-height, or wrapping (inline-block words wrap naturally; spaces preserved).
+## 2. Copy COA images into `/public/coa/`
+
+Use `cross_project--copy_project_asset` to bring over the ~50 PNG certificates from `Clarum Website Build/public/coa/` into our `public/coa/` directory. Files to copy (one call each):
+
+`BPC-157-(5mg).png`, `BPC-157-(10mg).png`, `BPC-157-(20mg).png`, `TB-500-(5mg).png`, `TB-500-(10mg).png`, `Wolverine-Blend-(5mg5mg).png`, `Wolverine-Blend-(10mg10mg).png`, `LL37.png`, `Sermorelin.png`, `CJC-1295-Without-DAC.png`, `CJC-1295-With-DAC.png`, `2X-Blend-CJCIpamorelin.png`, `Ipamorelin.png`, `GHRP-6-Acetate.png`, `Hexarelin-Acetate.png`, `GDF-8.png`, `ACE-031.png`, `Epitalon-(10mg).png`, `MOTS-c.png`, `SS-31-(10mg).png`, `SS-31-(50mg).png`, `FOXO4.png`, `GHK-Cu-(50mg).png`, `GHK-Cu-(100mg).png`, `GLOW.png`, `KLOW.png`, `Melanotan-2.png`, `Semax.png`, `Selank.png`, `DSIP-(5mg).png`, `DSIP-(15mg).png`, `Thymosin-Alpha-1.png`, `KPV.png`, `5-Amino-1MQ-(5mg).png`, `5-Amino-1MQ-(50mg).png`, `AOD-9604.png`, `Cagrilintide.png`, `Mazdutide.png`, `SLU-PP-332.png`, `NAD+-(500mg).png`, `NAD+-(1000mg).png`, `Glutathione.png`, `KissPeptin.png`, `4X-Blend.png`, `8X-Blend.png`, `B12.png`.
+
+Note: the source uses `NAD+-(500mg).png` literally — keep the `+` in the filename and URL-encode in the `coaImage` field (`/coa/NAD%2B-(500mg).png`).
+
+## 3. Update the COA Library page (`src/routes/coa-library.tsx`)
+
+Keep the existing dark "row card" layout the user already approved (gold accent header, 5-cell test grid on the right, RevealOnScroll stagger). Two enhancements:
+
+1. **Render the actual COA image** when `peptide.coaImage` exists — collapsed by default with a "View Certificate" button that expands a panel showing the PNG (white background, rounded, max-height ~700px, click-to-enlarge modal). Falls back to the current static row when no image is available, and shows a "Coming Soon" badge in place of "Pass" for the handful of products without lab data (`aicar`, `glp-3-rz`, `hcg`, `hmg`, `igf-1-lr3-*`, `igf-des`, `recon-water-*`).
+2. **Add a category filter bar + search input** above the list (chips styled with `brand-gold` accents to match site theme). Drives a memoized filter on the existing `peptides` array.
+
+The Download PDF button becomes "Open Full Report" linking to `coaUrl` when present (Google Drive), hidden otherwise.
+
+## 4. Update Shop (`src/routes/shop.tsx`)
+
+- Surface all ~70 products in the existing 4-column card grid.
+- Add a category dropdown/chip row using the new `categories` export so the catalog is browsable (currently there is no filter — with 70 items it needs one).
+- Show the `badge` ("BEST SELLER" etc.) when present, in the same gold pill style already used for the `tag` field.
+- No visual redesign of the card itself — just more data flowing in.
+
+## 5. Update homepage Featured section (`src/routes/index.tsx`)
+
+Swap the current `peptides.slice(0,4)` (or similar) for `featuredPeptides`, so the homepage showcases the curated 8 (BPC-157, TB-500, Epitalon, MOTS-c, GHK-Cu, NAD+, KLOW, Wolverine) that the other Clarum site already uses. Keep the Seed-style card design we just built.
+
+## 6. Verification
+
+- `bun run build` to confirm types are clean and every imported asset path resolves.
+- Spot-check 3 COA cards in the preview (one with image, one Drive-only, one Coming Soon) to confirm layout.
 
 ## Out of scope
-- Horizontal pinning, parallax, or sticky-stacked card effects (not requested).
-- Header scroll behavior — already implemented separately.
-
-## Files touched
-- `src/components/RevealText.tsx` (new)
-- `src/components/RevealOnScroll.tsx` (new)
-- `src/styles.css` (add ~15 lines of utility CSS)
-- `src/routes/index.tsx`, `shop.tsx`, `coa-library.tsx`, `about.tsx`, `contact.tsx`, `disclaimer.tsx`, `faq.tsx` (swap headings/paragraphs to use `RevealText`)
+- No e-commerce / cart wiring (the Shopify integration is not enabled here).
+- No new ProductDetail route — that can be a follow-up if you want individual product pages.
+- The `_v2` jpg product photos from the source aren't copied; product cards stay text-only as they are today.
