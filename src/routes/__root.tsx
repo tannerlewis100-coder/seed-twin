@@ -29,14 +29,14 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CLARUM — Batch-Tested Research Peptides" },
+      { title: "C Research Peptides" },
       {
         name: "description",
         content:
           "Analytically tested research peptides with full 5-panel independent lab testing. Every batch documented. For in vitro laboratory research use only.",
       },
       { name: "author", content: "Clarum" },
-      { property: "og:title", content: "CLARUM — Batch-Tested Research Peptides" },
+      { property: "og:title", content: "C Research Peptides" },
       {
         property: "og:description",
         content:
@@ -45,6 +45,12 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "C Research Peptides" },
+      { name: "description", content: "Clarum is a website that replicates the design and functionality of seed.com, showcasing product information and scientific data." },
+      { property: "og:description", content: "Clarum is a website that replicates the design and functionality of seed.com, showcasing product information and scientific data." },
+      { name: "twitter:description", content: "Clarum is a website that replicates the design and functionality of seed.com, showcasing product information and scientific data." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a75daf3e-744d-45dd-91d0-6f418bb793d8/id-preview-55250ded--c6f60515-8207-4bdd-b760-76cddc5ccb61.lovable.app-1777184128274.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/a75daf3e-744d-45dd-91d0-6f418bb793d8/id-preview-55250ded--c6f60515-8207-4bdd-b760-76cddc5ccb61.lovable.app-1777184128274.png" },
     ],
     links: [
       {
