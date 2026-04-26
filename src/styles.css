@@ -68,31 +68,34 @@
 }
 
 :root {
-  --radius: 1.75rem;
-  /* Seed brand palette */
-  --background: oklch(0.97 0.018 95);          /* warm cream #f5f1e6 */
-  --foreground: oklch(0.27 0.05 145);          /* deep forest */
-  --card: oklch(0.98 0.012 95);
-  --card-foreground: oklch(0.27 0.05 145);
-  --popover: oklch(0.98 0.012 95);
-  --popover-foreground: oklch(0.27 0.05 145);
-  --primary: oklch(0.32 0.07 148);             /* dark seed green */
-  --primary-foreground: oklch(0.97 0.018 95);
-  --secondary: oklch(0.93 0.04 110);
-  --secondary-foreground: oklch(0.27 0.05 145);
-  --muted: oklch(0.94 0.015 95);
-  --muted-foreground: oklch(0.45 0.04 145);
-  --accent: oklch(0.92 0.13 125);              /* lime accent banner */
-  --accent-foreground: oklch(0.27 0.05 145);
+  --radius: 1.25rem;
+  /* Clarum brand palette — black / gold / white */
+  --background: oklch(0.13 0 0);                /* near-black */
+  --foreground: oklch(0.98 0 0);                /* white */
+  --card: oklch(0.17 0 0);
+  --card-foreground: oklch(0.98 0 0);
+  --popover: oklch(0.17 0 0);
+  --popover-foreground: oklch(0.98 0 0);
+  --primary: oklch(0.82 0.14 85);               /* gold */
+  --primary-foreground: oklch(0.13 0 0);
+  --secondary: oklch(0.22 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.2 0 0);
+  --muted-foreground: oklch(0.7 0 0);
+  --accent: oklch(0.82 0.14 85);
+  --accent-foreground: oklch(0.13 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.88 0.02 110);
-  --input: oklch(0.88 0.02 110);
-  --ring: oklch(0.32 0.07 148);
-  --brand-cream: oklch(0.97 0.018 95);
-  --brand-forest: oklch(0.27 0.05 145);
-  --brand-forest-deep: oklch(0.22 0.05 148);
-  --brand-lime: oklch(0.92 0.13 125);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.82 0.14 85);
+  /* Repurposed brand tokens — same names so all existing classes keep resolving */
+  --brand-cream: oklch(0.98 0 0);               /* white */
+  --brand-forest: oklch(0.13 0 0);              /* black */
+  --brand-forest-deep: oklch(0.08 0 0);         /* true black hover */
+  --brand-lime: oklch(0.82 0.14 85);            /* gold */
+  --brand-gold: oklch(0.82 0.14 85);
+  --brand-gold-light: oklch(0.9 0.13 90);
   --font-display: "Fraunces", "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --chart-1: oklch(0.646 0.222 41.116);
