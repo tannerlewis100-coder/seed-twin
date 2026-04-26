@@ -145,60 +145,110 @@ function StatsBand() {
 }
 
 function FeaturedProducts() {
-  const featured = peptides.slice(0, 3);
+  const featured = peptides.slice(0, 4);
+  // Per-card accent + product code, mirroring the seed.com lineup pattern
+  const cardMeta: Record<string, { code: string; accent: string; accentText: string }> = {
+    "bpc-157-10mg": {
+      code: "BP–157™",
+      accent: "bg-brand-gold/90",
+      accentText: "text-brand-forest",
+    },
+    "tb-500-5mg": {
+      code: "TB–500™",
+      accent: "bg-foreground/15",
+      accentText: "text-foreground",
+    },
+    "ghk-cu-50mg": {
+      code: "GHK–Cu™",
+      accent: "bg-brand-gold/30",
+      accentText: "text-brand-gold",
+    },
+    "semax-30mg": {
+      code: "SMX–02™",
+      accent: "bg-foreground/15",
+      accentText: "text-foreground",
+    },
+  };
+
   return (
-    <section className="bg-card border-b border-white/5">
-      <div className="mx-auto max-w-7xl px-6 py-24">
-        <div className="max-w-2xl mb-14">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <span className="h-px w-8 bg-brand-gold/40" />
-            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
-              Catalog
-            </span>
+    <section className="bg-background border-b border-white/5">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24">
+        <div className="grid lg:grid-cols-12 gap-10 mb-14 items-end">
+          <div className="lg:col-span-7">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-foreground">
+              Verified purity starts
+              <br />
+              in the <span className="italic text-brand-gold">vial.</span>
+            </h2>
           </div>
-          <h2 className="font-display text-4xl md:text-5xl leading-tight text-foreground">
-            Featured Compounds
-          </h2>
-          <p className="mt-4 text-foreground/55 max-w-md">
-            High-purity research peptides, analytically tested. Every product ships with a
-            batch-specific COA.
-          </p>
+          <div className="lg:col-span-5 lg:pb-2 flex lg:justify-end">
+            <div className="max-w-sm">
+              <p className="text-foreground/60 leading-relaxed">
+                Formulations backed by independent 5-panel lab testing — HPLC, mass spec, heavy
+                metals, microbial, and endotoxin.
+              </p>
+              <Link
+                to="/shop"
+                className="inline-flex items-center gap-1.5 mt-5 text-sm font-medium text-brand-gold border-b border-brand-gold/50 hover:border-brand-gold pb-0.5 transition-colors"
+              >
+                Shop All <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {featured.map((p) => (
-            <Link
-              key={p.slug}
-              to="/shop"
-              className="group bg-background rounded-3xl p-6 flex flex-col border border-white/5 hover:border-brand-gold/30 hover:-translate-y-1 transition-all duration-300"
-            >
-              {p.tag && (
-                <span className="text-[10px] uppercase tracking-wider font-bold text-brand-gold/80">
-                  {p.tag}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {featured.map((p) => {
+            const meta = cardMeta[p.slug] ?? {
+              code: p.name.toUpperCase(),
+              accent: "bg-foreground/15",
+              accentText: "text-foreground",
+            };
+            return (
+              <Link
+                key={p.slug}
+                to="/shop"
+                className="group relative bg-brand-forest rounded-3xl px-5 pt-5 pb-7 flex flex-col border border-white/5 hover:border-brand-gold/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              >
+                {/* Top tag pill */}
+                <span
+                  className={`self-start rounded-full px-3 py-1 text-[10px] uppercase tracking-wider font-semibold ${meta.accent} ${meta.accentText}`}
+                >
+                  {p.tag ?? p.category}
                 </span>
-              )}
-              <div className="my-6">
-                <CoaCard peptide={p} variant="mini" />
-              </div>
-              <div className="font-display text-2xl text-foreground">
-                {p.name} <span className="text-foreground/50 text-base">({p.size})</span>
-              </div>
-              <div className="text-sm text-foreground/55 mt-1">{p.category}</div>
-              <div className="mt-5 flex items-center justify-between text-sm">
-                <span className="text-foreground/70">${p.price.toFixed(2)}</span>
-                <span className="rounded-full border border-brand-gold/30 text-brand-gold px-3 py-1 group-hover:bg-brand-gold group-hover:text-brand-forest transition-colors">
-                  View COA
+
+                {/* Product code chip */}
+                <div className="mt-8 flex justify-center">
+                  <span className="rounded-full border border-foreground/30 px-4 py-1 text-[11px] tracking-wider text-foreground/85 font-medium">
+                    {meta.code}
+                  </span>
+                </div>
+
+                {/* Large product name */}
+                <h3 className="mt-3 text-center font-display text-2xl md:text-[26px] text-foreground leading-tight min-h-[64px]">
+                  {p.name}
+                  <br />
+                  <span className="text-foreground/70">{p.size}</span>
+                </h3>
+
+                {/* Vial visual */}
+                <div className="mt-6 mb-7 flex justify-center">
+                  <CoaCard peptide={p} variant="mini" />
+                </div>
+
+                {/* Shop Now pill */}
+                <span className="mx-auto inline-flex items-center justify-center rounded-full bg-brand-forest-deep border border-brand-gold/30 text-foreground px-7 py-3 text-sm font-medium group-hover:bg-brand-gold group-hover:text-brand-forest group-hover:border-brand-gold transition-colors">
+                  Shop Now
                 </span>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Link
-            to="/shop"
-            className="inline-flex items-center gap-1 rounded-full border border-brand-gold/40 text-brand-gold px-7 py-3.5 text-sm font-medium hover:bg-brand-gold/10 transition-colors"
-          >
-            View Full Catalog <ArrowRight className="h-4 w-4" />
-          </Link>
+
+                {/* Starting price */}
+                <p className="mt-4 text-center text-[13px] text-foreground/55">
+                  Starting at{" "}
+                  <span className="text-foreground/85">${p.price.toFixed(2)}</span> per vial
+                </p>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>
