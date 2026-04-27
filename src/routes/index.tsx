@@ -1,11 +1,33 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Check, FlaskConical, Atom, Shield, Bug, Syringe } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  FlaskConical,
+  Atom,
+  Shield,
+  Bug,
+  Syringe,
+  FileText,
+} from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
-import island from "@/assets/island.jpg";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+  CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import capsuleMacro from "@/assets/capsule-macro.jpg";
+import duoJars from "@/assets/duo-jars.jpg";
+import heroCapsule from "@/assets/hero-capsule.jpg";
 import lifestylePour from "@/assets/lifestyle-pour.jpg";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
@@ -21,10 +43,7 @@ export const Route = createFileRoute("/")({
         content:
           "Analytically tested research peptides with full 5-panel independent lab testing — HPLC, mass spec, heavy metals, microbial, and endotoxin. Every batch documented. For in vitro laboratory research use only.",
       },
-      {
-        property: "og:title",
-        content: "CLARUM — Nothing Hidden. Everything Tested.",
-      },
+      { property: "og:title", content: "CLARUM — Nothing Hidden. Everything Tested." },
       {
         property: "og:description",
         content:
@@ -34,12 +53,292 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+/* ---------------- Hero ---------------- */
+
+function Hero() {
+  const featured = peptides[0];
+  return (
+    <section className="relative bg-background border-b border-white/[0.08]">
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-20 lg:pt-28 pb-24 lg:pb-32 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center min-h-[60vh]">
+        <div className="order-2 lg:order-1 lg:col-span-7 max-w-2xl">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/40 text-brand-gold/90 bg-transparent rounded-full px-3 py-1 mb-8 text-[11px] tracking-[0.18em] uppercase font-medium"
+          >
+            Independently lab-tested
+          </Badge>
+          <h1 className="font-display text-[44px] md:text-6xl lg:text-[80px] leading-[1.02] text-foreground tracking-[-0.02em]">
+            <RevealText text={"Nothing hidden.\nEverything tested."} stagger={55} />
+          </h1>
+          <RevealOnScroll
+            as="p"
+            delay={250}
+            className="mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
+          >
+            Every batch undergoes 5 independent lab tests — HPLC purity, mass
+            spectrometry, heavy metals, microbial, and endotoxin. Full COAs
+            published publicly in our library.
+          </RevealOnScroll>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <Button
+              asChild
+              size="lg"
+              className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px]"
+            >
+              <Link to="/shop">Shop the Catalog</Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="lg"
+              className="rounded-full text-foreground hover:text-brand-gold hover:bg-transparent h-12 px-2 text-[14px]"
+            >
+              <Link to="/coa-library">
+                View COA Library <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+        <div className="order-1 lg:order-2 lg:col-span-5 flex justify-center lg:justify-end">
+          <CoaCard peptide={featured} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Stats band ---------------- */
+
 const heroStats = [
-  "8 Compounds",
-  "5 Tests Per Batch",
-  "100% COA Documented",
-  "≥99% HPLC Purity",
+  ["70+", "Compounds"],
+  ["5", "Tests Per Batch"],
+  ["100%", "COA Documented"],
+  ["≥99%", "HPLC Purity"],
 ];
+
+function StatsBand() {
+  return (
+    <section className="bg-brand-forest-deep border-b border-white/[0.08]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+        {heroStats.map(([num, label], i) => (
+          <RevealOnScroll key={label} delay={i * 80} className="text-center md:text-left">
+            <div className="font-display text-3xl md:text-4xl text-brand-gold tracking-[-0.02em]">
+              {num}
+            </div>
+            <div className="text-[11px] uppercase tracking-[0.2em] text-foreground/55 mt-1.5">
+              {label}
+            </div>
+          </RevealOnScroll>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Featured products (4-up shadcn Card grid) ---------------- */
+
+function FeaturedProducts() {
+  const featured = featuredPeptides.slice(0, 4);
+
+  return (
+    <section className="bg-background border-b border-white/[0.08]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
+        <div className="grid lg:grid-cols-12 gap-10 mb-16 items-end">
+          <div className="lg:col-span-7">
+            <Badge
+              variant="outline"
+              className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
+            >
+              The Catalog
+            </Badge>
+            <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+              <RevealText text={"Verified purity\nstarts in the vial."} />
+            </h2>
+          </div>
+          <div className="lg:col-span-5 lg:pb-3">
+            <RevealOnScroll
+              as="p"
+              delay={120}
+              className="text-foreground/60 leading-[1.6] max-w-md"
+            >
+              Each compound is backed by independent 5-panel lab testing — HPLC,
+              mass spec, heavy metals, microbial, and endotoxin. Verify the
+              batch before you order.
+            </RevealOnScroll>
+            <Button
+              asChild
+              variant="link"
+              className="mt-3 px-0 text-brand-gold hover:text-brand-gold-light"
+            >
+              <Link to="/shop">
+                Shop all compounds <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {featured.map((p, i) => (
+            <RevealOnScroll key={p.slug} delay={i * 80}>
+              <Card className="group h-full bg-zinc-950 border-white/10 rounded-2xl shadow-none hover:border-brand-gold/30 transition-colors duration-300 flex flex-col">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <Badge
+                      variant="secondary"
+                      className="bg-white/5 text-foreground/70 hover:bg-white/5 border border-white/10 rounded-full text-[10px] uppercase tracking-[0.15em] font-medium px-2.5"
+                    >
+                      {p.category}
+                    </Badge>
+                    <Badge className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] uppercase tracking-wider font-semibold">
+                      ● {p.purity}
+                    </Badge>
+                  </div>
+                  <CardTitle className="font-display text-[22px] text-foreground leading-tight tracking-[-0.01em] mt-2">
+                    {p.name}
+                  </CardTitle>
+                  <CardDescription className="text-foreground/50 text-[13px]">
+                    {p.size} · Batch {p.batch}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 pb-4">
+                  <CoaCard peptide={p} variant="mini" />
+                </CardContent>
+                <CardFooter className="flex items-center justify-between border-t border-white/[0.08] pt-4">
+                  <div className="text-[13px] text-foreground/60">
+                    From{" "}
+                    <span className="text-foreground/90 tabular-nums font-medium">
+                      ${p.price.toFixed(2)}
+                    </span>
+                  </div>
+                  <Button
+                    asChild
+                    size="sm"
+                    variant="ghost"
+                    className="rounded-full text-brand-gold hover:text-brand-gold-light hover:bg-brand-gold/5 px-3"
+                  >
+                    <Link to="/shop">
+                      Shop <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </CardFooter>
+              </Card>
+            </RevealOnScroll>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Quality & Transparency (image collage + checkmarks) ---------------- */
+
+function QualityCollage() {
+  const checks = [
+    "Batch-specific COA, not generic certificates",
+    "Independent third-party laboratory",
+    "Full 5-panel results, published publicly",
+    "Heavy metals & endotoxin — tests vendors skip",
+    "QR code on every order links to your batch",
+  ];
+  return (
+    <section className="bg-background border-b border-white/[0.08]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+        {/* Image collage */}
+        <div className="lg:col-span-6 grid grid-cols-12 grid-rows-6 gap-4 h-[520px]">
+          <RevealOnScroll className="col-span-7 row-span-4 overflow-hidden rounded-2xl border border-white/[0.08]">
+            <img
+              src={heroCapsule}
+              alt="Sealed research vial"
+              loading="lazy"
+              className="w-full h-full object-cover"
+            />
+          </RevealOnScroll>
+          <RevealOnScroll
+            delay={120}
+            className="col-span-5 row-span-3 overflow-hidden rounded-2xl border border-white/[0.08]"
+          >
+            <img
+              src={capsuleMacro}
+              alt="Macro capsule detail"
+              loading="lazy"
+              className="w-full h-full object-cover"
+            />
+          </RevealOnScroll>
+          <RevealOnScroll
+            delay={200}
+            className="col-span-5 row-span-3 overflow-hidden rounded-2xl border border-white/[0.08]"
+          >
+            <img
+              src={duoJars}
+              alt="Vial pair"
+              loading="lazy"
+              className="w-full h-full object-cover"
+            />
+          </RevealOnScroll>
+          <RevealOnScroll
+            delay={280}
+            className="col-span-7 row-span-2 overflow-hidden rounded-2xl border border-white/[0.08]"
+          >
+            <img
+              src={lifestylePour}
+              alt="Lab preparation"
+              loading="lazy"
+              className="w-full h-full object-cover"
+            />
+          </RevealOnScroll>
+        </div>
+
+        {/* Copy + checkmarks */}
+        <div className="lg:col-span-6">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
+          >
+            Quality &amp; Transparency
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[52px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText text={"We test what\nothers skip."} />
+          </h2>
+          <RevealOnScroll
+            as="p"
+            delay={250}
+            className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
+          >
+            We don't claim "third-party tested" — we publish the data. Every
+            batch ships with a Certificate of Analysis you can verify before you
+            ever break the seal.
+          </RevealOnScroll>
+          <ul className="mt-8 space-y-4">
+            {checks.map((item, i) => (
+              <RevealOnScroll
+                as="li"
+                key={item}
+                delay={i * 60}
+                className="flex items-start gap-3"
+              >
+                <span className="mt-0.5 w-5 h-5 rounded-full bg-brand-gold/10 border border-brand-gold/30 flex items-center justify-center shrink-0">
+                  <Check className="h-3 w-3 text-brand-gold" />
+                </span>
+                <span className="text-[15px] text-foreground/80 leading-[1.55]">
+                  {item}
+                </span>
+              </RevealOnScroll>
+            ))}
+          </ul>
+          <Button
+            asChild
+            size="lg"
+            className="mt-10 rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px]"
+          >
+            <Link to="/coa-library">View the COA Library</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- How it's tested (full-bleed grid background) ---------------- */
 
 const testingPanels = [
   {
@@ -52,247 +351,71 @@ const testingPanels = [
     icon: Atom,
     num: "02",
     title: "Mass Spectrometry",
-    desc: "LC-MS confirms molecular identity down to the atomic level. No substitutions.",
+    desc: "LC-MS confirms molecular identity at the atomic level. No substitutions.",
   },
   {
     icon: Shield,
     num: "03",
     title: "Heavy Metals",
-    desc: "ICP-MS screens arsenic, lead, mercury, and cadmium. Reported ND or flagged.",
+    desc: "ICP-MS screens arsenic, lead, mercury, and cadmium.",
   },
   {
     icon: Bug,
     num: "04",
     title: "Microbial & Yeast",
-    desc: "Total aerobic count, yeast, and mold screened to lab-cleanliness standards.",
+    desc: "Total aerobic count, yeast, and mold to lab-cleanliness standards.",
   },
   {
     icon: Syringe,
     num: "05",
     title: "Endotoxin (LAL)",
-    desc: "The test most peptide vendors skip entirely. We run it on every batch.",
+    desc: "The test most peptide vendors skip. We run it on every batch.",
   },
 ];
 
-function Hero() {
-  const featured = peptides[0];
+function HowTested() {
   return (
-    <section className="relative bg-background overflow-hidden">
-      <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-60" />
-      <div className="absolute top-1/3 -left-40 w-[600px] h-[600px] rounded-full bg-brand-gold/[0.05] blur-[140px]" />
-      <div className="absolute bottom-0 -right-40 w-[500px] h-[500px] rounded-full bg-brand-gold/[0.04] blur-[120px]" />
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-16 lg:pt-24 pb-28 lg:pb-36 grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
-        <div className="order-2 lg:order-1 max-w-xl">
-          <span className="inline-block rounded-full border border-brand-gold/40 px-3.5 py-1 text-[12px] tracking-wide text-brand-gold/90 mb-7">
-            BPC-157<sup className="text-[8px]">®</sup>  Research Peptide
-          </span>
-          <h1 className="font-display text-[44px] md:text-6xl lg:text-[76px] leading-[1.02] text-foreground">
-            <RevealText text={"Nothing hidden.\nEverything tested."} stagger={55} />
-          </h1>
+    <section className="relative bg-background gold-grid-texture border-b border-white/[0.08]">
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
+        <div className="max-w-3xl mb-16">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
+          >
+            How it's tested
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText text={"Five tests. Every batch.\nNo exceptions."} />
+          </h2>
           <RevealOnScroll
             as="p"
             delay={250}
-            className="mt-7 text-[15px] lg:text-[17px] text-foreground/60 leading-relaxed max-w-md"
+            className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            Our 5-panel independent lab testing verifies purity, identity, and safety on every
-            single batch — published publicly in our COA Library.
-          </RevealOnScroll>
-          <div className="mt-9 flex items-center gap-7">
-            <Link
-              to="/shop"
-              className="inline-flex items-center rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-[14px] font-medium hover:bg-brand-gold-light transition-colors"
-            >
-              Shop the Catalog
-            </Link>
-            <Link
-              to="/coa-library"
-              className="inline-flex items-center gap-1.5 text-[14px] font-medium text-foreground hover:text-brand-gold transition-colors border-b border-foreground/30 hover:border-brand-gold pb-0.5"
-            >
-              View COA Library <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-        <div className="order-1 lg:order-2 flex justify-center relative">
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-[420px] h-[420px] rounded-full border border-brand-gold/20" />
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-[520px] h-[520px] rounded-full border border-brand-gold/10" />
-          </div>
-          <div className="relative">
-            <CoaCard peptide={featured} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function StatsBand() {
-  return (
-    <section className="bg-brand-forest-deep border-y border-white/5">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-        {heroStats.map((s, i) => {
-          const [num, ...rest] = s.split(" ");
-          return (
-            <RevealOnScroll key={s} delay={i * 100} className="text-center md:text-left">
-              <div className="font-display text-3xl md:text-4xl text-brand-gold">{num}</div>
-              <div className="text-[12px] uppercase tracking-[0.18em] text-foreground/55 mt-1">
-                {rest.join(" ")}
-              </div>
-            </RevealOnScroll>
-          );
-        })}
-      </div>
-    </section>
-  );
-}
-
-function FeaturedProducts() {
-  const featured = featuredPeptides.slice(0, 4);
-  // Per-card accent + product code, mirroring the seed.com lineup pattern
-  const cardMeta: Record<string, { code: string; accent: string; accentText: string }> = {
-    "bpc-157-10mg": {
-      code: "BP–157™",
-      accent: "bg-brand-gold/90",
-      accentText: "text-brand-forest",
-    },
-    "tb-500-5mg": {
-      code: "TB–500™",
-      accent: "bg-foreground/15",
-      accentText: "text-foreground",
-    },
-    "ghk-cu-50mg": {
-      code: "GHK–Cu™",
-      accent: "bg-brand-gold/30",
-      accentText: "text-brand-gold",
-    },
-    "semax-30mg": {
-      code: "SMX–02™",
-      accent: "bg-foreground/15",
-      accentText: "text-foreground",
-    },
-  };
-
-  return (
-    <section className="bg-background border-b border-white/5">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24">
-        <div className="grid lg:grid-cols-12 gap-10 mb-14 items-end">
-          <div className="lg:col-span-7">
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-foreground">
-              <RevealText text={"Verified purity starts\nin the vial."} />
-            </h2>
-          </div>
-          <div className="lg:col-span-5 lg:pb-2 flex lg:justify-end">
-            <div className="max-w-sm">
-              <RevealOnScroll as="p" delay={120} className="text-foreground/60 leading-relaxed">
-                Formulations backed by independent 5-panel lab testing — HPLC, mass spec, heavy
-                metals, microbial, and endotoxin.
-              </RevealOnScroll>
-              <Link
-                to="/shop"
-                className="inline-flex items-center gap-1.5 mt-5 text-sm font-medium text-brand-gold border-b border-brand-gold/50 hover:border-brand-gold pb-0.5 transition-colors"
-              >
-                Shop All <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {featured.map((p) => {
-            const meta = cardMeta[p.slug] ?? {
-              code: p.name.toUpperCase(),
-              accent: "bg-foreground/15",
-              accentText: "text-foreground",
-            };
-            return (
-              <Link
-                key={p.slug}
-                to="/shop"
-                className="group relative bg-brand-forest rounded-3xl px-5 pt-5 pb-7 flex flex-col border border-white/5 hover:border-brand-gold/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden"
-              >
-                {/* Top tag pill */}
-                <span
-                  className={`self-start rounded-full px-3 py-1 text-[10px] uppercase tracking-wider font-semibold ${meta.accent} ${meta.accentText}`}
-                >
-                  {p.tag ?? p.category}
-                </span>
-
-                {/* Product code chip */}
-                <div className="mt-8 flex justify-center">
-                  <span className="rounded-full border border-foreground/30 px-4 py-1 text-[11px] tracking-wider text-foreground/85 font-medium">
-                    {meta.code}
-                  </span>
-                </div>
-
-                {/* Large product name */}
-                <h3 className="mt-3 text-center font-display text-2xl md:text-[26px] text-foreground leading-tight min-h-[64px]">
-                  {p.name}
-                  <br />
-                  <span className="text-foreground/70">{p.size}</span>
-                </h3>
-
-                {/* Vial visual */}
-                <div className="mt-6 mb-7 flex justify-center">
-                  <CoaCard peptide={p} variant="mini" />
-                </div>
-
-                {/* Shop Now pill */}
-                <span className="mx-auto inline-flex items-center justify-center rounded-full bg-brand-forest-deep border border-brand-gold/30 text-foreground px-7 py-3 text-sm font-medium group-hover:bg-brand-gold group-hover:text-brand-forest group-hover:border-brand-gold transition-colors">
-                  Shop Now
-                </span>
-
-                {/* Starting price */}
-                <p className="mt-4 text-center text-[13px] text-foreground/55">
-                  Starting at{" "}
-                  <span className="text-foreground/85">${p.price.toFixed(2)}</span> per vial
-                </p>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Testing() {
-  return (
-    <section className="relative bg-background gold-grid-texture overflow-hidden border-b border-white/5">
-      <div className="absolute top-1/3 -left-40 w-[400px] h-[400px] rounded-full bg-brand-gold/[0.03] blur-[100px]" />
-      <div className="relative mx-auto max-w-7xl px-6 py-24">
-        <div className="text-center mb-16 max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <span className="h-px w-8 bg-brand-gold/40" />
-            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
-              Quality & Transparency
-            </span>
-            <span className="h-px w-8 bg-brand-gold/40" />
-          </div>
-          <h2 className="font-display text-4xl md:text-5xl leading-tight text-foreground">
-            <RevealText text="We Test What Others " />
-            <span className="italic text-brand-gold"><RevealText text="Skip" delay={250} /></span>
-          </h2>
-          <RevealOnScroll as="p" delay={200} className="mt-4 text-foreground/55">
-            Every batch undergoes 5 independent lab tests. Full COAs published publicly — no login
-            required.
+            Each compound is sent to an independent ISO/IEC 17025 accredited
+            laboratory. We publish the full panel — not a summary, not a
+            screenshot, the complete report.
           </RevealOnScroll>
         </div>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
           {testingPanels.map((card, i) => (
-            <RevealOnScroll key={card.title} delay={i * 80} className="group relative">
-              <div className="absolute -inset-px rounded-2xl bg-gradient-to-b from-brand-gold/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-              <div className="relative bg-card border border-white/5 rounded-2xl p-6 text-center h-full transition-all duration-300 group-hover:border-brand-gold/30 group-hover:-translate-y-1">
-                <span className="text-[10px] font-bold text-brand-gold/40 tracking-widest">
-                  {card.num}
-                </span>
-                <div className="w-14 h-14 mx-auto my-4 rounded-full border border-brand-gold/30 flex items-center justify-center group-hover:border-brand-gold transition-colors">
-                  <card.icon className="h-6 w-6 text-brand-gold/80 group-hover:text-brand-gold transition-colors" />
-                </div>
-                <h3 className="font-display text-lg text-foreground mb-2">{card.title}</h3>
-                <p className="text-[11px] text-foreground/50 leading-relaxed">{card.desc}</p>
-              </div>
+            <RevealOnScroll key={card.title} delay={i * 70}>
+              <Card className="h-full bg-zinc-950 border-white/10 rounded-2xl shadow-none hover:border-brand-gold/30 transition-colors duration-300">
+                <CardContent className="p-6">
+                  <div className="text-[10px] font-semibold text-brand-gold/60 tracking-[0.2em]">
+                    {card.num}
+                  </div>
+                  <div className="mt-5 mb-5 w-11 h-11 rounded-full border border-brand-gold/30 flex items-center justify-center">
+                    <card.icon className="h-5 w-5 text-brand-gold" />
+                  </div>
+                  <h3 className="font-display text-[19px] text-foreground leading-tight tracking-[-0.01em]">
+                    {card.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] text-foreground/55 leading-[1.55]">
+                    {card.desc}
+                  </p>
+                </CardContent>
+              </Card>
             </RevealOnScroll>
           ))}
         </div>
@@ -301,126 +424,188 @@ function Testing() {
   );
 }
 
-function CoaBand() {
-  const samplePeptide = peptides.find((p) => p.slug === "ghk-cu-50mg") ?? peptides[0];
-  const checks = [
-    "Batch-specific COA, not generic certificates",
-    "Independent third-party laboratory",
-    "Full 5-panel results, published publicly",
-    "Heavy metals and endotoxin — tests most vendors skip",
-    "QR code on every order links to your batch's COA",
-  ];
+/* ---------------- COA Library teaser (4 floating preview cards) ---------------- */
+
+function CoaTeaser() {
+  const previewSlugs = ["bpc-157-10mg", "tb-500-10mg", "ghk-cu-50mg", "epitalon-10mg"];
+  const previews = previewSlugs
+    .map((s) => peptides.find((p) => p.slug === s))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
+
   return (
-    <section className="relative bg-card overflow-hidden border-b border-white/5">
-      <img
-        src={lifestylePour}
-        alt=""
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover opacity-[0.07] mix-blend-luminosity"
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-card via-card/90 to-card/60" />
-      <div className="relative mx-auto max-w-7xl px-6 py-24 grid lg:grid-cols-2 gap-14 items-center">
-        <div>
-          <div className="inline-flex items-center gap-2 mb-5">
-            <span className="h-px w-8 bg-brand-gold/60" />
-            <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
-              The COA Library
-            </span>
-          </div>
-          <h2 className="font-display text-4xl md:text-5xl text-foreground leading-tight">
-            <RevealText text={"Every Batch Has a COA.\n"} />
-            <span className="italic text-brand-gold"><RevealText text="No Exceptions." delay={300} /></span>
-          </h2>
-          <RevealOnScroll as="p" delay={250} className="mt-6 text-foreground/55 max-w-lg">
-            We don't just claim "third-party tested." We publish the actual data — batch-specific
-            Certificates of Analysis with full 5-panel results — publicly available, no login
-            required.
-          </RevealOnScroll>
-          <ul className="mt-8 space-y-3.5">
-            {checks.map((item) => (
-              <li key={item} className="flex items-start gap-3">
-                <span className="mt-0.5 w-5 h-5 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0">
-                  <Check className="h-3 w-3 text-emerald-400" />
-                </span>
-                <span className="text-sm text-foreground/75 leading-relaxed">{item}</span>
-              </li>
-            ))}
-          </ul>
-          <Link
-            to="/coa-library"
-            className="inline-flex items-center mt-10 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors"
+    <section className="bg-background border-b border-white/[0.08]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32 grid lg:grid-cols-12 gap-12 items-start">
+        <div className="lg:col-span-5 lg:sticky lg:top-32">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
           >
-            View the COA Library
-          </Link>
+            COA Library
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText text={"Every batch.\nPublic record."} />
+          </h2>
+          <RevealOnScroll
+            as="p"
+            delay={250}
+            className="mt-6 text-foreground/60 leading-[1.6] max-w-md"
+          >
+            Browse the certificate of analysis for every batch we've ever
+            shipped. No login, no email gate — just data.
+          </RevealOnScroll>
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="mt-8 rounded-full border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 hover:text-brand-gold-light bg-transparent h-12 px-7 text-[14px]"
+          >
+            <Link to="/coa-library">
+              Open COA Library <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
-        <div className="flex justify-center">
-          <CoaCard peptide={samplePeptide} showLink={false} />
+        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {previews.map((p, i) => (
+            <RevealOnScroll
+              key={p.slug}
+              delay={i * 100}
+              className={i % 2 === 1 ? "sm:translate-y-10" : ""}
+            >
+              <Card className="bg-zinc-950 border-white/10 rounded-2xl shadow-none hover:border-brand-gold/30 transition-colors duration-300">
+                <CardContent className="p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2 text-[11px] text-foreground/50 uppercase tracking-[0.18em]">
+                      <FileText className="h-3.5 w-3.5" /> COA · {p.batch}
+                    </div>
+                    <Badge className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] uppercase tracking-wider font-semibold">
+                      Pass
+                    </Badge>
+                  </div>
+                  <div className="font-display text-[20px] text-foreground tracking-[-0.01em]">
+                    {p.name}
+                  </div>
+                  <div className="text-[13px] text-foreground/50 mb-4">{p.size}</div>
+                  <Separator className="bg-white/[0.08] mb-4" />
+                  <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[12px]">
+                    <dt className="text-foreground/45">HPLC Purity</dt>
+                    <dd className="text-foreground/90 text-right tabular-nums font-medium">
+                      {p.purity}
+                    </dd>
+                    <dt className="text-foreground/45">Mass Spec ID</dt>
+                    <dd className="text-foreground/90 text-right">Confirmed</dd>
+                    <dt className="text-foreground/45">Heavy Metals</dt>
+                    <dd className="text-foreground/90 text-right">{p.coa.heavyMetals}</dd>
+                    <dt className="text-foreground/45">Endotoxin</dt>
+                    <dd className="text-foreground/90 text-right">&lt; 1 EU/mg</dd>
+                  </dl>
+                </CardContent>
+              </Card>
+            </RevealOnScroll>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-function LabStandards() {
+/* ---------------- Testimonials (Card grid) ---------------- */
+
+const testimonials = [
+  {
+    quote:
+      "The fact that I can verify the exact batch I received against an actual lab report — that alone is worth switching vendors.",
+    name: "Dr. M. Reyes",
+    title: "Independent Researcher",
+  },
+  {
+    quote:
+      "Most vendors hand-wave on endotoxin. Clarum publishes the LAL number on every single batch. That's the standard the industry should hold.",
+    name: "K. Larsen",
+    title: "Lab Director",
+  },
+  {
+    quote:
+      "Clean reports, consistent purity across batches, and the COAs are easy to read. Exactly what an analytical workflow needs.",
+    name: "S. Whitfield",
+    title: "Bench Scientist",
+  },
+];
+
+function Testimonials() {
   return (
-    <section className="relative bg-brand-forest-deep overflow-hidden border-b border-white/5">
-      <img
-        src={island}
-        alt=""
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover opacity-25"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-brand-forest-deep via-brand-forest-deep/85 to-brand-forest-deep/70" />
-      <div className="relative mx-auto max-w-7xl px-6 py-28 text-center">
-        <div className="inline-flex items-center gap-2 mb-5 justify-center">
-          <span className="h-px w-8 bg-brand-gold/60" />
-          <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
-            Lab Standards
-          </span>
-          <span className="h-px w-8 bg-brand-gold/60" />
+    <section className="bg-background border-b border-white/[0.08]">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
+        <div className="max-w-2xl mb-14">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
+          >
+            Researcher voices
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl text-foreground leading-[1.05] tracking-[-0.02em]">
+            <RevealText text={"Trusted by people\nwho read the data."} />
+          </h2>
         </div>
-        <h2 className="font-display text-5xl md:text-6xl text-foreground mb-5">
-          <RevealText text="ISO/IEC 17025 Tested" />
-        </h2>
-        <RevealOnScroll as="p" delay={220} className="max-w-xl mx-auto text-foreground/65 leading-relaxed">
-          Every Clarum batch is sent to an accredited, independent laboratory. Identity, purity,
-          contaminants, and endotoxin — the full picture, not just a number.
-        </RevealOnScroll>
-        <Link
-          to="/about"
-          className="inline-flex items-center gap-1 mt-9 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors"
-        >
-          Read our story <ArrowRight className="h-4 w-4" />
-        </Link>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {testimonials.map((t, i) => (
+            <RevealOnScroll key={t.name} delay={i * 80}>
+              <Card className="h-full bg-zinc-950 border-white/10 rounded-2xl shadow-none">
+                <CardContent className="p-7 flex flex-col h-full">
+                  <p className="font-display text-[19px] text-foreground/90 leading-[1.5] tracking-[-0.01em] flex-1">
+                    “{t.quote}”
+                  </p>
+                  <Separator className="my-6 bg-white/[0.08]" />
+                  <div>
+                    <div className="text-[14px] text-foreground font-medium">
+                      {t.name}
+                    </div>
+                    <div className="text-[12px] text-foreground/50 mt-0.5">
+                      {t.title}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </RevealOnScroll>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
+
+/* ---------------- CTA banner ---------------- */
 
 function FinalCta() {
   return (
-    <section className="bg-background">
-      <div className="mx-auto max-w-5xl px-6 py-28 text-center">
-        <h2 className="font-display text-5xl md:text-6xl text-foreground leading-[1.05]">
-          <RevealText text="Research deserves " />
-          <span className="italic text-brand-gold"><RevealText text="real data." delay={300} /></span>
+    <section className="bg-brand-forest-deep">
+      <div className="mx-auto max-w-5xl px-6 py-28 lg:py-32 text-center">
+        <h2 className="font-display text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.02] tracking-[-0.02em]">
+          <RevealText text={"Research deserves\nreal data."} />
         </h2>
-        <RevealOnScroll as="p" delay={250} className="mt-6 text-foreground/60 max-w-xl mx-auto">
-          Verify every batch before you order. Browse the catalog or open the COA Library.
+        <RevealOnScroll
+          as="p"
+          delay={250}
+          className="mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
+        >
+          Verify every batch before you order. Browse the catalog or open the
+          COA Library — it's all public.
         </RevealOnScroll>
-        <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link
-            to="/shop"
-            className="inline-flex items-center rounded-full bg-brand-gold text-brand-forest px-8 py-4 text-base font-medium hover:bg-brand-gold-light transition-colors"
+        <div className="mt-11 flex flex-wrap justify-center gap-3">
+          <Button
+            asChild
+            size="lg"
+            className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-8 text-[14px]"
           >
-            Shop the Catalog
-          </Link>
-          <Link
-            to="/coa-library"
-            className="inline-flex items-center rounded-full border border-brand-gold/40 text-brand-gold px-8 py-4 text-base font-medium hover:bg-brand-gold/10 transition-colors"
+            <Link to="/shop">Shop Catalog</Link>
+          </Button>
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="rounded-full border-white/20 text-foreground hover:bg-white/5 hover:text-brand-gold bg-transparent h-12 px-8 text-[14px]"
           >
-            Open the COA Library
-          </Link>
+            <Link to="/coa-library">Open COA Library</Link>
+          </Button>
         </div>
       </div>
     </section>
@@ -434,10 +619,12 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
+        <StatsBand />
         <FeaturedProducts />
-        <Testing />
-        <CoaBand />
-        <LabStandards />
+        <QualityCollage />
+        <HowTested />
+        <CoaTeaser />
+        <Testimonials />
         <FinalCta />
       </main>
       <SiteFooter />
