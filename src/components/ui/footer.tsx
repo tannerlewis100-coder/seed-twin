@@ -2,6 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
+import { Twitter, Linkedin, Instagram, Youtube, Mail } from "lucide-react";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
@@ -66,9 +67,11 @@ const sections: FooterSection[] = [
 ];
 
 const socials = [
-  { href: "#", label: "Twitter", icon: "T" },
-  { href: "#", label: "LinkedIn", icon: "L" },
-  { href: "#", label: "Email", icon: "@" },
+  { href: "#", label: "Twitter", Icon: Twitter },
+  { href: "#", label: "LinkedIn", Icon: Linkedin },
+  { href: "#", label: "Instagram", Icon: Instagram },
+  { href: "#", label: "YouTube", Icon: Youtube },
+  { href: "mailto:hello@clarum.com", label: "Email", Icon: Mail },
 ];
 
 function NavSection({ title, links }: FooterSection) {
@@ -96,11 +99,11 @@ function NavSection({ title, links }: FooterSection) {
 function SocialLink({
   href,
   label,
-  icon,
+  Icon,
 }: {
   href: string;
   label: string;
-  icon: string;
+  Icon: React.ComponentType<{ className?: string }>;
 }) {
   return (
     <motion.a
@@ -108,9 +111,9 @@ function SocialLink({
       aria-label={label}
       variants={socialVariants}
       whileHover={{ y: -2, scale: 1.05 }}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-foreground/70 text-xs font-medium hover:border-brand-gold/50 hover:text-brand-gold transition-colors"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-foreground/70 hover:border-brand-gold/50 hover:text-brand-gold hover:bg-brand-gold/5 transition-colors"
     >
-      {icon}
+      <Icon className="h-4 w-4" />
     </motion.a>
   );
 }
@@ -144,7 +147,7 @@ export default function StickyFooter() {
               {/* Top: brand + nav */}
               <div className="grid md:grid-cols-5 gap-10">
                 <motion.div variants={itemVariants} className="md:col-span-2 space-y-4">
-                  <div className="font-display text-2xl text-foreground flex items-center gap-1.5">
+                  <div className="font-display text-xl text-brand-gold flex items-center gap-1.5">
                     CLARUM
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold" />
                   </div>
