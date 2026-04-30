@@ -170,7 +170,7 @@ export default function StickyFooter() {
                 variants={itemVariants}
                 className="mt-auto pt-12 select-none"
               >
-                <div className="font-display text-[10vw] md:text-[7vw] leading-none tracking-tight text-brand-gold/20">
+                <div className="font-display text-[10vw] md:text-[7vw] leading-none tracking-tight text-brand-gold/70 drop-shadow-[0_0_40px_rgba(212,175,55,0.35)]">
                   CLARUM
                 </div>
               </motion.div>
