@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import capsuleMacro from "@/assets/capsule-macro.jpg";
 import duoJars from "@/assets/duo-jars.jpg";
 import heroCapsule from "@/assets/hero-capsule.jpg";
