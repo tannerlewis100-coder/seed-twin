@@ -157,7 +157,8 @@ function AboutMenu() {
 export function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<MenuKey>(null);
   const [scrolled, setScrolled] = useState(false);
-  const { user } = useAuth();
+  const auth = useAuth();
+  const user = auth?.user ?? null;
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
