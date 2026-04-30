@@ -110,10 +110,14 @@ function SocialLink({
       href={href}
       aria-label={label}
       variants={socialVariants}
-      whileHover={{ y: -2, scale: 1.05 }}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-foreground/70 hover:border-brand-gold/50 hover:text-brand-gold hover:bg-brand-gold/5 transition-colors"
+      whileHover={{ y: -4, scale: 1.15, rotate: -6 }}
+      whileTap={{ scale: 0.92 }}
+      transition={{ type: "spring", stiffness: 400, damping: 14 }}
+      className="group relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-gold/30 bg-brand-gold/5 text-brand-gold/80 hover:text-brand-forest-deep hover:border-brand-gold transition-colors duration-300 overflow-hidden"
     >
-      <Icon className="h-4 w-4" />
+      <span className="absolute inset-0 rounded-full bg-brand-gold scale-0 group-hover:scale-100 transition-transform duration-300 ease-out" />
+      <span className="absolute inset-0 rounded-full bg-brand-gold/40 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <Icon className="h-4 w-4 relative z-10" />
     </motion.a>
   );
 }
@@ -166,7 +170,7 @@ export default function StickyFooter() {
                 variants={itemVariants}
                 className="mt-auto pt-12 select-none"
               >
-                <div className="font-display text-[10vw] md:text-[7vw] leading-none tracking-tight text-brand-gold/20">
+                <div className="font-display text-[10vw] md:text-[7vw] leading-none tracking-tight text-brand-gold/70 drop-shadow-[0_0_40px_rgba(212,175,55,0.35)]">
                   CLARUM
                 </div>
               </motion.div>
