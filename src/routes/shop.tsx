@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import CoaCard from "@/components/CoaCard";
+
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { allPeptides, categories } from "@/data/peptides";
@@ -111,16 +111,12 @@ function ShopPage() {
                     to="/coa-library"
                     className="group/card relative cursor-pointer overflow-hidden rounded-3xl h-96 w-full flex flex-col justify-between p-5 border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
                   >
-                    {/* COA visual as background layer */}
-                    <div className="absolute inset-0 scale-110 transition-transform duration-700 group-hover/card:scale-125 opacity-90">
-                      <div className="absolute inset-0 bg-gradient-to-br from-brand-forest-deep via-background to-black" />
-                      <div className="absolute inset-6 flex items-center justify-center opacity-80">
-                        <CoaCard peptide={p} variant="mini" />
-                      </div>
-                    </div>
+                    {/* Background gradient */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-brand-forest-deep via-background to-black transition-transform duration-700 group-hover/card:scale-110" />
+                    <div className="absolute inset-0 gold-line-texture opacity-30 pointer-events-none" />
 
                     {/* Dark hover overlay */}
-                    <div className="absolute inset-0 bg-black/40 group-hover/card:bg-black/75 transition-colors duration-500" />
+                    <div className="absolute inset-0 bg-black/30 group-hover/card:bg-black/70 transition-colors duration-500" />
 
                     {/* Top meta row */}
                     <div className="relative z-10 flex items-center justify-between">
@@ -134,12 +130,12 @@ function ShopPage() {
 
                     {/* Bottom content */}
                     <div className="relative z-10">
-                      <div className="font-display text-2xl text-gray-50">
+                      <h3 className="text-xl font-semibold tracking-tight text-foreground leading-snug">
                         {p.name}
                         {p.size && (
-                          <span className="text-white/60 text-base"> ({p.size})</span>
+                          <span className="text-foreground/60 text-sm font-normal"> ({p.size})</span>
                         )}
-                      </div>
+                      </h3>
                       <p className="font-normal text-sm text-gray-100/90 my-3 leading-relaxed line-clamp-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500">
                         {p.description}
                       </p>
