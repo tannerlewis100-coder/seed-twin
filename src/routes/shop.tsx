@@ -109,34 +109,46 @@ function ShopPage() {
                 <RevealOnScroll key={p.slug} delay={Math.min(i * 40, 400)}>
                   <Link
                     to="/coa-library"
-                    className="group bg-background rounded-3xl p-6 flex flex-col h-full border border-white/5 hover:border-brand-gold/30 hover:-translate-y-1 transition-all duration-300"
+                    className="group/card relative cursor-pointer overflow-hidden rounded-3xl h-96 w-full flex flex-col justify-between p-5 border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] uppercase tracking-wider text-brand-gold/80 font-bold">
+                    {/* COA visual as background layer */}
+                    <div className="absolute inset-0 scale-110 transition-transform duration-700 group-hover/card:scale-125 opacity-90">
+                      <div className="absolute inset-0 bg-gradient-to-br from-brand-forest-deep via-background to-black" />
+                      <div className="absolute inset-6 flex items-center justify-center opacity-80">
+                        <CoaCard peptide={p} variant="mini" />
+                      </div>
+                    </div>
+
+                    {/* Dark hover overlay */}
+                    <div className="absolute inset-0 bg-black/40 group-hover/card:bg-black/75 transition-colors duration-500" />
+
+                    {/* Top meta row */}
+                    <div className="relative z-10 flex items-center justify-between">
+                      <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full border border-brand-gold/20">
                         {p.badge ?? p.category}
                       </span>
-                      <span className="text-[10px] text-foreground/40">{p.purity} HPLC</span>
-                    </div>
-                    <div className="my-6">
-                      <CoaCard peptide={p} variant="mini" />
-                    </div>
-                    <div className="font-display text-2xl text-foreground">
-                      {p.name}
-                      {p.size && (
-                        <>
-                          {" "}
-                          <span className="text-foreground/50 text-base">({p.size})</span>
-                        </>
-                      )}
-                    </div>
-                    <p className="text-xs text-foreground/55 mt-2 leading-relaxed line-clamp-2">
-                      {p.description}
-                    </p>
-                    <div className="mt-auto pt-5 flex items-center justify-between text-sm">
-                      <span className="text-foreground/80 font-medium">${p.price.toFixed(2)}</span>
-                      <span className="rounded-full border border-brand-gold/30 text-brand-gold px-3 py-1 group-hover:bg-brand-gold group-hover:text-brand-forest transition-colors">
-                        View COA
+                      <span className="text-[10px] text-white/70 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full">
+                        {p.purity} HPLC
                       </span>
+                    </div>
+
+                    {/* Bottom content */}
+                    <div className="relative z-10">
+                      <div className="font-display text-2xl text-gray-50">
+                        {p.name}
+                        {p.size && (
+                          <span className="text-white/60 text-base"> ({p.size})</span>
+                        )}
+                      </div>
+                      <p className="font-normal text-sm text-gray-100/90 my-3 leading-relaxed line-clamp-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500">
+                        {p.description}
+                      </p>
+                      <div className="flex items-center justify-between text-sm pt-2">
+                        <span className="text-white font-semibold">${p.price.toFixed(2)}</span>
+                        <span className="rounded-full border border-brand-gold/40 text-brand-gold px-3 py-1 text-xs group-hover/card:bg-brand-gold group-hover/card:text-brand-forest transition-colors">
+                          View COA
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 </RevealOnScroll>
