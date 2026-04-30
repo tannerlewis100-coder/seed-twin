@@ -1,7 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, FlaskConical, FileCheck, ShieldCheck, BookOpen, Beaker, Microscope } from "lucide-react";
+import { ArrowRight, FlaskConical, FileCheck, ShieldCheck, BookOpen, Beaker, Microscope, LogOut } from "lucide-react";
 import { useState, useEffect } from "react";
 import { peptides } from "@/data/peptides";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export function AnnouncementBar() {
   return (
@@ -154,6 +157,13 @@ function AboutMenu() {
 export function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<MenuKey>(null);
   const [scrolled, setScrolled] = useState(false);
+  const { user } = useAuth();
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) toast.error(error.message);
+    else toast.success("Signed out");
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -244,12 +254,22 @@ export function SiteHeader() {
                 : "h-full"
             }`}
           >
-            <Link
-              to="/contact"
-              className="hidden md:inline-flex text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
-            >
-              Sign in
-            </Link>
+            {user ? (
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="hidden md:inline-flex items-center gap-1.5 text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
+              >
+                <LogOut className="h-4 w-4" /> Sign out
+              </button>
+            ) : (
+              <Link
+                to="/sign-in"
+                className="hidden md:inline-flex text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
+              >
+                Sign in
+              </Link>
+            )}
             <Link
               to="/shop"
               className={`inline-flex items-center rounded-full bg-brand-gold text-brand-forest text-[14px] font-medium hover:bg-brand-gold-light transition-colors ${
