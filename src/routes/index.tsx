@@ -619,7 +619,7 @@ function Index() {
       <AnnouncementBar />
       <SiteHeader />
       <main>
-        <Hero />
+        <ParallaxHero />
         <StatsBand />
         <FeaturedProducts />
         <QualityCollage />
