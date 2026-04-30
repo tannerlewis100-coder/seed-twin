@@ -157,6 +157,13 @@ function AboutMenu() {
 export function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<MenuKey>(null);
   const [scrolled, setScrolled] = useState(false);
+  const { user } = useAuth();
+
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) toast.error(error.message);
+    else toast.success("Signed out");
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
