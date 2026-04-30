@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import capsuleMacro from "@/assets/capsule-macro.jpg";
 import duoJars from "@/assets/duo-jars.jpg";
 import heroCapsule from "@/assets/hero-capsule.jpg";
@@ -508,28 +509,7 @@ function CoaTeaser() {
   );
 }
 
-/* ---------------- Testimonials (Card grid) ---------------- */
-
-const testimonials = [
-  {
-    quote:
-      "The fact that I can verify the exact batch I received against an actual lab report — that alone is worth switching vendors.",
-    name: "Dr. M. Reyes",
-    title: "Independent Researcher",
-  },
-  {
-    quote:
-      "Most vendors hand-wave on endotoxin. Clarum publishes the LAL number on every single batch. That's the standard the industry should hold.",
-    name: "K. Larsen",
-    title: "Lab Director",
-  },
-  {
-    quote:
-      "Clean reports, consistent purity across batches, and the COAs are easy to read. Exactly what an analytical workflow needs.",
-    name: "S. Whitfield",
-    title: "Bench Scientist",
-  },
-];
+/* ---------------- Testimonials (Stagger) ---------------- */
 
 function Testimonials() {
   return (
@@ -546,28 +526,9 @@ function Testimonials() {
             <RevealText text={"Trusted by people\nwho read the data."} />
           </h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {testimonials.map((t, i) => (
-            <RevealOnScroll key={t.name} delay={i * 80}>
-              <Card className="h-full bg-zinc-950 border-white/10 rounded-2xl shadow-none">
-                <CardContent className="p-7 flex flex-col h-full">
-                  <p className="font-display text-[19px] text-foreground/90 leading-[1.5] tracking-[-0.01em] flex-1">
-                    “{t.quote}”
-                  </p>
-                  <Separator className="my-6 bg-white/[0.08]" />
-                  <div>
-                    <div className="text-[14px] text-foreground font-medium">
-                      {t.name}
-                    </div>
-                    <div className="text-[12px] text-foreground/50 mt-0.5">
-                      {t.title}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </RevealOnScroll>
-          ))}
-        </div>
+        <RevealOnScroll>
+          <StaggerTestimonials />
+        </RevealOnScroll>
       </div>
     </section>
   );
