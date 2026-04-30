@@ -167,7 +167,7 @@ export const StaggerTestimonials: React.FC<{ items?: Testimonial[] }> = ({
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden" style={{ height: 600 }}>
+    <div className="relative w-full overflow-hidden" style={{ height: 460 }}>
       {testimonialsList.map((testimonial, index) => {
         const position =
           testimonialsList.length % 2
