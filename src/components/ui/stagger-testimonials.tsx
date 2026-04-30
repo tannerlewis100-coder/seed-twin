@@ -135,7 +135,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 export const StaggerTestimonials: React.FC<{ items?: Testimonial[] }> = ({
   items = defaultTestimonials,
 }) => {
-  const [cardSize, setCardSize] = useState(365);
+  const [cardSize, setCardSize] = useState(300);
   const [testimonialsList, setTestimonialsList] = useState<Testimonial[]>(items);
 
   const handleMove = (steps: number) => {
