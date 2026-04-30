@@ -3,6 +3,7 @@
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { Twitter, Linkedin, Instagram, Youtube, Mail } from "lucide-react";
+import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
@@ -168,11 +169,15 @@ export default function StickyFooter() {
               {/* Wordmark */}
               <motion.div
                 variants={itemVariants}
-                className="mt-auto pt-12 select-none"
+                className="mt-auto pt-12 select-none flex items-center justify-center"
               >
-                <div className="font-display text-[10vw] md:text-[7vw] leading-none tracking-tight text-brand-gold/70 drop-shadow-[0_0_40px_rgba(212,175,55,0.35)]">
-                  CLARUM
-                </div>
+                <GooeyText
+                  texts={["CLARUM", "PURITY", "TESTED", "TRUSTED"]}
+                  morphTime={1.2}
+                  cooldownTime={1.5}
+                  className="h-[14vw] md:h-[10vw] w-full"
+                  textClassName="font-display !text-[10vw] md:!text-[7vw] leading-none tracking-tight text-brand-gold drop-shadow-[0_0_40px_rgba(212,175,55,0.45)]"
+                />
               </motion.div>
 
               {/* Bottom row */}
