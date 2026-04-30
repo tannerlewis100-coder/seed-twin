@@ -135,7 +135,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 export const StaggerTestimonials: React.FC<{ items?: Testimonial[] }> = ({
   items = defaultTestimonials,
 }) => {
-  const [cardSize, setCardSize] = useState(365);
+  const [cardSize, setCardSize] = useState(300);
   const [testimonialsList, setTestimonialsList] = useState<Testimonial[]>(items);
 
   const handleMove = (steps: number) => {
@@ -159,7 +159,7 @@ export const StaggerTestimonials: React.FC<{ items?: Testimonial[] }> = ({
   useEffect(() => {
     const updateSize = () => {
       const { matches } = window.matchMedia("(min-width: 640px)");
-      setCardSize(matches ? 365 : 290);
+      setCardSize(matches ? 300 : 240);
     };
     updateSize();
     window.addEventListener("resize", updateSize);
@@ -167,7 +167,7 @@ export const StaggerTestimonials: React.FC<{ items?: Testimonial[] }> = ({
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden" style={{ height: 600 }}>
+    <div className="relative w-full overflow-hidden" style={{ height: 460 }}>
       {testimonialsList.map((testimonial, index) => {
         const position =
           testimonialsList.length % 2
@@ -187,7 +187,7 @@ export const StaggerTestimonials: React.FC<{ items?: Testimonial[] }> = ({
         <button
           onClick={() => handleMove(-1)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center text-2xl transition-colors",
+            "flex h-11 w-11 items-center justify-center text-xl transition-colors",
             "bg-background border-2 border-white/10 text-foreground hover:bg-brand-gold hover:text-brand-forest-deep hover:border-brand-gold",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           )}
@@ -198,7 +198,7 @@ export const StaggerTestimonials: React.FC<{ items?: Testimonial[] }> = ({
         <button
           onClick={() => handleMove(1)}
           className={cn(
-            "flex h-14 w-14 items-center justify-center text-2xl transition-colors",
+            "flex h-11 w-11 items-center justify-center text-xl transition-colors",
             "bg-background border-2 border-white/10 text-foreground hover:bg-brand-gold hover:text-brand-forest-deep hover:border-brand-gold",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           )}

@@ -514,8 +514,8 @@ function CoaTeaser() {
 function Testimonials() {
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
-        <div className="max-w-2xl mb-14">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-20">
+        <div className="max-w-2xl mb-10">
           <Badge
             variant="outline"
             className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
