@@ -10,6 +10,7 @@ import {
   FileText,
 } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
+import { ParallaxHero } from "@/components/ParallaxHero";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
 import RevealText from "@/components/RevealText";
