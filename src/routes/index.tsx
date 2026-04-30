@@ -10,7 +10,6 @@ import {
   FileText,
 } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
-import { ParallaxHero } from "@/components/ParallaxHero";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
 import RevealText from "@/components/RevealText";
@@ -619,7 +618,7 @@ function Index() {
       <AnnouncementBar />
       <SiteHeader />
       <main>
-        <ParallaxHero />
+        <Hero />
         <StatsBand />
         <FeaturedProducts />
         <QualityCollage />
