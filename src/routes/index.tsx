@@ -417,9 +417,8 @@ function HowTested() {
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            Each compound is sent to an independent ISO/IEC 17025 accredited
-            laboratory. We publish the full panel — not a summary, not a
-            screenshot, the complete report.
+            Each batch is sent to an independent ISO/IEC 17025 accredited
+            laboratory. Here's the full panel we run — every time.
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
