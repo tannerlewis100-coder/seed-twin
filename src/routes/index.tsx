@@ -262,9 +262,8 @@ function QualityCollage() {
   const checks = [
     "Batch-specific COA, not generic certificates",
     "Independent third-party laboratory",
-    "Full 5-panel results, published publicly",
-    "Heavy metals & endotoxin — tests vendors skip",
     "QR code on every order links to your batch",
+    "Public COA library — verify before you order",
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
