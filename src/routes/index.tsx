@@ -605,8 +605,8 @@ function Index() {
         <Hero />
         <StatsBand />
         <FeaturedProducts />
-        <QualityCollage />
         <HowTested />
+        <QualityCollage />
         <CoaTeaser />
         <Testimonials />
         <FinalCta />
