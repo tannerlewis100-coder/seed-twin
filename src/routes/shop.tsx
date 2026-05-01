@@ -105,50 +105,68 @@ function ShopPage() {
               product{filtered.length !== 1 ? "s" : ""}
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {filtered.map((p, i) => (
-                <RevealOnScroll key={p.slug} delay={Math.min(i * 40, 400)}>
-                  <Link
-                    to="/coa-library"
-                    className="group/card relative cursor-pointer overflow-hidden rounded-3xl h-96 w-full flex flex-col justify-between p-5 border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
-                  >
-                    {/* Background gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-brand-forest-deep via-background to-black transition-transform duration-700 group-hover/card:scale-110" />
-                    <div className="absolute inset-0 gold-line-texture opacity-30 pointer-events-none" />
-
-                    {/* Dark hover overlay */}
-                    <div className="absolute inset-0 bg-black/30 group-hover/card:bg-black/70 transition-colors duration-500" />
-
-                    {/* Top meta row */}
-                    <div className="relative z-10 flex items-center justify-between">
-                      <span className="text-[10px] uppercase tracking-wider text-brand-gold font-bold bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full border border-brand-gold/20">
-                        {p.badge ?? p.category}
-                      </span>
-                      <span className="text-[10px] text-white/70 bg-black/40 backdrop-blur-sm px-2.5 py-1 rounded-full">
-                        {p.purity} HPLC
-                      </span>
-                    </div>
-
-                    {/* Bottom content */}
-                    <div className="relative z-10">
-                      <h3 className="text-xl font-semibold tracking-tight text-foreground leading-snug">
-                        {p.name}
-                        {p.size && (
-                          <span className="text-foreground/60 text-sm font-normal"> ({p.size})</span>
-                        )}
-                      </h3>
-                      <p className="font-normal text-sm text-gray-100/90 my-3 leading-relaxed line-clamp-2 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500">
-                        {p.description}
-                      </p>
-                      <div className="flex items-center justify-between text-sm pt-2">
-                        <span className="text-white font-semibold">${p.price.toFixed(2)}</span>
-                        <span className="rounded-full border border-brand-gold/40 text-brand-gold px-3 py-1 text-xs group-hover/card:bg-brand-gold group-hover/card:text-brand-forest transition-colors">
-                          View COA
+              {filtered.map((p, i) => {
+                const code = p.batch?.split("-").slice(-1)[0]?.replace(/\d+$/, "") || p.name.slice(0, 3).toUpperCase();
+                const shortCode = `${code}-${String(i + 1).padStart(2, "0")}`;
+                return (
+                  <RevealOnScroll key={p.slug} delay={Math.min(i * 40, 400)}>
+                    <Link
+                      to="/coa-library"
+                      className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
+                    >
+                      {/* Top-left badge */}
+                      <div className="absolute top-5 left-5 z-10">
+                        <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1.5 rounded-full">
+                          {p.badge ?? p.category}
                         </span>
                       </div>
-                    </div>
-                  </Link>
-                </RevealOnScroll>
-              ))}
+
+                      {/* Code pill */}
+                      <div className="relative z-10 mt-10 mb-4">
+                        <span className="inline-block text-xs tracking-wider text-foreground/80 border border-white/20 rounded-full px-4 py-1.5">
+                          {shortCode}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="relative z-10 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[80%]">
+                        {p.name}
+                      </h3>
+
+                      {/* Vial visual */}
+                      <div className="relative z-10 flex-1 flex items-center justify-center w-full my-4">
+                        <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
+                          {/* Cap */}
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
+                          <div className="absolute top-5 left-1/2 -translate-x-1/2 w-[5.5rem] h-2 bg-black/60 rounded-sm" />
+                          {/* Bottle */}
+                          <div className="absolute top-7 left-1/2 -translate-x-1/2 w-28 h-36 rounded-b-xl rounded-t-sm bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
+                            <div className="absolute inset-x-3 top-10 h-px bg-brand-gold/30" />
+                            <div className="absolute inset-x-0 top-12 text-center">
+                              <span className="text-[8px] tracking-[0.2em] text-brand-gold/80 font-semibold">CLARUM</span>
+                            </div>
+                            <div className="absolute inset-x-4 bottom-6 text-center">
+                              <span className="text-[7px] tracking-wider text-white/50 block">{shortCode} · {p.size}</span>
+                              <span className="text-[6px] tracking-wider text-white/30 block mt-0.5">RESEARCH USE ONLY</span>
+                            </div>
+                            <div className="absolute inset-y-0 right-2 w-2 bg-gradient-to-r from-transparent to-white/10" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Shop Now button */}
+                      <div className="relative z-10 w-full">
+                        <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
+                          Shop Now
+                        </div>
+                        <p className="mt-4 text-xs text-foreground/60">
+                          Starting at <span className="text-foreground/90 font-semibold">${p.price.toFixed(2)}</span>
+                        </p>
+                      </div>
+                    </Link>
+                  </RevealOnScroll>
+                );
+              })}
             </div>
             {filtered.length === 0 && (
               <p className="text-center text-foreground/40 py-20">
