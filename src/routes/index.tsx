@@ -262,9 +262,8 @@ function QualityCollage() {
   const checks = [
     "Batch-specific COA, not generic certificates",
     "Independent third-party laboratory",
-    "Full 5-panel results, published publicly",
-    "Heavy metals & endotoxin — tests vendors skip",
     "QR code on every order links to your batch",
+    "Public COA library — verify before you order",
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
@@ -323,16 +322,16 @@ function QualityCollage() {
             Quality &amp; Transparency
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[52px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"We test what\nothers skip."} />
+            <RevealText text={"Receipts,\nnot claims."} />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
-            We don't claim "third-party tested" — we publish the data. Every
-            batch ships with a Certificate of Analysis you can verify before you
-            ever break the seal.
+            We don't just say "third-party tested" — we publish the data. Every
+            batch ships with a Certificate of Analysis you can pull up before
+            you ever break the seal.
           </RevealOnScroll>
           <ul className="mt-8 space-y-4">
             {checks.map((item, i) => (
@@ -418,9 +417,8 @@ function HowTested() {
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            Each compound is sent to an independent ISO/IEC 17025 accredited
-            laboratory. We publish the full panel — not a summary, not a
-            screenshot, the complete report.
+            Each batch is sent to an independent ISO/IEC 17025 accredited
+            laboratory. Here's the full panel we run — every time.
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -607,8 +605,8 @@ function Index() {
         <Hero />
         <StatsBand />
         <FeaturedProducts />
-        <QualityCollage />
         <HowTested />
+        <QualityCollage />
         <CoaTeaser />
         <Testimonials />
         <FinalCta />
