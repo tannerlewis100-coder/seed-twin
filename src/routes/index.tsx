@@ -322,16 +322,16 @@ function QualityCollage() {
             Quality &amp; Transparency
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[52px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"We test what\nothers skip."} />
+            <RevealText text={"Receipts,\nnot claims."} />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
-            We don't claim "third-party tested" — we publish the data. Every
-            batch ships with a Certificate of Analysis you can verify before you
-            ever break the seal.
+            We don't just say "third-party tested" — we publish the data. Every
+            batch ships with a Certificate of Analysis you can pull up before
+            you ever break the seal.
           </RevealOnScroll>
           <ul className="mt-8 space-y-4">
             {checks.map((item, i) => (
