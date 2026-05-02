@@ -1,18 +1,29 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { X } from "lucide-react";
+import { X, Check } from "lucide-react";
 import promoVials from "@/assets/promo-vials.png";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "clarum_promo_dismissed";
+const REVEALED_KEY = "clarum_promo_revealed";
 const DELAY_MS = 4000;
+const PROMO_CODE = "CLARUM10";
+
+const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function PromoPopup() {
   const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (sessionStorage.getItem(STORAGE_KEY)) return;
+    if (localStorage.getItem(REVEALED_KEY)) {
+      // Already signed up before — don't pester them.
+      return;
+    }
 
     let timer: ReturnType<typeof setTimeout> | null = null;
     let triggered = false;
@@ -51,11 +62,35 @@ export function PromoPopup() {
 
   const copyCode = async () => {
     try {
-      await navigator.clipboard.writeText("CLARUM10");
-      toast.success("Copied CLARUM10");
+      await navigator.clipboard.writeText(PROMO_CODE);
+      toast.success(`Copied ${PROMO_CODE}`);
     } catch {
-      toast.error("Couldn't copy. Code is CLARUM10.");
+      toast.error(`Couldn't copy. Code is ${PROMO_CODE}.`);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!emailRx.test(trimmed)) {
+      toast.error("Enter a valid email.");
+      return;
+    }
+
+    setSubmitting(true);
+    const { error } = await supabase
+      .from("promo_signups")
+      .insert({ email: trimmed, source: "popup" });
+    setSubmitting(false);
+
+    // Duplicate email is fine. Still reveal the code.
+    if (error && error.code !== "23505") {
+      toast.error("Something broke. Try again.");
+      return;
+    }
+
+    localStorage.setItem(REVEALED_KEY, "1");
+    setRevealed(true);
   };
 
   if (!open) return null;
@@ -81,7 +116,7 @@ export function PromoPopup() {
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-black md:aspect-auto md:min-h-[460px]">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-black md:aspect-auto md:min-h-[480px]">
             <img
               src={promoVials}
               alt="Clarum research peptide vials"
@@ -93,44 +128,82 @@ export function PromoPopup() {
           </div>
 
           <div className="flex flex-col justify-center gap-5 p-8 md:p-10">
-            <div className="space-y-2">
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                Welcome
-              </p>
-              <h2 className="font-display text-4xl leading-tight text-foreground md:text-5xl">
-                10% off your first order.
-              </h2>
-            </div>
+            {!revealed ? (
+              <>
+                <div className="space-y-2">
+                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                    Welcome
+                  </p>
+                  <h2 className="font-display text-4xl leading-tight text-foreground md:text-5xl">
+                    10% off your first order.
+                  </h2>
+                </div>
 
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              Same vials. Same Eurofins panel out of Lancaster, Pennsylvania. A small
-              thank you for trying us first.
-            </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Drop your email. We'll send the code, plus a heads-up when new
+                  Eurofins COAs go live. No fluff, no daily blasts.
+                </p>
 
-            <button
-              onClick={copyCode}
-              className="group w-full rounded-md border-2 border-dashed border-primary/60 bg-primary/5 px-4 py-3.5 text-center font-mono text-lg tracking-[0.3em] text-foreground transition hover:border-primary hover:bg-primary/10"
-            >
-              CLARUM10
-              <span className="ml-2 text-xs tracking-normal text-muted-foreground group-hover:text-foreground">
-                (tap to copy)
-              </span>
-            </button>
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <input
+                    type="email"
+                    required
+                    autoFocus
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@email.com"
+                    className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    disabled={submitting}
+                  />
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="block w-full rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+                  >
+                    {submitting ? "Sending..." : "Reveal my code"}
+                  </button>
+                </form>
 
-            <Link
-              to="/promo"
-              onClick={close}
-              className="block w-full rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
-            >
-              See the offer
-            </Link>
+                <button
+                  onClick={close}
+                  className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+                >
+                  No thanks
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                    <Check className="h-4 w-4" /> You're in
+                  </div>
+                  <h2 className="font-display text-4xl leading-tight text-foreground md:text-5xl">
+                    Here's your code.
+                  </h2>
+                </div>
 
-            <button
-              onClick={close}
-              className="text-xs text-muted-foreground underline-offset-4 hover:underline"
-            >
-              No thanks
-            </button>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Use it at checkout. Good for 10% off your first order.
+                </p>
+
+                <button
+                  onClick={copyCode}
+                  className="group w-full rounded-md border-2 border-dashed border-primary/60 bg-primary/5 px-4 py-3.5 text-center font-mono text-lg tracking-[0.3em] text-foreground transition hover:border-primary hover:bg-primary/10"
+                >
+                  {PROMO_CODE}
+                  <span className="ml-2 text-xs tracking-normal text-muted-foreground group-hover:text-foreground">
+                    (tap to copy)
+                  </span>
+                </button>
+
+                <button
+                  onClick={close}
+                  className="block w-full rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+                >
+                  Start shopping
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
