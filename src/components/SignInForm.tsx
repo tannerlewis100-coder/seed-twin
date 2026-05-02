@@ -23,9 +23,9 @@ interface Testimonial {
 }
 
 const testimonials: Testimonial[] = [
-  { avatarSrc: "https://i.pravatar.cc/64?img=12", name: "Dr. Sarah Chen", handle: "@biopep_lab", text: "First vendor publishing raw HPLC data per batch. Real transparency." },
-  { avatarSrc: "https://i.pravatar.cc/64?img=33", name: "Marcus K.", handle: "@longevitynerd", text: "Independent COA before checkout. This is the standard now." },
-  { avatarSrc: "https://i.pravatar.cc/64?img=45", name: "Bryne Research", handle: "@brynelabs", text: "Re-ran their TB-500 in-house. Numbers matched exactly." },
+  { avatarSrc: "https://i.pravatar.cc/64?img=12", name: "Dr. Sarah Chen", handle: "@biopep_lab", text: "First vendor I've seen publishing raw HPLC traces per batch. Not a summary. The actual chromatogram." },
+  { avatarSrc: "https://i.pravatar.cc/64?img=33", name: "Marcus K.", handle: "@longevitynerd", text: "COA up before checkout. This should be the floor, not the ceiling." },
+  { avatarSrc: "https://i.pravatar.cc/64?img=45", name: "Bryne Research", handle: "@brynelabs", text: "Re-ran their TB-500 in-house. Numbers matched within 0.3%." },
 ];
 
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -123,8 +123,8 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
           </h1>
           <p className="animate-element animate-delay-200 mt-4 text-[15px] text-foreground/60 leading-relaxed">
             {isSignUp
-              ? "Get access to the COA library, batch records, and order history."
-              : "Access your COA library, order history, and batch records."}
+              ? "One account. COA library, batch records, order history."
+              : "Pick up where you left off. Orders, batches, the whole library."}
           </p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
@@ -227,7 +227,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
       <aside className="hidden lg:block relative flex-1 overflow-hidden">
         <img
           src={heroImg}
-          alt="Analytical chemistry lab — HPLC vials"
+          alt="Analytical chemistry lab. HPLC vials in a rack."
           className="animate-slide-right absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/30 to-transparent" />
