@@ -26,9 +26,9 @@ export const Route = createFileRoute("/about")({
 
 const values = [
   { title: "Transparency First", desc: "Every COA published. Every batch documented. Nothing behind a login." },
-  { title: "Science Over Marketing", desc: "We let the data speak. No influencer hype, no miracle claims." },
-  { title: "Beyond Purity", desc: "Most vendors stop at HPLC. We run 5 independent tests per batch." },
-  { title: "Built for Researchers", desc: "By people who understand what's at stake when quality fails." },
+  { title: "Science Over Marketing", desc: "We let the data speak. No influencer codes, no miracle claims." },
+  { title: "Beyond Purity", desc: "Most vendors stop at HPLC. We run five panels per batch." },
+  { title: "Built for Researchers", desc: "By people who know what's at stake when a reagent is off-spec." },
 ];
 
 const panels = [
