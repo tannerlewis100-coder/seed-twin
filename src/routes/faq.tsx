@@ -49,7 +49,7 @@ const faqs = [
   },
   {
     q: "What makes Clarum's testing different from other vendors?",
-    a: "Most vendors only test for purity via HPLC. Clarum runs a full 5-panel test on every batch: HPLC purity, mass spectrometry (LC-MS) identity, heavy metals (ICP-MS), microbial/yeast screening, and endotoxin (LAL). All results are published in our public COA Library.",
+    a: "Most vendors stop at HPLC. We send every batch to Eurofins in Lancaster, PA (ISO/IEC 17025 accredited) for the full 5-panel: HPLC purity, mass spec identity (LC-MS), heavy metals (ICP-MS), microbial and yeast counts, and endotoxin (LAL). The full report goes into the public COA library before the batch ships.",
   },
   {
     q: "Do you ship internationally?",
