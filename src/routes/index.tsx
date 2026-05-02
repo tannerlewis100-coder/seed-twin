@@ -267,9 +267,9 @@ function QualityCollage() {
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-20 items-center">
         {/* Image collage */}
-        <div className="lg:col-span-6 grid grid-cols-12 grid-rows-6 gap-4 h-[520px]">
+        <div className="lg:col-span-6 grid grid-cols-12 grid-rows-6 gap-3 sm:gap-4 h-[380px] sm:h-[460px] lg:h-[520px]">
           <RevealOnScroll className="col-span-7 row-span-4 overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={heroCapsule}
