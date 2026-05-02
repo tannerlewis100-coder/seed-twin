@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Analytically tested research peptides with full 5-panel independent lab testing — HPLC, mass spec, heavy metals, microbial, and endotoxin. Every batch documented. For in vitro laboratory research use only.",
+          "Research peptides with a 5-panel Certificate of Analysis on every batch: HPLC, mass spec, heavy metals, microbial, endotoxin. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "CLARUM — Nothing Hidden. Everything Tested." },
       {
