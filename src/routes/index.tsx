@@ -76,9 +76,9 @@ function Hero() {
             delay={250}
             className="mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
           >
-            Every batch undergoes 5 independent lab tests — HPLC purity, mass
-            spectrometry, heavy metals, microbial, and endotoxin. Full COAs
-            published publicly in our library.
+            Five tests on every batch. HPLC, mass spec, heavy metals, microbial,
+            endotoxin. The full report goes up in the COA library the same week
+            the batch ships.
           </RevealOnScroll>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button
