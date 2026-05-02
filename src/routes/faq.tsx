@@ -95,7 +95,7 @@ function FaqPage() {
         </section>
 
         <section className="bg-card">
-          <div className="mx-auto max-w-3xl px-6 py-20">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 py-14 md:py-20">
             <Accordion type="single" collapsible className="space-y-3">
               {faqs.map((f, i) => (
                 <RevealOnScroll key={f.q} delay={i * 60}>

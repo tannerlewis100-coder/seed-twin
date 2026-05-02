@@ -83,7 +83,7 @@ function ContactPage() {
         </section>
 
         <section className="bg-card border-b border-white/5">
-          <div className="mx-auto max-w-7xl px-6 py-20 grid lg:grid-cols-[1fr_1.6fr] gap-10">
+          <div className="mx-auto max-w-7xl px-5 sm:px-6 py-14 md:py-20 grid lg:grid-cols-[1fr_1.6fr] gap-10">
             <aside className="space-y-4">
               {contactInfo.map((c, i) => (
                 <RevealOnScroll

@@ -45,7 +45,7 @@ function DisclaimerPage() {
         </section>
 
         <section className="bg-card">
-          <div className="mx-auto max-w-3xl px-6 py-20 space-y-6 text-foreground/65 leading-[1.8]">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 py-14 md:py-20 space-y-6 text-foreground/65 leading-[1.8]">
             <RevealOnScroll as="p">
               All products sold by Clarum are intended strictly for in vitro laboratory research
               by qualified professionals. Products are{" "}

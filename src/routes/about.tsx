@@ -59,7 +59,7 @@ function AboutPage() {
         </section>
 
         <section className="bg-card border-b border-white/5 gold-grid-texture">
-          <div className="mx-auto max-w-3xl px-6 py-24">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 py-16 md:py-24">
             <div className="inline-flex items-center gap-2 mb-5">
               <span className="h-px w-8 bg-brand-gold/60" />
               <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
@@ -125,7 +125,7 @@ function AboutPage() {
         </section>
 
         <section className="bg-background border-b border-white/5">
-          <div className="mx-auto max-w-7xl px-6 py-20">
+          <div className="mx-auto max-w-7xl px-5 sm:px-6 py-14 md:py-20">
             <div className="text-center mb-12">
               <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
                 Methodology
@@ -149,7 +149,7 @@ function AboutPage() {
         </section>
 
         <section className="bg-card">
-          <div className="mx-auto max-w-3xl px-6 py-20">
+          <div className="mx-auto max-w-3xl px-5 sm:px-6 py-14 md:py-20">
             <div className="text-center mb-8">
               <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
                 Values
