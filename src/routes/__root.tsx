@@ -1,5 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
+import { PromoPopup } from "@/components/PromoPopup";
 
 import appCss from "../styles.css?url";
 
@@ -83,6 +84,7 @@ function RootComponent() {
   return (
     <>
       <Outlet />
+      <PromoPopup />
       <Toaster />
     </>
   );
