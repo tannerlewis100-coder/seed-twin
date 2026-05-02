@@ -13,7 +13,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Why we built Clarum: an industry built on shortcuts, vague claims, and unverifiable purity. We publish every COA, test every batch, and hide nothing.",
+          "Why we built Clarum. The vague COAs, the skipped endotoxin tests, and the 5-panel batch reports we publish in response.",
       },
       { property: "og:title", content: "About Clarum — Built on Transparency" },
       {
