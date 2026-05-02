@@ -564,22 +564,22 @@ function FinalCta() {
   return (
     <section className="bg-brand-forest-deep">
       <div className="mx-auto max-w-5xl px-5 sm:px-6 py-20 md:py-24 lg:py-32 text-center">
-        <h2 className="font-display text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.02] tracking-[-0.02em]">
+        <h2 className="font-display text-[40px] sm:text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.05] lg:leading-[1.02] tracking-[-0.02em]">
           <RevealText text={"Read the COA\nbefore you buy."} />
         </h2>
         <RevealOnScroll
           as="p"
           delay={250}
-          className="mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
+          className="mt-6 sm:mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
         >
           Every batch we've shipped since launch is up in the library. Open it,
           search a batch number, and check the numbers yourself.
         </RevealOnScroll>
-        <div className="mt-11 flex flex-wrap justify-center gap-3">
+        <div className="mt-9 sm:mt-11 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3">
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-8 text-[14px]"
+            className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-8 text-[14px] w-full sm:w-auto"
           >
             <Link to="/shop">Shop Catalog</Link>
           </Button>
@@ -587,7 +587,7 @@ function FinalCta() {
             asChild
             size="lg"
             variant="outline"
-            className="rounded-full border-white/20 text-foreground hover:bg-white/5 hover:text-brand-gold bg-transparent h-12 px-8 text-[14px]"
+            className="rounded-full border-white/20 text-foreground hover:bg-white/5 hover:text-brand-gold bg-transparent h-12 px-8 text-[14px] w-full sm:w-auto"
           >
             <Link to="/coa-library">Open COA Library</Link>
           </Button>
