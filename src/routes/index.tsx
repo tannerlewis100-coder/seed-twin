@@ -565,15 +565,15 @@ function FinalCta() {
     <section className="bg-brand-forest-deep">
       <div className="mx-auto max-w-5xl px-6 py-28 lg:py-32 text-center">
         <h2 className="font-display text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.02] tracking-[-0.02em]">
-          <RevealText text={"Research deserves\nreal data."} />
+          <RevealText text={"Read the COA\nbefore you buy."} />
         </h2>
         <RevealOnScroll
           as="p"
           delay={250}
           className="mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
         >
-          Verify every batch before you order. Browse the catalog or open the
-          COA Library — it's all public.
+          Every batch we've shipped since launch is up in the library. Open it,
+          search a batch number, and check the numbers yourself.
         </RevealOnScroll>
         <div className="mt-11 flex flex-wrap justify-center gap-3">
           <Button
