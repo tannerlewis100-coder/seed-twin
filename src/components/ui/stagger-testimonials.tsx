@@ -10,7 +10,7 @@ const defaultTestimonials = [
   {
     tempId: 0,
     testimonial:
-      "The fact that I can verify the exact batch I received against an actual lab report — that alone is worth switching vendors.",
+      "I can verify the exact batch I received against an actual lab report. That alone is worth switching vendors.",
     by: "Dr. M. Reyes, Independent Researcher",
     imgSrc: "https://i.pravatar.cc/150?img=12",
   },
@@ -38,7 +38,7 @@ const defaultTestimonials = [
   {
     tempId: 4,
     testimonial:
-      "Mass spec, HPLC, water content, residual solvents, endotoxin — finally a vendor that publishes the full panel without me asking.",
+      "Mass spec, HPLC, water content, residual solvents, endotoxin. Finally a vendor that publishes the full panel without me asking.",
     by: "J. Okafor, Analytical Chemist",
     imgSrc: "https://i.pravatar.cc/150?img=52",
   },

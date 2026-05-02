@@ -45,7 +45,7 @@ const faqs = [
   },
   {
     q: "What is endotoxin testing and why does it matter?",
-    a: "Endotoxin testing (LAL method) detects bacterial endotoxins — toxic byproducts of gram-negative bacteria. Most peptide vendors skip this test entirely. Clarum runs it on every batch because endotoxin contamination can compromise research results.",
+    a: "Endotoxin testing (LAL method) detects bacterial endotoxins, the toxic byproducts of gram-negative bacteria. Most peptide vendors skip this test entirely. Clarum runs it on every batch because endotoxin contamination can compromise research results.",
   },
   {
     q: "What makes Clarum's testing different from other vendors?",
@@ -61,7 +61,7 @@ const faqs = [
   },
   {
     q: "Can I see the COA before I purchase?",
-    a: "Yes. Our entire COA Library is publicly available — no login required. You can verify testing results for any product and batch before ordering.",
+    a: "Yes. Our entire COA Library is publicly available, no login required. You can verify testing results for any product and batch before ordering.",
   },
   {
     q: "What is your return policy?",

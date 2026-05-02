@@ -71,8 +71,8 @@ function DisclaimerPage() {
               research applications.
             </RevealOnScroll>
             <p className="text-xs text-foreground/45 pt-6 border-t border-white/5">
-              Questions about compliance or research applications? Contact us — we're glad to
-              help.
+              Questions about compliance or research applications? Contact us.
+              We're glad to help.
             </p>
           </div>
         </section>
