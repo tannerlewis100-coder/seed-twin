@@ -60,31 +60,31 @@ function Hero() {
   const featured = peptides[0];
   return (
     <section className="relative bg-background border-b border-white/[0.08]">
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-20 lg:pt-28 pb-24 lg:pb-32 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center min-h-[60vh]">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-28 pb-16 sm:pb-20 lg:pb-32 grid lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-center min-h-[60vh]">
         <div className="order-2 lg:order-1 lg:col-span-7 max-w-2xl">
           <Badge
             variant="outline"
-            className="border-brand-gold/40 text-brand-gold/90 bg-transparent rounded-full px-3 py-1 mb-8 text-[11px] tracking-[0.18em] uppercase font-medium"
+            className="border-brand-gold/40 text-brand-gold/90 bg-transparent rounded-full px-3 py-1 mb-6 sm:mb-8 text-[11px] tracking-[0.18em] uppercase font-medium"
           >
             Independently lab-tested
           </Badge>
-          <h1 className="font-display text-[44px] md:text-6xl lg:text-[80px] leading-[1.02] text-foreground tracking-[-0.02em]">
+          <h1 className="font-display text-[36px] sm:text-[44px] md:text-6xl lg:text-[80px] leading-[1.05] lg:leading-[1.02] text-foreground tracking-[-0.02em]">
             <RevealText text={"Nothing hidden.\nEverything tested."} stagger={55} />
           </h1>
           <RevealOnScroll
             as="p"
             delay={250}
-            className="mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
+            className="mt-6 sm:mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
           >
             Five tests on every batch. HPLC, mass spec, heavy metals, microbial,
             endotoxin. The full report goes up in the COA library the same week
             the batch ships.
           </RevealOnScroll>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4">
             <Button
               asChild
               size="lg"
-              className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px]"
+              className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px] w-full sm:w-auto"
             >
               <Link to="/shop">Shop the Catalog</Link>
             </Button>
@@ -92,7 +92,7 @@ function Hero() {
               asChild
               variant="ghost"
               size="lg"
-              className="rounded-full text-foreground hover:text-brand-gold hover:bg-transparent h-12 px-2 text-[14px]"
+              className="rounded-full text-foreground hover:text-brand-gold hover:bg-transparent h-12 px-2 text-[14px] w-full sm:w-auto"
             >
               <Link to="/coa-library">
                 View COA Library <ArrowRight className="h-4 w-4" />
@@ -120,7 +120,7 @@ const heroStats = [
 function StatsBand() {
   return (
     <section className="bg-brand-forest-deep border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 md:py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
         {heroStats.map(([num, label], i) => (
           <RevealOnScroll key={label} delay={i * 80} className="text-center md:text-left">
             <div className="font-display text-3xl md:text-4xl text-brand-gold tracking-[-0.02em]">
@@ -143,7 +143,7 @@ function FeaturedProducts() {
 
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32">
         <div className="grid lg:grid-cols-12 gap-10 mb-16 items-end">
           <div className="lg:col-span-7">
             <Badge
@@ -267,9 +267,9 @@ function QualityCollage() {
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-20 items-center">
         {/* Image collage */}
-        <div className="lg:col-span-6 grid grid-cols-12 grid-rows-6 gap-4 h-[520px]">
+        <div className="lg:col-span-6 grid grid-cols-12 grid-rows-6 gap-3 sm:gap-4 h-[380px] sm:h-[460px] lg:h-[520px]">
           <RevealOnScroll className="col-span-7 row-span-4 overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={heroCapsule}
@@ -401,7 +401,7 @@ const testingPanels = [
 function HowTested() {
   return (
     <section className="relative bg-background gold-grid-texture border-b border-white/[0.08]">
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32">
         <div className="max-w-3xl mb-16">
           <Badge
             variant="outline"
@@ -459,7 +459,7 @@ function CoaTeaser() {
 
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32 grid lg:grid-cols-12 gap-12 items-start">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-12 items-start">
         <div className="lg:col-span-5 lg:sticky lg:top-32">
           <Badge
             variant="outline"
@@ -538,7 +538,7 @@ function CoaTeaser() {
 function Testimonials() {
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-12 md:py-16 lg:py-20">
         <div className="max-w-2xl mb-10">
           <Badge
             variant="outline"
@@ -563,23 +563,23 @@ function Testimonials() {
 function FinalCta() {
   return (
     <section className="bg-brand-forest-deep">
-      <div className="mx-auto max-w-5xl px-6 py-28 lg:py-32 text-center">
-        <h2 className="font-display text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.02] tracking-[-0.02em]">
+      <div className="mx-auto max-w-5xl px-5 sm:px-6 py-20 md:py-24 lg:py-32 text-center">
+        <h2 className="font-display text-[40px] sm:text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.05] lg:leading-[1.02] tracking-[-0.02em]">
           <RevealText text={"Read the COA\nbefore you buy."} />
         </h2>
         <RevealOnScroll
           as="p"
           delay={250}
-          className="mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
+          className="mt-6 sm:mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
         >
           Every batch we've shipped since launch is up in the library. Open it,
           search a batch number, and check the numbers yourself.
         </RevealOnScroll>
-        <div className="mt-11 flex flex-wrap justify-center gap-3">
+        <div className="mt-9 sm:mt-11 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3">
           <Button
             asChild
             size="lg"
-            className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-8 text-[14px]"
+            className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-8 text-[14px] w-full sm:w-auto"
           >
             <Link to="/shop">Shop Catalog</Link>
           </Button>
@@ -587,7 +587,7 @@ function FinalCta() {
             asChild
             size="lg"
             variant="outline"
-            className="rounded-full border-white/20 text-foreground hover:bg-white/5 hover:text-brand-gold bg-transparent h-12 px-8 text-[14px]"
+            className="rounded-full border-white/20 text-foreground hover:bg-white/5 hover:text-brand-gold bg-transparent h-12 px-8 text-[14px] w-full sm:w-auto"
           >
             <Link to="/coa-library">Open COA Library</Link>
           </Button>

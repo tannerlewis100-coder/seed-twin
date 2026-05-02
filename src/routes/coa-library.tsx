@@ -60,7 +60,7 @@ function CoaLibraryPage() {
               </span>
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
-            <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
+            <h1 className="font-display text-[40px] sm:text-5xl md:text-6xl text-foreground leading-tight">
               <RevealText text="The COA Library" />
             </h1>
             <RevealOnScroll as="p" delay={220} className="mt-5 text-foreground/55 max-w-2xl mx-auto">

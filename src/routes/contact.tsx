@@ -73,7 +73,7 @@ function ContactPage() {
               </span>
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
-            <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
+            <h1 className="font-display text-[40px] sm:text-5xl md:text-6xl text-foreground leading-tight">
               <RevealText text="Get in touch." />
             </h1>
             <RevealOnScroll as="p" delay={180} className="mt-5 text-foreground/55">
@@ -83,7 +83,7 @@ function ContactPage() {
         </section>
 
         <section className="bg-card border-b border-white/5">
-          <div className="mx-auto max-w-7xl px-6 py-20 grid lg:grid-cols-[1fr_1.6fr] gap-10">
+          <div className="mx-auto max-w-7xl px-5 sm:px-6 py-14 md:py-20 grid lg:grid-cols-[1fr_1.6fr] gap-10">
             <aside className="space-y-4">
               {contactInfo.map((c, i) => (
                 <RevealOnScroll

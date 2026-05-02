@@ -1,56 +1,60 @@
-## What I'll build
+# Mobile Optimization Plan
 
-A new route at `/promo` — a single landing page built around the uploaded photo of the BPC-157 / GHK-Cu / TB500 vials, offering 10% off a first order with code `CLARUM10`.
+## The big problem first
 
-The photo gets saved as `src/assets/promo-vials.png` and used as the hero image (and og:image / twitter:image for shares).
+**There is no mobile menu.** Right now, the nav links (Shop, COA Library, About, FAQ) and Sign In are all `hidden md:flex` — meaning on phones, users see only the logo and a "Get Started" button. They can't navigate anywhere except the homepage and shop. This is the #1 fix.
 
-## Page structure
+## What I'll change
 
-```text
-┌───────────────────────────────────────────────────────────┐
-│ HERO (split, photo right)                                 │
-│  ─ "First-order offer" eyebrow                            │
-│  H1: "10% off your first order."                          │
-│  Sub: one-line, voice-matching                            │
-│  [ CODE: CLARUM10  ] [ Copy ]   ← copy-to-clipboard       │
-│  [Shop the Catalog →]  [View the COA Library]             │
-│                                                           │
-│  Right: uploaded photo, rounded card, soft shadow,        │
-│         floating "10% Off" gold sticker                   │
-│         + 4-cell live countdown (Days/Hours/Mins/Secs)    │
-├───────────────────────────────────────────────────────────┤
-│ THREE BENEFITS (sm:grid-cols-3)                           │
-│  • Same panel, every time (Eurofins, Lancaster, PA)       │
-│  • Public batch COA (QR on vial)                          │
-│  • Code stacks with nothing (no influencer codes)         │
-├───────────────────────────────────────────────────────────┤
-│ FINE PRINT (centered, short)                              │
-│  Code, one-use rule, bulk-orders note → contact CTA       │
-└───────────────────────────────────────────────────────────┘
-```
+### 1. SiteHeader — add a real mobile menu
+- Add a hamburger icon (visible `md:hidden`) on the right side of the header pill, next to or instead of "Get Started" on mobile
+- Tapping it opens a full-screen slide-down sheet with: Shop, COA Library, About, FAQ, Sign in / Sign out, and the "Get Started" CTA
+- Close on tap-outside, on link click, and on a top-right X
+- Lock body scroll while open
+- Keep the floating pill style, but make the pill row use less horizontal padding on mobile so it doesn't crowd the edges
 
-Voice follows the project memory: short fragments mixed with longer lines, no em-dash hand-waves, no triplet headlines, specific details (Eurofins / Lancaster, PA; QR; "first order").
+### 2. Announcement bar
+- Currently "Every batch tested. Every COA published." + "View the COA Library →" sit on one line and wrap awkwardly on 390px viewports
+- On mobile: stack the link below the message, or show only the headline and drop the link (the COA library is in the menu)
 
-## Technical details
+### 3. Hero section overlap
+- Hero CTA buttons currently sit too close to the floating header pills, causing visual overlap when scrolling
+- Increase top padding on the hero on mobile (`pt-24` minimum) so the floating pill row doesn't visually clip the badge / headline
+- Reduce h1 from `text-[44px]` on mobile — push to `text-[40px]` with tighter `leading-[1.05]` so the headline fits cleanly on 360–390px screens
+- Stack CTAs full-width on mobile instead of side-by-side
 
-- **Asset**: copy `user-uploads://PNG_image.PNG` → `src/assets/promo-vials.png`, import as ES6 module.
-- **Route**: `src/routes/promo.tsx` using TanStack Start file-based routing, with `head()` setting title, description, og:title, og:description, og:image, twitter:image (the vial photo).
-- **Header / footer**: reuse `AnnouncementBar`, `SiteHeader`, `SiteFooter`.
-- **Copy-to-clipboard**: `navigator.clipboard.writeText("CLARUM10")` with a `sonner` toast confirmation.
-- **Countdown**: small `useCountdown` hook with `setInterval(1000)`. Deadline computed at module load: today + 3 days, 23:59:59 local. Cells use tabular-nums.
-- **Discount sticker**: pure CSS — circular `bg-brand-gold` badge, rotated -12°, anchored top-left of the photo card.
-- **Design tokens only**: `bg-brand-gold`, `text-brand-forest`, `bg-brand-forest-deep`, `text-foreground`, etc. No raw color classes.
-- **Reveal animations**: reuse `RevealText` and `RevealOnScroll` for parity with rest of the site.
+### 4. Image collage section
+- Lines 270–310 of `index.tsx` use a fixed-height (`h-[520px]`) 12-column grid that gets crammed on mobile
+- On mobile: collapse the collage to a single 2-column grid of the 4 images (or just 2 stacked), drop the fixed height, let images flow naturally
 
-## Files
+### 5. Typography & spacing pass on all routes
+- Many headings use `text-4xl md:text-5xl lg:text-[56px]` — fine, but check that the mobile size doesn't overflow on the smallest screens. Drop a step where needed.
+- Section vertical padding: `py-24 lg:py-32` is too tall on mobile. Change to `py-16 md:py-24 lg:py-32`
+- Stat grid (`grid-cols-2 md:grid-cols-4`) is fine, but check number sizes don't crowd
+- Audit horizontal padding: standardize on `px-5 md:px-6 lg:px-10` instead of mixing
 
-- `src/assets/promo-vials.png` (new — the uploaded image)
-- `src/routes/promo.tsx` (new)
+### 6. Footer
+- Check column stacking, link tap targets (need `min-h-[44px]` for accessibility)
 
-No other files touched. Header/footer nav not modified — page is reachable via direct link `/promo` (campaign URL). I can add it to nav in a follow-up if you want.
+### 7. Buttons & forms
+- Hero buttons, CTA buttons → make `w-full` on mobile, side-by-side from `sm:` up
+- Promo popup already responsive, no change needed
+- Sign-in / Sign-up forms: verify input field padding and button sizes on mobile
+
+### 8. Other routes (about, shop, contact, faq, coa-library, disclaimer)
+- Apply same audit: section padding, headline sizes, grid column counts, button widths
+- Most heavy lifting is in the shared header — fixing that alone unlocks navigation on every page
+
+## Files to edit
+- `src/components/SiteHeader.tsx` — add mobile menu, fix announcement bar
+- `src/routes/index.tsx` — hero spacing, collage layout, section padding, button widths
+- `src/routes/about.tsx`, `shop.tsx`, `contact.tsx`, `faq.tsx`, `coa-library.tsx`, `disclaimer.tsx` — section padding + heading sizes pass
+- `src/components/SiteFooter.tsx` (or `src/components/ui/footer.tsx`) — tap target sizes, column stacking
+- `src/components/SignInForm.tsx` — mobile spacing pass
 
 ## Out of scope
+- No content/copy changes (voice and copy are dialed in, leaving them alone)
+- No design system / color token changes
+- No new routes or features
 
-- Persisting the discount code to a real cart/checkout (no commerce backend wired up yet).
-- A/B variants, email capture, or analytics events.
-- Adding `/promo` to the main nav or announcement bar.
+Approve and I'll implement the whole pass.
