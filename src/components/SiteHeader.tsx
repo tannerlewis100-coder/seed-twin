@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, FlaskConical, FileCheck, ShieldCheck, BookOpen, Beaker, Microscope, LogOut } from "lucide-react";
+import { ArrowRight, FlaskConical, FileCheck, ShieldCheck, BookOpen, Beaker, Microscope, LogOut, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { peptides } from "@/data/peptides";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,9 +8,9 @@ import { toast } from "sonner";
 
 export function AnnouncementBar() {
   return (
-    <div className="bg-brand-gold text-brand-forest text-[13px]">
-      <div className="mx-auto max-w-7xl px-6 py-2.5 text-center font-medium flex items-center justify-center gap-1.5">
-        Every batch tested. Every COA published.
+    <div className="bg-brand-gold text-brand-forest text-[12px] sm:text-[13px]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-2 sm:py-2.5 text-center font-medium flex flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 leading-snug">
+        <span>Every batch tested. Every COA published.</span>
         <Link
           to="/coa-library"
           className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
