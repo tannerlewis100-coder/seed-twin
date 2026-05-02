@@ -382,7 +382,7 @@ const testingPanels = [
     icon: Shield,
     num: "03",
     title: "Heavy Metals",
-    desc: "ICP-MS screens arsenic, lead, mercury, and cadmium.",
+    desc: "ICP-MS screens for arsenic, lead, mercury, and cadmium.",
   },
   {
     icon: Bug,
@@ -394,7 +394,7 @@ const testingPanels = [
     icon: Syringe,
     num: "05",
     title: "Endotoxin (LAL)",
-    desc: "The test most peptide vendors skip. We run it on every batch.",
+    desc: "The test most peptide vendors skip. We run it on every batch. Spec: < 1 EU/mg.",
   },
 ];
 
