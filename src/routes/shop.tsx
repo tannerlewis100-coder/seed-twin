@@ -56,7 +56,7 @@ function ShopPage() {
               </span>
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
-            <h1 className="font-display text-5xl md:text-6xl text-foreground leading-tight">
+            <h1 className="font-display text-[40px] sm:text-5xl md:text-6xl text-foreground leading-tight">
               <RevealText text="Research Peptides" />
             </h1>
             <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55 max-w-xl mx-auto">
