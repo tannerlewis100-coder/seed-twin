@@ -60,8 +60,8 @@ function ShopPage() {
               <RevealText text="Research Peptides" />
             </h1>
             <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55 max-w-xl mx-auto">
-              Every compound below is batch-tested across HPLC, mass spec, heavy metals, microbial,
-              and endotoxin panels. Tap any card to view its current COA.
+              Every compound below runs the full 5-panel at Eurofins in
+              Lancaster, PA. Tap a card to pull up the current batch COA.
             </RevealOnScroll>
           </div>
         </section>
@@ -174,7 +174,7 @@ function ShopPage() {
               </p>
             )}
             <p className="mt-12 text-center text-xs text-foreground/40 max-w-2xl mx-auto">
-              All products listed are intended strictly for in vitro laboratory research. Not for
+              All products are for in vitro laboratory research only. Not for
               human or veterinary use, clinical application, or food.
             </p>
           </div>
