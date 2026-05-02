@@ -69,52 +69,69 @@ export function PromoPopup() {
       aria-label="10 percent off first order"
     >
       <div
-        className="relative w-full max-w-md overflow-hidden rounded-lg border border-border bg-card shadow-2xl"
+        className="relative w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={close}
-          className="absolute right-3 top-3 z-10 rounded-full bg-black/40 p-1.5 text-white transition hover:bg-black/60"
+          className="absolute right-3 top-3 z-10 rounded-full bg-black/50 p-1.5 text-white transition hover:bg-black/70"
           aria-label="Close"
         >
           <X className="h-4 w-4" />
         </button>
 
-        <div className="aspect-[4/3] w-full overflow-hidden bg-black">
-          <img
-            src={promoVials}
-            alt="Clarum research peptide vials"
-            className="h-full w-full object-cover"
-          />
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-black md:aspect-auto md:min-h-[460px]">
+            <img
+              src={promoVials}
+              alt="Clarum research peptide vials"
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute left-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-foreground shadow-lg">
+              First order
+            </div>
+          </div>
 
-        <div className="space-y-4 p-6 text-center">
-          <p className="font-display text-3xl text-foreground">10% off your first order.</p>
-          <p className="text-sm text-muted-foreground">
-            Same Eurofins-tested product. A small thank you for trying us first.
-          </p>
+          <div className="flex flex-col justify-center gap-5 p-8 md:p-10">
+            <div className="space-y-2">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                Welcome
+              </p>
+              <h2 className="font-display text-4xl leading-tight text-foreground md:text-5xl">
+                10% off your first order.
+              </h2>
+            </div>
 
-          <button
-            onClick={copyCode}
-            className="w-full rounded-md border-2 border-dashed border-primary bg-primary/5 px-4 py-3 font-mono text-lg tracking-widest text-foreground transition hover:bg-primary/10"
-          >
-            CLARUM10
-          </button>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Same vials. Same Eurofins panel out of Lancaster, Pennsylvania. A small
+              thank you for trying us first.
+            </p>
 
-          <Link
-            to="/promo"
-            onClick={close}
-            className="block w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground transition hover:bg-primary/90"
-          >
-            See the offer
-          </Link>
+            <button
+              onClick={copyCode}
+              className="group w-full rounded-md border-2 border-dashed border-primary/60 bg-primary/5 px-4 py-3.5 text-center font-mono text-lg tracking-[0.3em] text-foreground transition hover:border-primary hover:bg-primary/10"
+            >
+              CLARUM10
+              <span className="ml-2 text-xs tracking-normal text-muted-foreground group-hover:text-foreground">
+                (tap to copy)
+              </span>
+            </button>
 
-          <button
-            onClick={close}
-            className="text-xs text-muted-foreground underline-offset-4 hover:underline"
-          >
-            No thanks
-          </button>
+            <Link
+              to="/promo"
+              onClick={close}
+              className="block w-full rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+            >
+              See the offer
+            </Link>
+
+            <button
+              onClick={close}
+              className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+            >
+              No thanks
+            </button>
+          </div>
         </div>
       </div>
     </div>
