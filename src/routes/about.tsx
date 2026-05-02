@@ -24,13 +24,6 @@ export const Route = createFileRoute("/about")({
   }),
 });
 
-const values = [
-  { title: "Transparency First", desc: "Every COA published. Every batch documented. Nothing behind a login." },
-  { title: "Science Over Marketing", desc: "We let the data speak. No influencer codes, no miracle claims." },
-  { title: "Beyond Purity", desc: "Most vendors stop at HPLC. We run five panels per batch." },
-  { title: "Built for Researchers", desc: "By people who know what's at stake when a reagent is off-spec." },
-];
-
 const panels = [
   { icon: FlaskConical, title: "HPLC Purity", desc: "≥99% specification" },
   { icon: Atom, title: "Mass Spec (LC-MS)", desc: "Molecular identity" },
