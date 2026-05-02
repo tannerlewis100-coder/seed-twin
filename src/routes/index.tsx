@@ -410,15 +410,16 @@ function HowTested() {
             How it's tested
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Five tests. Every batch.\nNo exceptions."} />
+            <RevealText text={"Five tests on every\nsingle batch."} />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            Each batch is sent to an independent ISO/IEC 17025 accredited
-            laboratory. Here's the full panel we run — every time.
+            Every batch goes to Eurofins, an ISO/IEC 17025 accredited lab in
+            Lancaster, Pennsylvania. Below is the full panel they run. Same
+            five, every time.
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
