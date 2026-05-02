@@ -16,7 +16,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Reach Clarum for product questions, COA requests, bulk research orders, or compliance inquiries. Mon–Fri 9–5 EST.",
+          "Reach Clarum for product questions, COA requests, bulk research orders, or compliance inquiries. Mon to Fri, 9 to 5 EST.",
       },
       { property: "og:title", content: "Contact Clarum" },
       {
@@ -29,8 +29,8 @@ export const Route = createFileRoute("/contact")({
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "support@clarum.com" },
-  { icon: MapPin, label: "Location", value: "United States" },
-  { icon: Clock, label: "Hours", value: "Mon – Fri · 9AM – 5PM EST" },
+  { icon: MapPin, label: "Location", value: "Brooklyn, NY" },
+  { icon: Clock, label: "Hours", value: "Mon to Fri · 9 to 5 EST" },
 ];
 
 function ContactPage() {
