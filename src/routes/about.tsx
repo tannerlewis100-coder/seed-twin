@@ -57,10 +57,10 @@ function AboutPage() {
               <span className="h-px w-8 bg-brand-gold/40" />
             </div>
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground leading-[1.1] mb-5">
-              <RevealText text="We saw an industry built on shortcuts" />
+              <RevealText text="We saw an industry built on shortcuts." />
             </h1>
             <RevealOnScroll as="p" delay={300} className="text-foreground/55 leading-relaxed text-lg">
-              So we built the company we wished existed.
+              So we started Clarum.
             </RevealOnScroll>
           </div>
         </section>
@@ -156,27 +156,19 @@ function AboutPage() {
         </section>
 
         <section className="bg-card">
-          <div className="mx-auto max-w-5xl px-6 py-20">
-            <div className="text-center mb-10">
+          <div className="mx-auto max-w-3xl px-6 py-20">
+            <div className="text-center mb-8">
               <span className="text-[11px] uppercase tracking-[0.25em] text-brand-gold font-semibold">
                 Values
               </span>
-              <h2 className="font-display text-3xl lg:text-4xl text-foreground mt-2">
-                <RevealText text="What We Stand For" />
-              </h2>
             </div>
-            <div className="grid sm:grid-cols-2 gap-5 max-w-3xl mx-auto">
-              {values.map((v, i) => (
-                <RevealOnScroll
-                  key={v.title}
-                  delay={i * 100}
-                  className="bg-background rounded-2xl border border-white/5 p-6 hover:border-brand-gold/25 transition-colors"
-                >
-                  <h3 className="font-display text-xl text-foreground mb-2">{v.title}</h3>
-                  <p className="text-sm text-foreground/55">{v.desc}</p>
-                </RevealOnScroll>
-              ))}
-            </div>
+            <RevealOnScroll
+              as="p"
+              className="font-display text-2xl md:text-3xl text-foreground leading-[1.3] text-center"
+            >
+              We test every batch, publish every COA, and don't pay for
+              influencer codes.
+            </RevealOnScroll>
             <div className="text-center mt-10">
               <Link
                 to="/coa-library"
