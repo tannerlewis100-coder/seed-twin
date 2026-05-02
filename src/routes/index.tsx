@@ -60,31 +60,31 @@ function Hero() {
   const featured = peptides[0];
   return (
     <section className="relative bg-background border-b border-white/[0.08]">
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 pt-20 lg:pt-28 pb-24 lg:pb-32 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center min-h-[60vh]">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-28 pb-16 sm:pb-20 lg:pb-32 grid lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-center min-h-[60vh]">
         <div className="order-2 lg:order-1 lg:col-span-7 max-w-2xl">
           <Badge
             variant="outline"
-            className="border-brand-gold/40 text-brand-gold/90 bg-transparent rounded-full px-3 py-1 mb-8 text-[11px] tracking-[0.18em] uppercase font-medium"
+            className="border-brand-gold/40 text-brand-gold/90 bg-transparent rounded-full px-3 py-1 mb-6 sm:mb-8 text-[11px] tracking-[0.18em] uppercase font-medium"
           >
             Independently lab-tested
           </Badge>
-          <h1 className="font-display text-[44px] md:text-6xl lg:text-[80px] leading-[1.02] text-foreground tracking-[-0.02em]">
+          <h1 className="font-display text-[36px] sm:text-[44px] md:text-6xl lg:text-[80px] leading-[1.05] lg:leading-[1.02] text-foreground tracking-[-0.02em]">
             <RevealText text={"Nothing hidden.\nEverything tested."} stagger={55} />
           </h1>
           <RevealOnScroll
             as="p"
             delay={250}
-            className="mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
+            className="mt-6 sm:mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
           >
             Five tests on every batch. HPLC, mass spec, heavy metals, microbial,
             endotoxin. The full report goes up in the COA library the same week
             the batch ships.
           </RevealOnScroll>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4">
             <Button
               asChild
               size="lg"
-              className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px]"
+              className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px] w-full sm:w-auto"
             >
               <Link to="/shop">Shop the Catalog</Link>
             </Button>
@@ -92,7 +92,7 @@ function Hero() {
               asChild
               variant="ghost"
               size="lg"
-              className="rounded-full text-foreground hover:text-brand-gold hover:bg-transparent h-12 px-2 text-[14px]"
+              className="rounded-full text-foreground hover:text-brand-gold hover:bg-transparent h-12 px-2 text-[14px] w-full sm:w-auto"
             >
               <Link to="/coa-library">
                 View COA Library <ArrowRight className="h-4 w-4" />
