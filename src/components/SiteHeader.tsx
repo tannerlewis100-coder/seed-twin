@@ -157,6 +157,7 @@ function AboutMenu() {
 export function SiteHeader() {
   const [openMenu, setOpenMenu] = useState<MenuKey>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const auth = useAuth();
   const user = auth?.user ?? null;
 
@@ -172,6 +173,16 @@ export function SiteHeader() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [mobileOpen]);
 
   const navItem = (key: Exclude<MenuKey, null>, label: string) => {
     const isOpen = openMenu === key;
@@ -205,28 +216,28 @@ export function SiteHeader() {
     >
       <div
         className={`relative transition-[padding] duration-200 ease-out ${
-          floating ? "px-3 sm:px-6 pt-3" : "px-0 pt-0"
+          floating ? "px-2 sm:px-3 md:px-6 pt-2 sm:pt-3" : "px-0 pt-0"
         }`}
       >
         <div
           className={`relative mx-auto flex items-center transition-all duration-200 ease-out ${
             floating
-              ? "max-w-6xl justify-between gap-3"
-              : "max-w-7xl px-6 lg:px-10 h-20 justify-between bg-background/70 border-b border-white/5"
+              ? "max-w-6xl justify-between gap-2 sm:gap-3"
+              : "max-w-7xl px-4 sm:px-6 lg:px-10 h-16 md:h-20 justify-between bg-background/70 border-b border-white/5"
           }`}
         >
           {/* LEFT pill: brand + nav */}
           <div
             className={`flex items-center gap-8 lg:gap-12 transition-all duration-200 ease-out ${
               floating
-                ? "h-14 px-5 sm:px-7 rounded-full bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
+                ? "h-12 md:h-14 px-4 sm:px-5 md:px-7 rounded-full bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
                 : "h-full"
             }`}
           >
             <Link
               to="/"
               onMouseEnter={() => setOpenMenu(null)}
-              className="flex items-center gap-1.5 font-display text-[22px] lg:text-[26px] tracking-tight text-foreground"
+              className="flex items-center gap-1.5 font-display text-[20px] md:text-[22px] lg:text-[26px] tracking-tight text-foreground"
             >
               clarum
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
@@ -246,12 +257,12 @@ export function SiteHeader() {
             </nav>
           </div>
 
-          {/* RIGHT pill: sign in + CTA */}
+          {/* RIGHT pill: sign in + CTA + mobile menu button */}
           <div
             onMouseEnter={() => setOpenMenu(null)}
-            className={`flex items-center gap-3 transition-all duration-200 ease-out ${
+            className={`flex items-center gap-2 sm:gap-3 transition-all duration-200 ease-out ${
               floating
-                ? "h-14 pl-5 pr-2 rounded-full bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
+                ? "h-12 md:h-14 pl-3 sm:pl-5 pr-2 rounded-full bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
                 : "h-full"
             }`}
           >
@@ -273,17 +284,25 @@ export function SiteHeader() {
             )}
             <Link
               to="/shop"
-              className={`inline-flex items-center rounded-full bg-brand-gold text-brand-forest text-[14px] font-medium hover:bg-brand-gold-light transition-colors ${
-                floating ? "px-5 py-2" : "px-6 py-2.5"
+              className={`hidden sm:inline-flex items-center rounded-full bg-brand-gold text-brand-forest text-[14px] font-medium hover:bg-brand-gold-light transition-colors ${
+                floating ? "px-4 md:px-5 py-2" : "px-5 md:px-6 py-2 md:py-2.5"
               }`}
             >
               Get Started
             </Link>
+            <button
+              type="button"
+              aria-label="Open menu"
+              onClick={() => setMobileOpen(true)}
+              className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-full text-foreground hover:text-brand-gold transition-colors"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
           </div>
 
           {/* Left-anchored mega-menu panel (anchored under the LEFT pill) */}
           <div
-            className={`absolute left-0 top-full transition-opacity duration-150 ease-out ${
+            className={`absolute left-0 top-full hidden md:block transition-opacity duration-150 ease-out ${
               openMenu ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             }`}
           >
@@ -295,6 +314,77 @@ export function SiteHeader() {
           </div>
         </div>
       </div>
+
+      {/* Mobile drawer */}
+      {mobileOpen && (
+        <div className="md:hidden fixed inset-0 z-50 bg-background/95 backdrop-blur-xl flex flex-col animate-in fade-in duration-200">
+          <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
+            <Link
+              to="/"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-1.5 font-display text-[22px] tracking-tight text-foreground"
+            >
+              clarum
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
+            </Link>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex items-center justify-center w-10 h-10 rounded-full text-foreground hover:text-brand-gold transition-colors"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          <nav className="flex-1 overflow-y-auto px-5 py-8 flex flex-col gap-1">
+            {[
+              { to: "/shop" as const, label: "Shop" },
+              { to: "/coa-library" as const, label: "COA Library" },
+              { to: "/about" as const, label: "About" },
+              { to: "/faq" as const, label: "FAQ" },
+              { to: "/contact" as const, label: "Contact" },
+            ].map((l) => (
+              <Link
+                key={l.to}
+                to={l.to}
+                onClick={() => setMobileOpen(false)}
+                className="font-display text-[28px] text-foreground hover:text-brand-gold transition-colors py-3 border-b border-white/5"
+              >
+                {l.label}
+              </Link>
+            ))}
+            <div className="mt-8 flex flex-col gap-3">
+              <Link
+                to="/shop"
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex items-center justify-center rounded-full bg-brand-gold text-brand-forest text-[15px] font-medium hover:bg-brand-gold-light transition-colors h-12"
+              >
+                Get Started
+              </Link>
+              {user ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileOpen(false);
+                    handleSignOut();
+                  }}
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 text-foreground hover:text-brand-gold hover:border-brand-gold/40 transition-colors h-12 text-[15px]"
+                >
+                  <LogOut className="h-4 w-4" /> Sign out
+                </button>
+              ) : (
+                <Link
+                  to="/sign-in"
+                  onClick={() => setMobileOpen(false)}
+                  className="inline-flex items-center justify-center rounded-full border border-white/15 text-foreground hover:text-brand-gold hover:border-brand-gold/40 transition-colors h-12 text-[15px]"
+                >
+                  Sign in
+                </Link>
+              )}
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }
