@@ -16,8 +16,7 @@ const defaultTestimonials = [
   },
   {
     tempId: 1,
-    testimonial:
-      "Most vendors hand-wave on endotoxin. Clarum publishes the LAL number on every single batch.",
+    testimonial: "Finally.",
     by: "K. Larsen, Lab Director",
     imgSrc: "https://i.pravatar.cc/150?img=15",
   },
@@ -31,15 +30,15 @@ const defaultTestimonials = [
   {
     tempId: 3,
     testimonial:
-      "I've stopped second-guessing my reagents. Every order ships with a 5-panel COA and the numbers line up batch after batch.",
+      "ok so I've been ordering peptides for like six years from probably eight different vendors and you get used to the COA being some PDF that looks the same every batch with the date changed, and then I ordered BPC-157 from these guys and the QR on the vial pulled up an actual chromatogram from a lab I can google, and I just sat there for a second because that should not feel novel but it does",
     by: "Dr. A. Petrov, Principal Investigator",
     imgSrc: "https://i.pravatar.cc/150?img=33",
   },
   {
     tempId: 4,
     testimonial:
-      "Mass spec, HPLC, water content, residual solvents, endotoxin. Finally a vendor that publishes the full panel without me asking.",
-    by: "J. Okafor, Analytical Chemist",
+      "their ghk-cu came in last tuesday and the coa was already up before the box hit my desk. nice.",
+    by: "j. okafor, analytical chemist",
     imgSrc: "https://i.pravatar.cc/150?img=52",
   },
   {
