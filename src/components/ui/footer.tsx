@@ -157,8 +157,9 @@ export default function StickyFooter() {
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold" />
                   </div>
                   <p className="max-w-md text-sm text-foreground/55 leading-relaxed">
-                    Batch-tested research peptides with full 5-panel COA documentation.
-                    Built for researchers who refuse to take "trust me" for an answer.
+                    Batch-tested research peptides. Five lab panels per batch,
+                    every COA public, no login required. For researchers who
+                    won't take "trust me" for an answer.
                   </p>
                 </motion.div>
                 {sections.map((s) => (
