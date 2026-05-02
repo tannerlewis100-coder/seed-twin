@@ -25,7 +25,7 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   { avatarSrc: "https://i.pravatar.cc/64?img=12", name: "Dr. Sarah Chen", handle: "@biopep_lab", text: "First vendor publishing raw HPLC data per batch. Real transparency." },
   { avatarSrc: "https://i.pravatar.cc/64?img=33", name: "Marcus K.", handle: "@longevitynerd", text: "Independent COA before checkout. This is the standard now." },
-  { avatarSrc: "https://i.pravatar.cc/64?img=45", name: "Bryne Research", handle: "@brynelabs", text: "Re-ran their TB-500 in-house — numbers matched exactly." },
+  { avatarSrc: "https://i.pravatar.cc/64?img=45", name: "Bryne Research", handle: "@brynelabs", text: "Re-ran their TB-500 in-house. Numbers matched exactly." },
 ];
 
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (

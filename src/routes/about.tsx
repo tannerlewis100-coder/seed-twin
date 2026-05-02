@@ -13,7 +13,7 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Why we built Clarum: an industry built on shortcuts, vague claims, and unverifiable purity. We publish every COA, test every batch, and hide nothing.",
+          "Why we built Clarum. The vague COAs, the skipped endotoxin tests, and the 5-panel batch reports we publish in response.",
       },
       { property: "og:title", content: "About Clarum — Built on Transparency" },
       {
@@ -26,9 +26,9 @@ export const Route = createFileRoute("/about")({
 
 const values = [
   { title: "Transparency First", desc: "Every COA published. Every batch documented. Nothing behind a login." },
-  { title: "Science Over Marketing", desc: "We let the data speak. No influencer hype, no miracle claims." },
-  { title: "Beyond Purity", desc: "Most vendors stop at HPLC. We run 5 independent tests per batch." },
-  { title: "Built for Researchers", desc: "By people who understand what's at stake when quality fails." },
+  { title: "Science Over Marketing", desc: "We let the data speak. No influencer codes, no miracle claims." },
+  { title: "Beyond Purity", desc: "Most vendors stop at HPLC. We run five panels per batch." },
+  { title: "Built for Researchers", desc: "By people who know what's at stake when a reagent is off-spec." },
 ];
 
 const panels = [
@@ -78,21 +78,23 @@ function AboutPage() {
             </h2>
             <RevealOnScroll as="div" delay={200} className="space-y-5 text-foreground/60 leading-[1.8]">
               <p>
-                We spent years as researchers on the other side of the counter — ordering peptides
-                and hoping the label matched what was actually in the vial. For a while, a handful
-                of vendors made that trust easy. Reliable. Consistent.
+                We spent years on the other side of the counter, ordering
+                peptides and hoping the label matched what was actually in the
+                vial. For a while, a handful of vendors made that easy. Reliable.
+                Consistent.
               </p>
               <p>
-                Then the cracks started showing. Vendor after vendor cut the same corners: skip
-                identity testing, skip heavy metals, skip endotoxin — just run an HPLC and call it
-                "third-party tested." Enough to look legitimate, but not enough to actually protect
-                the research.
+                Then the cracks showed. Vendor after vendor cut the same
+                corners: skip identity testing, skip heavy metals, skip
+                endotoxin, run an HPLC, call it "third-party tested." Enough to
+                look legitimate. Not enough to actually protect the research.
               </p>
               <p>
-                It was cheaper. It was faster. Most customers couldn't tell the difference. The
-                market raced to the bottom — competing on price, marketing, and influencer deals
-                instead of quality. The COAs that did exist were vague, generic, or recycled across
-                batches.
+                It was cheaper. It was faster. Most customers couldn't tell the
+                difference, so the market raced to the bottom, competing on
+                Instagram ads and influencer codes instead of purity. The COAs
+                that did exist were vague, generic, or recycled across batches.
+                We saw one COA used for three different lots.
               </p>
             </RevealOnScroll>
 
@@ -105,26 +107,25 @@ function AboutPage() {
               </span>
             </div>
             <h2 className="font-display text-3xl lg:text-4xl text-foreground mb-7 leading-tight">
-              <RevealText text="We didn't build Clarum to fill a gap. " />
-              <span className="italic text-brand-gold"><RevealText text="We built it to fix one." delay={400} /></span>
+              <RevealText text="So we sent every batch out for the full panel." />
             </h2>
             <RevealOnScroll as="div" delay={300} className="space-y-5 text-foreground/60 leading-[1.8]">
               <p>
-                We refused to accept that "good enough" was the standard. We didn't want to be
-                another vendor selling vials with a purity number and a trust-me attitude.
+                "Good enough" wasn't going to cut it, and a single HPLC number
+                with a trust-me attitude felt insulting to anyone reading the
+                report.
               </p>
               <p>
-                So we did something the industry considers extreme: we test every single batch
-                across five independent panels — HPLC purity, mass spec identity, heavy metals,
-                microbial, and endotoxin.{" "}
-                <strong className="text-foreground">
-                  Every batch. Every product. Every time.
-                </strong>
+                Five independent panels per batch: HPLC purity, mass spec
+                identity, heavy metals (ICP-MS), microbial, endotoxin (LAL).
+                Same lab. Same panel. Costs us roughly $480 per batch. We do it
+                anyway.
               </p>
               <p>
-                Then we publish the full results. No logins. No paywalls. Every Certificate of
-                Analysis is publicly available, batch-specific, and linked via QR code on every
-                order. If you want to verify what you're buying before you buy it — you can.
+                Then we publish the full results. No login. No paywall. Every
+                Certificate of Analysis is public, batch-specific, and linked
+                via a QR code on the vial. If you want to verify what you're
+                buying before you buy it, you can.
               </p>
             </RevealOnScroll>
           </div>

@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Analytically tested research peptides with full 5-panel independent lab testing — HPLC, mass spec, heavy metals, microbial, and endotoxin. Every batch documented. For in vitro laboratory research use only.",
+          "Research peptides with a 5-panel Certificate of Analysis on every batch: HPLC, mass spec, heavy metals, microbial, endotoxin. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "CLARUM — Nothing Hidden. Everything Tested." },
       {
@@ -76,9 +76,9 @@ function Hero() {
             delay={250}
             className="mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
           >
-            Every batch undergoes 5 independent lab tests — HPLC purity, mass
-            spectrometry, heavy metals, microbial, and endotoxin. Full COAs
-            published publicly in our library.
+            Five tests on every batch. HPLC, mass spec, heavy metals, microbial,
+            endotoxin. The full report goes up in the COA library the same week
+            the batch ships.
           </RevealOnScroll>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button
@@ -162,9 +162,9 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Each compound is backed by independent 5-panel lab testing — HPLC,
-              mass spec, heavy metals, microbial, and endotoxin. Verify the
-              batch before you order.
+              Each compound runs the full 5-panel: HPLC, mass spec, heavy
+              metals, microbial, endotoxin. Pull the batch report before you
+              checkout. Or after. We don't mind.
             </RevealOnScroll>
             <Button
               asChild
@@ -260,10 +260,10 @@ function FeaturedProducts() {
 
 function QualityCollage() {
   const checks = [
-    "Batch-specific COA, not generic certificates",
-    "Independent third-party laboratory",
-    "QR code on every order links to your batch",
-    "Public COA library — verify before you order",
+    "Batch-specific COA, not a generic certificate recycled across runs",
+    "Tested by Eurofins (Lancaster, PA), an ISO/IEC 17025 lab we don't own",
+    "QR code on the vial. Scan it, see your batch, on your phone, in 4 seconds.",
+    "Public COA library. No login. No email gate.",
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
@@ -329,9 +329,9 @@ function QualityCollage() {
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
-            We don't just say "third-party tested" — we publish the data. Every
-            batch ships with a Certificate of Analysis you can pull up before
-            you ever break the seal.
+            "Third-party tested" is the phrase every vendor uses. Almost none of
+            them publish the actual numbers. We do. Every batch ships with a
+            Certificate of Analysis you can pull up before you break the seal.
           </RevealOnScroll>
           <ul className="mt-8 space-y-4">
             {checks.map((item, i) => (
@@ -382,7 +382,7 @@ const testingPanels = [
     icon: Shield,
     num: "03",
     title: "Heavy Metals",
-    desc: "ICP-MS screens arsenic, lead, mercury, and cadmium.",
+    desc: "ICP-MS screens for arsenic, lead, mercury, and cadmium.",
   },
   {
     icon: Bug,
@@ -394,7 +394,7 @@ const testingPanels = [
     icon: Syringe,
     num: "05",
     title: "Endotoxin (LAL)",
-    desc: "The test most peptide vendors skip. We run it on every batch.",
+    desc: "The test most peptide vendors skip. We run it on every batch. Spec: < 1 EU/mg.",
   },
 ];
 
@@ -410,15 +410,16 @@ function HowTested() {
             How it's tested
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Five tests. Every batch.\nNo exceptions."} />
+            <RevealText text={"Five tests on every\nsingle batch."} />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            Each batch is sent to an independent ISO/IEC 17025 accredited
-            laboratory. Here's the full panel we run — every time.
+            Every batch goes to Eurofins, an ISO/IEC 17025 accredited lab in
+            Lancaster, Pennsylvania. Below is the full panel they run. Same
+            five, every time.
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -475,7 +476,7 @@ function CoaTeaser() {
             className="mt-6 text-foreground/60 leading-[1.6] max-w-md"
           >
             Browse the certificate of analysis for every batch we've ever
-            shipped. No login, no email gate — just data.
+            shipped. No login. No email gate. Just data.
           </RevealOnScroll>
           <Button
             asChild
@@ -564,15 +565,15 @@ function FinalCta() {
     <section className="bg-brand-forest-deep">
       <div className="mx-auto max-w-5xl px-6 py-28 lg:py-32 text-center">
         <h2 className="font-display text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.02] tracking-[-0.02em]">
-          <RevealText text={"Research deserves\nreal data."} />
+          <RevealText text={"Read the COA\nbefore you buy."} />
         </h2>
         <RevealOnScroll
           as="p"
           delay={250}
           className="mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
         >
-          Verify every batch before you order. Browse the catalog or open the
-          COA Library — it's all public.
+          Every batch we've shipped since launch is up in the library. Open it,
+          search a batch number, and check the numbers yourself.
         </RevealOnScroll>
         <div className="mt-11 flex flex-wrap justify-center gap-3">
           <Button

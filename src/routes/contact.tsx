@@ -77,7 +77,7 @@ function ContactPage() {
               <RevealText text="Get in touch." />
             </h1>
             <RevealOnScroll as="p" delay={180} className="mt-5 text-foreground/55">
-              Questions about a compound, a COA, or a bulk research order — we're here.
+              Questions about a compound, a COA, or a bulk research order. We're here.
             </RevealOnScroll>
           </div>
         </section>

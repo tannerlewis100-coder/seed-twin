@@ -15,7 +15,7 @@ export const Route = createFileRoute("/coa-library")({
       {
         name: "description",
         content:
-          "Browse Clarum's public COA library. Every batch, every test, every result — published openly with no login required.",
+          "Browse Clarum's public COA library. Every batch, every test, every result, published openly with no login required.",
       },
       { property: "og:title", content: "COA Library | CLARUM" },
       {
@@ -64,8 +64,8 @@ function CoaLibraryPage() {
               <RevealText text="The COA Library" />
             </h1>
             <RevealOnScroll as="p" delay={220} className="mt-5 text-foreground/55 max-w-2xl mx-auto">
-              Every batch we ship has a Certificate of Analysis. Every COA lives here, openly —
-              no login, no email, no paywall.
+              Every batch we ship has a Certificate of Analysis. They all live
+              here. No login, no email, no paywall.
             </RevealOnScroll>
           </div>
         </section>
