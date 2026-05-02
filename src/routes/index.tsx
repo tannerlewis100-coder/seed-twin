@@ -476,7 +476,7 @@ function CoaTeaser() {
             className="mt-6 text-foreground/60 leading-[1.6] max-w-md"
           >
             Browse the certificate of analysis for every batch we've ever
-            shipped. No login, no email gate — just data.
+            shipped. No login. No email gate. Just data.
           </RevealOnScroll>
           <Button
             asChild
