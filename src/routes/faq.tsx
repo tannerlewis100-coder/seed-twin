@@ -89,7 +89,7 @@ function FaqPage() {
               <RevealText text="Questions, answered." />
             </h1>
             <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55">
-              Research peptides, our 5-panel COA process, shipping, storage, and compliance.
+              Peptides, COAs, shipping, storage, RUO compliance. Short answers.
             </RevealOnScroll>
           </div>
         </section>
