@@ -162,9 +162,9 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Each compound is backed by independent 5-panel lab testing — HPLC,
-              mass spec, heavy metals, microbial, and endotoxin. Verify the
-              batch before you order.
+              Each compound runs the full 5-panel: HPLC, mass spec, heavy
+              metals, microbial, endotoxin. Pull the batch report before you
+              checkout. Or after. We don't mind.
             </RevealOnScroll>
             <Button
               asChild
