@@ -329,9 +329,9 @@ function QualityCollage() {
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
-            We don't just say "third-party tested" — we publish the data. Every
-            batch ships with a Certificate of Analysis you can pull up before
-            you ever break the seal.
+            "Third-party tested" is the phrase every vendor uses. Almost none of
+            them publish the actual numbers. We do. Every batch ships with a
+            Certificate of Analysis you can pull up before you break the seal.
           </RevealOnScroll>
           <ul className="mt-8 space-y-4">
             {checks.map((item, i) => (
