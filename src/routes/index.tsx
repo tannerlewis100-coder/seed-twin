@@ -120,7 +120,7 @@ const heroStats = [
 function StatsBand() {
   return (
     <section className="bg-brand-forest-deep border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 md:py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
         {heroStats.map(([num, label], i) => (
           <RevealOnScroll key={label} delay={i * 80} className="text-center md:text-left">
             <div className="font-display text-3xl md:text-4xl text-brand-gold tracking-[-0.02em]">
@@ -143,7 +143,7 @@ function FeaturedProducts() {
 
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32">
         <div className="grid lg:grid-cols-12 gap-10 mb-16 items-end">
           <div className="lg:col-span-7">
             <Badge
@@ -401,7 +401,7 @@ const testingPanels = [
 function HowTested() {
   return (
     <section className="relative bg-background gold-grid-texture border-b border-white/[0.08]">
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32">
         <div className="max-w-3xl mb-16">
           <Badge
             variant="outline"
@@ -459,7 +459,7 @@ function CoaTeaser() {
 
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-24 lg:py-32 grid lg:grid-cols-12 gap-12 items-start">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-12 items-start">
         <div className="lg:col-span-5 lg:sticky lg:top-32">
           <Badge
             variant="outline"
@@ -538,7 +538,7 @@ function CoaTeaser() {
 function Testimonials() {
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-6 lg:px-10 py-16 lg:py-20">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-12 md:py-16 lg:py-20">
         <div className="max-w-2xl mb-10">
           <Badge
             variant="outline"
@@ -563,7 +563,7 @@ function Testimonials() {
 function FinalCta() {
   return (
     <section className="bg-brand-forest-deep">
-      <div className="mx-auto max-w-5xl px-6 py-28 lg:py-32 text-center">
+      <div className="mx-auto max-w-5xl px-5 sm:px-6 py-20 md:py-24 lg:py-32 text-center">
         <h2 className="font-display text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.02] tracking-[-0.02em]">
           <RevealText text={"Read the COA\nbefore you buy."} />
         </h2>
