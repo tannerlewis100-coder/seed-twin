@@ -260,10 +260,10 @@ function FeaturedProducts() {
 
 function QualityCollage() {
   const checks = [
-    "Batch-specific COA, not generic certificates",
-    "Independent third-party laboratory",
-    "QR code on every order links to your batch",
-    "Public COA library — verify before you order",
+    "Batch-specific COA, not a generic certificate recycled across runs",
+    "Tested by Eurofins (Lancaster, PA), an ISO/IEC 17025 lab we don't own",
+    "QR code on the vial. Scan it, see your batch, on your phone, in 4 seconds.",
+    "Public COA library. No login. No email gate.",
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
