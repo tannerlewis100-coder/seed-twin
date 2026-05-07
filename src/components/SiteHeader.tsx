@@ -16,6 +16,15 @@ import {
   Mail,
   ScrollText,
   Sparkles,
+  Dna,
+  Flame,
+  Brain,
+  Droplet,
+  Heart,
+  Zap,
+  Layers,
+  Package,
+  Sprout,
 } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { peptides } from "@/data/peptides";
@@ -104,45 +113,116 @@ function QuickLink({ to, children }: { to: LinkTo; children: React.ReactNode }) 
   );
 }
 
-function ShopMenu() {
-  const featured = peptides.slice(0, 4);
+const CATEGORY_META: { name: string; icon: React.ComponentType<{ className?: string }>; desc: string }[] = [
+  { name: "Growth Hormone", icon: Dna, desc: "GHRH & secretagogues" },
+  { name: "Recovery", icon: Sprout, desc: "Tissue & repair signaling" },
+  { name: "Weight Management", icon: Flame, desc: "Metabolic research" },
+  { name: "Longevity", icon: Heart, desc: "Cellular aging models" },
+  { name: "Cognitive", icon: Brain, desc: "Neuro & sleep" },
+  { name: "Skin", icon: Droplet, desc: "Dermal & melanocortin" },
+  { name: "Immune", icon: ShieldCheck, desc: "Antimicrobial & immune" },
+  { name: "NAD+", icon: Zap, desc: "Mitochondrial precursors" },
+  { name: "Sexual Health", icon: Heart, desc: "PT-141 family" },
+  { name: "Blends", icon: Layers, desc: "Multi-compound vials" },
+  { name: "Supplies", icon: Package, desc: "BAC water, B12, kits" },
+];
+
+function CategoryTile({
+  name,
+  icon: Icon,
+  desc,
+  count,
+}: {
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+  desc: string;
+  count: number;
+}) {
   return (
-    <div className="grid grid-cols-[1fr_240px] gap-2 p-3 w-[600px]">
+    <Link
+      to="/shop"
+      className="group relative flex items-start gap-2.5 px-2.5 py-2 rounded-lg hover:bg-white/[0.04] transition-colors"
+    >
+      <span className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-brand-gold/10 ring-1 ring-inset ring-brand-gold/15 group-hover:ring-brand-gold/40 transition mt-0.5">
+        <Icon className="h-3.5 w-3.5 text-brand-gold" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center gap-1.5">
+          <span className="font-display text-[13.5px] text-foreground leading-tight group-hover:text-brand-gold transition-colors">
+            {name}
+          </span>
+          <span className="text-[10.5px] text-foreground/40 font-medium">{count}</span>
+        </span>
+        <span className="block text-[11.5px] text-foreground/50 mt-0.5 leading-snug">{desc}</span>
+      </span>
+    </Link>
+  );
+}
+
+function ShopMenu() {
+  const counts = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (const p of peptides) map[p.category] = (map[p.category] ?? 0) + 1;
+    return map;
+  }, []);
+  const bestSellers = useMemo(
+    () => peptides.filter((p) => p.badge === "BEST SELLER").slice(0, 4),
+    [],
+  );
+
+  return (
+    <div className="grid grid-cols-[1fr_240px] gap-3 p-4 w-[760px]">
       <div>
-        <ColumnLabel>Featured</ColumnLabel>
-        <div className="flex flex-col">
-          {featured.map((p, i) => (
-            <MenuRow
-              key={p.slug}
-              row={{
-                to: "/shop",
-                title: `${p.name} ${p.size}`,
-                desc: p.tag ?? p.category,
-                badge: i === 1 ? "Save 25%" : undefined,
-                icon: FlaskConical,
-              }}
+        <ColumnLabel>Shop by Category</ColumnLabel>
+        <div className="grid grid-cols-2 gap-x-1 gap-y-0.5">
+          {CATEGORY_META.map((c) => (
+            <CategoryTile
+              key={c.name}
+              name={c.name}
+              icon={c.icon}
+              desc={c.desc}
+              count={counts[c.name] ?? 0}
             />
           ))}
         </div>
-      </div>
-      <div className="border-l border-white/5 pl-2">
-        <ColumnLabel>Browse</ColumnLabel>
-        <div className="flex flex-col">
-          <QuickLink to="/shop">Shop all</QuickLink>
-          <QuickLink to="/shop">Bestsellers</QuickLink>
-          <QuickLink to="/shop">New arrivals</QuickLink>
-          <QuickLink to="/shop">Bundles</QuickLink>
+        <div className="mt-2 pt-2 border-t border-white/5 px-2.5">
+          <Link
+            to="/shop"
+            className="inline-flex items-center gap-1 text-[12.5px] font-medium text-brand-gold hover:underline underline-offset-4"
+          >
+            Shop all {peptides.length} peptides <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
-        <div className="mt-3 mx-2 rounded-xl border border-brand-gold/20 bg-brand-gold/[0.06] p-3">
-          <div className="flex items-center gap-1.5 text-brand-gold text-[11px] font-semibold uppercase tracking-wider">
-            <Sparkles className="h-3 w-3" /> Verified
+      </div>
+      <div className="border-l border-white/5 pl-3 flex flex-col">
+        <ColumnLabel>Bestsellers</ColumnLabel>
+        <div className="flex flex-col">
+          {bestSellers.map((p) => (
+            <Link
+              key={p.slug}
+              to="/shop"
+              className="group flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors"
+            >
+              <span className="min-w-0">
+                <span className="block font-display text-[13px] text-foreground group-hover:text-brand-gold transition-colors leading-tight truncate">
+                  {p.name}
+                </span>
+                <span className="block text-[11px] text-foreground/45 mt-0.5">{p.size}</span>
+              </span>
+              <span className="text-[12px] text-foreground/55 shrink-0">${p.price}</span>
+            </Link>
+          ))}
+        </div>
+        <div className="mt-3 mx-1 rounded-xl border border-brand-gold/20 bg-brand-gold/[0.06] p-3">
+          <div className="flex items-center gap-1.5 text-brand-gold text-[10.5px] font-semibold uppercase tracking-wider">
+            <Sparkles className="h-3 w-3" /> Verified at Eurofins
           </div>
-          <div className="text-[13px] text-foreground/80 mt-1 leading-snug">
-            Every batch tested at Eurofins.
+          <div className="text-[12.5px] text-foreground/75 mt-1 leading-snug">
+            Every batch tested. Every COA published.
           </div>
           <Link
             to="/coa-library"
-            className="inline-flex items-center gap-1 text-[12.5px] font-medium text-brand-gold mt-2 hover:underline underline-offset-4"
+            className="inline-flex items-center gap-1 text-[12px] font-medium text-brand-gold mt-2 hover:underline underline-offset-4"
           >
             View COAs <ArrowRight className="h-3 w-3" />
           </Link>
