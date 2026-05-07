@@ -118,13 +118,6 @@ const CATEGORY_META: { name: string; icon: React.ComponentType<{ className?: str
   { name: "Recovery", icon: Sprout, desc: "Tissue & repair signaling" },
   { name: "Weight Management", icon: Flame, desc: "Metabolic research" },
   { name: "Longevity", icon: Heart, desc: "Cellular aging models" },
-  { name: "Cognitive", icon: Brain, desc: "Neuro & sleep" },
-  { name: "Skin", icon: Droplet, desc: "Dermal & melanocortin" },
-  { name: "Immune", icon: ShieldCheck, desc: "Antimicrobial & immune" },
-  { name: "NAD+", icon: Zap, desc: "Mitochondrial precursors" },
-  { name: "Sexual Health", icon: Heart, desc: "PT-141 family" },
-  { name: "Blends", icon: Layers, desc: "Multi-compound vials" },
-  { name: "Supplies", icon: Package, desc: "BAC water, B12, kits" },
 ];
 
 function CategoryTile({
