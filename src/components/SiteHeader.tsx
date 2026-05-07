@@ -16,6 +16,15 @@ import {
   Mail,
   ScrollText,
   Sparkles,
+  Dna,
+  Flame,
+  Brain,
+  Droplet,
+  Heart,
+  Zap,
+  Layers,
+  Package,
+  Sprout,
 } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { peptides } from "@/data/peptides";
