@@ -1,60 +1,43 @@
-# Mobile Optimization Plan
+## Goal
 
-## The big problem first
+The current header dropdowns (Shop / COA Library / About) feel cramped and inconsistent: oversized icon tiles, repeated rows that look identical, and a narrow 380px panel that wastes the floating header's width. Clean them up with a more deliberate, editorial layout.
 
-**There is no mobile menu.** Right now, the nav links (Shop, COA Library, About, FAQ) and Sign In are all `hidden md:flex` — meaning on phones, users see only the logo and a "Get Started" button. They can't navigate anywhere except the homepage and shop. This is the #1 fix.
+## Changes (SiteHeader.tsx only)
 
-## What I'll change
+**1. New tile component**
+- Replace bulky 56px icon squares with a compact 40px circular icon in `brand-gold/10` with a subtle gold ring on hover.
+- Drop the eyebrow label clutter; use a single title + one-line description.
+- Add a faint right-side `→` chevron that slides in on hover for affordance.
+- Hover state: `bg-white/[0.04]` with a left gold accent bar (2px) instead of the current full-row tint.
 
-### 1. SiteHeader — add a real mobile menu
-- Add a hamburger icon (visible `md:hidden`) on the right side of the header pill, next to or instead of "Get Started" on mobile
-- Tapping it opens a full-screen slide-down sheet with: Shop, COA Library, About, FAQ, Sign in / Sign out, and the "Get Started" CTA
-- Close on tap-outside, on link click, and on a top-right X
-- Lock body scroll while open
-- Keep the floating pill style, but make the pill row use less horizontal padding on mobile so it doesn't crowd the edges
+**2. Shop dropdown — two-column layout (560px wide)**
+- Left column: 4 featured products as compact rows (name + size, small category eyebrow).
+- Right column: a "Quick links" stack — Shop All, Bestsellers, New Arrivals, Bundles — plus a small promo card at the bottom ("Every batch tested. View COAs →") with the gold accent.
+- Footer strip: single "Shop all products →" link, right-aligned.
 
-### 2. Announcement bar
-- Currently "Every batch tested. Every COA published." + "View the COA Library →" sit on one line and wrap awkwardly on 390px viewports
-- On mobile: stack the link below the message, or show only the headline and drop the link (the COA library is in the menu)
+**3. COA Library dropdown — two-column (560px)**
+- Left column: the 4 test types (HPLC, Mass Spec, Heavy Metals, Endotoxin) as icon rows.
+- Right column header "Reference" with: How to Read a COA, Verify by Batch #, Lab Partner (Eurofins).
+- Bottom: small inline note "Eurofins · Lancaster, PA · ISO/IEC 17025" in muted text.
 
-### 3. Hero section overlap
-- Hero CTA buttons currently sit too close to the floating header pills, causing visual overlap when scrolling
-- Increase top padding on the hero on mobile (`pt-24` minimum) so the floating pill row doesn't visually clip the badge / headline
-- Reduce h1 from `text-[44px]` on mobile — push to `text-[40px]` with tighter `leading-[1.05]` so the headline fits cleanly on 360–390px screens
-- Stack CTAs full-width on mobile instead of side-by-side
+**4. About dropdown — two-column (560px)**
+- Left column: Our Story, 5-Panel Testing, Lab Partners, Contact.
+- Right "Reference" column: FAQ, Research Use Disclaimer.
 
-### 4. Image collage section
-- Lines 270–310 of `index.tsx` use a fixed-height (`h-[520px]`) 12-column grid that gets crammed on mobile
-- On mobile: collapse the collage to a single 2-column grid of the 4 images (or just 2 stacked), drop the fixed height, let images flow naturally
+**5. Panel container polish**
+- Widen panel to `w-[560px]`, reduce internal padding to `p-3`, tighten row gap.
+- Soften shadow, drop border opacity slightly (`border-white/8`).
+- Add a 150ms fade+translate-y-1 enter animation (already partially there).
+- Anchor each panel under its triggering nav item (currently all anchor left under the brand) — track the trigger's left offset via ref so the panel sits flush below the hovered label.
 
-### 5. Typography & spacing pass on all routes
-- Many headings use `text-4xl md:text-5xl lg:text-[56px]` — fine, but check that the mobile size doesn't overflow on the smallest screens. Drop a step where needed.
-- Section vertical padding: `py-24 lg:py-32` is too tall on mobile. Change to `py-16 md:py-24 lg:py-32`
-- Stat grid (`grid-cols-2 md:grid-cols-4`) is fine, but check number sizes don't crowd
-- Audit horizontal padding: standardize on `px-5 md:px-6 lg:px-10` instead of mixing
-
-### 6. Footer
-- Check column stacking, link tap targets (need `min-h-[44px]` for accessibility)
-
-### 7. Buttons & forms
-- Hero buttons, CTA buttons → make `w-full` on mobile, side-by-side from `sm:` up
-- Promo popup already responsive, no change needed
-- Sign-in / Sign-up forms: verify input field padding and button sizes on mobile
-
-### 8. Other routes (about, shop, contact, faq, coa-library, disclaimer)
-- Apply same audit: section padding, headline sizes, grid column counts, button widths
-- Most heavy lifting is in the shared header — fixing that alone unlocks navigation on every page
-
-## Files to edit
-- `src/components/SiteHeader.tsx` — add mobile menu, fix announcement bar
-- `src/routes/index.tsx` — hero spacing, collage layout, section padding, button widths
-- `src/routes/about.tsx`, `shop.tsx`, `contact.tsx`, `faq.tsx`, `coa-library.tsx`, `disclaimer.tsx` — section padding + heading sizes pass
-- `src/components/SiteFooter.tsx` (or `src/components/ui/footer.tsx`) — tap target sizes, column stacking
-- `src/components/SignInForm.tsx` — mobile spacing pass
+**6. Trigger polish**
+- Add a small caret indicator next to nav labels that have a menu, rotating 180° when open.
+- Underline-grow effect on hover (2px gold bar from left to right) to replace the current flat color change.
 
 ## Out of scope
-- No content/copy changes (voice and copy are dialed in, leaving them alone)
-- No design system / color token changes
-- No new routes or features
+- Mobile drawer (already redesigned recently).
+- Announcement bar, footer, page bodies.
+- No new routes or data changes — featured products still come from `peptides`.
 
-Approve and I'll implement the whole pass.
+## Files
+- `src/components/SiteHeader.tsx` (only file touched).
