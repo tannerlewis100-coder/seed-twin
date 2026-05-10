@@ -343,10 +343,14 @@ export function SiteHeader() {
             <Link
               to="/"
               onMouseEnter={() => setOpenMenu(null)}
-              className="flex items-center gap-1.5 font-display text-[20px] md:text-[22px] lg:text-[26px] tracking-tight text-foreground"
+              aria-label="Clarum Research Peptides"
+              className="flex items-center"
             >
-              clarum
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
+              <img
+                src={clarumLogo}
+                alt="Clarum Research Peptides"
+                className="h-8 md:h-9 lg:h-10 w-auto"
+              />
             </Link>
             <nav className="hidden md:flex items-center gap-7 lg:gap-9 h-full">
               {navItem("shop", "Shop")}
@@ -431,10 +435,14 @@ export function SiteHeader() {
             <Link
               to="/"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-1.5 font-display text-[22px] tracking-tight text-foreground"
+              aria-label="Clarum Research Peptides"
+              className="flex items-center"
             >
-              clarum
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
+              <img
+                src={clarumLogo}
+                alt="Clarum Research Peptides"
+                className="h-9 w-auto"
+              />
             </Link>
             <button
               type="button"
