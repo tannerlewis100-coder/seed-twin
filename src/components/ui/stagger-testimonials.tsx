@@ -10,48 +10,49 @@ const defaultTestimonials = [
   {
     tempId: 0,
     testimonial:
-      "I can verify the exact batch I received against an actual lab report. That alone is worth switching vendors.",
+      "I can verify the exact batch I received against the actual Eurofins report. That alone was worth switching vendors.",
     by: "Dr. M. Reyes, Independent Researcher",
     imgSrc: "https://i.pravatar.cc/150?img=12",
   },
   {
     tempId: 1,
-    testimonial: "Finally.",
+    testimonial:
+      "Clean documentation, traceable batches, accreditation that holds up. We've standardized on Clarum for our reference work.",
     by: "K. Larsen, Lab Director",
     imgSrc: "https://i.pravatar.cc/150?img=15",
   },
   {
     tempId: 2,
     testimonial:
-      "Clean reports, consistent purity across batches, and the COAs are easy to read. Exactly what an analytical workflow needs.",
+      "Consistent purity across batches and COAs that read like real lab reports. Exactly what an analytical workflow needs.",
     by: "S. Whitfield, Bench Scientist",
     imgSrc: "https://i.pravatar.cc/150?img=5",
   },
   {
     tempId: 3,
     testimonial:
-      "ok so I've been ordering peptides for like six years from probably eight different vendors and you get used to the COA being some PDF that looks the same every batch with the date changed, and then I ordered BPC-157 from these guys and the QR on the vial pulled up an actual chromatogram from a lab I can google, and I just sat there for a second because that should not feel novel but it does",
+      "Scanned the QR on the vial and pulled the actual chromatogram from a lab I can google. That should not feel novel, but it does.",
     by: "Dr. A. Petrov, Principal Investigator",
     imgSrc: "https://i.pravatar.cc/150?img=33",
   },
   {
     tempId: 4,
     testimonial:
-      "their ghk-cu came in last tuesday and the coa was already up before the box hit my desk. nice.",
-    by: "j. okafor, analytical chemist",
+      "GHK-Cu arrived Tuesday. The COA was already published before the box hit my desk. Endotoxin under 1 EU/mg. Clean.",
+    by: "J. Okafor, Analytical Chemist",
     imgSrc: "https://i.pravatar.cc/150?img=52",
   },
   {
     tempId: 5,
     testimonial:
-      "Reproducibility matters. Clarum's batch traceability has eliminated a whole category of variables from our workflow.",
+      "Three batches of BPC-157 over four months, HPLC traces within a hair of each other. Reproducibility starts here.",
     by: "Prof. L. Tanaka, University Lab",
     imgSrc: "https://i.pravatar.cc/150?img=47",
   },
   {
     tempId: 6,
     testimonial:
-      "The public COA library was the deciding factor. Transparency before the sale builds trust after it.",
+      "The public COA library was the deciding factor. Transparency before the sale tells me how they'll behave after it.",
     by: "R. Almeida, Research Coordinator",
     imgSrc: "https://i.pravatar.cc/150?img=68",
   },
@@ -113,9 +114,15 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
       />
       <h3
         className={cn(
-          "text-base sm:text-lg font-medium leading-snug",
+          "text-sm sm:text-base font-medium leading-snug overflow-hidden",
           isCenter ? "text-brand-forest-deep" : "text-foreground"
         )}
+        style={{
+          display: "-webkit-box",
+          WebkitLineClamp: 6,
+          WebkitBoxOrient: "vertical",
+          paddingBottom: 48,
+        }}
       >
         "{testimonial.testimonial}"
       </h3>
