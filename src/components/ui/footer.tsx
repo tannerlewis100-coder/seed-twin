@@ -154,7 +154,7 @@ export default function StickyFooter() {
               <div className="grid md:grid-cols-5 gap-10">
                 <motion.div variants={itemVariants} className="md:col-span-2 space-y-4">
                   <Link to="/" aria-label="Clarum Research Peptides" className="inline-flex items-center">
-                    <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto" />
+                    <img src={clarumMark} alt="Clarum Research Peptides" className="h-14 md:h-16 w-auto" />
                   </Link>
                   <p className="max-w-md text-sm text-foreground/55 leading-relaxed">
                     Batch-tested research peptides. Five lab panels per batch,
