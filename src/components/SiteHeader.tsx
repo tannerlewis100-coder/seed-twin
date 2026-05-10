@@ -350,7 +350,7 @@ export function SiteHeader() {
               <img
                 src={clarumLogo}
                 alt="Clarum Research Peptides"
-                className="h-8 md:h-9 lg:h-10 w-auto"
+                className="h-10 md:h-12 lg:h-14 w-auto"
               />
             </Link>
             <nav className="hidden md:flex items-center gap-7 lg:gap-9 h-full">
