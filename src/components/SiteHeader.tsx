@@ -18,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
+import clarumLogo from "@/assets/clarum-logo.png";
 import { peptides } from "@/data/peptides";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
