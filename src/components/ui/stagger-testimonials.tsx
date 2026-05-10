@@ -114,9 +114,15 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
       />
       <h3
         className={cn(
-          "text-base sm:text-lg font-medium leading-snug",
+          "text-sm sm:text-base font-medium leading-snug overflow-hidden",
           isCenter ? "text-brand-forest-deep" : "text-foreground"
         )}
+        style={{
+          display: "-webkit-box",
+          WebkitLineClamp: 6,
+          WebkitBoxOrient: "vertical",
+          paddingBottom: 48,
+        }}
       >
         "{testimonial.testimonial}"
       </h3>
