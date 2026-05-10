@@ -533,25 +533,104 @@ function CoaTeaser() {
   );
 }
 
-/* ---------------- Testimonials (Stagger) ---------------- */
+/* ---------------- Testimonials ---------------- */
+
+const testimonials = [
+  {
+    quote:
+      "We pulled three batches of BPC-157 over four months and the HPLC traces were within a hair of each other. That kind of batch-to-batch consistency is what actually matters in a workflow.",
+    name: "Dr. M. Reyes",
+    role: "Independent Researcher",
+    org: "Phoenix, AZ",
+    initials: "MR",
+  },
+  {
+    quote:
+      "Scanning the QR on the vial and getting back the actual Eurofins report — not a vendor-formatted summary — changed how I evaluate suppliers. It should be the bar.",
+    name: "Dr. A. Petrov",
+    role: "Principal Investigator",
+    org: "University Lab",
+    initials: "AP",
+  },
+  {
+    quote:
+      "The COA was published before the package arrived. Endotoxin under 1 EU/mg, identity confirmed by mass spec. Reproducibility starts with knowing exactly what you ordered.",
+    name: "Prof. L. Tanaka",
+    role: "Analytical Chemistry",
+    org: "Research University",
+    initials: "LT",
+  },
+  {
+    quote:
+      "I've used eight vendors in six years. Clarum is the first one whose lab reports I can independently verify against the testing facility. That alone earned the switch.",
+    name: "S. Whitfield, PhD",
+    role: "Bench Scientist",
+    org: "Biotech R&D",
+    initials: "SW",
+  },
+  {
+    quote:
+      "Clean documentation, traceable batches, and accreditation that holds up. We've standardized on Clarum for our peptide reference work.",
+    name: "K. Larsen",
+    role: "Lab Director",
+    org: "Contract Research Org",
+    initials: "KL",
+  },
+  {
+    quote:
+      "The public COA library was the deciding factor. Transparency before the sale tells me how they'll behave after it.",
+    name: "R. Almeida",
+    role: "Research Coordinator",
+    org: "Clinical Sciences",
+    initials: "RA",
+  },
+];
 
 function Testimonials() {
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-12 md:py-16 lg:py-20">
-        <div className="max-w-2xl mb-10">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-20 lg:py-24">
+        <div className="max-w-2xl mb-10 md:mb-14">
           <Badge
             variant="outline"
             className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
           >
             Researcher voices
           </Badge>
-          <h2 className="font-display text-4xl md:text-5xl text-foreground leading-[1.05] tracking-[-0.02em]">
+          <h2 className="font-display text-[36px] sm:text-4xl md:text-5xl text-foreground leading-[1.05] tracking-[-0.02em]">
             <RevealText text={"Trusted by people\nwho read the data."} />
           </h2>
         </div>
         <RevealOnScroll>
-          <StaggerTestimonials />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            {testimonials.map((t) => (
+              <figure
+                key={t.name}
+                className="group relative flex flex-col h-full rounded-2xl border border-white/[0.08] bg-white/[0.02] p-6 md:p-7 transition-colors hover:border-brand-gold/30 hover:bg-white/[0.035]"
+              >
+                <Quote
+                  className="absolute top-5 right-5 h-5 w-5 text-brand-gold/40"
+                  aria-hidden
+                />
+                <blockquote className="text-[15px] md:text-base leading-relaxed text-foreground/85 flex-1">
+                  "{t.quote}"
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-3 pt-5 border-t border-white/[0.06]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-gold/10 ring-1 ring-inset ring-brand-gold/20 text-brand-gold text-xs font-semibold tracking-wider">
+                    {t.initials}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-foreground truncate">
+                      {t.name}
+                    </div>
+                    <div className="text-xs text-foreground/55 truncate">
+                      {t.role} · {t.org}
+                    </div>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
         </RevealOnScroll>
       </div>
     </section>
