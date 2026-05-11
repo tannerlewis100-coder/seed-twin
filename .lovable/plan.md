@@ -1,43 +1,40 @@
 ## Goal
 
-The current header dropdowns (Shop / COA Library / About) feel cramped and inconsistent: oversized icon tiles, repeated rows that look identical, and a narrow 380px panel that wastes the floating header's width. Clean them up with a more deliberate, editorial layout.
+On the shop, every peptide that exists in multiple sizes (BPC-157 5/10/20mg, TB-500 5/10mg, Tesamorelin 10/20mg, GHRP-6 5/10mg, IGF-1 LR3, Epitalon, MOTS-c, SS-31, GHK-Cu, DSIP, 5-Amino-1MQ, NAD+, Glutathione, Reconstitution Water, Wolverine Blend) collapses into one card. Clicking that card opens a modal with the vial visual, the long-form description, and a size picker that swaps price, batch, purity and the linked COA.
 
-## Changes (SiteHeader.tsx only)
+## Behavior
 
-**1. New tile component**
-- Replace bulky 56px icon squares with a compact 40px circular icon in `brand-gold/10` with a subtle gold ring on hover.
-- Drop the eyebrow label clutter; use a single title + one-line description.
-- Add a faint right-side `→` chevron that slides in on hover for affordance.
-- Hover state: `bg-white/[0.04]` with a left gold accent bar (2px) instead of the current full-row tint.
+1. **Grouping (shop only, data file unchanged)**
+   - In `src/routes/shop.tsx`, build groups by `${name}__${category}` from `allPeptides`.
+   - Render one card per group. Card shows the group's lowest price as "Starting at $X" and a "+N sizes" pill when the group has more than one variant.
+   - Filters and search keep working against the underlying peptides (search matches if any variant in the group matches).
 
-**2. Shop dropdown — two-column layout (560px wide)**
-- Left column: 4 featured products as compact rows (name + size, small category eyebrow).
-- Right column: a "Quick links" stack — Shop All, Bestsellers, New Arrivals, Bundles — plus a small promo card at the bottom ("Every batch tested. View COAs →") with the gold accent.
-- Footer strip: single "Shop all products →" link, right-aligned.
+2. **Card click opens modal (no route change)**
+   - Replace the current `<Link to="/coa-library">` wrapper with a button that sets the active group in local state.
+   - Modal built with the existing shadcn `Dialog` component.
 
-**3. COA Library dropdown — two-column (560px)**
-- Left column: the 4 test types (HPLC, Mass Spec, Heavy Metals, Endotoxin) as icon rows.
-- Right column header "Reference" with: How to Read a COA, Verify by Batch #, Lab Partner (Eurofins).
-- Bottom: small inline note "Eurofins · Lancaster, PA · ISO/IEC 17025" in muted text.
+3. **Modal contents**
+   - Left: enlarged vial visual reusing the same CSS vial markup from the shop card (cap, bottle, CLARUM label, dynamic short-code + size).
+   - Right:
+     - Category pill, name, short purity/batch line.
+     - Long description from `peptide.description`.
+     - Size selector: pill buttons, one per variant, sorted by price asc. Selecting a size updates: price, batch, purity, COA link, and the size text inside the vial.
+     - Primary CTA: "View COA" — links to `peptide.coaUrl` (new tab) when present, otherwise routes to `/coa-library`.
+     - Secondary line: "For in vitro laboratory research only."
+   - If the variant is in `COMING_SOON_SLUGS`, the COA button shows "Coming soon" and is disabled.
 
-**4. About dropdown — two-column (560px)**
-- Left column: Our Story, 5-Panel Testing, Lab Partners, Contact.
-- Right "Reference" column: FAQ, Research Use Disclaimer.
+4. **Empty state and counts**
+   - "Showing N products" reflects group count, not variant count.
+   - No-results copy unchanged.
 
-**5. Panel container polish**
-- Widen panel to `w-[560px]`, reduce internal padding to `p-3`, tighten row gap.
-- Soften shadow, drop border opacity slightly (`border-white/8`).
-- Add a 150ms fade+translate-y-1 enter animation (already partially there).
-- Anchor each panel under its triggering nav item (currently all anchor left under the brand) — track the trigger's left offset via ref so the panel sits flush below the hovered label.
+## Files touched
 
-**6. Trigger polish**
-- Add a small caret indicator next to nav labels that have a menu, rotating 180° when open.
-- Underline-grow effect on hover (2px gold bar from left to right) to replace the current flat color change.
+- `src/routes/shop.tsx` — group peptides, render one card per group, manage modal state, render modal.
+- `src/components/ProductDetailModal.tsx` (new) — the dialog with vial + size selector, takes a `group: Peptide[]` prop.
+
+No changes to `src/data/peptides.ts`, header, footer, or other routes. The COA library page stays as-is.
 
 ## Out of scope
-- Mobile drawer (already redesigned recently).
-- Announcement bar, footer, page bodies.
-- No new routes or data changes — featured products still come from `peptides`.
 
-## Files
-- `src/components/SiteHeader.tsx` (only file touched).
+- No add-to-cart, no new product route, no new images.
+- Homepage featured grid keeps using its current `featuredPeptides` (still works since slugs are intact).
