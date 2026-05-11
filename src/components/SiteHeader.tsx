@@ -425,6 +425,7 @@ export function SiteHeader() {
 
           {/* Mega-menu panel anchored under active trigger */}
           <div
+            ref={panelRef}
             className={`absolute top-full hidden md:block transition-all duration-200 ease-out ${
               openMenu
                 ? "opacity-100 translate-y-0 pointer-events-auto"
