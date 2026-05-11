@@ -264,12 +264,23 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (!openMenu) return;
-    const triggerEl = triggerRefs.current[openMenu];
-    const rowEl = navRowRef.current;
-    if (!triggerEl || !rowEl) return;
-    const t = triggerEl.getBoundingClientRect();
-    const r = rowEl.getBoundingClientRect();
-    setPanelLeft(t.left - r.left + t.width / 2);
+    const compute = () => {
+      const triggerEl = triggerRefs.current[openMenu];
+      const rowEl = navRowRef.current;
+      if (!triggerEl || !rowEl) return;
+      const t = triggerEl.getBoundingClientRect();
+      const r = rowEl.getBoundingClientRect();
+      const center = t.left + t.width / 2;
+      const panelWidth = panelRef.current?.firstElementChild?.getBoundingClientRect().width ?? 600;
+      const pad = 16;
+      const minCenter = pad + panelWidth / 2;
+      const maxCenter = window.innerWidth - pad - panelWidth / 2;
+      const clamped = Math.min(Math.max(center, minCenter), maxCenter);
+      setPanelLeft(clamped - r.left);
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
   }, [openMenu, scrolled]);
 
   const ActiveMenu = useMemo(
