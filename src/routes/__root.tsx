@@ -2,6 +2,8 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import { Toaster } from "@/components/ui/sonner";
 import { PromoPopup } from "@/components/PromoPopup";
 import { AgeGate } from "@/components/AgeGate";
+import { CartProvider } from "@/lib/cart";
+import { CartDrawer } from "@/components/CartDrawer";
 
 import appCss from "../styles.css?url";
 
@@ -83,11 +85,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <>
+    <CartProvider>
       <Outlet />
       <AgeGate />
       <PromoPopup />
+      <CartDrawer />
       <Toaster />
-    </>
+    </CartProvider>
   );
 }

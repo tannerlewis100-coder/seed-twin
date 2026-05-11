@@ -16,6 +16,7 @@ import {
   Mail,
   ScrollText,
   Sparkles,
+  ShoppingCart,
 } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
 import clarumLogo from "@/assets/clarum-logo.png";
@@ -23,6 +24,7 @@ import { peptides } from "@/data/peptides";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCart } from "@/lib/cart";
 
 export function AnnouncementBar() {
   return (
@@ -237,6 +239,7 @@ export function SiteHeader() {
   const [panelLeft, setPanelLeft] = useState(0);
   const auth = useAuth();
   const user = auth?.user ?? null;
+  const { count, openCart } = useCart();
 
   const triggerRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const navRowRef = useRef<HTMLDivElement | null>(null);
@@ -408,6 +411,19 @@ export function SiteHeader() {
                 Sign in
               </Link>
             )}
+            <button
+              type="button"
+              onClick={openCart}
+              aria-label="Open cart"
+              className="relative inline-flex items-center justify-center w-10 h-10 rounded-full text-foreground/85 hover:text-brand-gold transition-colors"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {count > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-brand-gold text-brand-forest text-[10px] font-bold flex items-center justify-center">
+                  {count}
+                </span>
+              )}
+            </button>
             <Link
               to="/shop"
               className={`hidden sm:inline-flex items-center rounded-full bg-brand-gold text-brand-forest text-[14px] font-medium hover:bg-brand-gold-light transition-colors ${
