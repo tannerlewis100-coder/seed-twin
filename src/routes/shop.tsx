@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
-import { allPeptides, categories } from "@/data/peptides";
+import { allPeptides, categories, type Peptide } from "@/data/peptides";
+import ProductDetailModal from "@/components/ProductDetailModal";
 
 export const Route = createFileRoute("/shop")({
   component: ShopPage,
@@ -32,13 +33,23 @@ const FILTERS = [{ name: "All", slug: "All" }, ...categories];
 function ShopPage() {
   const [activeCat, setActiveCat] = useState("All");
   const [query, setQuery] = useState("");
+  const [activeGroup, setActiveGroup] = useState<Peptide[] | null>(null);
 
-  const filtered = useMemo(() => {
+  const groups = useMemo(() => {
     let items = allPeptides;
     if (activeCat !== "All") items = items.filter((p) => p.category === activeCat);
     const q = query.trim().toLowerCase();
     if (q) items = items.filter((p) => p.name.toLowerCase().includes(q));
-    return items;
+    const map = new Map<string, Peptide[]>();
+    for (const p of items) {
+      const key = `${p.name}__${p.category}`;
+      const arr = map.get(key);
+      if (arr) arr.push(p);
+      else map.set(key, [p]);
+    }
+    return Array.from(map.values()).map((variants) =>
+      [...variants].sort((a, b) => a.price - b.price),
+    );
   }, [activeCat, query]);
 
   return (
