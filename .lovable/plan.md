@@ -1,40 +1,74 @@
 ## Goal
 
-On the shop, every peptide that exists in multiple sizes (BPC-157 5/10/20mg, TB-500 5/10mg, Tesamorelin 10/20mg, GHRP-6 5/10mg, IGF-1 LR3, Epitalon, MOTS-c, SS-31, GHK-Cu, DSIP, 5-Amino-1MQ, NAD+, Glutathione, Reconstitution Water, Wolverine Blend) collapses into one card. Clicking that card opens a modal with the vial visual, the long-form description, and a size picker that swaps price, batch, purity and the linked COA.
+Replace "View COA" in the product modal with "Add to Cart". Build a cart that holds line items locally, shows a header cart icon + drawer, and checks out through the WooCommerce Store API. Use a placeholder Woo URL for now so it can be swapped later.
 
-## Behavior
+## Architecture
 
-1. **Grouping (shop only, data file unchanged)**
-   - In `src/routes/shop.tsx`, build groups by `${name}__${category}` from `allPeptides`.
-   - Render one card per group. Card shows the group's lowest price as "Starting at $X" and a "+N sizes" pill when the group has more than one variant.
-   - Filters and search keep working against the underlying peptides (search matches if any variant in the group matches).
+```text
+Browser  →  Cart Context (localStorage)
+  add → modal Add-to-Cart button
+  view → header cart icon + slide-over drawer
+  checkout → POST /api/cart/checkout (server fn proxy)
+                ↓
+         WooCommerce Store API (cart + checkout)
+                ↓
+       Returns checkout URL → window.location
+```
 
-2. **Card click opens modal (no route change)**
-   - Replace the current `<Link to="/coa-library">` wrapper with a button that sets the active group in local state.
-   - Modal built with the existing shadcn `Dialog` component.
+We proxy Woo through a TanStack server function to avoid CORS and keep the Woo URL/key out of the browser.
 
-3. **Modal contents**
-   - Left: enlarged vial visual reusing the same CSS vial markup from the shop card (cap, bottle, CLARUM label, dynamic short-code + size).
-   - Right:
-     - Category pill, name, short purity/batch line.
-     - Long description from `peptide.description`.
-     - Size selector: pill buttons, one per variant, sorted by price asc. Selecting a size updates: price, batch, purity, COA link, and the size text inside the vial.
-     - Primary CTA: "View COA" — links to `peptide.coaUrl` (new tab) when present, otherwise routes to `/coa-library`.
-     - Secondary line: "For in vitro laboratory research only."
-   - If the variant is in `COMING_SOON_SLUGS`, the COA button shows "Coming soon" and is disabled.
+## Step 1 — Cart state
 
-4. **Empty state and counts**
-   - "Showing N products" reflects group count, not variant count.
-   - No-results copy unchanged.
+New `src/lib/cart.tsx`:
+- `CartProvider` with `useReducer`, persists to `localStorage` under `clarum.cart.v1`.
+- Item shape: `{ slug, name, size, price, qty }`.
+- API: `addItem`, `removeItem`, `updateQty`, `clearCart`, `items`, `subtotal`, `count`.
+- Mounted once in `src/routes/__root.tsx` so every page sees it.
 
-## Files touched
+## Step 2 — Modal CTA swap
 
-- `src/routes/shop.tsx` — group peptides, render one card per group, manage modal state, render modal.
-- `src/components/ProductDetailModal.tsx` (new) — the dialog with vial + size selector, takes a `group: Peptide[]` prop.
+In `src/components/ProductDetailModal.tsx`:
+- Replace the "View COA" anchor with an "Add to Cart" button that calls `addItem(activeVariant)` and shows a brief "Added ✓" state for 1.5s.
+- Remove COA link entirely (per the answered question).
+- Keep the "Coming soon" disabled state for variants in `COMING_SOON_SLUGS`.
 
-No changes to `src/data/peptides.ts`, header, footer, or other routes. The COA library page stays as-is.
+## Step 3 — Header cart icon + drawer
+
+- Add a cart button to `src/components/SiteHeader.tsx` (right side, next to existing nav). Shows `count` badge when > 0.
+- New `src/components/CartDrawer.tsx` using shadcn `Sheet`:
+  - Lists items with name, size, qty stepper, line price, remove.
+  - Subtotal row.
+  - "Checkout" primary button → calls `startCheckout()`.
+  - Disclaimer line: "For in vitro laboratory research only."
+
+## Step 4 — Woo proxy server function
+
+New `src/lib/woo.functions.ts`:
+- `startCheckout` server fn (POST). Validates input with Zod: array of `{ sku, quantity }`.
+- Reads `WOO_STORE_URL` from `process.env`. If missing, returns a graceful `{ error: "Store not configured yet." }` so the UI stays usable on the placeholder.
+- Calls Woo Store API: `POST {WOO_STORE_URL}/wp-json/wc/store/v1/cart/add-item` per SKU (uses Cart-Token header to keep one server-side cart per request) and finally returns `{ checkoutUrl: "{WOO_STORE_URL}/checkout/" }`.
+- The browser then `window.location.assign(checkoutUrl)`.
+- Note: with the placeholder URL the server fn returns an error and the drawer shows "Store not configured yet — paste your WooCommerce URL in Lovable secrets to enable checkout."
+
+## Step 5 — Slug → Woo SKU mapping
+
+For now Woo SKU = peptide `slug` (e.g. `bpc-157-10mg`). When the user wires their real store, they only need to set product SKUs in Woo to match. No data file changes required.
+
+## Step 6 — Secret
+
+Request one secret: `WOO_STORE_URL` (e.g. `https://shop.clarum.com`). Used only by the server function. Kept blank for now and the cart still works locally; checkout shows the configuration hint until it's set.
+
+## Files
+
+- new `src/lib/cart.tsx` — context + reducer + localStorage
+- new `src/lib/woo.functions.ts` — `startCheckout` server fn (Zod validated)
+- new `src/components/CartDrawer.tsx` — Sheet UI
+- edit `src/routes/__root.tsx` — wrap with `CartProvider`, render `CartDrawer`
+- edit `src/components/SiteHeader.tsx` — cart icon + count badge, opens drawer
+- edit `src/components/ProductDetailModal.tsx` — Add to Cart button, remove COA link
 
 ## Out of scope
 
-- No add-to-cart, no new product route, no new images.
-- Homepage featured grid keeps using its current `featuredPeptides` (still works since slugs are intact).
+- No real payments (Woo handles that on its own checkout page).
+- No product sync from Woo. The shop catalog stays driven by `src/data/peptides.ts`.
+- No inventory or stock checks.
