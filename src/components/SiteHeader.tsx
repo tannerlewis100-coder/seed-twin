@@ -237,6 +237,7 @@ export function SiteHeader() {
 
   const triggerRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const navRowRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
