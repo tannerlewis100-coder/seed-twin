@@ -112,45 +112,49 @@ function ShopPage() {
         <section className="bg-card border-b border-white/5">
           <div className="mx-auto max-w-7xl px-6 py-12">
             <p className="text-xs text-foreground/50 mb-6">
-              Showing <span className="text-foreground font-semibold">{filtered.length}</span>{" "}
-              product{filtered.length !== 1 ? "s" : ""}
+              Showing <span className="text-foreground font-semibold">{groups.length}</span>{" "}
+              product{groups.length !== 1 ? "s" : ""}
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {filtered.map((p, i) => {
+              {groups.map((group, i) => {
+                const p = group[0];
                 const code = p.batch?.split("-").slice(-1)[0]?.replace(/\d+$/, "") || p.name.slice(0, 3).toUpperCase();
                 const shortCode = `${code}-${String(i + 1).padStart(2, "0")}`;
+                const sizeCount = group.length;
                 return (
                   <RevealOnScroll key={p.slug} delay={Math.min(i * 40, 400)}>
-                    <Link
-                      to="/coa-library"
+                    <button
+                      type="button"
+                      onClick={() => setActiveGroup(group)}
                       className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
                     >
-                      {/* Top-left badge */}
                       <div className="absolute top-5 left-5 z-10">
                         <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1.5 rounded-full">
                           {p.badge ?? p.category}
                         </span>
                       </div>
+                      {sizeCount > 1 && (
+                        <div className="absolute top-5 right-5 z-10">
+                          <span className="text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-foreground/80 border border-white/10 px-2.5 py-1 rounded-full">
+                            {sizeCount} sizes
+                          </span>
+                        </div>
+                      )}
 
-                      {/* Code pill */}
                       <div className="relative z-10 mt-10 mb-4">
                         <span className="inline-block text-xs tracking-wider text-foreground/80 border border-white/20 rounded-full px-4 py-1.5">
                           {shortCode}
                         </span>
                       </div>
 
-                      {/* Title */}
                       <h3 className="relative z-10 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[80%]">
                         {p.name}
                       </h3>
 
-                      {/* Vial visual */}
                       <div className="relative z-10 flex-1 flex items-center justify-center w-full my-4">
                         <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
-                          {/* Cap */}
                           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
                           <div className="absolute top-5 left-1/2 -translate-x-1/2 w-[5.5rem] h-2 bg-black/60 rounded-sm" />
-                          {/* Bottle */}
                           <div className="absolute top-7 left-1/2 -translate-x-1/2 w-28 h-36 rounded-b-xl rounded-t-sm bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
                             <div className="absolute inset-x-3 top-10 h-px bg-brand-gold/30" />
                             <div className="absolute inset-x-0 top-12 text-center">
@@ -165,21 +169,21 @@ function ShopPage() {
                         </div>
                       </div>
 
-                      {/* Shop Now button */}
                       <div className="relative z-10 w-full">
                         <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
-                          Shop Now
+                          View Details
                         </div>
                         <p className="mt-4 text-xs text-foreground/60">
-                          Starting at <span className="text-foreground/90 font-semibold">${p.price.toFixed(2)}</span>
+                          {sizeCount > 1 ? "Starting at " : ""}
+                          <span className="text-foreground/90 font-semibold">${p.price.toFixed(2)}</span>
                         </p>
                       </div>
-                    </Link>
+                    </button>
                   </RevealOnScroll>
                 );
               })}
             </div>
-            {filtered.length === 0 && (
+            {groups.length === 0 && (
               <p className="text-center text-foreground/40 py-20">
                 No products found matching your filters.
               </p>
@@ -192,6 +196,11 @@ function ShopPage() {
         </section>
       </main>
       <SiteFooter />
+      <ProductDetailModal
+        group={activeGroup}
+        open={!!activeGroup}
+        onOpenChange={(o) => !o && setActiveGroup(null)}
+      />
     </div>
   );
 }
