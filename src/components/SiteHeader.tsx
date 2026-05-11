@@ -237,6 +237,7 @@ export function SiteHeader() {
 
   const triggerRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const navRowRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
@@ -263,12 +264,23 @@ export function SiteHeader() {
 
   useEffect(() => {
     if (!openMenu) return;
-    const triggerEl = triggerRefs.current[openMenu];
-    const rowEl = navRowRef.current;
-    if (!triggerEl || !rowEl) return;
-    const t = triggerEl.getBoundingClientRect();
-    const r = rowEl.getBoundingClientRect();
-    setPanelLeft(t.left - r.left + t.width / 2);
+    const compute = () => {
+      const triggerEl = triggerRefs.current[openMenu];
+      const rowEl = navRowRef.current;
+      if (!triggerEl || !rowEl) return;
+      const t = triggerEl.getBoundingClientRect();
+      const r = rowEl.getBoundingClientRect();
+      const center = t.left + t.width / 2;
+      const panelWidth = panelRef.current?.firstElementChild?.getBoundingClientRect().width ?? 600;
+      const pad = 16;
+      const minCenter = pad + panelWidth / 2;
+      const maxCenter = window.innerWidth - pad - panelWidth / 2;
+      const clamped = Math.min(Math.max(center, minCenter), maxCenter);
+      setPanelLeft(clamped - r.left);
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
   }, [openMenu, scrolled]);
 
   const ActiveMenu = useMemo(
@@ -413,6 +425,7 @@ export function SiteHeader() {
 
           {/* Mega-menu panel anchored under active trigger */}
           <div
+            ref={panelRef}
             className={`absolute top-full hidden md:block transition-all duration-200 ease-out ${
               openMenu
                 ? "opacity-100 translate-y-0 pointer-events-auto"
