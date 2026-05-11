@@ -30,7 +30,7 @@ export const startCheckout = createServerFn({ method: "POST" })
       let cartToken: string | null = null;
       // Add each item, threading the Cart-Token header so Woo keeps one server-side cart.
       for (const item of data.items) {
-        const res = await fetch(`${storeUrl}/wp-json/wc/store/v1/cart/add-item`, {
+        const res: Response = await fetch(`${storeUrl}/wp-json/wc/store/v1/cart/add-item`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export const startCheckout = createServerFn({ method: "POST" })
           },
           body: JSON.stringify({ id: 0, sku: item.sku, quantity: item.quantity }),
         });
-        const next = res.headers.get("Cart-Token");
+        const next: string | null = res.headers.get("Cart-Token");
         if (next) cartToken = next;
         if (!res.ok) {
           const text = await res.text();
