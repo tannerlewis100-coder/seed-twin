@@ -106,7 +106,10 @@ function QuickLink({ to, children }: { to: LinkTo; children: React.ReactNode }) 
 }
 
 function ShopMenu() {
-  const featured = peptides.slice(0, 4);
+  const featuredSlugs = ["bpc-157-5mg", "ghk-cu-50mg", "ipamorelin", "nad-500mg"];
+  const featured = featuredSlugs
+    .map((s) => peptides.find((p) => p.slug === s))
+    .filter((p): p is (typeof peptides)[number] => Boolean(p));
   return (
     <div className="grid grid-cols-[1fr_240px] gap-2 p-3 w-[600px]">
       <div>
