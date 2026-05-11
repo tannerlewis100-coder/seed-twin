@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Search, Shield } from "lucide-react";
+import { Search } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -104,86 +104,64 @@ function ShopPage() {
               Showing <span className="text-foreground font-semibold">{filtered.length}</span>{" "}
               product{filtered.length !== 1 ? "s" : ""}
             </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {filtered.map((p, i) => {
-                const shortDesc =
-                  p.description.length > 180
-                    ? p.description.slice(0, 180).replace(/\s+\S*$/, "") + "…"
-                    : p.description;
+                const code = p.batch?.split("-").slice(-1)[0]?.replace(/\d+$/, "") || p.name.slice(0, 3).toUpperCase();
+                const shortCode = `${code}-${String(i + 1).padStart(2, "0")}`;
                 return (
-                  <RevealOnScroll key={p.slug} delay={Math.min(i * 30, 300)}>
+                  <RevealOnScroll key={p.slug} delay={Math.min(i * 40, 400)}>
                     <Link
-                      to="/shop/$slug"
-                      params={{ slug: p.slug }}
-                      className="group/card relative flex flex-col h-full rounded-3xl bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl overflow-hidden"
+                      to="/coa-library"
+                      className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
                     >
-                      {/* Visual header */}
-                      <div className="relative h-48 bg-gradient-to-b from-black/40 to-brand-forest-deep flex items-center justify-center border-b border-white/5">
-                        <div className="absolute top-4 left-4 z-10">
-                          <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-2.5 py-1 rounded-full">
-                            {p.badge ?? p.category}
-                          </span>
-                        </div>
-                        <div className="absolute top-4 right-4 z-10">
-                          <span className="text-[10px] uppercase tracking-wider text-foreground/60 border border-white/15 rounded-full px-2.5 py-1">
-                            {p.purity}
-                          </span>
-                        </div>
-                        <div className="relative w-20 h-32 transition-transform duration-700 group-hover/card:scale-110">
-                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-4 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
-                          <div className="absolute top-3.5 left-1/2 -translate-x-1/2 w-14 h-1.5 bg-black/60 rounded-sm" />
-                          <div className="absolute top-5 left-1/2 -translate-x-1/2 w-20 h-26 h-[6.5rem] rounded-b-xl rounded-t-sm bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
-                            <div className="absolute inset-x-2 top-7 h-px bg-brand-gold/30" />
-                            <div className="absolute inset-x-0 top-8 text-center">
-                              <span className="text-[7px] tracking-[0.2em] text-brand-gold/80 font-semibold">CLARUM</span>
+                      {/* Top-left badge */}
+                      <div className="absolute top-5 left-5 z-10">
+                        <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1.5 rounded-full">
+                          {p.badge ?? p.category}
+                        </span>
+                      </div>
+
+                      {/* Code pill */}
+                      <div className="relative z-10 mt-10 mb-4">
+                        <span className="inline-block text-xs tracking-wider text-foreground/80 border border-white/20 rounded-full px-4 py-1.5">
+                          {shortCode}
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="relative z-10 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[80%]">
+                        {p.name}
+                      </h3>
+
+                      {/* Vial visual */}
+                      <div className="relative z-10 flex-1 flex items-center justify-center w-full my-4">
+                        <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
+                          {/* Cap */}
+                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
+                          <div className="absolute top-5 left-1/2 -translate-x-1/2 w-[5.5rem] h-2 bg-black/60 rounded-sm" />
+                          {/* Bottle */}
+                          <div className="absolute top-7 left-1/2 -translate-x-1/2 w-28 h-36 rounded-b-xl rounded-t-sm bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
+                            <div className="absolute inset-x-3 top-10 h-px bg-brand-gold/30" />
+                            <div className="absolute inset-x-0 top-12 text-center">
+                              <span className="text-[8px] tracking-[0.2em] text-brand-gold/80 font-semibold">CLARUM</span>
                             </div>
-                            <div className="absolute inset-x-1 bottom-3 text-center">
-                              <span className="text-[6px] tracking-wider text-white/50 block">{p.size}</span>
+                            <div className="absolute inset-x-4 bottom-6 text-center">
+                              <span className="text-[7px] tracking-wider text-white/50 block">{shortCode} · {p.size}</span>
+                              <span className="text-[6px] tracking-wider text-white/30 block mt-0.5">RESEARCH USE ONLY</span>
                             </div>
+                            <div className="absolute inset-y-0 right-2 w-2 bg-gradient-to-r from-transparent to-white/10" />
                           </div>
                         </div>
                       </div>
 
-                      {/* Body */}
-                      <div className="flex flex-col flex-1 p-5">
-                        <div className="text-[10px] uppercase tracking-wider text-brand-gold/80 font-semibold mb-1.5">
-                          {p.category}
+                      {/* Shop Now button */}
+                      <div className="relative z-10 w-full">
+                        <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
+                          Shop Now
                         </div>
-                        <h3 className="font-display text-xl text-foreground leading-tight">
-                          {p.name}
-                        </h3>
-                        <div className="text-xs text-foreground/50 mt-0.5">
-                          {p.size} · Batch {p.batch}
-                        </div>
-
-                        <p className="mt-3 text-sm text-foreground/65 leading-relaxed line-clamp-4">
-                          {shortDesc}
+                        <p className="mt-4 text-xs text-foreground/60">
+                          Starting at <span className="text-foreground/90 font-semibold">${p.price.toFixed(2)}</span>
                         </p>
-
-                        {/* Spec row */}
-                        <div className="mt-4 flex items-center gap-2 text-[10px] text-foreground/55">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-white/[0.04] border border-white/10 px-2 py-1">
-                            <Shield className="h-2.5 w-2.5 text-brand-gold" /> Eurofins tested
-                          </span>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-white/[0.04] border border-white/10 px-2 py-1">
-                            {p.coa.identity}
-                          </span>
-                        </div>
-
-                        {/* Footer */}
-                        <div className="mt-auto pt-5 flex items-center justify-between">
-                          <div>
-                            <div className="text-[10px] uppercase tracking-wider text-foreground/40">
-                              From
-                            </div>
-                            <div className="font-display text-2xl text-foreground">
-                              ${p.price.toFixed(2)}
-                            </div>
-                          </div>
-                          <div className="rounded-full bg-brand-forest border border-white/10 px-5 py-2.5 text-foreground text-xs font-semibold group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
-                            View Product →
-                          </div>
-                        </div>
                       </div>
                     </Link>
                   </RevealOnScroll>
