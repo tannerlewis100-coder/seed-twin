@@ -16,6 +16,7 @@ import {
   Mail,
   ScrollText,
   Sparkles,
+  ShoppingCart,
 } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
 import clarumLogo from "@/assets/clarum-logo.png";
@@ -23,6 +24,7 @@ import { peptides } from "@/data/peptides";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useCart } from "@/lib/cart";
 
 export function AnnouncementBar() {
   return (

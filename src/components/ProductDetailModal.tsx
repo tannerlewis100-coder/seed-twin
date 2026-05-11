@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { COMING_SOON_SLUGS, type Peptide } from "@/data/peptides";
+import { useCart } from "@/lib/cart";
+import { Check, ShoppingCart } from "lucide-react";
 
 type Props = {
   group: Peptide[] | null;
@@ -14,9 +16,12 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
     [group],
   );
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
+  const [added, setAdded] = useState(false);
+  const { addItem } = useCart();
 
   useEffect(() => {
     if (variants.length) setActiveSlug(variants[0].slug);
+    setAdded(false);
   }, [variants]);
 
   if (!group || !variants.length) return null;
@@ -101,22 +106,31 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
                 >
                   Coming soon
                 </button>
-              ) : active.coaUrl ? (
-                <a
-                  href={active.coaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 text-center rounded-full bg-brand-gold text-brand-forest px-6 py-3 text-sm font-semibold hover:bg-brand-gold/90 transition-colors"
-                >
-                  View COA
-                </a>
               ) : (
-                <a
-                  href="/coa-library"
-                  className="flex-1 text-center rounded-full bg-brand-gold text-brand-forest px-6 py-3 text-sm font-semibold hover:bg-brand-gold/90 transition-colors"
+                <button
+                  type="button"
+                  onClick={() => {
+                    addItem({
+                      slug: active.slug,
+                      name: `${active.name} ${active.size}`,
+                      size: active.size,
+                      price: active.price,
+                    });
+                    setAdded(true);
+                    window.setTimeout(() => setAdded(false), 1500);
+                  }}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-full bg-brand-gold text-brand-forest px-6 py-3 text-sm font-semibold hover:bg-brand-gold/90 transition-colors"
                 >
-                  View COA Library
-                </a>
+                  {added ? (
+                    <>
+                      <Check className="h-4 w-4" /> Added
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="h-4 w-4" /> Add to Cart
+                    </>
+                  )}
+                </button>
               )}
             </div>
 
