@@ -26,10 +26,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-import capsuleMacro from "@/assets/quality-ss37.png";
-import duoJars from "@/assets/quality-semax.png";
-import heroCapsule from "@/assets/quality-tb500-box.png";
-import lifestylePour from "@/assets/quality-trio.png";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
@@ -267,74 +263,9 @@ function QualityCollage() {
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-20 items-center">
-        {/* Image collage */}
-        <div className="lg:col-span-6 grid grid-cols-12 grid-rows-6 gap-3 sm:gap-4 h-[380px] sm:h-[460px] lg:h-[520px]">
-          <RevealOnScroll className="col-span-7 row-span-4 overflow-hidden rounded-2xl border border-white/[0.08]">
-            <img
-              src={heroCapsule}
-              srcSet={`${heroCapsule} 1x, ${heroCapsule} 2x`}
-              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 60vw"
-              alt="TB-500 sealed box"
-              loading="eager"
-              decoding="sync"
-              fetchPriority="high"
-              style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
-            />
-          </RevealOnScroll>
-          <RevealOnScroll
-            delay={120}
-            className="col-span-5 row-span-3 overflow-hidden rounded-2xl border border-white/[0.08]"
-          >
-            <img
-              src={capsuleMacro}
-              srcSet={`${capsuleMacro} 1x, ${capsuleMacro} 2x`}
-              sizes="(min-width: 1024px) 22vw, (min-width: 640px) 38vw, 42vw"
-              alt="SS-37 vial"
-              loading="eager"
-              decoding="sync"
-              fetchPriority="high"
-              style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
-            />
-          </RevealOnScroll>
-          <RevealOnScroll
-            delay={200}
-            className="col-span-5 row-span-3 overflow-hidden rounded-2xl border border-white/[0.08]"
-          >
-            <img
-              src={duoJars}
-              srcSet={`${duoJars} 1x, ${duoJars} 2x`}
-              sizes="(min-width: 1024px) 22vw, (min-width: 640px) 38vw, 42vw"
-              alt="SEMAX vial"
-              loading="eager"
-              decoding="sync"
-              fetchPriority="high"
-              style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
-            />
-          </RevealOnScroll>
-          <RevealOnScroll
-            delay={280}
-            className="col-span-7 row-span-2 overflow-hidden rounded-2xl border border-white/[0.08]"
-          >
-            <img
-              src={lifestylePour}
-              srcSet={`${lifestylePour} 1x, ${lifestylePour} 2x`}
-              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 60vw"
-              alt="BPC-157, SELANK, GHK-Cu trio"
-              loading="eager"
-              decoding="sync"
-              fetchPriority="high"
-              style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
-            />
-          </RevealOnScroll>
-        </div>
-
+      <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32">
         {/* Copy + checkmarks */}
-        <div className="lg:col-span-6">
+        <div>
           <Badge
             variant="outline"
             className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"

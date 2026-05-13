@@ -19,7 +19,6 @@ import {
   ShoppingCart,
 } from "lucide-react";
 import { useState, useEffect, useRef, useMemo } from "react";
-import clarumLogo from "@/assets/clarum-logo.png";
 import { peptides } from "@/data/peptides";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -363,13 +362,10 @@ export function SiteHeader() {
               to="/"
               onMouseEnter={() => setOpenMenu(null)}
               aria-label="Clarum Research Peptides"
-              className="flex items-center"
+              className="inline-flex items-center gap-1.5 font-display text-[22px] md:text-[26px] tracking-tight text-foreground"
             >
-              <img
-                src={clarumLogo}
-                alt="Clarum Research Peptides"
-                className="h-10 md:h-12 lg:h-14 w-auto"
-              />
+              clarum
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
             </Link>
             <nav className="hidden md:flex items-center gap-7 lg:gap-9 h-full">
               {navItem("shop", "Shop")}
@@ -469,13 +465,10 @@ export function SiteHeader() {
               to="/"
               onClick={() => setMobileOpen(false)}
               aria-label="Clarum Research Peptides"
-              className="flex items-center"
+              className="inline-flex items-center gap-1.5 font-display text-[22px] tracking-tight text-foreground"
             >
-              <img
-                src={clarumLogo}
-                alt="Clarum Research Peptides"
-                className="h-9 w-auto"
-              />
+              clarum
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
             </Link>
             <button
               type="button"

@@ -4,7 +4,6 @@ import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { Twitter, Linkedin, Instagram, Youtube, Mail } from "lucide-react";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
-import clarumLogo from "@/assets/clarum-logo.png";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
@@ -153,12 +152,13 @@ export default function StickyFooter() {
               {/* Top: brand + nav */}
               <div className="grid md:grid-cols-5 gap-10">
                 <motion.div variants={itemVariants} className="md:col-span-2 space-y-4">
-                  <Link to="/" aria-label="Clarum Research Peptides" className="group inline-flex items-center">
-                    <img
-                      src={clarumLogo}
-                      alt="Clarum Research Peptides"
-                      className="h-16 md:h-20 w-auto drop-shadow-[0_0_24px_rgba(212,175,55,0.35)] transition-transform duration-500 group-hover:scale-[1.03]"
-                    />
+                  <Link
+                    to="/"
+                    aria-label="Clarum Research Peptides"
+                    className="group inline-flex items-center gap-2 font-display text-4xl md:text-5xl tracking-tight text-foreground drop-shadow-[0_0_24px_rgba(212,175,55,0.35)] transition-transform duration-500 hover:scale-[1.03]"
+                  >
+                    clarum
+                    <span className="inline-block w-2 h-2 rounded-full bg-brand-gold translate-y-2" />
                   </Link>
                   <p className="max-w-md text-sm text-foreground/55 leading-relaxed">
                     Batch-tested research peptides. Five lab panels per batch,

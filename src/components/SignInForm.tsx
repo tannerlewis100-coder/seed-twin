@@ -4,7 +4,6 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import heroImg from "@/assets/signin-hero.jpg";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48" aria-hidden>
@@ -224,12 +223,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
       </section>
 
       {/* RIGHT: hero + testimonials */}
-      <aside className="hidden lg:block relative flex-1 overflow-hidden">
-        <img
-          src={heroImg}
-          alt="Analytical chemistry lab. HPLC vials in a rack."
-          className="animate-slide-right absolute inset-0 h-full w-full object-cover"
-        />
+      <aside className="hidden lg:block relative flex-1 overflow-hidden bg-brand-forest-deep">
         <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/30 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/80" />
 
