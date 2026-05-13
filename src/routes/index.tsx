@@ -26,6 +26,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
+import qualitySemax from "@/assets/quality-semax.jpg";
+import qualitySs37 from "@/assets/quality-ss37.jpg";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
@@ -263,9 +265,58 @@ function QualityCollage() {
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-20 items-center">
+        {/* Image collage */}
+        <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
+          <RevealOnScroll className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
+            <img
+              src={qualitySs37}
+              srcSet={`${qualitySs37} 1x, ${qualitySs37} 2x`}
+              sizes="(min-width: 1024px) 24vw, 45vw"
+              alt="SS-37 vial"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
+              className="w-full h-full object-cover"
+            />
+          </RevealOnScroll>
+          <RevealOnScroll
+            delay={120}
+            className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]"
+          >
+            <img
+              src={qualitySemax}
+              srcSet={`${qualitySemax} 1x, ${qualitySemax} 2x`}
+              sizes="(min-width: 1024px) 24vw, 45vw"
+              alt="SEMAX vial"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
+              className="w-full h-full object-cover"
+            />
+          </RevealOnScroll>
+          <RevealOnScroll
+            delay={200}
+            className="aspect-[3/4] overflow-hidden rounded-2xl border border-dashed border-white/[0.12] bg-white/[0.02] flex items-center justify-center"
+          >
+            <span className="text-[11px] tracking-[0.2em] uppercase text-foreground/30">
+              Image coming
+            </span>
+          </RevealOnScroll>
+          <RevealOnScroll
+            delay={280}
+            className="aspect-[3/4] overflow-hidden rounded-2xl border border-dashed border-white/[0.12] bg-white/[0.02] flex items-center justify-center"
+          >
+            <span className="text-[11px] tracking-[0.2em] uppercase text-foreground/30">
+              Image coming
+            </span>
+          </RevealOnScroll>
+        </div>
+
         {/* Copy + checkmarks */}
-        <div>
+        <div className="lg:col-span-6">
           <Badge
             variant="outline"
             className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
