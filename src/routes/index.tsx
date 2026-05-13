@@ -273,8 +273,13 @@ function QualityCollage() {
           <RevealOnScroll className="col-span-7 row-span-4 overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={heroCapsule}
-              alt="Sealed research vial"
-              loading="lazy"
+              srcSet={`${heroCapsule} 1x, ${heroCapsule} 2x`}
+              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 60vw"
+              alt="TB-500 sealed box"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
               className="w-full h-full object-cover"
             />
           </RevealOnScroll>
@@ -284,8 +289,13 @@ function QualityCollage() {
           >
             <img
               src={capsuleMacro}
-              alt="Macro capsule detail"
-              loading="lazy"
+              srcSet={`${capsuleMacro} 1x, ${capsuleMacro} 2x`}
+              sizes="(min-width: 1024px) 22vw, (min-width: 640px) 38vw, 42vw"
+              alt="SS-37 vial"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
               className="w-full h-full object-cover"
             />
           </RevealOnScroll>
@@ -295,8 +305,13 @@ function QualityCollage() {
           >
             <img
               src={duoJars}
-              alt="Vial pair"
-              loading="lazy"
+              srcSet={`${duoJars} 1x, ${duoJars} 2x`}
+              sizes="(min-width: 1024px) 22vw, (min-width: 640px) 38vw, 42vw"
+              alt="SEMAX vial"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
               className="w-full h-full object-cover"
             />
           </RevealOnScroll>
@@ -306,8 +321,13 @@ function QualityCollage() {
           >
             <img
               src={lifestylePour}
-              alt="Lab preparation"
-              loading="lazy"
+              srcSet={`${lifestylePour} 1x, ${lifestylePour} 2x`}
+              sizes="(min-width: 1024px) 30vw, (min-width: 640px) 50vw, 60vw"
+              alt="BPC-157, SELANK, GHK-Cu trio"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
               className="w-full h-full object-cover"
             />
           </RevealOnScroll>
