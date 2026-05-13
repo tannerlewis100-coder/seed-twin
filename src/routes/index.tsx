@@ -26,14 +26,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-const qualitySemax = "/quality-semax.webp";
-const qualitySemax2x = "/quality-semax@2x.webp";
-const qualitySs37 = "/quality-ss37.webp";
-const qualitySs372x = "/quality-ss37@2x.webp";
-const qualityTb500 = "/quality-tb500-box.webp";
-const qualityTb5002x = "/quality-tb500-box@2x.webp";
-const qualityTrio = "/quality-trio.webp";
-const qualityTrio2x = "/quality-trio@2x.webp";
+const qualitySemax = "/quality-semax.png?v=3";
+const qualitySs37 = "/quality-ss37.png?v=3";
+const qualityTb500 = "/quality-tb500-box.png?v=3";
+const qualityTrio = "/quality-trio.png?v=3";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
@@ -274,67 +270,54 @@ function QualityCollage() {
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-20 items-center">
         {/* Image collage */}
         <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
-          <RevealOnScroll className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySs37}
-              srcSet={`${qualitySs37} 1x, ${qualitySs372x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="SS-37 vial"
               loading="eager"
-              decoding="sync"
+              decoding="async"
               fetchPriority="high"
               style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
-          </RevealOnScroll>
-          <RevealOnScroll
-            delay={120}
-            className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]"
-          >
+          </div>
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySemax}
-              srcSet={`${qualitySemax} 1x, ${qualitySemax2x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="SEMAX vial"
               loading="eager"
-              decoding="sync"
+              decoding="async"
               fetchPriority="high"
               style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
-          </RevealOnScroll>
-          <RevealOnScroll
-            delay={200}
-            className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]"
-          >
+          </div>
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualityTb500}
-              srcSet={`${qualityTb500} 1x, ${qualityTb5002x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="TB500 vial in Clarum presentation box with batch tag"
               loading="eager"
-              decoding="sync"
+              decoding="async"
               fetchPriority="high"
               style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
-          </RevealOnScroll>
-          <RevealOnScroll
-            delay={280}
-            className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]"
-          >
+          </div>
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualityTrio}
-              srcSet={`${qualityTrio} 1x, ${qualityTrio2x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="BPC-157, SELANK, and GHK-CU vials"
               loading="eager"
-              decoding="sync"
+              decoding="async"
               fetchPriority="high"
               style={{ imageRendering: "auto" }}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
             />
-          </RevealOnScroll>
+          </div>
         </div>
 
         {/* Copy + checkmarks */}
