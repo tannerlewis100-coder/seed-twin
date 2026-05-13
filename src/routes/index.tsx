@@ -331,6 +331,7 @@ function QualityCollage() {
               className="w-full h-full object-cover"
             />
           </RevealOnScroll>
+        </div>
 
         {/* Copy + checkmarks */}
         <div className="lg:col-span-6">
