@@ -26,10 +26,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-const qualitySemax = "/quality-semax.png";
-const qualitySs37 = "/quality-ss37.png";
-const qualityTb500 = "/quality-tb500-box.png";
-const qualityTrio = "/quality-trio.png";
+const qualitySemax = "/quality-semax.webp";
+const qualitySemax2x = "/quality-semax@2x.webp";
+const qualitySs37 = "/quality-ss37.webp";
+const qualitySs372x = "/quality-ss37@2x.webp";
+const qualityTb500 = "/quality-tb500-box.webp";
+const qualityTb5002x = "/quality-tb500-box@2x.webp";
+const qualityTrio = "/quality-trio.webp";
+const qualityTrio2x = "/quality-trio@2x.webp";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
@@ -273,7 +277,7 @@ function QualityCollage() {
           <RevealOnScroll className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySs37}
-              srcSet={`${qualitySs37} 1x, ${qualitySs37} 2x`}
+              srcSet={`${qualitySs37} 1x, ${qualitySs372x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="SS-37 vial"
               loading="eager"
@@ -289,7 +293,7 @@ function QualityCollage() {
           >
             <img
               src={qualitySemax}
-              srcSet={`${qualitySemax} 1x, ${qualitySemax} 2x`}
+              srcSet={`${qualitySemax} 1x, ${qualitySemax2x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="SEMAX vial"
               loading="eager"
@@ -305,7 +309,7 @@ function QualityCollage() {
           >
             <img
               src={qualityTb500}
-              srcSet={`${qualityTb500} 1x, ${qualityTb500} 2x`}
+              srcSet={`${qualityTb500} 1x, ${qualityTb5002x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="TB500 vial in Clarum presentation box with batch tag"
               loading="eager"
@@ -321,7 +325,7 @@ function QualityCollage() {
           >
             <img
               src={qualityTrio}
-              srcSet={`${qualityTrio} 1x, ${qualityTrio} 2x`}
+              srcSet={`${qualityTrio} 1x, ${qualityTrio2x} 2x`}
               sizes="(min-width: 1024px) 24vw, 45vw"
               alt="BPC-157, SELANK, and GHK-CU vials"
               loading="eager"
