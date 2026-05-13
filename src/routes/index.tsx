@@ -26,10 +26,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-const qualitySemax = "/quality-semax@2x.webp?v=2";
-const qualitySs37 = "/quality-ss37@2x.webp?v=2";
-const qualityTb500 = "/quality-tb500-box@2x.webp?v=2";
-const qualityTrio = "/quality-trio@2x.webp?v=2";
+const qualitySemax = "/quality-semax.png?v=3";
+const qualitySs37 = "/quality-ss37.png?v=3";
+const qualityTb500 = "/quality-tb500-box.png?v=3";
+const qualityTrio = "/quality-trio.png?v=3";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
