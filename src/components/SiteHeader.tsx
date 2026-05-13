@@ -465,13 +465,10 @@ export function SiteHeader() {
               to="/"
               onClick={() => setMobileOpen(false)}
               aria-label="Clarum Research Peptides"
-              className="flex items-center"
+              className="inline-flex items-center gap-1.5 font-display text-[22px] tracking-tight text-foreground"
             >
-              <img
-                src={clarumLogo}
-                alt="Clarum Research Peptides"
-                className="h-9 w-auto"
-              />
+              clarum
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
             </Link>
             <button
               type="button"
