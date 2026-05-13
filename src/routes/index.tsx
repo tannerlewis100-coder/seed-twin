@@ -28,6 +28,8 @@ import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 import qualitySemax from "@/assets/quality-semax.jpg";
 import qualitySs37 from "@/assets/quality-ss37.jpg";
+import qualityTb500 from "@/assets/quality-tb500-box.jpg";
+import qualityTrio from "@/assets/quality-trio.jpg";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
@@ -299,19 +301,35 @@ function QualityCollage() {
           </RevealOnScroll>
           <RevealOnScroll
             delay={200}
-            className="aspect-[3/4] overflow-hidden rounded-2xl border border-dashed border-white/[0.12] bg-white/[0.02] flex items-center justify-center"
+            className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]"
           >
-            <span className="text-[11px] tracking-[0.2em] uppercase text-foreground/30">
-              Image coming
-            </span>
+            <img
+              src={qualityTb500}
+              srcSet={`${qualityTb500} 1x, ${qualityTb500} 2x`}
+              sizes="(min-width: 1024px) 24vw, 45vw"
+              alt="TB500 vial in Clarum presentation box with batch tag"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
+              className="w-full h-full object-cover"
+            />
           </RevealOnScroll>
           <RevealOnScroll
             delay={280}
-            className="aspect-[3/4] overflow-hidden rounded-2xl border border-dashed border-white/[0.12] bg-white/[0.02] flex items-center justify-center"
+            className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]"
           >
-            <span className="text-[11px] tracking-[0.2em] uppercase text-foreground/30">
-              Image coming
-            </span>
+            <img
+              src={qualityTrio}
+              srcSet={`${qualityTrio} 1x, ${qualityTrio} 2x`}
+              sizes="(min-width: 1024px) 24vw, 45vw"
+              alt="BPC-157, SELANK, and GHK-CU vials"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
+              style={{ imageRendering: "auto" }}
+              className="w-full h-full object-cover"
+            />
           </RevealOnScroll>
         </div>
 
