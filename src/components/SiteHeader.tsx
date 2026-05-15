@@ -18,6 +18,7 @@ import {
   Sparkles,
   ShoppingCart,
 } from "lucide-react";
+import clarumLogo from "@/assets/clarum-logo.jpeg";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { peptides } from "@/data/peptides";
 import { useAuth } from "@/hooks/useAuth";
@@ -362,10 +363,9 @@ export function SiteHeader() {
               to="/"
               onMouseEnter={() => setOpenMenu(null)}
               aria-label="Clarum Research Peptides"
-              className="inline-flex items-center gap-1.5 font-display text-[22px] md:text-[26px] tracking-tight text-foreground"
+              className="inline-flex items-center"
             >
-              clarum
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
+              <img src={clarumLogo} alt="Clarum Research Peptides" className="h-9 md:h-11 w-auto object-contain" />
             </Link>
             <nav className="hidden md:flex items-center gap-7 lg:gap-9 h-full">
               {navItem("shop", "Shop")}
@@ -465,10 +465,9 @@ export function SiteHeader() {
               to="/"
               onClick={() => setMobileOpen(false)}
               aria-label="Clarum Research Peptides"
-              className="inline-flex items-center gap-1.5 font-display text-[22px] tracking-tight text-foreground"
+              className="inline-flex items-center"
             >
-              clarum
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
+              <img src={clarumLogo} alt="Clarum Research Peptides" className="h-9 w-auto object-contain" />
             </Link>
             <button
               type="button"
