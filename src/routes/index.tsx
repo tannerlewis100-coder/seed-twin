@@ -69,16 +69,16 @@ function Hero() {
             Independently lab-tested
           </Badge>
           <h1 className="font-display text-[36px] sm:text-[44px] md:text-6xl lg:text-[80px] leading-[1.05] lg:leading-[1.02] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Nothing hidden.\nEverything tested."} stagger={55} />
+            <RevealText text={"No secrets here.\nAll testing done."} stagger={55} />
           </h1>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 sm:mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
           >
-            Five tests on every batch. HPLC, mass spec, heavy metals, microbial,
-            endotoxin. The full report goes up in the COA library the same week
-            the batch ships.
+            Five tests performed on each batch. HPLC, MS, metals, microbiology,
+            and endotoxin. The full report is added to the COA database the
+            same week the batch ships.
           </RevealOnScroll>
           <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4">
             <Button
