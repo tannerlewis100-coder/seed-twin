@@ -18,7 +18,7 @@ import {
   Sparkles,
   ShoppingCart,
 } from "lucide-react";
-import clarumLogo from "@/assets/clarum-logo.jpeg";
+import clarumLogo from "@/assets/clarum-logo.png";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { peptides } from "@/data/peptides";
 import { useAuth } from "@/hooks/useAuth";
