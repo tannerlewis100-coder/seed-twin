@@ -162,9 +162,10 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Each compound runs the full 5-panel: HPLC, mass spec, heavy
-              metals, microbial, endotoxin. Pull the batch report before you
-              checkout. Or after. We don't mind.
+              Each molecule goes through the complete 5-panel process: HPLC,
+              mass spectroscopy, heavy metals, microbe, and endotoxin. Grab
+              the batch test report prior to checkout. Or post-checkout. We
+              don't mind.
             </RevealOnScroll>
             <Button
               asChild
