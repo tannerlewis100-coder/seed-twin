@@ -33,39 +33,35 @@ export const Route = createFileRoute("/faq")({
 const faqs = [
   {
     q: "What are research peptides?",
-    a: "Research peptides are short chains of amino acids used in scientific and laboratory research. They are synthesized for in vitro study and are not intended for human or veterinary use.",
+    a: "Peptides used for research purposes are composed of amino acid sequences. They are not meant for use by humans or animals but rather for use in laboratory tests and research.",
   },
   {
     q: 'What does "Research Use Only" mean?',
-    a: "All products sold by Clarum are intended strictly for in vitro laboratory research. They are not for human consumption, clinical application, or veterinary use. By purchasing, you confirm the products will be used solely for legitimate research purposes.",
+    a: "All items offered by Clarum are meant to be used exclusively for research in the laboratory. These products are neither for human nor animal use or consumption. Purchasing them implies that you are using them only for research purposes.",
   },
   {
     q: "How do I read a Certificate of Analysis (COA)?",
-    a: "A COA includes the compound name, batch number, and results from each test panel. Look for HPLC purity (≥99%), mass spectrometry confirmation, heavy metals (ND = non-detect), microbial counts, and endotoxin levels. All values should be within specification for a PASS result.",
+    a: "COA includes the name of the compound, batch numbers, and information about all the tests carried out. COA should have details such as HPLC purity greater than 99%, mass spectrometry, no detectable heavy metals, and levels of microbial and endotoxins.",
   },
   {
     q: "What is endotoxin testing and why does it matter?",
-    a: "Endotoxin testing (LAL method) detects bacterial endotoxins, the toxic byproducts of gram-negative bacteria. Most peptide vendors skip this test entirely. Clarum runs it on every batch because endotoxin contamination can compromise research results.",
+    a: "Endotoxin detection (LAL test) is used to identify endotoxins, which are toxins produced from gram-negative bacteria. Most peptide suppliers do not conduct this test at all. Clarum conducts this test on all batches, since contamination with endotoxins may affect experimental results.",
   },
   {
     q: "What makes Clarum's testing different from other vendors?",
-    a: "Most vendors stop at HPLC. We run the full 5-panel on every batch: HPLC purity, mass spec identity (LC-MS), heavy metals (ICP-MS), microbial and yeast counts, and endotoxin (LAL). The full report goes into the public COA library before the batch ships.",
+    a: "This is where most vendors will stop. Our batches, however, go through a complete 5-panel test that includes HPLC purity, LC-MS identity, ICP-MS heavy metals, microbial and yeast counts, and LAL endotoxin. The entire test results are uploaded to the publicly accessible COA library before shipment.",
   },
   {
     q: "Do you ship internationally?",
-    a: "Currently, Clarum ships within the United States. International shipping is being evaluated and will be announced when available.",
+    a: "For now, Clarum only ships to addresses in the US. International shipping is under consideration and will be updated when it becomes available.",
   },
   {
     q: "How are products shipped and stored?",
-    a: "Products are shipped in insulated packaging with appropriate temperature controls. Upon receipt, we recommend storing lyophilized peptides in a freezer (-20°C) for maximum stability.",
+    a: "The product is delivered using insulated packaging with proper temperature control measures. It is recommended that the lyophilized peptides be stored at -20°C for optimal storage.",
   },
   {
     q: "Can I see the COA before I purchase?",
-    a: "Yes. Our entire COA Library is publicly available, no login required. You can verify testing results for any product and batch before ordering.",
-  },
-  {
-    q: "What is your return policy?",
-    a: "Due to the nature of research materials, we cannot accept returns on opened products. Unopened products may be returned within 14 days. Contact us for specific inquiries.",
+    a: "Yes, our entire library of COA documents is accessible to you without having to log in. You have an opportunity to confirm the test results of any batch of products.",
   },
 ];
 
