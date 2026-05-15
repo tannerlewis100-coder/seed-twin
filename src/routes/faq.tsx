@@ -49,7 +49,7 @@ const faqs = [
   },
   {
     q: "What makes Clarum's testing different from other vendors?",
-    a: "Most vendors stop at HPLC. We send every batch to Eurofins in Lancaster, PA (ISO/IEC 17025 accredited) for the full 5-panel: HPLC purity, mass spec identity (LC-MS), heavy metals (ICP-MS), microbial and yeast counts, and endotoxin (LAL). The full report goes into the public COA library before the batch ships.",
+    a: "Most vendors stop at HPLC. We run the full 5-panel on every batch: HPLC purity, mass spec identity (LC-MS), heavy metals (ICP-MS), microbial and yeast counts, and endotoxin (LAL). The full report goes into the public COA library before the batch ships.",
   },
   {
     q: "Do you ship internationally?",

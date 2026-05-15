@@ -145,7 +145,7 @@ function CoaLibraryPage() {
                           )}
                         </h2>
                         <p className="text-xs text-foreground/45 mt-1">
-                          {p.category} · ISO/IEC 17025 lab
+                          {p.category}
                         </p>
                         <p className="text-[11px] text-foreground/40 mt-2">{p.coa.form}</p>
                       </div>

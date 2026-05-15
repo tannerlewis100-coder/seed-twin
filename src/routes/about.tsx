@@ -111,8 +111,7 @@ function AboutPage() {
               <p>
                 Five independent panels per batch: HPLC purity, mass spec
                 identity, heavy metals (ICP-MS), microbial, endotoxin (LAL).
-                Same lab. Same panel. Costs us roughly $480 per batch. We do it
-                anyway.
+                Same panel, every time. We do it on every run.
               </p>
               <p>
                 Then we publish the full results. No login. No paywall. Every
