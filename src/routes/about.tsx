@@ -159,8 +159,7 @@ function AboutPage() {
               as="p"
               className="font-display text-2xl md:text-3xl text-foreground leading-[1.3] text-center"
             >
-              We test every batch, publish every COA, and don't pay for
-              influencer codes.
+              We test every batch and publish every COA.
             </RevealOnScroll>
             <div className="text-center mt-10">
               <Link
