@@ -261,7 +261,7 @@ function FeaturedProducts() {
 function QualityCollage() {
   const checks = [
     "Batch-specific COA, not a generic certificate recycled across runs",
-    "Tested by Eurofins (Lancaster, PA), an ISO/IEC 17025 lab we don't own",
+    "Full 5-panel analytical testing on every single batch we ship",
     "QR code on the vial. Scan it, see your batch, on your phone, in 4 seconds.",
     "Public COA library. No login. No email gate.",
   ];
@@ -424,9 +424,8 @@ function HowTested() {
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            Every batch goes to Eurofins, an ISO/IEC 17025 accredited lab in
-            Lancaster, Pennsylvania. Below is the full panel they run. Same
-            five, every time.
+            Every batch runs the full analytical panel before it ships. Below
+            is the full panel. Same five, every time.
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">

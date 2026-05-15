@@ -10,7 +10,7 @@ const defaultTestimonials = [
   {
     tempId: 0,
     testimonial:
-      "I can verify the exact batch I received against the actual Eurofins report. That alone was worth switching vendors.",
+      "I can verify the exact batch I received against the actual lab report. That alone was worth switching vendors.",
     by: "Dr. M. Reyes, Independent Researcher",
     imgSrc: "https://i.pravatar.cc/150?img=12",
   },
