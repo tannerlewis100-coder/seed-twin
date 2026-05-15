@@ -47,28 +47,27 @@ function DisclaimerPage() {
         <section className="bg-card">
           <div className="mx-auto max-w-3xl px-5 sm:px-6 py-14 md:py-20 space-y-6 text-foreground/65 leading-[1.8]">
             <RevealOnScroll as="p">
-              All products sold by Clarum are intended strictly for in vitro laboratory research
-              by qualified professionals. Products are{" "}
-              <strong className="text-foreground">not</strong> intended for human consumption,
-              clinical use, veterinary use, food additives, cosmetics, or household purposes.
+              All products provided by Clarum are exclusively designed for use in in vitro
+              laboratory research by professional researchers. None of the products offered are
+              meant for ingestion, clinical applications, animal applications, dietary or
+              nutritional supplements, cosmeceutical uses, household use, or similar applications.
             </RevealOnScroll>
             <RevealOnScroll as="p" delay={120}>
-              By purchasing from Clarum, you affirm that you are at least 18 years of age, that
-              you are a qualified researcher or affiliated with a research institution, and that
-              all products will be used in compliance with applicable laws and ethical research
-              standards in your jurisdiction.
+              When purchasing products from Clarum, you declare that you are at least 18 years
+              old, that you are a legitimate researcher, and that you will conduct research with
+              all products purchased in accordance with all relevant laws and regulations in your
+              jurisdiction.
             </RevealOnScroll>
             <RevealOnScroll as="p" delay={240}>
-              Statements made on this website have not been evaluated by the FDA, EMA, or any
-              other regulatory body. No product is intended to diagnose, treat, cure, or prevent
-              any disease. Clarum makes no claims regarding the therapeutic or human-use efficacy
-              of any compound listed.
+              None of the information provided on our website has been evaluated by the FDA, EMA,
+              or any other regulatory agency. None of the products are claimed to diagnose, treat,
+              cure, or prevent any disease. Clarum makes no representations concerning the
+              efficacy or human application of any compounds mentioned.
             </RevealOnScroll>
             <RevealOnScroll as="p" delay={360}>
-              Certificates of Analysis published in our COA Library reflect testing performed on
-              the specific batch indicated. Independent verification is encouraged. Clarum
-              disclaims liability for any misuse of products outside the scope of permitted
-              research applications.
+              Certificates of analysis posted in our COA library refer only to the lot number
+              mentioned. Independent testing is encouraged. Clarum is not liable for any misuse
+              of products not consistent with legitimate scientific research purposes.
             </RevealOnScroll>
             <p className="text-xs text-foreground/45 pt-6 border-t border-white/5">
               Questions about compliance or research applications? Contact us.
