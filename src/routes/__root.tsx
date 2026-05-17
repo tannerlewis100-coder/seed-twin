@@ -88,7 +88,6 @@ function RootComponent() {
     <CartProvider>
       <Outlet />
       <AgeGate />
-      <ComingSoonPopup />
       <PromoPopup />
       <CartDrawer />
       <Toaster />
