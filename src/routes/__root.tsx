@@ -1,7 +1,6 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
 import { PromoPopup } from "@/components/PromoPopup";
-import { ComingSoonPopup } from "@/components/ComingSoonPopup";
 import { AgeGate } from "@/components/AgeGate";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -89,7 +88,6 @@ function RootComponent() {
     <CartProvider>
       <Outlet />
       <AgeGate />
-      <ComingSoonPopup />
       <PromoPopup />
       <CartDrawer />
       <Toaster />
