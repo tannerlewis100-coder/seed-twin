@@ -1,3 +1,4 @@
+import type React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -272,7 +273,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" as any }}
+              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
@@ -284,7 +285,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" as any }}
+              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
@@ -296,7 +297,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" as any }}
+              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
@@ -308,7 +309,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" as any }}
+              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
