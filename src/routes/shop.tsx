@@ -136,7 +136,7 @@ function ShopPage() {
                       {sizeCount > 1 && (
                         <div className="absolute top-5 right-5 z-10">
                           <span className="text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-foreground/80 border border-white/10 px-2.5 py-1 rounded-full">
-                            {sizeCount} sizes
+                            {sizeCount} vial sizes
                           </span>
                         </div>
                       )}
