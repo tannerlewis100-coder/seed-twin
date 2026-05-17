@@ -104,7 +104,7 @@ export function PromoPopup() {
       aria-label="10 percent off first order"
     >
       <div
-        className="relative w-full max-w-3xl overflow-hidden rounded-xl border border-border bg-card shadow-2xl"
+        className="relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-3xl md:overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <button
@@ -116,7 +116,7 @@ export function PromoPopup() {
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="relative aspect-[4/5] w-full overflow-hidden bg-black md:aspect-auto md:min-h-[480px]">
+          <div className="relative aspect-[16/9] w-full overflow-hidden bg-black md:aspect-auto md:min-h-[480px]">
             <img
               src={promoVials}
               alt="Clarum research peptide vials"
@@ -127,14 +127,14 @@ export function PromoPopup() {
             </div>
           </div>
 
-          <div className="flex flex-col justify-center gap-5 p-8 md:p-10">
+          <div className="flex flex-col justify-center gap-3.5 p-5 md:gap-5 md:p-10">
             {!revealed ? (
               <>
                 <div className="space-y-2">
                   <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
                     Welcome
                   </p>
-                  <h2 className="font-display text-4xl leading-tight text-foreground md:text-5xl">
+                  <h2 className="font-display text-2xl leading-tight text-foreground md:text-5xl">
                     10% off your first order.
                   </h2>
                 </div>
@@ -177,7 +177,7 @@ export function PromoPopup() {
                   <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
                     <Check className="h-4 w-4" /> You're in
                   </div>
-                  <h2 className="font-display text-4xl leading-tight text-foreground md:text-5xl">
+                  <h2 className="font-display text-2xl leading-tight text-foreground md:text-5xl">
                     Here's your code.
                   </h2>
                 </div>
