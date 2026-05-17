@@ -272,7 +272,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" }}
+              style={{ imageRendering: "high-quality" as any }}
               className="h-full w-full object-cover"
             />
           </div>
@@ -284,7 +284,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" }}
+              style={{ imageRendering: "high-quality" as any }}
               className="h-full w-full object-cover"
             />
           </div>
@@ -296,7 +296,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" }}
+              style={{ imageRendering: "high-quality" as any }}
               className="h-full w-full object-cover"
             />
           </div>
@@ -308,7 +308,7 @@ function QualityCollage() {
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" }}
+              style={{ imageRendering: "high-quality" as any }}
               className="h-full w-full object-cover"
             />
           </div>
