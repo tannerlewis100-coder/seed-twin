@@ -50,13 +50,9 @@ export function ComingSoonPopup() {
           </span>
         </div>
 
-        <h2 className="mt-5 font-display text-4xl leading-[1.05] text-foreground md:text-5xl">
-          Final batch testing in progress.
+        <h2 className="mt-5 font-display text-5xl leading-[1.05] text-foreground md:text-6xl">
+          Coming soon.
         </h2>
-
-        <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
-          The lab is verifying every vial before we open orders. No early access, no shortcuts. Check back shortly.
-        </p>
 
         <div className="mt-8 flex items-center justify-center gap-6 text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
           <div className="flex flex-col items-center gap-1">
