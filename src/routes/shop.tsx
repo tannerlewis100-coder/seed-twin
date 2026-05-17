@@ -141,11 +141,11 @@ function ShopPage() {
                         </div>
                       )}
 
-                      <h3 className="relative z-10 mt-12 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[80%]">
+                      <h3 className="relative z-10 mt-14 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[85%] min-h-[4rem] flex items-center justify-center">
                         {p.name}
                       </h3>
 
-                      <div className="relative z-10 flex-1 flex items-center justify-center w-full my-4">
+                      <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
                         <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
                           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
                           <div className="absolute top-5 left-1/2 -translate-x-1/2 w-[5.5rem] h-2 bg-black/60 rounded-sm" />
