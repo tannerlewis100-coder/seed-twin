@@ -141,13 +141,7 @@ function ShopPage() {
                         </div>
                       )}
 
-                      <div className="relative z-10 mt-10 mb-4">
-                        <span className="inline-block text-xs tracking-wider text-foreground/80 border border-white/20 rounded-full px-4 py-1.5">
-                          {shortCode}
-                        </span>
-                      </div>
-
-                      <h3 className="relative z-10 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[80%]">
+                      <h3 className="relative z-10 mt-12 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[80%]">
                         {p.name}
                       </h3>
 
