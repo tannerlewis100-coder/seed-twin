@@ -159,7 +159,6 @@ export function PromoPopup() {
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <input
                     type="email"
-                    required
                     autoFocus
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -171,7 +170,7 @@ export function PromoPopup() {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone number (optional)"
+                    placeholder="Phone number"
                     className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     disabled={submitting}
                   />
