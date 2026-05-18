@@ -146,20 +146,8 @@ function ShopPage() {
                       </h3>
 
                       <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
-                        <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
-                          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
-                          <div className="absolute top-5 left-1/2 -translate-x-1/2 w-[5.5rem] h-2 bg-black/60 rounded-sm" />
-                          <div className="absolute top-7 left-1/2 -translate-x-1/2 w-28 h-36 rounded-b-xl rounded-t-sm bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
-                            <div className="absolute inset-x-3 top-10 h-px bg-brand-gold/30" />
-                            <div className="absolute inset-x-0 top-12 text-center">
-                              <span className="text-[8px] tracking-[0.2em] text-brand-gold/80 font-semibold">CLARUM</span>
-                            </div>
-                            <div className="absolute inset-x-4 bottom-6 text-center">
-                              <span className="text-[7px] tracking-wider text-white/50 block">{shortCode} · {p.size}</span>
-                              <span className="text-[6px] tracking-wider text-white/30 block mt-0.5">RESEARCH USE ONLY</span>
-                            </div>
-                            <div className="absolute inset-y-0 right-2 w-2 bg-gradient-to-r from-transparent to-white/10" />
-                          </div>
+                        <div className="transition-transform duration-700 group-hover/card:scale-105">
+                          <Vial360 size="sm" />
                         </div>
                       </div>
 
