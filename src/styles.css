@@ -260,9 +260,10 @@
   .animate-delay-500 { animation-delay: 0.5s; }
 
   @keyframes vial-spin {
-    0%, 20%   { opacity: 1; }
-    30%, 95%  { opacity: 0; }
-    100%      { opacity: 1; }
+    0%     { opacity: 1; }
+    12.5%  { opacity: 0; }
+    87.5%  { opacity: 0; }
+    100%   { opacity: 1; }
   }
   .animate-delay-600 { animation-delay: 0.6s; }
   .animate-delay-700 { animation-delay: 0.7s; }
