@@ -14,6 +14,12 @@ const GoogleIcon = () => (
   </svg>
 );
 
+const AppleIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <path d="M16.365 1.43c0 1.14-.42 2.22-1.26 3.06-.84.84-2.04 1.5-3.18 1.41-.12-1.14.42-2.34 1.2-3.12.84-.9 2.22-1.5 3.24-1.35zM20.43 17.13c-.57 1.32-.84 1.92-1.59 3.09-1.05 1.62-2.52 3.63-4.35 3.66-1.62.03-2.04-1.05-4.23-1.02-2.19.03-2.67 1.05-4.29 1.02-1.83-.03-3.21-1.86-4.26-3.48C-.96 16.83-1.26 11.4 1.05 8.49c1.65-2.07 4.23-3.27 6.66-3.27 2.46 0 4.02 1.35 6.06 1.35 1.98 0 3.18-1.35 6.06-1.35 2.16 0 4.44 1.17 6.06 3.21-5.34 2.91-4.47 10.5-1.74 12.39-.66 1.47-.93 2.04-1.71 3.31z"/>
+  </svg>
+);
+
 interface Testimonial {
   avatarSrc: string;
   name: string;
@@ -57,6 +63,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
+  const [appleSubmitting, setAppleSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: FormEvent) => {
@@ -106,6 +113,26 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
     }
   };
 
+  const handleApple = async () => {
+    if (appleSubmitting) return;
+    setAppleSubmitting(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("apple", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error(result.error instanceof Error ? result.error.message : "Apple sign-in failed");
+        setAppleSubmitting(false);
+        return;
+      }
+      if (result.redirected) return;
+      navigate({ to: "/" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Apple sign-in failed");
+      setAppleSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-background text-foreground flex">
       {/* LEFT: form */}
@@ -137,7 +164,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="researcher@lab.com"
+                  placeholder="your@email.com"
                   className="w-full bg-transparent text-[15px] px-4 py-3.5 rounded-2xl focus:outline-none placeholder:text-foreground/30"
                 />
               </GlassInputWrapper>
@@ -206,6 +233,16 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
           >
             {googleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
             Continue with Google
+          </button>
+
+          <button
+            type="button"
+            onClick={handleApple}
+            disabled={appleSubmitting}
+            className="animate-element animate-delay-800 mt-3 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
+          >
+            {appleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
+            Continue with Apple
           </button>
 
           <p className="animate-element animate-delay-900 mt-8 text-center text-[14px] text-foreground/55">
