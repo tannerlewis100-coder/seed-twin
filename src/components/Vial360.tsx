@@ -1,15 +1,12 @@
 import { useEffect } from "react";
 import vial1 from "@/assets/vial/vial-1.png";
-import vial1b from "@/assets/vial/vial-1b.png";
 import vial2 from "@/assets/vial/vial-2.png";
-import vial2b from "@/assets/vial/vial-2b.png";
 import vial3 from "@/assets/vial/vial-3.png";
-import vial3b from "@/assets/vial/vial-3b.png";
 import vial4 from "@/assets/vial/vial-4.png";
-import vial4b from "@/assets/vial/vial-4b.png";
 
-// Turntable order: 0°, 45°, 90°, 135°, 180°, 225°, 270°, 315°
-const FRAMES = [vial1, vial1b, vial2, vial2b, vial3, vial3b, vial4, vial4b];
+// Normalized turntable: 0°, 90°, 180°, 270°. Same vial height, same center,
+// true alpha. Crossfade between the four so there's no zoom or wobble.
+const FRAMES = [vial1, vial2, vial3, vial4];
 
 type Props = {
   size?: "sm" | "md" | "lg" | "xl";
@@ -26,8 +23,6 @@ const sizeClasses: Record<NonNullable<Props["size"]>, string> = {
 };
 
 /**
- * Continuous turntable spin. Cross-fades 8 angle frames so adjacent
- * frames overlap heavily — reads as smooth rotation, not a slideshow.
  * Spins only while a parent with `group/card` is hovered.
  */
 export default function Vial360({ size = "md", duration = 4800, className = "" }: Props) {
@@ -37,8 +32,6 @@ export default function Vial360({ size = "md", duration = 4800, className = "" }
       img.src = src;
     });
   }, []);
-
-  const step = 100 / FRAMES.length; // 12.5%
 
   return (
     <div className={`relative ${sizeClasses[size]} ${className}`}>
@@ -54,8 +47,6 @@ export default function Vial360({ size = "md", duration = 4800, className = "" }
             animation: `vial-spin ${duration}ms linear infinite`,
             animationDelay: `${-((FRAMES.length - i) * (duration / FRAMES.length))}ms`,
             filter: "drop-shadow(0 30px 40px rgba(0,0,0,0.55))",
-            // expose step for the keyframe via CSS var
-            ["--step" as never]: `${step}%`,
           }}
         />
       ))}
