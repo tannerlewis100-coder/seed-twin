@@ -235,6 +235,16 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
             Continue with Google
           </button>
 
+          <button
+            type="button"
+            onClick={handleApple}
+            disabled={appleSubmitting}
+            className="animate-element animate-delay-800 mt-3 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
+          >
+            {appleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
+            Continue with Apple
+          </button>
+
           <p className="animate-element animate-delay-900 mt-8 text-center text-[14px] text-foreground/55">
             {isSignUp ? (
               <>Already have an account?{" "}
