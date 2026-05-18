@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { Twitter, Linkedin, Instagram, Youtube, Mail } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
 import clarumLogo from "@/assets/clarum-logo.png";
 
