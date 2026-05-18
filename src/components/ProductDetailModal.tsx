@@ -35,9 +35,27 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
       <DialogContent className="max-w-3xl bg-brand-forest-deep border-white/10 text-foreground p-0 overflow-hidden">
         <div className="grid md:grid-cols-2">
           {/* Vial */}
-          <div className="relative bg-gradient-to-br from-brand-forest to-brand-forest-deep p-10 flex items-center justify-center min-h-[320px] border-b md:border-b-0 md:border-r border-white/5">
+          <div className="group/card relative bg-gradient-to-br from-brand-forest to-brand-forest-deep p-10 flex items-center justify-center min-h-[320px] border-b md:border-b-0 md:border-r border-white/5">
             <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-40" />
-            <Vial360 size="lg" />
+            {active.slug.startsWith("ghk-cu") ? (
+              <Vial360 size="xl" hoverGroup="card" />
+            ) : (
+              <div className="relative w-44 h-60">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
+                <div className="absolute top-7 left-1/2 -translate-x-1/2 w-28 h-2.5 bg-black/60 rounded-sm" />
+                <div className="absolute top-9 left-1/2 -translate-x-1/2 w-40 h-48 rounded-b-xl rounded-t-sm bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
+                  <div className="absolute inset-x-4 top-14 h-px bg-brand-gold/30" />
+                  <div className="absolute inset-x-0 top-16 text-center">
+                    <span className="text-[11px] tracking-[0.25em] text-brand-gold/90 font-semibold">CLARUM</span>
+                  </div>
+                  <div className="absolute inset-x-4 bottom-8 text-center">
+                    <span className="text-[9px] tracking-wider text-white/60 block">{code} · {active.size}</span>
+                    <span className="text-[8px] tracking-wider text-white/30 block mt-1">RESEARCH USE ONLY</span>
+                  </div>
+                  <div className="absolute inset-y-0 right-2 w-2 bg-gradient-to-r from-transparent to-white/10" />
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Details */}
