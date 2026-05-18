@@ -14,6 +14,7 @@ const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function PromoPopup() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [revealed, setRevealed] = useState(false);
 
