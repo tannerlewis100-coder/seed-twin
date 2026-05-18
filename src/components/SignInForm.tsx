@@ -4,6 +4,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
+import clarumLogo from "@/assets/clarum-logo.png";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48" aria-hidden>
@@ -139,9 +140,8 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
       <section className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
         <div className="w-full max-w-md">
           {/* Brand */}
-          <Link to="/" className="animate-element inline-flex items-center gap-1.5 font-display text-[26px] tracking-tight text-foreground mb-10">
-            clarum
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-brand-gold translate-y-1.5" />
+          <Link to="/" className="animate-element inline-flex items-center mb-10">
+            <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto object-contain" />
           </Link>
 
           <h1 className="animate-element animate-delay-100 font-display text-5xl md:text-6xl leading-[1.05] text-foreground">
