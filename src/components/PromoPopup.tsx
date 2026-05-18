@@ -72,8 +72,15 @@ export function PromoPopup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = email.trim();
-    if (!emailRx.test(trimmed)) {
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+
+    if (!trimmedEmail && !trimmedPhone) {
+      toast.error("Enter an email or phone number.");
+      return;
+    }
+
+    if (trimmedEmail && !emailRx.test(trimmedEmail)) {
       toast.error("Enter a valid email.");
       return;
     }
@@ -81,7 +88,11 @@ export function PromoPopup() {
     setSubmitting(true);
     const { error } = await supabase
       .from("promo_signups")
-      .insert({ email: trimmed, source: "popup" });
+      .insert({
+        ...(trimmedEmail ? { email: trimmedEmail } : {}),
+        ...(trimmedPhone ? { phone: trimmedPhone } : {}),
+        source: "popup",
+      } as any);
     setSubmitting(false);
 
     // Duplicate email is fine. Still reveal the code.
@@ -141,14 +152,14 @@ export function PromoPopup() {
                 </div>
 
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Drop your email. We'll send the code, plus a heads-up when new
-                  products drop or a discount goes live. No fluff, no daily blasts.
+                  Drop your email or phone number. We'll send the code, plus a
+                  heads-up when new products drop or a discount goes live. No
+                  fluff, no daily blasts.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-3">
                   <input
                     type="email"
-                    required
                     autoFocus
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -160,7 +171,7 @@ export function PromoPopup() {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone number (optional)"
+                    placeholder="Phone number"
                     className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     disabled={submitting}
                   />
