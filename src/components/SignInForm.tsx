@@ -136,16 +136,13 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground flex">
-      {/* LEFT: form */}
-      <section className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
-        <div className="w-full max-w-md">
-          {/* Brand */}
-          <Link to="/" className="animate-element inline-flex items-center mb-10">
-            <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto object-contain" />
-          </Link>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <AnnouncementBar />
+      <SiteHeader />
 
-          <h1 className="animate-element animate-delay-100 font-display text-5xl md:text-6xl leading-[1.05] text-foreground">
+      <main className="flex flex-1 items-center justify-center px-6 py-16 lg:py-24">
+        <div className="w-full max-w-md">
+          <h1 className="animate-element animate-delay-100 font-display text-4xl md:text-5xl leading-[1.05] text-foreground">
             {isSignUp ? "Create account." : "Welcome back."}
           </h1>
           <p className="animate-element animate-delay-200 mt-4 text-[15px] text-foreground/60 leading-relaxed">
@@ -258,19 +255,9 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
             )}
           </p>
         </div>
-      </section>
+      </main>
 
-      {/* RIGHT: hero + testimonials */}
-      <aside className="hidden lg:block relative flex-1 overflow-hidden bg-brand-forest-deep">
-        <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/30 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/80" />
-
-        <div className="absolute bottom-8 right-8 flex flex-col gap-3 items-end">
-          <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
-          <TestimonialCard testimonial={testimonials[1]} delay="animate-delay-1200" />
-          <TestimonialCard testimonial={testimonials[2]} delay="animate-delay-1400" />
-        </div>
-      </aside>
+      <SiteFooter />
     </div>
   );
 }
