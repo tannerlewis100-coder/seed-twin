@@ -113,6 +113,26 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
     }
   };
 
+  const handleApple = async () => {
+    if (appleSubmitting) return;
+    setAppleSubmitting(true);
+    try {
+      const result = await lovable.auth.signInWithOAuth("apple", {
+        redirect_uri: window.location.origin,
+      });
+      if (result.error) {
+        toast.error(result.error instanceof Error ? result.error.message : "Apple sign-in failed");
+        setAppleSubmitting(false);
+        return;
+      }
+      if (result.redirected) return;
+      navigate({ to: "/" });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Apple sign-in failed");
+      setAppleSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen w-full bg-background text-foreground flex">
       {/* LEFT: form */}
