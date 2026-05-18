@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import clarumLogo from "@/assets/clarum-logo.png";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48" aria-hidden>
@@ -22,9 +23,37 @@ const AppleIcon = () => (
   </svg>
 );
 
+interface Testimonial {
+  avatarSrc: string;
+  name: string;
+  handle: string;
+  text: string;
+}
+
+const testimonials: Testimonial[] = [
+  { avatarSrc: "https://i.pravatar.cc/64?img=12", name: "Dr. Sarah Chen", handle: "@biopep_lab", text: "First vendor I've seen publishing raw HPLC traces per batch. Not a summary. The actual chromatogram." },
+  { avatarSrc: "https://i.pravatar.cc/64?img=33", name: "Marcus K.", handle: "@longevitynerd", text: "COA up before checkout. This should be the floor, not the ceiling." },
+  { avatarSrc: "https://i.pravatar.cc/64?img=45", name: "Bryne Research", handle: "@brynelabs", text: "Re-ran their TB-500 in-house. Numbers matched within 0.3%." },
+];
+
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="rounded-2xl border border-white/10 bg-white/[0.03] focus-within:border-brand-gold/60 focus-within:bg-white/[0.06] transition-colors">
     {children}
+  </div>
+);
+
+const TestimonialCard = ({ testimonial, delay }: { testimonial: Testimonial; delay: string }) => (
+  <div
+    className={`animate-testimonial ${delay} rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-4 max-w-[280px] shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]`}
+  >
+    <div className="flex items-center gap-3 mb-2">
+      <img src={testimonial.avatarSrc} alt="" className="h-9 w-9 rounded-full object-cover ring-1 ring-white/15" />
+      <div className="min-w-0">
+        <div className="text-[13px] font-medium text-foreground leading-tight truncate">{testimonial.name}</div>
+        <div className="text-[11px] text-foreground/50 leading-tight">{testimonial.handle}</div>
+      </div>
+    </div>
+    <p className="text-[13px] text-foreground/80 leading-snug">{testimonial.text}</p>
   </div>
 );
 
@@ -112,121 +141,140 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
       <AnnouncementBar />
       <SiteHeader />
 
-      <main className="flex flex-1 items-center justify-center px-6 py-16 lg:py-24">
-        <div className="w-full max-w-md">
-          <h1 className="animate-element animate-delay-100 font-display text-4xl md:text-5xl leading-[1.05] text-foreground">
-            {isSignUp ? "Create account." : "Welcome back."}
-          </h1>
-          <p className="animate-element animate-delay-200 mt-4 text-[15px] text-foreground/60 leading-relaxed">
-            {isSignUp
-              ? "One account. COA library, batch records, order history."
-              : "Pick up where you left off. Orders, batches, the whole library."}
-          </p>
+      <main className="flex flex-1">
+        {/* LEFT: form */}
+        <section className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
+          <div className="w-full max-w-md">
+            <Link to="/" className="animate-element inline-flex items-center mb-10">
+              <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto object-contain" />
+            </Link>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
-            <div className="animate-element animate-delay-300">
-              <label htmlFor="email" className="block text-[13px] text-foreground/60 mb-2">Email Address</label>
-              <GlassInputWrapper>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="w-full bg-transparent text-[15px] px-4 py-3.5 rounded-2xl focus:outline-none placeholder:text-foreground/30"
-                />
-              </GlassInputWrapper>
-            </div>
+            <h1 className="animate-element animate-delay-100 font-display text-5xl md:text-6xl leading-[1.05] text-foreground">
+              {isSignUp ? "Create account." : "Welcome back."}
+            </h1>
+            <p className="animate-element animate-delay-200 mt-4 text-[15px] text-foreground/60 leading-relaxed">
+              {isSignUp
+                ? "One account. COA library, batch records, order history."
+                : "Pick up where you left off. Orders, batches, the whole library."}
+            </p>
 
-            <div className="animate-element animate-delay-400">
-              <label htmlFor="password" className="block text-[13px] text-foreground/60 mb-2">Password</label>
-              <GlassInputWrapper>
-                <div className="relative">
+            <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+              <div className="animate-element animate-delay-300">
+                <label htmlFor="email" className="block text-[13px] text-foreground/60 mb-2">Email Address</label>
+                <GlassInputWrapper>
                   <input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
+                    id="email"
+                    type="email"
                     required
-                    minLength={isSignUp ? 8 : undefined}
-                    autoComplete={isSignUp ? "new-password" : "current-password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder={isSignUp ? "At least 8 characters" : "Enter your password"}
-                    className="w-full bg-transparent text-[15px] px-4 py-3.5 pr-12 rounded-2xl focus:outline-none placeholder:text-foreground/30"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    className="w-full bg-transparent text-[15px] px-4 py-3.5 rounded-2xl focus:outline-none placeholder:text-foreground/30"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((v) => !v)}
-                    className="absolute inset-y-0 right-3 flex items-center text-foreground/50 hover:text-foreground"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </GlassInputWrapper>
+              </div>
+
+              <div className="animate-element animate-delay-400">
+                <label htmlFor="password" className="block text-[13px] text-foreground/60 mb-2">Password</label>
+                <GlassInputWrapper>
+                  <div className="relative">
+                    <input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      minLength={isSignUp ? 8 : undefined}
+                      autoComplete={isSignUp ? "new-password" : "current-password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder={isSignUp ? "At least 8 characters" : "Enter your password"}
+                      className="w-full bg-transparent text-[15px] px-4 py-3.5 pr-12 rounded-2xl focus:outline-none placeholder:text-foreground/30"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((v) => !v)}
+                      className="absolute inset-y-0 right-3 flex items-center text-foreground/50 hover:text-foreground"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </GlassInputWrapper>
+              </div>
+
+              {!isSignUp && (
+                <div className="animate-element animate-delay-500 flex items-center justify-between text-[13px]">
+                  <label className="flex items-center gap-2 text-foreground/70 cursor-pointer">
+                    <input type="checkbox" className="custom-checkbox" defaultChecked />
+                    Keep me signed in
+                  </label>
+                  <button type="button" className="text-brand-gold hover:underline underline-offset-4">
+                    Reset password
                   </button>
                 </div>
-              </GlassInputWrapper>
+              )}
+
+              <button
+                type="submit"
+                disabled={submitting}
+                className="animate-element animate-delay-600 w-full inline-flex items-center justify-center gap-2 rounded-full bg-brand-gold text-brand-forest text-[15px] font-medium py-3.5 hover:bg-brand-gold-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
+                {isSignUp ? "Create Account" : "Sign In"}
+              </button>
+            </form>
+
+            <div className="animate-element animate-delay-700 my-6 flex items-center gap-4 text-[12px] text-foreground/40 uppercase tracking-[0.18em]">
+              <span className="h-px flex-1 bg-white/10" />
+              Or continue with
+              <span className="h-px flex-1 bg-white/10" />
             </div>
 
-            {!isSignUp && (
-              <div className="animate-element animate-delay-500 flex items-center justify-between text-[13px]">
-                <label className="flex items-center gap-2 text-foreground/70 cursor-pointer">
-                  <input type="checkbox" className="custom-checkbox" defaultChecked />
-                  Keep me signed in
-                </label>
-                <button type="button" className="text-brand-gold hover:underline underline-offset-4">
-                  Reset password
-                </button>
-              </div>
-            )}
+            <button
+              type="button"
+              onClick={handleGoogle}
+              disabled={googleSubmitting}
+              className="animate-element animate-delay-800 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
+            >
+              {googleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
+              Continue with Google
+            </button>
 
             <button
-              type="submit"
-              disabled={submitting}
-              className="animate-element animate-delay-600 w-full inline-flex items-center justify-center gap-2 rounded-full bg-brand-gold text-brand-forest text-[15px] font-medium py-3.5 hover:bg-brand-gold-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              type="button"
+              onClick={handleApple}
+              disabled={appleSubmitting}
+              className="animate-element animate-delay-800 mt-3 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
             >
-              {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isSignUp ? "Create Account" : "Sign In"}
+              {appleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
+              Continue with Apple
             </button>
-          </form>
 
-          <div className="animate-element animate-delay-700 my-6 flex items-center gap-4 text-[12px] text-foreground/40 uppercase tracking-[0.18em]">
-            <span className="h-px flex-1 bg-white/10" />
-            Or continue with
-            <span className="h-px flex-1 bg-white/10" />
+            <p className="animate-element animate-delay-900 mt-8 text-center text-[14px] text-foreground/55">
+              {isSignUp ? (
+                <>Already have an account?{" "}
+                  <Link to="/sign-in" className="text-brand-gold hover:underline underline-offset-4">Sign In</Link>
+                </>
+              ) : (
+                <>New to Clarum?{" "}
+                  <Link to="/sign-up" className="text-brand-gold hover:underline underline-offset-4">Create Account</Link>
+                </>
+              )}
+            </p>
           </div>
+        </section>
 
-          <button
-            type="button"
-            onClick={handleGoogle}
-            disabled={googleSubmitting}
-            className="animate-element animate-delay-800 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
-          >
-            {googleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
-            Continue with Google
-          </button>
+        {/* RIGHT: hero + testimonials */}
+        <aside className="hidden lg:block relative flex-1 overflow-hidden bg-brand-forest-deep">
+          <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/80" />
 
-          <button
-            type="button"
-            onClick={handleApple}
-            disabled={appleSubmitting}
-            className="animate-element animate-delay-800 mt-3 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
-          >
-            {appleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
-            Continue with Apple
-          </button>
-
-          <p className="animate-element animate-delay-900 mt-8 text-center text-[14px] text-foreground/55">
-            {isSignUp ? (
-              <>Already have an account?{" "}
-                <Link to="/sign-in" className="text-brand-gold hover:underline underline-offset-4">Sign In</Link>
-              </>
-            ) : (
-              <>New to Clarum?{" "}
-                <Link to="/sign-up" className="text-brand-gold hover:underline underline-offset-4">Create Account</Link>
-              </>
-            )}
-          </p>
-        </div>
+          <div className="absolute bottom-8 right-8 flex flex-col gap-3 items-end">
+            <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
+            <TestimonialCard testimonial={testimonials[1]} delay="animate-delay-1200" />
+            <TestimonialCard testimonial={testimonials[2]} delay="animate-delay-1400" />
+          </div>
+        </aside>
       </main>
 
       <SiteFooter />
