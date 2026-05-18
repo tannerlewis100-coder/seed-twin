@@ -88,7 +88,11 @@ export function PromoPopup() {
     setSubmitting(true);
     const { error } = await supabase
       .from("promo_signups")
-      .insert({ email: trimmedEmail || null, phone: trimmedPhone || null, source: "popup" });
+      .insert({
+        ...(trimmedEmail ? { email: trimmedEmail } : {}),
+        ...(trimmedPhone ? { phone: trimmedPhone } : {}),
+        source: "popup",
+      } as any);
     setSubmitting(false);
 
     // Duplicate email is fine. Still reveal the code.
