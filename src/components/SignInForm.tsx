@@ -164,7 +164,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="researcher@lab.com"
+                  placeholder="your@email.com"
                   className="w-full bg-transparent text-[15px] px-4 py-3.5 rounded-2xl focus:outline-none placeholder:text-foreground/30"
                 />
               </GlassInputWrapper>
