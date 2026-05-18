@@ -4,7 +4,8 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
-import clarumLogo from "@/assets/clarum-logo.png";
+import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48" aria-hidden>
@@ -21,37 +22,9 @@ const AppleIcon = () => (
   </svg>
 );
 
-interface Testimonial {
-  avatarSrc: string;
-  name: string;
-  handle: string;
-  text: string;
-}
-
-const testimonials: Testimonial[] = [
-  { avatarSrc: "https://i.pravatar.cc/64?img=12", name: "Dr. Sarah Chen", handle: "@biopep_lab", text: "First vendor I've seen publishing raw HPLC traces per batch. Not a summary. The actual chromatogram." },
-  { avatarSrc: "https://i.pravatar.cc/64?img=33", name: "Marcus K.", handle: "@longevitynerd", text: "COA up before checkout. This should be the floor, not the ceiling." },
-  { avatarSrc: "https://i.pravatar.cc/64?img=45", name: "Bryne Research", handle: "@brynelabs", text: "Re-ran their TB-500 in-house. Numbers matched within 0.3%." },
-];
-
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="rounded-2xl border border-white/10 bg-white/[0.03] focus-within:border-brand-gold/60 focus-within:bg-white/[0.06] transition-colors">
     {children}
-  </div>
-);
-
-const TestimonialCard = ({ testimonial, delay }: { testimonial: Testimonial; delay: string }) => (
-  <div
-    className={`animate-testimonial ${delay} rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-4 max-w-[280px] shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]`}
-  >
-    <div className="flex items-center gap-3 mb-2">
-      <img src={testimonial.avatarSrc} alt="" className="h-9 w-9 rounded-full object-cover ring-1 ring-white/15" />
-      <div className="min-w-0">
-        <div className="text-[13px] font-medium text-foreground leading-tight truncate">{testimonial.name}</div>
-        <div className="text-[11px] text-foreground/50 leading-tight">{testimonial.handle}</div>
-      </div>
-    </div>
-    <p className="text-[13px] text-foreground/80 leading-snug">{testimonial.text}</p>
   </div>
 );
 
@@ -135,16 +108,13 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground flex">
-      {/* LEFT: form */}
-      <section className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
-        <div className="w-full max-w-md">
-          {/* Brand */}
-          <Link to="/" className="animate-element inline-flex items-center mb-10">
-            <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto object-contain" />
-          </Link>
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
+      <AnnouncementBar />
+      <SiteHeader />
 
-          <h1 className="animate-element animate-delay-100 font-display text-5xl md:text-6xl leading-[1.05] text-foreground">
+      <main className="flex flex-1 items-center justify-center px-6 py-16 lg:py-24">
+        <div className="w-full max-w-md">
+          <h1 className="animate-element animate-delay-100 font-display text-4xl md:text-5xl leading-[1.05] text-foreground">
             {isSignUp ? "Create account." : "Welcome back."}
           </h1>
           <p className="animate-element animate-delay-200 mt-4 text-[15px] text-foreground/60 leading-relaxed">
@@ -257,19 +227,9 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
             )}
           </p>
         </div>
-      </section>
+      </main>
 
-      {/* RIGHT: hero + testimonials */}
-      <aside className="hidden lg:block relative flex-1 overflow-hidden bg-brand-forest-deep">
-        <div className="absolute inset-0 bg-gradient-to-tr from-background via-background/30 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/80" />
-
-        <div className="absolute bottom-8 right-8 flex flex-col gap-3 items-end">
-          <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
-          <TestimonialCard testimonial={testimonials[1]} delay="animate-delay-1200" />
-          <TestimonialCard testimonial={testimonials[2]} delay="animate-delay-1400" />
-        </div>
-      </aside>
+      <SiteFooter />
     </div>
   );
 }
