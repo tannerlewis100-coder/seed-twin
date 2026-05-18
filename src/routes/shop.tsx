@@ -148,7 +148,7 @@ function ShopPage() {
 
                       <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
                         {p.slug.startsWith("ghk-cu") ? (
-                          <Vial360 size="lg" hoverGroup="card" />
+                          <Vial360 size="lg" />
                         ) : (
                           <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />

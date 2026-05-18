@@ -38,7 +38,7 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
           <div className="group/card relative bg-gradient-to-br from-brand-forest to-brand-forest-deep p-10 flex items-center justify-center min-h-[320px] border-b md:border-b-0 md:border-r border-white/5">
             <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-40" />
             {active.slug.startsWith("ghk-cu") ? (
-              <Vial360 size="xl" hoverGroup="card" />
+              <Vial360 size="xl" />
             ) : (
               <div className="relative w-44 h-60">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
