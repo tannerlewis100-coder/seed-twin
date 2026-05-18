@@ -152,9 +152,9 @@ export function PromoPopup() {
                 </div>
 
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Drop your email or phone number. We'll send the code, plus a
-                  heads-up when new products drop or a discount goes live. No
-                  fluff, no daily blasts.
+                  Enter your email or phone number. Get the code and an alert
+                  when we drop new stuff. We don't waste your time with spam or
+                  daily emails.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-3">
