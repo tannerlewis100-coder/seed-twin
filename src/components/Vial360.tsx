@@ -25,7 +25,7 @@ const sizeClasses: Record<NonNullable<Props["size"]>, string> = {
 /**
  * Spins only while a parent with `group/card` is hovered.
  */
-export default function Vial360({ size = "md", duration = 4800, className = "" }: Props) {
+export default function Vial360({ size = "md", duration = 10000, className = "" }: Props) {
   useEffect(() => {
     FRAMES.forEach((src) => {
       const img = new Image();
