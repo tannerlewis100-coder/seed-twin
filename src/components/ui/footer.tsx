@@ -69,10 +69,8 @@ const sections: FooterSection[] = [
 ];
 
 const socials = [
-  { href: "#", label: "Twitter", Icon: Twitter },
-  { href: "#", label: "LinkedIn", Icon: Linkedin },
+  { href: "#", label: "Facebook", Icon: Facebook },
   { href: "#", label: "Instagram", Icon: Instagram },
-  { href: "#", label: "YouTube", Icon: Youtube },
   { href: "mailto:hello@clarum.com", label: "Email", Icon: Mail },
 ];
 
