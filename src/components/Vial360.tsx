@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import vial1 from "@/assets/vial/vial-1.png";
 import vial2 from "@/assets/vial/vial-2.png";
 import vial3 from "@/assets/vial/vial-3.png";
@@ -8,22 +8,31 @@ import vial4 from "@/assets/vial/vial-4.png";
 const FRAMES = [vial1, vial2, vial3, vial4];
 
 type Props = {
-  size?: "sm" | "lg";
-  intervalMs?: number;
+  size?: "sm" | "md" | "lg" | "xl";
+  /** Animation duration in ms for one full 360° */
+  duration?: number;
+  /**
+   * Tailwind "group/<name>" hover scope that controls play state.
+   * Defaults to the component's own hover (group/vial).
+   */
+  hoverGroup?: string;
   className?: string;
 };
 
 const sizeClasses: Record<NonNullable<Props["size"]>, string> = {
-  sm: "w-32 h-44",
-  lg: "w-44 h-60",
+  sm: "w-40 h-56",
+  md: "w-56 h-72",
+  lg: "w-72 h-96",
+  xl: "w-80 h-[26rem]",
 };
 
-export default function Vial360({ size = "sm", intervalMs = 180, className = "" }: Props) {
-  const [frame, setFrame] = useState(0);
-  const [active, setActive] = useState(true);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  // Preload
+export default function Vial360({
+  size = "md",
+  duration = 3200,
+  hoverGroup = "vial",
+  className = "",
+}: Props) {
+  // Preload remaining frames so the first hover doesn't pop
   useEffect(() => {
     FRAMES.forEach((src) => {
       const img = new Image();
@@ -31,51 +40,24 @@ export default function Vial360({ size = "sm", intervalMs = 180, className = "" 
     });
   }, []);
 
-  // Respect reduced motion
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (mq.matches) setActive(false);
-    const handler = (e: MediaQueryListEvent) => setActive(!e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
-  }, []);
-
-  // Pause when offscreen
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setActive(entry.isIntersecting),
-      { threshold: 0.1 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!active) return;
-    const id = window.setInterval(() => {
-      setFrame((f) => (f + 1) % FRAMES.length);
-    }, intervalMs);
-    return () => window.clearInterval(id);
-  }, [active, intervalMs]);
+  // Tailwind v4 supports arbitrary variants like group-hover/<name>
+  const playClass = `[animation-play-state:paused] group-hover/${hoverGroup}:[animation-play-state:running]`;
 
   return (
-    <div
-      ref={containerRef}
-      className={`relative ${sizeClasses[size]} ${className}`}
-    >
+    <div className={`group/vial relative ${sizeClasses[size]} ${className}`}>
       {FRAMES.map((src, i) => (
         <img
           key={src}
           src={src}
           alt=""
           draggable={false}
-          className={`absolute inset-0 w-full h-full object-contain select-none transition-opacity duration-100 ${
-            i === frame ? "opacity-100" : "opacity-0"
-          }`}
-          style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.45))" }}
+          className={`absolute inset-0 w-full h-full object-contain select-none ${playClass}`}
+          style={{
+            opacity: i === 0 ? 1 : 0,
+            animation: `vial-spin ${duration}ms linear infinite`,
+            animationDelay: `${(i * duration) / FRAMES.length}ms`,
+            filter: "drop-shadow(0 25px 35px rgba(0,0,0,0.55))",
+          }}
         />
       ))}
     </div>
