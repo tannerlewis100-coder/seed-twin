@@ -152,8 +152,9 @@ export function PromoPopup() {
                 </div>
 
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Drop your email. We'll send the code, plus a heads-up when new
-                  products drop or a discount goes live. No fluff, no daily blasts.
+                  Drop your email or phone number. We'll send the code, plus a
+                  heads-up when new products drop or a discount goes live. No
+                  fluff, no daily blasts.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-3">
