@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { Twitter, Linkedin, Instagram, Youtube, Mail } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
 import clarumLogo from "@/assets/clarum-logo.png";
 
@@ -69,10 +69,8 @@ const sections: FooterSection[] = [
 ];
 
 const socials = [
-  { href: "#", label: "Twitter", Icon: Twitter },
-  { href: "#", label: "LinkedIn", Icon: Linkedin },
+  { href: "#", label: "Facebook", Icon: Facebook },
   { href: "#", label: "Instagram", Icon: Instagram },
-  { href: "#", label: "YouTube", Icon: Youtube },
   { href: "mailto:hello@clarum.com", label: "Email", Icon: Mail },
 ];
 
