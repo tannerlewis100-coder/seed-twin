@@ -22,37 +22,9 @@ const AppleIcon = () => (
   </svg>
 );
 
-interface Testimonial {
-  avatarSrc: string;
-  name: string;
-  handle: string;
-  text: string;
-}
-
-const testimonials: Testimonial[] = [
-  { avatarSrc: "https://i.pravatar.cc/64?img=12", name: "Dr. Sarah Chen", handle: "@biopep_lab", text: "First vendor I've seen publishing raw HPLC traces per batch. Not a summary. The actual chromatogram." },
-  { avatarSrc: "https://i.pravatar.cc/64?img=33", name: "Marcus K.", handle: "@longevitynerd", text: "COA up before checkout. This should be the floor, not the ceiling." },
-  { avatarSrc: "https://i.pravatar.cc/64?img=45", name: "Bryne Research", handle: "@brynelabs", text: "Re-ran their TB-500 in-house. Numbers matched within 0.3%." },
-];
-
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="rounded-2xl border border-white/10 bg-white/[0.03] focus-within:border-brand-gold/60 focus-within:bg-white/[0.06] transition-colors">
     {children}
-  </div>
-);
-
-const TestimonialCard = ({ testimonial, delay }: { testimonial: Testimonial; delay: string }) => (
-  <div
-    className={`animate-testimonial ${delay} rounded-2xl border border-white/10 bg-black/40 backdrop-blur-md p-4 max-w-[280px] shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]`}
-  >
-    <div className="flex items-center gap-3 mb-2">
-      <img src={testimonial.avatarSrc} alt="" className="h-9 w-9 rounded-full object-cover ring-1 ring-white/15" />
-      <div className="min-w-0">
-        <div className="text-[13px] font-medium text-foreground leading-tight truncate">{testimonial.name}</div>
-        <div className="text-[11px] text-foreground/50 leading-tight">{testimonial.handle}</div>
-      </div>
-    </div>
-    <p className="text-[13px] text-foreground/80 leading-snug">{testimonial.text}</p>
   </div>
 );
 
