@@ -3,6 +3,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { COMING_SOON_SLUGS, type Peptide } from "@/data/peptides";
 import { useCart } from "@/lib/cart";
 import { Check, ShoppingCart } from "lucide-react";
+import Vial360 from "@/components/Vial360";
 
 type Props = {
   group: Peptide[] | null;
