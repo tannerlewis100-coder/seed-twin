@@ -72,8 +72,15 @@ export function PromoPopup() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = email.trim();
-    if (!emailRx.test(trimmed)) {
+    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
+
+    if (!trimmedEmail && !trimmedPhone) {
+      toast.error("Enter an email or phone number.");
+      return;
+    }
+
+    if (trimmedEmail && !emailRx.test(trimmedEmail)) {
       toast.error("Enter a valid email.");
       return;
     }
@@ -81,7 +88,7 @@ export function PromoPopup() {
     setSubmitting(true);
     const { error } = await supabase
       .from("promo_signups")
-      .insert({ email: trimmed, source: "popup" });
+      .insert({ email: trimmedEmail || null, phone: trimmedPhone || null, source: "popup" });
     setSubmitting(false);
 
     // Duplicate email is fine. Still reveal the code.
