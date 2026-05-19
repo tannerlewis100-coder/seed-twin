@@ -312,3 +312,26 @@
   font-display: swap;
   src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2") format("woff2");
 }
+
+/* Fix retina blur from reveal animation residue */
+img,
+picture,
+picture > img,
+div[class*="reveal"] img,
+div[class*="Reveal"] img,
+div[class*="animate"] img,
+div[data-reveal] img {
+  will-change: auto !important;
+  transform: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  image-rendering: high-quality;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Also strip from animation wrapper parents once revealed */
+div[class*="reveal"][data-revealed="true"],
+div[class*="Reveal"][data-revealed="true"] {
+  will-change: auto !important;
+  transform: none !important;
+}
