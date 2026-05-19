@@ -117,6 +117,8 @@ function SocialLink({
   return (
     <motion.a
       href={href}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
       aria-label={label}
       variants={socialVariants}
       whileHover={{ y: -4, scale: 1.15, rotate: -6 }}
