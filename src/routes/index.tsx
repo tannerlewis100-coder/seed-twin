@@ -268,48 +268,48 @@ function QualityCollage() {
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySs37}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1920}
+              height={1280}
               alt="SS-37 vial"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySemax}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1440}
+              height={1920}
               alt="SEMAX vial"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualityTb500}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1536}
+              height={1920}
               alt="TB500 vial in Clarum presentation box with batch tag"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualityTrio}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1920}
+              height={1280}
               alt="BPC-157, SELANK, and GHK-CU vials"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
