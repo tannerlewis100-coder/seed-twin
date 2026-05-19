@@ -4,6 +4,7 @@ import { COMING_SOON_SLUGS, type Peptide } from "@/data/peptides";
 import { useCart } from "@/lib/cart";
 import { Check, ShoppingCart } from "lucide-react";
 import Vial360 from "@/components/Vial360";
+import glp1sImage from "@/assets/products/glp1-s-20mg.png";
 
 type Props = {
   group: Peptide[] | null;
@@ -39,6 +40,12 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
             <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-40" />
             {active.slug.startsWith("ghk-cu") ? (
               <Vial360 size="xl" />
+            ) : active.slug.startsWith("glp-1-s") ? (
+              <img
+                src={glp1sImage}
+                alt={`${active.name} ${active.size} vial`}
+                className="h-80 w-auto object-contain drop-shadow-2xl"
+              />
             ) : (
               <div className="relative w-44 h-60">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />

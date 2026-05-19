@@ -9,6 +9,7 @@ import RevealOnScroll from "@/components/RevealOnScroll";
 import { allPeptides, categories, type Peptide } from "@/data/peptides";
 import ProductDetailModal from "@/components/ProductDetailModal";
 import Vial360 from "@/components/Vial360";
+import glp1sImage from "@/assets/products/glp1-s-20mg.png";
 
 export const Route = createFileRoute("/shop")({
   component: ShopPage,
@@ -149,6 +150,12 @@ function ShopPage() {
                       <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
                         {p.slug.startsWith("ghk-cu") ? (
                           <Vial360 size="lg" />
+                        ) : p.slug.startsWith("glp-1-s") ? (
+                          <img
+                            src={glp1sImage}
+                            alt={`${p.name} vial`}
+                            className="h-56 w-auto object-contain transition-transform duration-700 group-hover/card:scale-105 drop-shadow-2xl"
+                          />
                         ) : (
                           <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
