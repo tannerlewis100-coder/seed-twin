@@ -37,7 +37,7 @@ const testimonials: Testimonial[] = [
 ];
 
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-2xl border border-white/10 bg-white/[0.03] focus-within:border-brand-gold/60 focus-within:bg-white/[0.06] transition-colors">
+  <div className="rounded-2xl border border-white/10 bg-black focus-within:border-brand-gold/60 transition-colors">
     {children}
   </div>
 );
@@ -137,20 +137,20 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col text-foreground">
-      <img
-        src="/signin-bg.png"
-        alt=""
-        aria-hidden
-        className="fixed inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="fixed inset-0 -z-10 bg-background/55" />
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <AnnouncementBar />
       <SiteHeader />
 
-      <main className="flex flex-1">
+      <main className="relative flex flex-1 overflow-hidden">
+        <img
+          src="/signin-bg.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-background/55" />
         {/* LEFT: form */}
-        <section className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
+        <section className="relative flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
           <div className="w-full max-w-md">
             <Link to="/" className="animate-element inline-flex items-center mb-10">
               <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto object-contain" />
@@ -271,15 +271,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
           </div>
         </section>
 
-        {/* RIGHT: hero + testimonials */}
-        <aside className="hidden md:block relative flex-1 overflow-hidden">
-
-          <div className="absolute bottom-8 right-8 flex flex-col gap-3 items-end">
-            <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
-            <TestimonialCard testimonial={testimonials[1]} delay="animate-delay-1200" />
-            <TestimonialCard testimonial={testimonials[2]} delay="animate-delay-1400" />
-          </div>
-        </aside>
+        <aside className="hidden md:block relative flex-1" />
       </main>
 
       <SiteFooter />
