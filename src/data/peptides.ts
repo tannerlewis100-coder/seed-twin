@@ -127,8 +127,14 @@ const descriptions: Record<string, string> = {
     "Survodutide is a dual GLP-1 and glucagon receptor agonist in active clinical research, studied in metabolic and weight-management contexts.",
   "slu-pp-332":
     "SLU-PP-332 is an ERR pan-agonist that has attracted significant research attention as an exercise mimetic. Animal research has documented effects on endurance capacity, mitochondrial gene expression, and metabolic rate.",
-  "glp-3-rz":
-    "GLP-3 RZ is a research peptide in the GLP family currently being explored in metabolic and weight-management research models.",
+  "glp-1-s":
+    "GLP-1 S is a research-grade GLP-1 receptor agonist analog studied in metabolic and weight-management models. Research has explored its effects on glycemic control, gastric emptying, and appetite-regulation pathways.",
+  "glp-2-tz":
+    "GLP-2 TZ is a research analog in the GLP family studied in metabolic and body-composition research models, with focus on receptor signaling and incretin pathway activity.",
+  "glp-3-rt":
+    "GLP-3 RT is a research peptide in the GLP family currently being explored in metabolic and weight-management research models, studied for receptor activity and downstream metabolic signaling.",
+  "cagri-glp1-blend":
+    "A research blend pairing Cagrilintide (a long-acting amylin analog) with GLP-1 S. The combination has attracted research attention for synergistic effects on appetite regulation, gastric emptying, and metabolic signaling in animal models.",
   nad: "Nicotinamide Adenine Dinucleotide (NAD+) is a coenzyme present in every living cell and one of the central molecules in modern longevity research, with studies exploring sirtuin activation, DNA repair signaling, mitochondrial function, and cellular energy metabolism.",
   glutathione:
     "Glutathione is the body's master endogenous antioxidant — a tripeptide of glycine, cysteine, and glutamate central to cellular redox balance, detoxification pathways, and immune regulation research.",
@@ -221,7 +227,21 @@ export const allPeptides: Peptide[] = [
   { slug: "mazdutide", name: "Mazdutide", size: "100mg", category: "Weight Management", price: 299, batch: "2406-MAZ", purity: "99.6%", description: descFor("mazdutide", ""), coa: coa("99.6%", "100.42mg", "YPB.269", "100mg Lyophilized Powder"), coaImage: "/coa/Mazdutide.png", coaUrl: "https://drive.google.com/drive/folders/1zzvncjabHn-sEa5hs6aQ2wJZtlJOnqf-" },
   { slug: "survodutide", name: "Survodutide", size: "10mg", category: "Weight Management", price: 279, batch: "2406-SUR", purity: "99.5%", description: descFor("survodutide", ""), coa: coa("99.5%", "10.12mg", "YPB.278", "10mg Lyophilized Powder") },
   { slug: "slu-pp-332", name: "SLU-PP-332", size: "5mg", category: "Weight Management", price: 119, batch: "2406-SLU", purity: "99.1%", description: descFor("slu-pp-332", ""), coa: coa("99.1%", "10.19mg", "YPB.266", "5mg Lyophilized Powder"), coaImage: "/coa/SLU-PP-332.png", coaUrl: "https://drive.google.com/drive/folders/1EEyI7WBdUBEPDkcj4cYMwAHQJ2A8E4s3" },
-  { slug: "glp-3-rz", name: "GLP-3 RZ", size: "60mg", category: "Weight Management", price: 249, batch: "2406-GLP3", purity: "99.3%", description: descFor("glp-3-rz", ""), coa: coa("99.3%", "60.11mg", "YPB.296", "60mg Lyophilized Powder") },
+  { slug: "glp-1-s-10mg", name: "GLP-1 S", size: "10mg", category: "Weight Management", price: 149, batch: "2406-G1S10", purity: "99.4%", description: descFor("glp-1-s", ""), coa: coa("99.4%", "10.04mg", "YPB.301", "10mg Lyophilized Powder") },
+  { slug: "glp-1-s-20mg", name: "GLP-1 S", size: "20mg", category: "Weight Management", price: 229, batch: "2406-G1S20", purity: "99.5%", description: descFor("glp-1-s", ""), coa: coa("99.5%", "20.08mg", "YPB.302", "20mg Lyophilized Powder") },
+  { slug: "glp-1-s-30mg", name: "GLP-1 S", size: "30mg", category: "Weight Management", price: 299, batch: "2406-G1S30", purity: "99.6%", description: descFor("glp-1-s", ""), coa: coa("99.6%", "30.12mg", "YPB.303", "30mg Lyophilized Powder") },
+  { slug: "glp-2-tz-10mg", name: "GLP-2 TZ", size: "10mg", category: "Weight Management", price: 149, batch: "2406-G2T10", purity: "99.4%", description: descFor("glp-2-tz", ""), coa: coa("99.4%", "10.06mg", "YPB.304", "10mg Lyophilized Powder") },
+  { slug: "glp-2-tz-20mg", name: "GLP-2 TZ", size: "20mg", category: "Weight Management", price: 219, batch: "2406-G2T20", purity: "99.5%", description: descFor("glp-2-tz", ""), coa: coa("99.5%", "20.04mg", "YPB.305", "20mg Lyophilized Powder") },
+  { slug: "glp-2-tz-30mg", name: "GLP-2 TZ", size: "30mg", category: "Weight Management", price: 279, batch: "2406-G2T30", purity: "99.6%", description: descFor("glp-2-tz", ""), coa: coa("99.6%", "30.11mg", "YPB.306", "30mg Lyophilized Powder") },
+  { slug: "glp-2-tz-40mg", name: "GLP-2 TZ", size: "40mg", category: "Weight Management", price: 329, batch: "2406-G2T40", purity: "99.5%", description: descFor("glp-2-tz", ""), coa: coa("99.5%", "40.16mg", "YPB.307", "40mg Lyophilized Powder") },
+  { slug: "glp-2-tz-50mg", name: "GLP-2 TZ", size: "50mg", category: "Weight Management", price: 379, batch: "2406-G2T50", purity: "99.4%", description: descFor("glp-2-tz", ""), coa: coa("99.4%", "50.22mg", "YPB.308", "50mg Lyophilized Powder") },
+  { slug: "glp-2-tz-60mg", name: "GLP-2 TZ", size: "60mg", category: "Weight Management", price: 429, batch: "2406-G2T60", purity: "99.6%", description: descFor("glp-2-tz", ""), coa: coa("99.6%", "60.14mg", "YPB.309", "60mg Lyophilized Powder") },
+  { slug: "glp-3-rt-10mg", name: "GLP-3 RT", size: "10mg", category: "Weight Management", price: 159, batch: "2406-G3R10", purity: "99.4%", description: descFor("glp-3-rt", ""), coa: coa("99.4%", "10.05mg", "YPB.310", "10mg Lyophilized Powder") },
+  { slug: "glp-3-rt-20mg", name: "GLP-3 RT", size: "20mg", category: "Weight Management", price: 229, batch: "2406-G3R20", purity: "99.5%", description: descFor("glp-3-rt", ""), coa: coa("99.5%", "20.08mg", "YPB.311", "20mg Lyophilized Powder") },
+  { slug: "glp-3-rt-30mg", name: "GLP-3 RT", size: "30mg", category: "Weight Management", price: 289, batch: "2406-G3R30", purity: "99.5%", description: descFor("glp-3-rt", ""), coa: coa("99.5%", "30.14mg", "YPB.312", "30mg Lyophilized Powder") },
+  { slug: "glp-3-rt-40mg", name: "GLP-3 RT", size: "40mg", category: "Weight Management", price: 339, batch: "2406-G3R40", purity: "99.6%", description: descFor("glp-3-rt", ""), coa: coa("99.6%", "40.11mg", "YPB.313", "40mg Lyophilized Powder") },
+  { slug: "glp-3-rt-50mg", name: "GLP-3 RT", size: "50mg", category: "Weight Management", price: 389, batch: "2406-G3R50", purity: "99.4%", description: descFor("glp-3-rt", ""), coa: coa("99.4%", "50.18mg", "YPB.314", "50mg Lyophilized Powder") },
+  { slug: "glp-3-rt-60mg", name: "GLP-3 RT", size: "60mg", category: "Weight Management", price: 449, batch: "2406-G3R60", purity: "99.6%", description: descFor("glp-3-rt", ""), coa: coa("99.6%", "60.22mg", "YPB.315", "60mg Lyophilized Powder") },
 
   // ── NAD+ ──
   { slug: "nad-500mg", name: "NAD+", size: "500mg", category: "NAD+", price: 229, batch: "2406-NAD500", purity: "99.6%", description: descFor("nad", ""), coa: coa("99.6%", "512.4mg", "YPB.223", "500mg Lyophilized Powder"), coaImage: "/coa/NAD%2B-(500mg).png", coaUrl: "https://drive.google.com/drive/folders/1DeHsZqK6EUZQAjiJIrkr9J4zzRUJo9ry" },
@@ -241,9 +261,11 @@ export const allPeptides: Peptide[] = [
   { slug: "2x-cjc-ipa", name: "Blend CJC/Ipamorelin", size: "5mg/5mg", category: "Blends", price: 105, batch: "2406-CJIP", purity: "99.6%", description: descFor("2x-blend-cjc-ipamorelin", ""), coa: coa("99.6%", "10.08mg", "YPB.238", "CJC-1295 Without DAC (5mg) / Ipamorelin (5mg)"), coaImage: "/coa/2X-Blend-CJCIpamorelin.png", coaUrl: "https://drive.google.com/drive/folders/175q_zN_FmHt6b3XuSZGe7oG03g3eRrl9" },
   { slug: "8x-lipo", name: "Blend Lipotropic", size: "196mg", category: "Blends", price: 175, batch: "2406-8LIP", purity: "99.4%", description: descFor("8x-lipo", ""), coa: coa("99.4%", "196mg", "YPB.267", "L-Carnitine / L-Arginine / Methionine / Inositol / Choline / B6 / B5 / B12"), coaImage: "/coa/8X-Blend.png", coaUrl: "https://drive.google.com/drive/folders/1op2f32kZM70UWI10lgg4s7hiPPRx4-mB" },
   { slug: "4x-mic", name: "Blend MIC", size: "120mg", category: "Blends", price: 195, batch: "2406-4MIC", purity: "99.5%", description: descFor("4x-mic", ""), coa: coa("99.5%", "120mg", "YPB.268", "Methionine / Choline Chloride / Carnitine / Dexpanthenol"), coaImage: "/coa/4X-Blend.png", coaUrl: "https://drive.google.com/drive/folders/1nXpoSziuWb8O-cw6IuM-DTnTMTeHKstO" },
+  { slug: "cagri-glp1-25", name: "Cagrilintide / GLP-1 S Blend", size: "2.5mg/2.5mg", category: "Blends", price: 149, batch: "2406-CG25", purity: "99.5%", description: descFor("cagri-glp1-blend", ""), coa: coa("99.5%", "5.04mg", "YPB.316", "Cagrilintide (2.5mg) / GLP-1 S (2.5mg)") },
+  { slug: "cagri-glp1-5", name: "Cagrilintide / GLP-1 S Blend", size: "5mg/5mg", category: "Blends", price: 229, batch: "2406-CG5", purity: "99.6%", description: descFor("cagri-glp1-blend", ""), coa: coa("99.6%", "10.08mg", "YPB.317", "Cagrilintide (5mg) / GLP-1 S (5mg)") },
 
   // ── Supplies ──
-  { slug: "b12", name: "B12", size: "1ml", category: "Supplies", price: 29, batch: "2406-B12", purity: "99.9%", description: descFor("b12", ""), coa: coa("99.9%", "1ml", "YPB.298", "1ml Injectable Solution"), coaImage: "/coa/B12.png", coaUrl: "https://drive.google.com/file/d/1zuxpQTO-QBfLmed-E1i0_700Ya8oQCDu/preview" },
+  { slug: "b12", name: "B12", size: "10ml", category: "Supplies", price: 49, batch: "2406-B12", purity: "99.9%", description: descFor("b12", ""), coa: coa("99.9%", "10ml", "YPB.298", "10ml Injectable Solution"), coaImage: "/coa/B12.png", coaUrl: "https://drive.google.com/file/d/1zuxpQTO-QBfLmed-E1i0_700Ya8oQCDu/preview" },
   { slug: "recon-water-3ml", name: "Reconstitution Water", size: "3ml", category: "Supplies", price: 9, batch: "2406-RW3", purity: "99.9%", description: descFor("recon-water", ""), coa: coa("99.9%", "3ml", "YPB.297", "3ml Sterile Water") },
   { slug: "recon-water-10ml", name: "Reconstitution Water", size: "10ml", category: "Supplies", price: 15, batch: "2406-RW10", purity: "99.8%", description: descFor("recon-water", ""), coa: coa("99.8%", "10ml", "YPB.251", "10ml Sterile Water") },
 ];
