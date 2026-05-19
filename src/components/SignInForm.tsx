@@ -241,7 +241,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
               type="button"
               onClick={handleGoogle}
               disabled={googleSubmitting}
-              className="animate-element animate-delay-800 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
+              className="animate-element animate-delay-800 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-black hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
             >
               {googleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <GoogleIcon />}
               Continue with Google
@@ -251,7 +251,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
               type="button"
               onClick={handleApple}
               disabled={appleSubmitting}
-              className="animate-element animate-delay-800 mt-3 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
+              className="animate-element animate-delay-800 mt-3 w-full inline-flex items-center justify-center gap-3 rounded-full border border-white/15 bg-black hover:bg-white/[0.08] text-foreground text-[15px] py-3.5 transition-colors disabled:opacity-60"
             >
               {appleSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <AppleIcon />}
               Continue with Apple
