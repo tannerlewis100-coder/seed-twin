@@ -78,9 +78,9 @@ const sections: FooterSection[] = [
 
 const socials = [
   { href: "#", label: "Facebook", Icon: Facebook },
-  { href: "#", label: "Instagram", Icon: Instagram },
+  { href: "https://instagram.com/clarumpeptides", label: "Instagram", Icon: Instagram },
   { href: "#", label: "TikTok", Icon: TikTokIcon },
-  { href: "mailto:hello@clarum.com", label: "Email", Icon: Mail },
+  { href: "mailto:clarumpeps@gmail.com", label: "Email", Icon: Mail },
 ];
 
 function NavSection({ title, links }: FooterSection) {
