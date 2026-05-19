@@ -265,7 +265,7 @@ export const allPeptides: Peptide[] = [
   { slug: "cagri-glp1-5", name: "Cagrilintide / GLP-1 S Blend", size: "5mg/5mg", category: "Blends", price: 229, batch: "2406-CG5", purity: "99.6%", description: descFor("cagri-glp1-blend", ""), coa: coa("99.6%", "10.08mg", "YPB.317", "Cagrilintide (5mg) / GLP-1 S (5mg)") },
 
   // ── Supplies ──
-  { slug: "b12", name: "B12", size: "1ml", category: "Supplies", price: 29, batch: "2406-B12", purity: "99.9%", description: descFor("b12", ""), coa: coa("99.9%", "1ml", "YPB.298", "1ml Injectable Solution"), coaImage: "/coa/B12.png", coaUrl: "https://drive.google.com/file/d/1zuxpQTO-QBfLmed-E1i0_700Ya8oQCDu/preview" },
+  { slug: "b12", name: "B12", size: "10ml", category: "Supplies", price: 49, batch: "2406-B12", purity: "99.9%", description: descFor("b12", ""), coa: coa("99.9%", "10ml", "YPB.298", "10ml Injectable Solution"), coaImage: "/coa/B12.png", coaUrl: "https://drive.google.com/file/d/1zuxpQTO-QBfLmed-E1i0_700Ya8oQCDu/preview" },
   { slug: "recon-water-3ml", name: "Reconstitution Water", size: "3ml", category: "Supplies", price: 9, batch: "2406-RW3", purity: "99.9%", description: descFor("recon-water", ""), coa: coa("99.9%", "3ml", "YPB.297", "3ml Sterile Water") },
   { slug: "recon-water-10ml", name: "Reconstitution Water", size: "10ml", category: "Supplies", price: 15, batch: "2406-RW10", purity: "99.8%", description: descFor("recon-water", ""), coa: coa("99.8%", "10ml", "YPB.251", "10ml Sterile Water") },
 ];
