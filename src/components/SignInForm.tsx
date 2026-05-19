@@ -137,7 +137,14 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <div className="relative flex min-h-screen flex-col text-foreground">
+      <img
+        src="/signin-bg.png"
+        alt=""
+        aria-hidden
+        className="fixed inset-0 -z-10 h-full w-full object-cover"
+      />
+      <div className="fixed inset-0 -z-10 bg-background/55" />
       <AnnouncementBar />
       <SiteHeader />
 
