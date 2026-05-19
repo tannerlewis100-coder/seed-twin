@@ -150,7 +150,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
         />
         <div className="absolute inset-0 bg-background/55" />
         {/* LEFT: form */}
-        <section className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
+        <section className="relative flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
           <div className="w-full max-w-md">
             <Link to="/" className="animate-element inline-flex items-center mb-10">
               <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto object-contain" />
