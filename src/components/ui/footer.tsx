@@ -78,9 +78,9 @@ const sections: FooterSection[] = [
 
 const socials = [
   { href: "#", label: "Facebook", Icon: Facebook },
-  { href: "#", label: "Instagram", Icon: Instagram },
+  { href: "https://instagram.com/clarumpeptides", label: "Instagram", Icon: Instagram },
   { href: "#", label: "TikTok", Icon: TikTokIcon },
-  { href: "mailto:hello@clarum.com", label: "Email", Icon: Mail },
+  { href: "mailto:clarumpeps@gmail.com", label: "Email", Icon: Mail },
 ];
 
 function NavSection({ title, links }: FooterSection) {
@@ -117,6 +117,8 @@ function SocialLink({
   return (
     <motion.a
       href={href}
+      target={href.startsWith("http") ? "_blank" : undefined}
+      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
       aria-label={label}
       variants={socialVariants}
       whileHover={{ y: -4, scale: 1.15, rotate: -6 }}
