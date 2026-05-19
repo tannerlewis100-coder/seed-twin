@@ -141,7 +141,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
       <AnnouncementBar />
       <SiteHeader />
 
-      <main className="relative flex flex-1 overflow-hidden">
+      <main className="relative flex flex-1 items-center justify-center overflow-hidden px-4 py-12 sm:px-6">
         <img
           src="/signin-bg.png"
           alt=""
@@ -149,9 +149,8 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-background/55" />
-        {/* LEFT: form */}
-        <section className="relative flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
-          <div className="w-full max-w-md">
+        <section className="relative w-full max-w-md rounded-2xl border border-white/10 bg-black p-8 sm:p-10 shadow-[0_24px_60px_-16px_rgba(0,0,0,0.85)]">
+          <div className="w-full">
             <Link to="/" className="animate-element inline-flex items-center mb-10">
               <img src={clarumLogo} alt="Clarum Research Peptides" className="h-10 w-auto object-contain" />
             </Link>
