@@ -269,8 +269,6 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
             </p>
           </div>
         </section>
-
-        <aside className="hidden md:block relative flex-1" />
       </main>
 
       <SiteFooter />
