@@ -137,18 +137,18 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col text-foreground">
-      <img
-        src="/signin-bg.png"
-        alt=""
-        aria-hidden
-        className="fixed inset-0 -z-10 h-full w-full object-cover"
-      />
-      <div className="fixed inset-0 -z-10 bg-background/55" />
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <AnnouncementBar />
       <SiteHeader />
 
-      <main className="flex flex-1">
+      <main className="relative flex flex-1 overflow-hidden">
+        <img
+          src="/signin-bg.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-background/55" />
         {/* LEFT: form */}
         <section className="flex-1 flex items-center justify-center px-6 py-12 lg:px-12">
           <div className="w-full max-w-md">
