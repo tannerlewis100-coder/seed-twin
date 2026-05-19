@@ -265,7 +265,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
         </section>
 
         {/* RIGHT: hero + testimonials */}
-        <aside className="hidden lg:block relative flex-1 overflow-hidden bg-brand-forest-deep">
+        <aside className="hidden md:block relative flex-1 overflow-hidden bg-brand-forest-deep">
           <img
             src="/signin-bg.png"
             alt=""
