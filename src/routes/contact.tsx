@@ -28,8 +28,8 @@ export const Route = createFileRoute("/contact")({
 });
 
 const contactInfo = [
-  { icon: Mail, label: "Email", value: "support@clarum.com" },
-  { icon: MapPin, label: "Location", value: "Brooklyn, NY" },
+  { icon: Mail, label: "Email", value: "clarumpeps@gmail.com" },
+  { icon: MapPin, label: "Location", value: "Keller, Texas" },
   { icon: Clock, label: "Hours", value: "Mon to Fri · 9 to 5 EST" },
 ];
 
