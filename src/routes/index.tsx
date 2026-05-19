@@ -27,10 +27,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-const qualitySemax = "/quality-semax.png?v=3";
-const qualitySs37 = "/quality-ss37.png?v=3";
-const qualityTb500 = "/quality-tb500-box.png?v=3";
-const qualityTrio = "/quality-trio.png?v=3";
+const qualitySemax = "/quality-semax.jpg?v=4";
+const qualitySs37 = "/quality-ss37.jpg?v=4";
+const qualityTb500 = "/quality-tb500-box.jpg?v=4";
+const qualityTrio = "/quality-trio.jpg?v=4";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
@@ -268,48 +268,48 @@ function QualityCollage() {
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySs37}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1920}
+              height={1280}
               alt="SS-37 vial"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySemax}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1440}
+              height={1920}
               alt="SEMAX vial"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualityTb500}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1536}
+              height={1920}
               alt="TB500 vial in Clarum presentation box with batch tag"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualityTrio}
-              sizes="(min-width: 1024px) 24vw, 45vw"
+              width={1920}
+              height={1280}
               alt="BPC-157, SELANK, and GHK-CU vials"
               loading="eager"
               decoding="async"
               fetchPriority="high"
-              style={{ imageRendering: "high-quality" } as unknown as React.CSSProperties}
               className="h-full w-full object-cover"
             />
           </div>
