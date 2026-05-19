@@ -313,25 +313,39 @@
   src: url("https://fonts.gstatic.com/s/inter/v18/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2") format("woff2");
 }
 
-/* Fix retina blur from reveal animation residue */
+/* ============================================================
+   Sitewide image crispness fix.
+   On DPR=1 desktop displays, any ancestor with `filter`,
+   `backdrop-filter`, `transform`, `will-change`, or a transform
+   transition promotes the image to a GPU layer that gets
+   rasterized at 1x and then composited — producing visible blur.
+   Mobile (DPR 2-3) hides the artifact, which matches the report.
+   We strip those properties from images and their direct wrappers.
+   ============================================================ */
 img,
 picture,
-picture > img,
-div[class*="reveal"] img,
-div[class*="Reveal"] img,
-div[class*="animate"] img,
-div[data-reveal] img {
+picture > img {
   will-change: auto !important;
   transform: none !important;
   filter: none !important;
   backdrop-filter: none !important;
-  image-rendering: high-quality;
-  -webkit-font-smoothing: antialiased;
+  transition: none !important;
+  image-rendering: auto;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
-/* Also strip from animation wrapper parents once revealed */
-div[class*="reveal"][data-revealed="true"],
-div[class*="Reveal"][data-revealed="true"] {
+/* Strip GPU-layer triggers from any element that directly wraps
+   an <img>, including reveal/animate wrappers and hover-scale cards. */
+:where(div, a, button, span, figure, picture):has(> img) {
+  will-change: auto !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+}
+
+/* Once a reveal animation finishes, drop will-change/transform
+   so the compositor releases the bitmap layer. */
+[data-revealed="true"] {
   will-change: auto !important;
   transform: none !important;
 }
