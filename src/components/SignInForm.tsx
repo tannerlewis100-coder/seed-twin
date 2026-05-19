@@ -272,15 +272,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
         </section>
 
         {/* RIGHT: hero + testimonials */}
-        <aside className="hidden md:block relative flex-1 overflow-hidden bg-brand-forest-deep">
-          <img
-            src="/signin-bg.png"
-            alt=""
-            aria-hidden
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-tr from-background/70 via-background/20 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-transparent to-background/70" />
+        <aside className="hidden md:block relative flex-1 overflow-hidden">
 
           <div className="absolute bottom-8 right-8 flex flex-col gap-3 items-end">
             <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
