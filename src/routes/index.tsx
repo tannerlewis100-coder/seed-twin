@@ -28,7 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 const qualitySemax = "https://admin.clarumpeptides.com/cdn/quality-semax.jpg";
-const qualitySs37 = "https://admin.clarumpeptides.com/cdn/quality-ss37.jpg";
+const qualitySs37 = "/quality-ss37-new.png";
 const qualityTb500 = "https://admin.clarumpeptides.com/cdn/quality-tb500-box.jpg";
 const qualityTrio = "https://admin.clarumpeptides.com/cdn/quality-trio.jpg";
 import { peptides, featuredPeptides } from "@/data/peptides";
@@ -268,8 +268,8 @@ function QualityCollage() {
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySs37}
-              width={1920}
-              height={1280}
+              width={789}
+              height={977}
               alt="SS-37 vial"
               loading="eager"
               decoding="async"
