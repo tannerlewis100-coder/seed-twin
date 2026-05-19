@@ -1,24 +1,19 @@
 ## Goal
 
-Center the sign-in form on the page. Remove the split-screen layout. Photo becomes a true full-width background; form sits in a contained panel in the middle.
+Use the newly uploaded SS-37 vial image (on the textured tan/sand background) for the top-left image in the "Receipts, not claims." section — **desktop only**. Mobile keeps the current image.
 
 ## Changes
 
-**File:** `src/components/SignInForm.tsx`
+1. **Copy uploaded asset** to `public/quality-ss37-desktop.png`.
 
-1. Remove the empty right `<aside>` and the two-column flex layout in `<main>`.
-2. Make `<main>` a single centered container — flex, items-center, justify-center, full width.
-3. Keep the background image + dark overlay covering all of `<main>`.
-4. Wrap the form content in a centered panel:
-   - `max-w-md`, mx-auto
-   - Solid black background (matches the inputs/buttons already in place)
-   - Subtle border (`border-white/10`), rounded-2xl, generous padding
-   - Slight drop shadow for separation from the photo
-5. Keep all existing form internals as-is: logo, heading, email, password, "Keep me signed in" + reset, Sign In button, divider, Google, Apple, footer link.
+2. **Edit `src/routes/index.tsx`** (top-left tile of the Receipts collage, around line 268–279):
+   - Replace the single `<img src={qualitySs37} />` with a `<picture>` element:
+     - `<source media="(min-width: 1024px)" srcSet="/quality-ss37-desktop.png" />` (new image on desktop, matches Tailwind `lg:` breakpoint where the collage layout kicks in)
+     - `<img src={qualitySs37} ... />` as the fallback (current image on mobile/tablet)
+   - Keep all existing attributes: width, height, alt, loading, decoding, fetchPriority, className.
 
 ## Out of scope
 
-- No copy changes.
-- No changes to inputs, buttons, or auth logic.
-- Header, announcement bar, footer untouched.
-- Sign-up page automatically inherits the same layout (same component).
+- No changes to the other two collage images.
+- No changes to copy, layout, or other sections.
+- No changes to the sign-in page.
