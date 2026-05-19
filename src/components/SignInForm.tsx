@@ -271,15 +271,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
           </div>
         </section>
 
-        {/* RIGHT: hero + testimonials */}
-        <aside className="hidden md:block relative flex-1 overflow-hidden">
-
-          <div className="absolute bottom-8 right-8 flex flex-col gap-3 items-end">
-            <TestimonialCard testimonial={testimonials[0]} delay="animate-delay-1000" />
-            <TestimonialCard testimonial={testimonials[1]} delay="animate-delay-1200" />
-            <TestimonialCard testimonial={testimonials[2]} delay="animate-delay-1400" />
-          </div>
-        </aside>
+        <aside className="hidden md:block relative flex-1" />
       </main>
 
       <SiteFooter />
