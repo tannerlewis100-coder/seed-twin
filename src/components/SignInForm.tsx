@@ -37,7 +37,7 @@ const testimonials: Testimonial[] = [
 ];
 
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="rounded-2xl border border-white/10 bg-white/[0.03] focus-within:border-brand-gold/60 focus-within:bg-white/[0.06] transition-colors">
+  <div className="rounded-2xl border border-white/10 bg-black focus-within:border-brand-gold/60 transition-colors">
     {children}
   </div>
 );
