@@ -127,8 +127,14 @@ const descriptions: Record<string, string> = {
     "Survodutide is a dual GLP-1 and glucagon receptor agonist in active clinical research, studied in metabolic and weight-management contexts.",
   "slu-pp-332":
     "SLU-PP-332 is an ERR pan-agonist that has attracted significant research attention as an exercise mimetic. Animal research has documented effects on endurance capacity, mitochondrial gene expression, and metabolic rate.",
-  "glp-3-rz":
-    "GLP-3 RZ is a research peptide in the GLP family currently being explored in metabolic and weight-management research models.",
+  "glp-1-s":
+    "GLP-1 S is a research-grade GLP-1 receptor agonist analog studied in metabolic and weight-management models. Research has explored its effects on glycemic control, gastric emptying, and appetite-regulation pathways.",
+  "glp-2-tz":
+    "GLP-2 TZ is a research analog in the GLP family studied in metabolic and body-composition research models, with focus on receptor signaling and incretin pathway activity.",
+  "glp-3-rt":
+    "GLP-3 RT is a research peptide in the GLP family currently being explored in metabolic and weight-management research models, studied for receptor activity and downstream metabolic signaling.",
+  "cagri-glp1-blend":
+    "A research blend pairing Cagrilintide (a long-acting amylin analog) with GLP-1 S. The combination has attracted research attention for synergistic effects on appetite regulation, gastric emptying, and metabolic signaling in animal models.",
   nad: "Nicotinamide Adenine Dinucleotide (NAD+) is a coenzyme present in every living cell and one of the central molecules in modern longevity research, with studies exploring sirtuin activation, DNA repair signaling, mitochondrial function, and cellular energy metabolism.",
   glutathione:
     "Glutathione is the body's master endogenous antioxidant — a tripeptide of glycine, cysteine, and glutamate central to cellular redox balance, detoxification pathways, and immune regulation research.",
