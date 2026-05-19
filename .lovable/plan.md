@@ -1,44 +1,50 @@
-## Goal
+## Problem
 
-Replace the black CSS-mocked vial on the GHK-Cu (and all other) shop cards and in the product detail modal with the real vial photos you uploaded, animated as a true 360° rotation by cycling the 4 angles.
+The GLP-1 S product image (and any future real product photos) renders soft on your DPR=1 desktop display even though the source asset is 1254×1254. Cause: the `<img>` element carries `drop-shadow-2xl` plus `transition-transform duration-700 group-hover/card:scale-105`. Together these promote the image to a GPU compositor layer that gets rasterized at the box size (224px on the card, 320px in the modal) and then redrawn — losing the higher native resolution.
 
-## Assets
+The global CSS override added earlier strips these properties, but `!important` overriding Tailwind utilities on the same element is brittle and doesn't always win in production builds. Better to remove the classes at the source.
 
-Copy the 4 uploads into `src/assets/vial/`:
-- `vial-1.png` (front — label visible)
-- `vial-2.png` (3/4 turn)
-- `vial-3.png` (back — fine print)
-- `vial-4.png` (other 3/4 turn)
+## Changes
 
-Order them front → right → back → left so the rotation reads as a continuous spin.
+### 1. `src/routes/shop.tsx` — product card image
 
-## New component: `Vial360.tsx`
+- Wrap the `<img>` in a `<span>` (or `<div>`) that carries the shadow and the hover scale.
+- The `<img>` keeps only sizing classes (`h-56 w-auto object-contain`) and adds explicit `width={1254} height={1254}` attributes so the browser knows the intrinsic resolution.
 
-A small client component that swaps the 4 frames on an interval to simulate rotation.
+```text
+<span className="block drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105">
+  <img src={glp1sImage} width={1254} height={1254}
+       className="h-56 w-auto object-contain" alt="GLP-1 S vial" />
+</span>
+```
 
-- Preloads all 4 images on mount.
-- Uses `setInterval` (~150ms per frame = full spin every ~600ms; we can tune).
-- Renders one `<img>` with a soft drop shadow, no background.
-- Accepts `size` prop (e.g. `sm` for shop cards, `lg` for the modal).
-- Pauses on `prefers-reduced-motion` and shows just the front frame.
-- Optional: pause when card is off-screen using `IntersectionObserver` to save CPU.
+### 2. `src/components/ProductDetailModal.tsx` — modal image
 
-## Wire it in
+Same pattern, with `h-80` instead of `h-56`.
 
-1. **`src/routes/shop.tsx`** — replace the CSS vial block (around lines 150–160, the `<span>CLARUM</span>` / `RESEARCH USE ONLY` mock) with `<Vial360 size="sm" />`. Keep the surrounding card/gradient backdrop.
-2. **`src/components/ProductDetailModal.tsx`** — replace the mocked vial block (lines ~36–50) with `<Vial360 size="lg" />`. Keep the green gradient panel behind it.
+### 3. `src/styles.css` — simplify the global override
 
-Same component, same 4 photos in both places — every product uses the same vial visual (matches how the current mock works).
+With the source fix in place, the `!important` overrides are no longer load-bearing. Keep a smaller version that just guarantees `image-rendering: high-quality` on every `<img>` and prevents accidental future regressions:
 
-## Notes
+```text
+img { image-rendering: high-quality; }
+img:not([data-allow-transform]) { transform: none; will-change: auto; }
+```
 
-- All vials in the catalog currently render the same generic mock, so using one shared spinning vial is consistent with existing behavior.
-- No data changes, no route changes, no backend work.
-- Pure frontend / presentation.
+Drop the broad `:has(> img)` rule — it was a sledgehammer that also killed the footer logo's intended glow.
+
+## Why this works
+
+Filters and transforms on a wrapper element create the GPU layer one level up. The `<img>` itself remains a plain raster element rendered by the browser at full source fidelity, then the wrapper layer composites the shadow and hover scale on top. Result: the vial label stays crisp at any DPR, the hover lift still feels premium, and the drop shadow still reads.
 
 ## Files touched
 
-- add: `src/assets/vial/vial-1.png … vial-4.png`
-- add: `src/components/Vial360.tsx`
-- edit: `src/routes/shop.tsx`
-- edit: `src/components/ProductDetailModal.tsx`
+- `src/routes/shop.tsx`
+- `src/components/ProductDetailModal.tsx`
+- `src/styles.css`
+
+## Out of scope
+
+- Footer GooeyText morph (you said leave as-is).
+- CSS-mocked vial cards for non-GLP-1-S products — no real `<img>` involved, nothing to fix.
+- Adding `srcset` / responsive image variants — current single 1254px asset is already comfortable for both display sizes through 3x DPR.

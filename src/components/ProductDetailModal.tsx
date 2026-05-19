@@ -41,11 +41,15 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
             {active.slug.startsWith("ghk-cu") ? (
               <Vial360 size="xl" />
             ) : active.slug.startsWith("glp-1-s") ? (
-              <img
-                src={glp1sImage}
-                alt={`${active.name} ${active.size} vial`}
-                className="h-80 w-auto object-contain drop-shadow-2xl"
-              />
+              <span className="block drop-shadow-2xl">
+                <img
+                  src={glp1sImage}
+                  alt={`${active.name} ${active.size} vial`}
+                  width={1254}
+                  height={1254}
+                  className="h-80 w-auto object-contain"
+                />
+              </span>
             ) : (
               <div className="relative w-44 h-60">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />

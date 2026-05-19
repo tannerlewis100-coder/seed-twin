@@ -151,11 +151,15 @@ function ShopPage() {
                         {p.slug.startsWith("ghk-cu") ? (
                           <Vial360 size="lg" />
                         ) : p.slug.startsWith("glp-1-s") ? (
-                          <img
-                            src={glp1sImage}
-                            alt={`${p.name} vial`}
-                            className="h-56 w-auto object-contain transition-transform duration-700 group-hover/card:scale-105 drop-shadow-2xl"
-                          />
+                          <span className="block drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105">
+                            <img
+                              src={glp1sImage}
+                              alt={`${p.name} vial`}
+                              width={1254}
+                              height={1254}
+                              className="h-56 w-auto object-contain"
+                            />
+                          </span>
                         ) : (
                           <div className="relative w-32 h-44 transition-transform duration-700 group-hover/card:scale-105">
                             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
