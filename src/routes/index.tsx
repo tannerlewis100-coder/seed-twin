@@ -266,16 +266,19 @@ function QualityCollage() {
         {/* Image collage */}
         <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
-            <img
-              src={qualitySs37}
-              width={789}
-              height={977}
-              alt="SS-37 vial"
-              loading="eager"
-              decoding="async"
-              fetchPriority="high"
-              className="h-full w-full object-cover"
-            />
+            <picture>
+              <source media="(min-width: 1024px)" srcSet="/quality-ss37-desktop.png" />
+              <img
+                src={qualitySs37}
+                width={789}
+                height={977}
+                alt="SS-37 vial"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+                className="h-full w-full object-cover"
+              />
+            </picture>
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
