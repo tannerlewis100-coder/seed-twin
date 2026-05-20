@@ -3,7 +3,6 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { COMING_SOON_SLUGS, type Peptide } from "@/data/peptides";
 import { useCart } from "@/lib/cart";
 import { Check, ShoppingCart } from "lucide-react";
-import Vial360 from "@/components/Vial360";
 import { vialImageFor } from "@/lib/vialImages";
 
 type Props = {
@@ -38,16 +37,12 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
           {/* Vial */}
           <div className="group/card relative bg-gradient-to-br from-brand-forest to-brand-forest-deep p-10 flex items-center justify-center min-h-[320px] border-b md:border-b-0 md:border-r border-white/5">
             <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-40" />
-            {active.slug.startsWith("ghk-cu") ? (
-              <Vial360 size="xl" />
-            ) : (
-              <img
-                src={vial}
-                alt={`${active.name} ${active.size} vial`}
-                draggable={false}
-                className="h-80 w-auto max-w-full object-contain select-none drop-shadow-2xl"
-              />
-            )}
+            <img
+              src={vial}
+              alt={`${active.name} ${active.size} vial`}
+              draggable={false}
+              className="h-80 w-auto max-w-full object-contain select-none drop-shadow-2xl"
+            />
           </div>
 
           {/* Details */}

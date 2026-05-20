@@ -8,7 +8,7 @@ import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { allPeptides, categories, type Peptide } from "@/data/peptides";
 import ProductDetailModal from "@/components/ProductDetailModal";
-import Vial360 from "@/components/Vial360";
+
 import { vialImageFor } from "@/lib/vialImages";
 
 export const Route = createFileRoute("/shop")({
@@ -147,17 +147,13 @@ function ShopPage() {
                       </h3>
 
                       <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
-                        {p.slug.startsWith("ghk-cu") ? (
-                          <Vial360 size="lg" />
-                        ) : (
-                          <img
-                            src={vial}
-                            alt={`${p.name} vial`}
-                            loading="lazy"
-                            draggable={false}
-                            className="h-56 w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
-                          />
-                        )}
+                        <img
+                          src={vial}
+                          alt={`${p.name} vial`}
+                          loading="lazy"
+                          draggable={false}
+                          className="h-56 w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
+                        />
                       </div>
 
                       <div className="relative z-10 w-full">
