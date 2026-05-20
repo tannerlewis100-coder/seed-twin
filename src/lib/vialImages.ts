@@ -65,12 +65,29 @@ import cagrilintide10 from "@/assets/products/cagrilintide-10mg.png";
 import kisspeptin from "@/assets/products/kisspeptin-10mg.png";
 import hcg10000 from "@/assets/products/hcg-10000iu.png";
 import hexarelin from "@/assets/products/hexarelin-5mg.png";
+import amino1mq50 from "@/assets/products/5amino1mq-50mg.png";
+import amino1mq5 from "@/assets/products/5amino1mq-5mg.png";
+import b12 from "@/assets/products/b12-10ml.png";
+import aod9604 from "@/assets/products/aod9604-5mg.png";
+import bpc157 from "@/assets/products/bpc157-20mg.png";
+import aicar from "@/assets/products/aicar-50mg.png";
+import ace031 from "@/assets/products/ace031-1mg.png";
+import ara290 from "@/assets/products/ara290-10mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
 const RULES: Array<[RegExp, string]> = [
   [/cagrilintide.*glp|cagri.*glp/i, cagriGlp],
   [/cagrilintide.*10mg|\bcagri\b.*10mg/i, cagrilintide10],
+  [/5-?amino-?1mq.*50mg|5amino1mq.*50mg/i, amino1mq50],
+  [/5-?amino-?1mq.*5mg|5amino1mq.*5mg/i, amino1mq5],
+  [/5-?amino-?1mq/i, amino1mq5],
+  [/\bb-?12\b|cyanocobalamin|methylcobalamin/i, b12],
+  [/aod-?9604/i, aod9604],
+  [/bpc-?157/i, bpc157],
+  [/\baicar\b/i, aicar],
+  [/ace-?031/i, ace031],
+  [/ara-?290/i, ara290],
   [/glp-?1\s*s.*30mg/i, glp1s30],
   [/glp-?1\s*s.*20mg/i, glp1s],
   [/glp-?1\s*s.*10mg/i, glp1s10],
