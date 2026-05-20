@@ -32,6 +32,16 @@ import igf1lr3 from "@/assets/products/igf1lr3-1mg.png";
 import nad1000 from "@/assets/products/nad-1000mg.png";
 import glutathione from "@/assets/products/glutathione-600mg.png";
 import pt141 from "@/assets/products/pt141-10mg.png";
+import tesamorelin20 from "@/assets/products/tesamorelin-20mg.png";
+import epitalon10 from "@/assets/products/epitalon-10mg.png";
+import selank from "@/assets/products/selank-10mg.png";
+import survodutide from "@/assets/products/survodutide-10mg.png";
+import glp2tz10 from "@/assets/products/glp2-tz-10mg.png";
+import melanotan2 from "@/assets/products/melanotan2-10mg.png";
+import wolverine20 from "@/assets/products/wolverine-20mg.png";
+import slupp332 from "@/assets/products/slu-pp-332-5mg.png";
+import igf1lr3Small from "@/assets/products/igf1lr3-0-1mg.png";
+import gdf8 from "@/assets/products/gdf8-1mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
@@ -40,11 +50,14 @@ const RULES: Array<[RegExp, string]> = [
   [/glp-?1\s*s/i, glp1s],
   [/glp-?2.*50mg|glp-?2-tz-50mg/i, glp2tz50],
   [/glp-?2.*20mg|glp-?2-tz-20mg/i, glp2tz20],
+  [/glp-?2.*10mg|glp-?2-tz-10mg/i, glp2tz10],
   [/glp-?2/i, glp2tz],
   [/glp-?3/i, glp3rt],
+  [/survodutide/i, survodutide],
   [/cjc.*with\s*dac|cjc-?dac|cjc\s*\+\s*dac/i, cjcWithDac],
   [/cjc.*without\s*dac|cjc.*no\s*dac|cjc-?nodac/i, cjcNoDac],
   [/blend\s*cjc\/ipamorelin|cjc.*ipa|ipamorelin.*cjc|2x-cjc-ipa/i, cjcIpaBlend],
+  [/tesamorelin.*20mg/i, tesamorelin20],
   [/tesamorelin/i, tesamorelin],
   [/sermorelin/i, sermorelin],
   [/pnc-?27/i, pnc27],
@@ -54,6 +67,7 @@ const RULES: Array<[RegExp, string]> = [
   [/thymosin\s*alpha\s*1|\bta1\b|\bta-?1\b/i, ta1],
   [/dsip/i, dsip],
   [/snap-?8/i, snap8],
+  [/wolverine.*20mg|wolverine-?20/i, wolverine20],
   [/wolverine/i, wolverine],
   [/glow/i, glowBlend],
   [/\bklow\b/i, klowBlend],
@@ -61,9 +75,14 @@ const RULES: Array<[RegExp, string]> = [
   [/ghk-?cu|\bghk\b/i, ghkcu],
   [/mots-?c|\bmots\b/i, motsc],
   [/tb-?500|thymosin\s*beta/i, tb500],
+  [/selank/i, selank],
   [/semax/i, semax],
+  [/melanotan/i, melanotan2],
+  [/slu-?pp-?332|slupp332/i, slupp332],
+  [/gdf-?8|myostatin/i, gdf8],
+  [/igf-?1\s*lr3.*0\.?1mg|igf-?1-?lr3-?0/i, igf1lr3Small],
   [/igf-?1\s*lr3|igf-1-lr3/i, igf1lr3],
-  [/epitalon|epithalon/i, epitalon],
+  [/epitalon|epithalon/i, epitalon10],
   [/nad\+/i, nad1000],
   [/glutathione/i, glutathione],
   [/pt-?141/i, pt141],
