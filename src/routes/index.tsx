@@ -29,7 +29,7 @@ import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
 const qualitySemax = "/quality-semax-v2.png";
 const qualitySs37 = "/quality-ss37-v2.png";
-const qualityTb500 = "/quality-glp1s-v2.png";
+const qualityTb500 = "/quality-glp1s-v3.jpg";
 const qualityTrio = "/quality-trio-v2.png";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
