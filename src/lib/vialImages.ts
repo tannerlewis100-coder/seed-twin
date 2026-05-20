@@ -59,6 +59,12 @@ import mazdutide from "@/assets/products/mazdutide-100mg.png";
 import foxo4 from "@/assets/products/foxo4-10mg.png";
 import glutathione1500 from "@/assets/products/glutathione-1500mg.png";
 import glp2tz60 from "@/assets/products/glp2-tz-60mg.png";
+import glp1s30 from "@/assets/products/glp1-s-30mg.png";
+import igfdes from "@/assets/products/igfdes-0-1mg.png";
+import cagrilintide10 from "@/assets/products/cagrilintide-10mg.png";
+import kisspeptin from "@/assets/products/kisspeptin-10mg.png";
+import hcg10000 from "@/assets/products/hcg-10000iu.png";
+import hexarelin from "@/assets/products/hexarelin-5mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
