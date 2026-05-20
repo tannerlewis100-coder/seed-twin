@@ -27,10 +27,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-const qualitySemax = "https://admin.clarumpeptides.com/cdn/quality-semax.jpg";
+const qualitySemax = "/quality-semax-hd.jpg";
 const qualitySs37 = "/quality-ss37-new.png";
-const qualityTb500 = "https://admin.clarumpeptides.com/cdn/quality-tb500-box.jpg";
-const qualityTrio = "https://admin.clarumpeptides.com/cdn/quality-trio.jpg";
+const qualityTb500 = "/quality-tb500-hd.jpg";
+const qualityTrio = "/quality-trio-hd.jpg";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
