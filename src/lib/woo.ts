@@ -72,6 +72,8 @@ export type WooVariationRef = {
   attributes: Array<{ name: string; value: string }>;
 };
 
+export type WooAttribute = { id?: number; name: string; value?: string; option?: string };
+
 export type WooProduct = {
   id: number;
   slug: string;
@@ -86,6 +88,8 @@ export type WooProduct = {
   images: WooImage[];
   categories: WooCategory[];
   variations: WooVariationRef[];
+  /** Present on variation-type products; describes the selected attribute values. */
+  attributes?: WooAttribute[];
   is_in_stock: boolean;
   is_purchasable: boolean;
 };

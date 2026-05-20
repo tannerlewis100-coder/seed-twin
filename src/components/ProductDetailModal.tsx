@@ -75,11 +75,11 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
 
   const onAdd = async () => {
     if (isVariable && activeVar) {
-      await addItem({
-        id: activeVar.id,
-        quantity: 1,
-        variation: activeVar.attributes.map((a) => ({ attribute: a.name, value: a.value })),
-      });
+      const variation = (activeVar.attributes ?? []).map((a) => ({
+        attribute: a.name,
+        value: a.value ?? a.option ?? "",
+      }));
+      await addItem({ id: activeVar.id, quantity: 1, variation });
     } else {
       await addItem({ id: product.id, quantity: 1 });
     }
@@ -88,8 +88,13 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   };
 
   // Build size label from variation attributes (first attribute, typically "Size").
-  const labelFor = (v: WooProduct) =>
-    v.attributes?.[0]?.value ?? v.name.replace(product.name, "").trim() || "Variant";
+  const labelFor = (v: WooProduct) => {
+    const attr = v.attributes?.[0];
+    const fromAttr = attr?.value ?? attr?.option;
+    if (fromAttr) return fromAttr;
+    const stripped = v.name.replace(product.name, "").trim();
+    return stripped || "Variant";
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
