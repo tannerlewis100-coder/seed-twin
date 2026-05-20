@@ -34,17 +34,20 @@ export function clearCartToken() {
 }
 
 async function wooFetch(path: string, init: RequestInit = {}): Promise<Response> {
+  const isCart = path.startsWith("/cart");
   const token = getCartToken();
   const headers: Record<string, string> = {
     Accept: "application/json",
     ...(init.body ? { "Content-Type": "application/json" } : {}),
     ...((init.headers as Record<string, string> | undefined) ?? {}),
   };
-  if (token) headers["Cart-Token"] = token;
+  // Only thread Cart-Token on cart endpoints — adding it on product reads
+  // triggers a CORS preflight that WP currently rejects, blanking the catalog.
+  if (isCart && token) headers["Cart-Token"] = token;
 
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    credentials: "include",
+    credentials: isCart ? "include" : "omit",
     headers,
   });
   const next = res.headers.get("Cart-Token");
