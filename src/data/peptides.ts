@@ -109,8 +109,6 @@ const descriptions: Record<string, string> = {
     "Delta Sleep-Inducing Peptide (DSIP) is a nonapeptide first isolated in 1974 from rabbit cerebral venous blood during slow-wave sleep, with nearly five decades of literature exploring sleep architecture regulation and stress response modulation.",
   "thymosin-alpha-1":
     "Thymosin Alpha-1 is a 28-amino acid peptide derived from prothymosin alpha and one of the most clinically validated immunomodulatory peptides in existence. Approved as a pharmaceutical drug in over 35 countries under the brand name Zadaxin.",
-  "kpv-lysine-proline-valine":
-    "KPV (Lysine-Proline-Valine) is the C-terminal tripeptide of alpha-MSH and has been studied for its role in NF-κB pathway modulation and anti-inflammatory signaling in cell and animal models.",
   vip10:
     "Vasoactive Intestinal Peptide (VIP) is a 28-amino acid neuropeptide found throughout the central and peripheral nervous systems. Studied for vasodilatory effects, immunomodulatory properties, and circadian rhythm regulation.",
   "5-amino-1mq":
@@ -142,8 +140,6 @@ const descriptions: Record<string, string> = {
     "PT-141, known pharmaceutically as Bremelanotide, is an FDA-approved melanocortin receptor agonist. Research has explored its activation of MC3R and MC4R receptors and central nervous system role in arousal-pathway research.",
   kisspeptin:
     "Kisspeptin is a neuropeptide encoded by the KISS1 gene and recognized as the master upstream regulator of the hypothalamic-pituitary-gonadal axis, with research exploring GnRH pulse generation and reproductive function.",
-  "klow-blend":
-    "KLOW combines GHK-Cu, KPV, BPC-157, and TB-500 — four of the most studied peptides in tissue, immune, and skin research — into a single research blend.",
   "8x-lipo":
     "An 8-component lipotropic blend (L-Carnitine, L-Arginine, Methionine, Inositol, Choline, B6, B5, B12) used as a reference compound in metabolic and nutritional research.",
   "4x-mic":
@@ -215,7 +211,6 @@ export const allPeptides: Peptide[] = [
 
   // ── Immune ──
   { slug: "ta-1", name: "Thymosin Alpha 1", size: "10mg", category: "Immune", price: 139, batch: "2406-TA1", purity: "99.7%", description: descFor("thymosin-alpha-1", ""), coa: coa("99.7%", "10.06mg", "YPB.231", "10mg Lyophilized Powder"), coaImage: "/coa/Thymosin-Alpha-1.png", coaUrl: "https://drive.google.com/drive/folders/1WnbGc1Z7vIaS9dQT4Mq2fIgy9xVQxML4" },
-  { slug: "kpv", name: "KPV / Lysine-Proline-Valine", size: "10mg", category: "Immune", price: 129, batch: "2406-KPV", purity: "99.6%", description: descFor("kpv-lysine-proline-valine", ""), coa: coa("99.6%", "10.14mg", "YPB.265", "10mg Lyophilized Powder"), coaImage: "/coa/KPV.png", coaUrl: "https://drive.google.com/drive/folders/1OY5VSh_dIld7GaRqPx9qbH3I782lJ9y2" },
   { slug: "vip10", name: "VIP10", size: "10mg", category: "Immune", price: 199, batch: "2406-VIP", purity: "99.4%", description: descFor("vip10", ""), coa: coa("99.4%", "10.06mg", "YPB.281", "10mg Lyophilized Powder") },
 
   // ── Weight Management ──
@@ -257,7 +252,7 @@ export const allPeptides: Peptide[] = [
   { slug: "wolverine-5mg", name: "Wolverine Blend", size: "5mg/5mg", category: "Blends", price: 125, batch: "2406-WLV5", purity: "99.7%", description: descFor("wolverine-blend", ""), coa: coa("99.7%", "10.06mg", "YPB.216", "BPC-157 (5mg) / TB500 (5mg)"), coaImage: "/coa/Wolverine-Blend-(5mg5mg).png", coaUrl: "https://drive.google.com/drive/folders/1hfyQ4hNDTcSy974vVKxzLtjXtBamqsHU" },
   { slug: "wolverine-10mg", name: "Wolverine Blend", size: "10mg/10mg", category: "Blends", price: 199, batch: "2406-WLV10", purity: "99.6%", description: descFor("wolverine-blend", ""), coa: coa("99.6%", "20.12mg", "YPB.217", "BPC-157 (10mg) / TB500 (10mg)"), coaImage: "/coa/Wolverine-Blend-(10mg10mg).png", coaUrl: "https://drive.google.com/drive/folders/1mUATcAAmdMYQzR7tv16dvwnYDNLbAlo3" },
   { slug: "glow-blend", name: "GLOW Blend", size: "70mg", category: "Blends", price: 279, batch: "2406-GLOW", purity: "99.4%", description: descFor("glow-blend", ""), coa: coa("99.4%", "70.08mg", "YPB.218", "GHK-Cu (50mg) / BPC-157 (10mg) / TB500 (10mg)"), coaImage: "/coa/GLOW.png", coaUrl: "https://drive.google.com/drive/folders/1bgn9BYPOLEmtsIdG2-MBUN4XvkCaROJF" },
-  { slug: "klow-blend", name: "KLOW Blend — GHK-Cu/KPV/BPC-157/TB-500", size: "80mg", category: "Blends", price: 219, batch: "2406-KLOW", purity: "99.3%", description: descFor("klow-blend", ""), coa: coa("99.3%", "80.14mg", "YPB.264", "GHK-Cu (50mg) / KPV (10mg) / BPC-157 (10mg) / TB500 (10mg)"), coaImage: "/coa/KLOW.png", coaUrl: "https://drive.google.com/drive/folders/16olIYPqxzShIcxtwNUIR1cI9_HQhgJie" },
+  
   { slug: "2x-cjc-ipa", name: "Blend CJC/Ipamorelin", size: "5mg/5mg", category: "Blends", price: 105, batch: "2406-CJIP", purity: "99.6%", description: descFor("2x-blend-cjc-ipamorelin", ""), coa: coa("99.6%", "10.08mg", "YPB.238", "CJC-1295 Without DAC (5mg) / Ipamorelin (5mg)"), coaImage: "/coa/2X-Blend-CJCIpamorelin.png", coaUrl: "https://drive.google.com/drive/folders/175q_zN_FmHt6b3XuSZGe7oG03g3eRrl9" },
   { slug: "8x-lipo", name: "Blend Lipotropic", size: "196mg", category: "Blends", price: 175, batch: "2406-8LIP", purity: "99.4%", description: descFor("8x-lipo", ""), coa: coa("99.4%", "196mg", "YPB.267", "L-Carnitine / L-Arginine / Methionine / Inositol / Choline / B6 / B5 / B12"), coaImage: "/coa/8X-Blend.png", coaUrl: "https://drive.google.com/drive/folders/1op2f32kZM70UWI10lgg4s7hiPPRx4-mB" },
   { slug: "4x-mic", name: "Blend MIC", size: "120mg", category: "Blends", price: 195, batch: "2406-4MIC", purity: "99.5%", description: descFor("4x-mic", ""), coa: coa("99.5%", "120mg", "YPB.268", "Methionine / Choline Chloride / Carnitine / Dexpanthenol"), coaImage: "/coa/4X-Blend.png", coaUrl: "https://drive.google.com/drive/folders/1nXpoSziuWb8O-cw6IuM-DTnTMTeHKstO" },
@@ -294,7 +289,7 @@ const FEATURED_SLUGS = [
   "mots-c-10mg",
   "ghk-cu-50mg",
   "nad-500mg",
-  "klow-blend",
+  "wolverine-5mg",
   "wolverine-10mg",
 ];
 

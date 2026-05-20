@@ -73,10 +73,12 @@ import bpc157 from "@/assets/products/bpc157-20mg.png";
 import aicar from "@/assets/products/aicar-50mg.png";
 import ace031 from "@/assets/products/ace031-1mg.png";
 import ara290 from "@/assets/products/ara290-10mg.png";
+import bacWater from "@/assets/products/bac-water-3ml.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
 const RULES: Array<[RegExp, string]> = [
+  [/reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water/i, bacWater],
   [/cagrilintide.*glp|cagri.*glp/i, cagriGlp],
   [/cagrilintide.*10mg|\bcagri\b.*10mg/i, cagrilintide10],
   [/5-?amino-?1mq.*50mg|5amino1mq.*50mg/i, amino1mq50],
