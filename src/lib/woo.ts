@@ -33,27 +33,33 @@ export function clearCartToken() {
   }
 }
 
+// In-memory nonce captured from any Woo Store API response. Refreshes
+// re-bootstrap via the initial GET /cart fired by CartProvider on mount.
+let currentNonce: string | null = null;
+
 async function wooFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const isCart = path.startsWith("/cart");
   const token = getCartToken();
+  const method = (init.method ?? "GET").toUpperCase();
+  const isMutation = method === "POST" || method === "PUT" || method === "DELETE";
+
   const headers: Record<string, string> = {
     Accept: "application/json",
     ...(init.body ? { "Content-Type": "application/json" } : {}),
     ...((init.headers as Record<string, string> | undefined) ?? {}),
   };
-  // Cart-Token is the guest session — no cookies needed. Only send it on
-  // cart endpoints so product reads stay simple-CORS (no preflight).
   if (isCart && token) headers["Cart-Token"] = token;
+  if (isMutation && currentNonce) headers["Nonce"] = currentNonce;
 
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    // No credentials: Woo Store API persists the guest cart via Cart-Token
-    // alone. Sending credentials would force WP to echo Allow-Credentials:true.
     credentials: "omit",
     headers,
   });
-  const next = res.headers.get("Cart-Token");
-  if (next) setCartToken(next);
+  const nextToken = res.headers.get("Cart-Token");
+  if (nextToken) setCartToken(nextToken);
+  const nextNonce = res.headers.get("Nonce");
+  if (nextNonce) currentNonce = nextNonce;
   return res;
 }
 
