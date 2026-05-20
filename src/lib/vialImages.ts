@@ -34,29 +34,43 @@ import glutathione from "@/assets/products/glutathione-600mg.png";
 import pt141 from "@/assets/products/pt141-10mg.png";
 import tesamorelin20 from "@/assets/products/tesamorelin-20mg.png";
 import epitalon10 from "@/assets/products/epitalon-10mg.png";
+import epitalon50 from "@/assets/products/epitalon-50mg.png";
 import selank from "@/assets/products/selank-10mg.png";
 import survodutide from "@/assets/products/survodutide-10mg.png";
+import glp1s10 from "@/assets/products/glp1-s-10mg.png";
 import glp2tz10 from "@/assets/products/glp2-tz-10mg.png";
+import glp3rt10 from "@/assets/products/glp3-rt-10mg.png";
+import glp3rt60 from "@/assets/products/glp3-rt-60mg.png";
 import melanotan2 from "@/assets/products/melanotan2-10mg.png";
 import wolverine20 from "@/assets/products/wolverine-20mg.png";
 import slupp332 from "@/assets/products/slu-pp-332-5mg.png";
 import igf1lr3Small from "@/assets/products/igf1lr3-0-1mg.png";
 import gdf8 from "@/assets/products/gdf8-1mg.png";
+import nad500 from "@/assets/products/nad-500mg.png";
+import lpv from "@/assets/products/lpv-10mg.png";
+import ll37 from "@/assets/products/ll37-5mg.png";
+import ipamorelin from "@/assets/products/ipamorelin-10mg.png";
+import thymalin from "@/assets/products/thymalin-10mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
 const RULES: Array<[RegExp, string]> = [
   [/cagrilintide.*glp|cagri.*glp/i, cagriGlp],
+  [/glp-?1\s*s.*20mg/i, glp1s],
+  [/glp-?1\s*s.*10mg/i, glp1s10],
   [/glp-?1\s*s/i, glp1s],
   [/glp-?2.*50mg|glp-?2-tz-50mg/i, glp2tz50],
   [/glp-?2.*20mg|glp-?2-tz-20mg/i, glp2tz20],
   [/glp-?2.*10mg|glp-?2-tz-10mg/i, glp2tz10],
   [/glp-?2/i, glp2tz],
+  [/glp-?3.*60mg/i, glp3rt60],
+  [/glp-?3.*10mg/i, glp3rt10],
   [/glp-?3/i, glp3rt],
   [/survodutide/i, survodutide],
   [/cjc.*with\s*dac|cjc-?dac|cjc\s*\+\s*dac/i, cjcWithDac],
   [/cjc.*without\s*dac|cjc.*no\s*dac|cjc-?nodac/i, cjcNoDac],
   [/blend\s*cjc\/ipamorelin|cjc.*ipa|ipamorelin.*cjc|2x-cjc-ipa/i, cjcIpaBlend],
+  [/\bipamorelin\b/i, ipamorelin],
   [/tesamorelin.*20mg/i, tesamorelin20],
   [/tesamorelin/i, tesamorelin],
   [/sermorelin/i, sermorelin],
@@ -65,6 +79,7 @@ const RULES: Array<[RegExp, string]> = [
   [/ghrp-?6/i, ghrp6],
   [/\bhmg\b/i, hmg],
   [/thymosin\s*alpha\s*1|\bta1\b|\bta-?1\b/i, ta1],
+  [/thymalin/i, thymalin],
   [/dsip/i, dsip],
   [/snap-?8/i, snap8],
   [/wolverine.*20mg|wolverine-?20/i, wolverine20],
@@ -80,9 +95,13 @@ const RULES: Array<[RegExp, string]> = [
   [/melanotan/i, melanotan2],
   [/slu-?pp-?332|slupp332/i, slupp332],
   [/gdf-?8|myostatin/i, gdf8],
+  [/ll-?37/i, ll37],
+  [/\blpv\b/i, lpv],
   [/igf-?1\s*lr3.*0\.?1mg|igf-?1-?lr3-?0/i, igf1lr3Small],
   [/igf-?1\s*lr3|igf-1-lr3/i, igf1lr3],
+  [/epitalon.*50mg|epithalon.*50mg/i, epitalon50],
   [/epitalon|epithalon/i, epitalon10],
+  [/nad\+.*500mg/i, nad500],
   [/nad\+/i, nad1000],
   [/glutathione/i, glutathione],
   [/pt-?141/i, pt141],
