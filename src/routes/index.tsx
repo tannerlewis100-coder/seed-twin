@@ -27,10 +27,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-const qualitySemax = "/quality-semax-hd.jpg";
-const qualitySs37 = "/quality-ss37-new.png";
-const qualityTb500 = "/quality-tb500-hd.jpg";
-const qualityTrio = "/quality-trio-hd.jpg";
+const qualitySemax = "/quality-semax-v2.png";
+const qualitySs37 = "/quality-ss37-v2.png";
+const qualityTb500 = "/quality-glp1s-v2.png";
+const qualityTrio = "/quality-trio-v2.png";
 import { peptides, featuredPeptides } from "@/data/peptides";
 
 export const Route = createFileRoute("/")({
@@ -266,19 +266,14 @@ function QualityCollage() {
         {/* Image collage */}
         <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
-            <picture>
-              <source media="(min-width: 1024px)" srcSet="/quality-ss37-desktop.png" />
-              <img
-                src={qualitySs37}
-                width={789}
-                height={977}
-                alt="SS-37 vial"
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
-                className="h-full w-full object-cover"
-              />
-            </picture>
+            <img
+              src={qualitySs37}
+              alt="SS-37 vial"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+              className="h-full w-full object-cover"
+            />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
@@ -297,7 +292,7 @@ function QualityCollage() {
               src={qualityTb500}
               width={1536}
               height={1920}
-              alt="TB500 vial in Clarum presentation box with batch tag"
+              alt="GLP1-S vial"
               loading="eager"
               decoding="async"
               fetchPriority="high"
