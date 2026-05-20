@@ -59,11 +59,19 @@ import mazdutide from "@/assets/products/mazdutide-100mg.png";
 import foxo4 from "@/assets/products/foxo4-10mg.png";
 import glutathione1500 from "@/assets/products/glutathione-1500mg.png";
 import glp2tz60 from "@/assets/products/glp2-tz-60mg.png";
+import glp1s30 from "@/assets/products/glp1-s-30mg.png";
+import igfdes from "@/assets/products/igfdes-0-1mg.png";
+import cagrilintide10 from "@/assets/products/cagrilintide-10mg.png";
+import kisspeptin from "@/assets/products/kisspeptin-10mg.png";
+import hcg10000 from "@/assets/products/hcg-10000iu.png";
+import hexarelin from "@/assets/products/hexarelin-5mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
 const RULES: Array<[RegExp, string]> = [
   [/cagrilintide.*glp|cagri.*glp/i, cagriGlp],
+  [/cagrilintide.*10mg|\bcagri\b.*10mg/i, cagrilintide10],
+  [/glp-?1\s*s.*30mg/i, glp1s30],
   [/glp-?1\s*s.*20mg/i, glp1s],
   [/glp-?1\s*s.*10mg/i, glp1s10],
   [/glp-?1\s*s/i, glp1s],
@@ -90,6 +98,9 @@ const RULES: Array<[RegExp, string]> = [
   [/tesamorelin.*20mg/i, tesamorelin20],
   [/tesamorelin/i, tesamorelin],
   [/sermorelin/i, sermorelin],
+  [/kisspeptin/i, kisspeptin],
+  [/hexarelin/i, hexarelin],
+  [/\bhcg\b|chorionic\s+gonadotropin/i, hcg10000],
   [/pnc-?27/i, pnc27],
   [/ss-?31/i, ss31],
   [/ghrp-?6/i, ghrp6],
@@ -104,7 +115,9 @@ const RULES: Array<[RegExp, string]> = [
   [/\bklow\b/i, klowBlend],
   [/ghk-?cu.*100mg|ghk-cu-100mg/i, ghkcu100],
   [/ghk-?cu|\bghk\b/i, ghkcu],
+  [/mots-?c.*40mg/i, motsc],
   [/mots-?c|\bmots\b/i, motsc],
+  [/tb-?500.*10mg/i, tb500],
   [/tb-?500|thymosin\s*beta/i, tb500],
   [/selank/i, selank],
   [/semax/i, semax],
@@ -113,6 +126,7 @@ const RULES: Array<[RegExp, string]> = [
   [/gdf-?8|myostatin/i, gdf8],
   [/ll-?37/i, ll37],
   [/\blpv\b/i, lpv],
+  [/igf-?des|igf\s*des/i, igfdes],
   [/igf-?1\s*lr3.*0\.?1mg|igf-?1-?lr3-?0/i, igf1lr3Small],
   [/igf-?1\s*lr3|igf-1-lr3/i, igf1lr3],
   [/epitalon.*50mg|epithalon.*50mg/i, epitalon50],
