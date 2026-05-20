@@ -32,6 +32,16 @@ import igf1lr3 from "@/assets/products/igf1lr3-1mg.png";
 import nad1000 from "@/assets/products/nad-1000mg.png";
 import glutathione from "@/assets/products/glutathione-600mg.png";
 import pt141 from "@/assets/products/pt141-10mg.png";
+import tesamorelin20 from "@/assets/products/tesamorelin-20mg.png";
+import epitalon10 from "@/assets/products/epitalon-10mg.png";
+import selank from "@/assets/products/selank-10mg.png";
+import survodutide from "@/assets/products/survodutide-10mg.png";
+import glp2tz10 from "@/assets/products/glp2-tz-10mg.png";
+import melanotan2 from "@/assets/products/melanotan2-10mg.png";
+import wolverine20 from "@/assets/products/wolverine-20mg.png";
+import slupp332 from "@/assets/products/slu-pp-332-5mg.png";
+import igf1lr3Small from "@/assets/products/igf1lr3-0-1mg.png";
+import gdf8 from "@/assets/products/gdf8-1mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
