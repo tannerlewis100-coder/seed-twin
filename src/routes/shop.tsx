@@ -1,15 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Search } from "lucide-react";
+import { Search, Loader2 } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
-import { allPeptides, categories, type Peptide } from "@/data/peptides";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
 import { vialImageFor } from "@/lib/vialImages";
+import { fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
 export const Route = createFileRoute("/shop")({
   component: ShopPage,
@@ -30,29 +30,59 @@ export const Route = createFileRoute("/shop")({
   }),
 });
 
-const FILTERS = [{ name: "All", slug: "All" }, ...categories];
-
 function ShopPage() {
+  const [products, setProducts] = useState<WooProduct[]>([]);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [errMsg, setErrMsg] = useState<string>("");
+
   const [activeCat, setActiveCat] = useState("All");
   const [query, setQuery] = useState("");
-  const [activeGroup, setActiveGroup] = useState<Peptide[] | null>(null);
+  const [activeProduct, setActiveProduct] = useState<WooProduct | null>(null);
 
-  const groups = useMemo(() => {
-    let items = allPeptides;
-    if (activeCat !== "All") items = items.filter((p) => p.category === activeCat);
+  useEffect(() => {
+    let cancelled = false;
+    setStatus("loading");
+    fetchProducts()
+      .then((list) => {
+        if (cancelled) return;
+        // Hide standalone variations; only show parent / simple products.
+        setProducts(list.filter((p) => p.type !== "variation"));
+        setStatus("ready");
+      })
+      .catch((e) => {
+        if (cancelled) return;
+        setErrMsg(e instanceof Error ? e.message : "Failed to load products");
+        setStatus("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const categories = useMemo(() => {
+    const map = new Map<string, string>(); // slug → name
+    for (const p of products) {
+      for (const c of p.categories ?? []) {
+        if (!map.has(c.slug)) map.set(c.slug, c.name);
+      }
+    }
+    return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
+  }, [products]);
+
+  const filters = useMemo(
+    () => [{ name: "All", slug: "All" }, ...categories],
+    [categories],
+  );
+
+  const visible = useMemo(() => {
+    let items = products;
+    if (activeCat !== "All") {
+      items = items.filter((p) => p.categories?.some((c) => c.slug === activeCat));
+    }
     const q = query.trim().toLowerCase();
     if (q) items = items.filter((p) => p.name.toLowerCase().includes(q));
-    const map = new Map<string, Peptide[]>();
-    for (const p of items) {
-      const key = `${p.name}__${p.category}`;
-      const arr = map.get(key);
-      if (arr) arr.push(p);
-      else map.set(key, [p]);
-    }
-    return Array.from(map.values()).map((variants) =>
-      [...variants].sort((a, b) => a.price - b.price),
-    );
-  }, [activeCat, query]);
+    return items;
+  }, [products, activeCat, query]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -93,7 +123,7 @@ function ShopPage() {
               />
             </div>
             <div className="flex flex-wrap justify-center gap-2">
-              {FILTERS.map((cat) => (
+              {filters.map((cat) => (
                 <button
                   key={cat.slug}
                   type="button"
@@ -113,68 +143,92 @@ function ShopPage() {
 
         <section className="bg-card border-b border-white/5">
           <div className="mx-auto max-w-7xl px-6 py-12">
-            <p className="text-xs text-foreground/50 mb-6">
-              Showing <span className="text-foreground font-semibold">{groups.length}</span>{" "}
-              product{groups.length !== 1 ? "s" : ""}
-            </p>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {groups.map((group, i) => {
-                const p = group[0];
-                const sizeCount = group.length;
-                const vial = vialImageFor(p.name, p.slug);
-                return (
-                  <RevealOnScroll key={p.slug} delay={Math.min(i * 40, 400)}>
-                    <button
-                      type="button"
-                      onClick={() => setActiveGroup(group)}
-                      className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
-                    >
-                      <div className="absolute top-5 left-5 z-10">
-                        <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1.5 rounded-full">
-                          {p.badge ?? p.category}
-                        </span>
-                      </div>
-                      {sizeCount > 1 && (
-                        <div className="absolute top-5 right-5 z-10">
-                          <span className="text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-foreground/80 border border-white/10 px-2.5 py-1 rounded-full">
-                            {sizeCount} vial sizes
-                          </span>
-                        </div>
-                      )}
-
-                      <h3 className="relative z-10 mt-14 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[85%] min-h-[4rem] flex items-center justify-center">
-                        {p.name}
-                      </h3>
-
-                      <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
-                        <img
-                          src={vial}
-                          alt={`${p.name} vial`}
-                          loading="lazy"
-                          draggable={false}
-                          className="h-56 w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
-                        />
-                      </div>
-
-                      <div className="relative z-10 w-full">
-                        <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
-                          View Details
-                        </div>
-                        <p className="mt-4 text-xs text-foreground/60">
-                          {sizeCount > 1 ? "Starting at " : ""}
-                          <span className="text-foreground/90 font-semibold">${p.price.toFixed(2)}</span>
-                        </p>
-                      </div>
-                    </button>
-                  </RevealOnScroll>
-                );
-              })}
-            </div>
-            {groups.length === 0 && (
-              <p className="text-center text-foreground/40 py-20">
-                No products found matching your filters.
-              </p>
+            {status === "loading" && (
+              <div className="flex flex-col items-center justify-center py-20 text-foreground/50">
+                <Loader2 className="h-6 w-6 animate-spin text-brand-gold mb-3" />
+                <p className="text-sm">Loading catalog…</p>
+              </div>
             )}
+
+            {status === "error" && (
+              <div className="text-center py-20">
+                <p className="text-foreground/70 text-sm">Couldn't load the catalog right now.</p>
+                <p className="text-foreground/40 text-xs mt-2">{errMsg}</p>
+              </div>
+            )}
+
+            {status === "ready" && (
+              <>
+                <p className="text-xs text-foreground/50 mb-6">
+                  Showing <span className="text-foreground font-semibold">{visible.length}</span>{" "}
+                  product{visible.length !== 1 ? "s" : ""}
+                </p>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                  {visible.map((p, i) => {
+                    const price = productPrice(p);
+                    const hasRange = price.min !== price.max;
+                    const wooImg = firstImage(p);
+                    const vial = wooImg ?? vialImageFor(p.name, p.slug);
+                    const cat = p.categories?.[0]?.name ?? "Research";
+                    const sizeCount = p.variations?.length ?? 0;
+                    return (
+                      <RevealOnScroll key={p.id} delay={Math.min(i * 40, 400)}>
+                        <button
+                          type="button"
+                          onClick={() => setActiveProduct(p)}
+                          className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
+                        >
+                          <div className="absolute top-5 left-5 z-10">
+                            <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1.5 rounded-full">
+                              {cat}
+                            </span>
+                          </div>
+                          {sizeCount > 1 && (
+                            <div className="absolute top-5 right-5 z-10">
+                              <span className="text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-foreground/80 border border-white/10 px-2.5 py-1 rounded-full">
+                                {sizeCount} vial sizes
+                              </span>
+                            </div>
+                          )}
+
+                          <h3 className="relative z-10 mt-14 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[85%] min-h-[4rem] flex items-center justify-center">
+                            {p.name}
+                          </h3>
+
+                          <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
+                            <img
+                              src={vial}
+                              alt={`${p.name} vial`}
+                              loading="lazy"
+                              draggable={false}
+                              className="h-56 w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
+                            />
+                          </div>
+
+                          <div className="relative z-10 w-full">
+                            <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
+                              View Details
+                            </div>
+                            <p className="mt-4 text-xs text-foreground/60">
+                              {hasRange ? "From " : ""}
+                              <span className="text-foreground/90 font-semibold">
+                                ${price.min.toFixed(2)}
+                              </span>
+                            </p>
+                          </div>
+                        </button>
+                      </RevealOnScroll>
+                    );
+                  })}
+                </div>
+                {visible.length === 0 && (
+                  <p className="text-center text-foreground/40 py-20">
+                    No products found matching your filters.
+                  </p>
+                )}
+              </>
+            )}
+
             <p className="mt-12 text-center text-xs text-foreground/40 max-w-2xl mx-auto">
               All products are for in vitro laboratory research only. Not for
               human or veterinary use, clinical application, or food.
@@ -184,9 +238,9 @@ function ShopPage() {
       </main>
       <SiteFooter />
       <ProductDetailModal
-        group={activeGroup}
-        open={!!activeGroup}
-        onOpenChange={(o) => !o && setActiveGroup(null)}
+        product={activeProduct}
+        open={!!activeProduct}
+        onOpenChange={(o) => !o && setActiveProduct(null)}
       />
     </div>
   );
