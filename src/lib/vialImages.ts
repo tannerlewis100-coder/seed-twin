@@ -16,6 +16,12 @@ import ghrp6 from "@/assets/products/ghrp6.png";
 import ta1 from "@/assets/products/ta1.png";
 import glowBlend from "@/assets/products/glow-blend.png";
 import wolverine from "@/assets/products/wolverine.png";
+import ghkcu from "@/assets/products/ghkcu.png";
+import motsc from "@/assets/products/motsc.png";
+import cjcWithDac from "@/assets/products/cjc-with-dac.png";
+import tb500 from "@/assets/products/tb500.png";
+import semax from "@/assets/products/semax.png";
+import epitalon from "@/assets/products/epitalon.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
@@ -24,6 +30,7 @@ const RULES: Array<[RegExp, string]> = [
   [/glp-?1\s*s/i, glp1s],
   [/glp-?2/i, glp2tz],
   [/glp-?3/i, glp3rt],
+  [/cjc.*with\s*dac|cjc-?dac|cjc\s*\+\s*dac/i, cjcWithDac],
   [/cjc.*without\s*dac|cjc.*no\s*dac|cjc-?nodac/i, cjcNoDac],
   [/blend\s*cjc\/ipamorelin|cjc.*ipa|ipamorelin.*cjc|2x-cjc-ipa/i, cjcIpaBlend],
   [/tesamorelin/i, tesamorelin],
@@ -35,6 +42,11 @@ const RULES: Array<[RegExp, string]> = [
   [/snap-?8/i, snap8],
   [/wolverine/i, wolverine],
   [/glow/i, glowBlend],
+  [/ghk-?cu|\bghk\b/i, ghkcu],
+  [/mots-?c|\bmots\b/i, motsc],
+  [/tb-?500|thymosin\s*beta/i, tb500],
+  [/semax/i, semax],
+  [/epitalon|epithalon/i, epitalon],
   [/8x|lipotropic|klow/i, blend8x],
   [/4x|mic|stack|blend/i, blend4x],
 ];
