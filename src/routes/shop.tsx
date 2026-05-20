@@ -8,7 +8,7 @@ import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { allPeptides, categories, type Peptide } from "@/data/peptides";
 import ProductDetailModal from "@/components/ProductDetailModal";
-import Vial360 from "@/components/Vial360";
+
 import { vialImageFor } from "@/lib/vialImages";
 
 export const Route = createFileRoute("/shop")({
