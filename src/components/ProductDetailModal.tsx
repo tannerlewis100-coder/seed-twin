@@ -4,7 +4,7 @@ import { COMING_SOON_SLUGS, type Peptide } from "@/data/peptides";
 import { useCart } from "@/lib/cart";
 import { Check, ShoppingCart } from "lucide-react";
 import Vial360 from "@/components/Vial360";
-import glp1sImage from "@/assets/products/glp1-s-20mg.png";
+import { vialImageFor } from "@/lib/vialImages";
 
 type Props = {
   group: Peptide[] | null;
@@ -29,7 +29,7 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
   if (!group || !variants.length) return null;
   const active = variants.find((v) => v.slug === activeSlug) ?? variants[0];
   const comingSoon = COMING_SOON_SLUGS.has(active.slug);
-  const code = active.batch?.split("-").slice(-1)[0]?.replace(/\d+$/, "") || active.name.slice(0, 3).toUpperCase();
+  const vial = vialImageFor(active.name, active.slug);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -40,32 +40,13 @@ export default function ProductDetailModal({ group, open, onOpenChange }: Props)
             <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-40" />
             {active.slug.startsWith("ghk-cu") ? (
               <Vial360 size="xl" />
-            ) : active.slug.startsWith("glp-1-s") ? (
-              <span className="block drop-shadow-2xl">
-                <img
-                  src={glp1sImage}
-                  alt={`${active.name} ${active.size} vial`}
-                  width={1254}
-                  height={1254}
-                  className="h-80 w-auto object-contain"
-                />
-              </span>
             ) : (
-              <div className="relative w-44 h-60">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-8 rounded-t-md bg-gradient-to-b from-neutral-700 to-neutral-900 border border-black/40" />
-                <div className="absolute top-7 left-1/2 -translate-x-1/2 w-28 h-2.5 bg-black/60 rounded-sm" />
-                <div className="absolute top-9 left-1/2 -translate-x-1/2 w-40 h-48 rounded-b-xl rounded-t-sm bg-gradient-to-b from-neutral-900 via-black to-neutral-950 border border-white/10 shadow-2xl overflow-hidden">
-                  <div className="absolute inset-x-4 top-14 h-px bg-brand-gold/30" />
-                  <div className="absolute inset-x-0 top-16 text-center">
-                    <span className="text-[11px] tracking-[0.25em] text-brand-gold/90 font-semibold">CLARUM</span>
-                  </div>
-                  <div className="absolute inset-x-4 bottom-8 text-center">
-                    <span className="text-[9px] tracking-wider text-white/60 block">{code} · {active.size}</span>
-                    <span className="text-[8px] tracking-wider text-white/30 block mt-1">RESEARCH USE ONLY</span>
-                  </div>
-                  <div className="absolute inset-y-0 right-2 w-2 bg-gradient-to-r from-transparent to-white/10" />
-                </div>
-              </div>
+              <img
+                src={vial}
+                alt={`${active.name} ${active.size} vial`}
+                draggable={false}
+                className="h-80 w-auto max-w-full object-contain select-none drop-shadow-2xl"
+              />
             )}
           </div>
 
