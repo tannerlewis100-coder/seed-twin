@@ -51,6 +51,14 @@ import lpv from "@/assets/products/lpv-10mg.png";
 import ll37 from "@/assets/products/ll37-5mg.png";
 import ipamorelin from "@/assets/products/ipamorelin-10mg.png";
 import thymalin from "@/assets/products/thymalin-10mg.png";
+import pinealon from "@/assets/products/pinealon-20mg.png";
+import vip10 from "@/assets/products/vip10-10mg.png";
+import glp3rt20 from "@/assets/products/glp3-rt-20mg.png";
+import glp3rt40 from "@/assets/products/glp3-rt-40mg.png";
+import mazdutide from "@/assets/products/mazdutide-100mg.png";
+import foxo4 from "@/assets/products/foxo4-10mg.png";
+import glutathione1500 from "@/assets/products/glutathione-1500mg.png";
+import glp2tz60 from "@/assets/products/glp2-tz-60mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
@@ -59,13 +67,21 @@ const RULES: Array<[RegExp, string]> = [
   [/glp-?1\s*s.*20mg/i, glp1s],
   [/glp-?1\s*s.*10mg/i, glp1s10],
   [/glp-?1\s*s/i, glp1s],
+  [/glp-?2.*60mg/i, glp2tz60],
   [/glp-?2.*50mg|glp-?2-tz-50mg/i, glp2tz50],
   [/glp-?2.*20mg|glp-?2-tz-20mg/i, glp2tz20],
   [/glp-?2.*10mg|glp-?2-tz-10mg/i, glp2tz10],
   [/glp-?2/i, glp2tz],
   [/glp-?3.*60mg/i, glp3rt60],
+  [/glp-?3.*40mg/i, glp3rt40],
+  [/glp-?3.*20mg/i, glp3rt20],
   [/glp-?3.*10mg/i, glp3rt10],
   [/glp-?3/i, glp3rt],
+  [/pinealon/i, pinealon],
+  [/\bvip-?10\b|\bvip\b/i, vip10],
+  [/mazdutide/i, mazdutide],
+  [/foxo-?4/i, foxo4],
+  [/glutathione.*1500mg/i, glutathione1500],
   [/survodutide/i, survodutide],
   [/cjc.*with\s*dac|cjc-?dac|cjc\s*\+\s*dac/i, cjcWithDac],
   [/cjc.*without\s*dac|cjc.*no\s*dac|cjc-?nodac/i, cjcNoDac],
