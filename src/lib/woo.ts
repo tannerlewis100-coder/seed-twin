@@ -41,13 +41,15 @@ async function wooFetch(path: string, init: RequestInit = {}): Promise<Response>
     ...(init.body ? { "Content-Type": "application/json" } : {}),
     ...((init.headers as Record<string, string> | undefined) ?? {}),
   };
-  // Only thread Cart-Token on cart endpoints — adding it on product reads
-  // triggers a CORS preflight that WP currently rejects, blanking the catalog.
+  // Cart-Token is the guest session — no cookies needed. Only send it on
+  // cart endpoints so product reads stay simple-CORS (no preflight).
   if (isCart && token) headers["Cart-Token"] = token;
 
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    credentials: isCart ? "include" : "omit",
+    // No credentials: Woo Store API persists the guest cart via Cart-Token
+    // alone. Sending credentials would force WP to echo Allow-Credentials:true.
+    credentials: "omit",
     headers,
   });
   const next = res.headers.get("Cart-Token");
