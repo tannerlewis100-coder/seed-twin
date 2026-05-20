@@ -109,8 +109,6 @@ const descriptions: Record<string, string> = {
     "Delta Sleep-Inducing Peptide (DSIP) is a nonapeptide first isolated in 1974 from rabbit cerebral venous blood during slow-wave sleep, with nearly five decades of literature exploring sleep architecture regulation and stress response modulation.",
   "thymosin-alpha-1":
     "Thymosin Alpha-1 is a 28-amino acid peptide derived from prothymosin alpha and one of the most clinically validated immunomodulatory peptides in existence. Approved as a pharmaceutical drug in over 35 countries under the brand name Zadaxin.",
-  "kpv-lysine-proline-valine":
-    "KPV (Lysine-Proline-Valine) is the C-terminal tripeptide of alpha-MSH and has been studied for its role in NF-κB pathway modulation and anti-inflammatory signaling in cell and animal models.",
   vip10:
     "Vasoactive Intestinal Peptide (VIP) is a 28-amino acid neuropeptide found throughout the central and peripheral nervous systems. Studied for vasodilatory effects, immunomodulatory properties, and circadian rhythm regulation.",
   "5-amino-1mq":
@@ -142,8 +140,6 @@ const descriptions: Record<string, string> = {
     "PT-141, known pharmaceutically as Bremelanotide, is an FDA-approved melanocortin receptor agonist. Research has explored its activation of MC3R and MC4R receptors and central nervous system role in arousal-pathway research.",
   kisspeptin:
     "Kisspeptin is a neuropeptide encoded by the KISS1 gene and recognized as the master upstream regulator of the hypothalamic-pituitary-gonadal axis, with research exploring GnRH pulse generation and reproductive function.",
-  "klow-blend":
-    "KLOW combines GHK-Cu, KPV, BPC-157, and TB-500 — four of the most studied peptides in tissue, immune, and skin research — into a single research blend.",
   "8x-lipo":
     "An 8-component lipotropic blend (L-Carnitine, L-Arginine, Methionine, Inositol, Choline, B6, B5, B12) used as a reference compound in metabolic and nutritional research.",
   "4x-mic":
@@ -293,7 +289,7 @@ const FEATURED_SLUGS = [
   "mots-c-10mg",
   "ghk-cu-50mg",
   "nad-500mg",
-  "klow-blend",
+  "wolverine-5mg",
   "wolverine-10mg",
 ];
 
