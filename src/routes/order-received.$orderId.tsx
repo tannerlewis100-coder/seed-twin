@@ -9,6 +9,7 @@ export const Route = createFileRoute("/order-received/$orderId")({
   component: OrderReceivedPage,
   validateSearch: (search: Record<string, unknown>) => ({
     key: typeof search.key === "string" ? search.key : "",
+    email: typeof search.email === "string" ? search.email : "",
   }),
   head: () => ({
     meta: [
@@ -20,8 +21,8 @@ export const Route = createFileRoute("/order-received/$orderId")({
 
 function OrderReceivedPage() {
   const { orderId } = Route.useParams();
-  const { key } = Route.useSearch();
-  const billingEmail = getOrderBillingEmail(orderId);
+  const { key, email } = Route.useSearch();
+  const billingEmail = email || getOrderBillingEmail(orderId);
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
