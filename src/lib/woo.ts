@@ -123,9 +123,62 @@ export type WooCart = {
   totals: {
     total_price: string;
     total_items: string;
+    total_shipping?: string;
+    total_tax?: string;
     currency_minor_unit: number;
     currency_code: string;
     currency_symbol: string;
+  };
+  payment_methods?: string[];
+  payment_requirements?: string[];
+  needs_shipping?: boolean;
+  shipping_rates?: Array<{
+    shipping_rates: Array<{
+      rate_id: string;
+      name: string;
+      price: string;
+      currency_minor_unit: number;
+      selected: boolean;
+    }>;
+  }>;
+};
+
+export type WooAddress = {
+  first_name: string;
+  last_name: string;
+  company?: string;
+  address_1: string;
+  address_2?: string;
+  city: string;
+  state: string;
+  postcode: string;
+  country: string;
+  email?: string;
+  phone?: string;
+};
+
+export type WooCheckoutInput = {
+  billing_address: WooAddress;
+  shipping_address: WooAddress;
+  payment_method: string;
+  payment_data?: Array<{ key: string; value: string }>;
+  customer_note?: string;
+};
+
+export type WooCheckoutResponse = {
+  order_id: number;
+  status: string;
+  order_key: string;
+  customer_note?: string;
+  customer_id?: number;
+  billing_address?: WooAddress;
+  shipping_address?: WooAddress;
+  payment_method?: string;
+  payment_result: {
+    payment_status: "success" | "failure" | "pending" | "error" | string;
+    payment_details?: Array<{ key: string; value: string }>;
+    redirect_url?: string;
+    message?: string;
   };
 };
 
@@ -192,7 +245,55 @@ export async function removeCartItem(key: string): Promise<WooCart> {
   return res.json();
 }
 
-// ─── Utilities ────────────────────────────────────────────────────────────
+// ─── Checkout ─────────────────────────────────────────────────────────────
+
+export async function updateCustomer(input: {
+  billing_address?: Partial<WooAddress>;
+  shipping_address?: Partial<WooAddress>;
+}): Promise<WooCart> {
+  const res = await wooFetch("/cart/update-customer", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || `Failed to update customer (${res.status})`);
+  }
+  return res.json();
+}
+
+export async function submitCheckout(input: WooCheckoutInput): Promise<WooCheckoutResponse> {
+  const res = await wooFetch("/checkout", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg =
+      (data && (data.message || (data.data && data.data.message))) ||
+      `Checkout failed (${res.status})`;
+    throw new Error(msg);
+  }
+  return data as WooCheckoutResponse;
+}
+
+/** Friendly label for known gateway IDs; otherwise humanize the slug. */
+export function gatewayLabel(id: string): string {
+  const map: Record<string, string> = {
+    depay_wc_payments: "Pay with Crypto (DePay)",
+    stripe: "Credit / Debit Card",
+    stripe_cc: "Credit / Debit Card",
+    paypal: "PayPal",
+    cod: "Cash on Delivery",
+    cheque: "Check Payment",
+    bacs: "Direct Bank Transfer",
+  };
+  if (map[id]) return map[id];
+  return id
+    .replace(/[_-]+/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 
 /** Woo prices are integer strings in the minor unit (e.g. "5900" with minor_unit=2 → $59.00). */
 export function fromMinor(amount: string | number | undefined, minorUnit: number): number {

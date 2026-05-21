@@ -30,6 +30,7 @@ type CartCtx = {
   items: CartItem[];
   count: number;
   subtotal: number;
+  raw: WooCart | null;
   isOpen: boolean;
   loading: boolean;
   error: string | null;
@@ -66,6 +67,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [count, setCount] = useState(0);
+  const [raw, setRaw] = useState<WooCart | null>(null);
   const [isOpen, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -84,6 +86,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(m.items);
     setSubtotal(m.subtotal);
     setCount(m.count);
+    setRaw(cart);
   }, []);
 
   const refresh = useCallback(async () => {
@@ -119,6 +122,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     items,
     count,
     subtotal,
+    raw,
     isOpen,
     loading,
     error,
