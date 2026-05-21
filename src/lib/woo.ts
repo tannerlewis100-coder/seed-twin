@@ -261,6 +261,21 @@ export async function updateCustomer(input: {
   return res.json();
 }
 
+export async function selectShippingRate(input: {
+  package_id: number;
+  rate_id: string;
+}): Promise<WooCart> {
+  const res = await wooFetch("/cart/select-shipping-rate", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || `Failed to select shipping rate (${res.status})`);
+  }
+  return res.json();
+}
+
 export async function submitCheckout(input: WooCheckoutInput): Promise<WooCheckoutResponse> {
   const res = await wooFetch("/checkout", {
     method: "POST",

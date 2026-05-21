@@ -7,7 +7,9 @@ import { useCart } from "@/lib/cart";
 import {
   fromMinor,
   gatewayLabel,
+  selectShippingRate,
   submitCheckout,
+  updateCustomer,
   type WooAddress,
 } from "@/lib/woo";
 
@@ -36,8 +38,16 @@ const EMPTY_ADDRESS: AddressForm = {
   phone: "",
 };
 
+type ShippingRate = {
+  rate_id: string;
+  name: string;
+  price: string;
+  currency_minor_unit: number;
+  selected: boolean;
+};
+
 function CheckoutPage() {
-  const { items, subtotal, raw, loading: cartLoading } = useCart();
+  const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -49,7 +59,13 @@ function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [rates, setRates] = useState<ShippingRate[]>([]);
+  const [selectedRateId, setSelectedRateId] = useState<string>("");
+  const [ratesLoading, setRatesLoading] = useState(false);
+  const [ratesError, setRatesError] = useState<string | null>(null);
+
   const gateways = raw?.payment_methods ?? [];
+  const needsShipping = raw?.needs_shipping ?? true;
 
   useEffect(() => {
     if (!paymentMethod && gateways.length) setPaymentMethod(gateways[0]);
@@ -62,6 +78,86 @@ function CheckoutPage() {
   const total = fromMinor(raw?.totals.total_price, minor) || subtotal;
 
   const cartEmpty = !cartLoading && items.length === 0;
+
+  // Effective shipping address for rate calculation
+  const shipAddr = shipSame ? billing : shipping;
+  const addrReady =
+    shipAddr.country.trim().length === 2 &&
+    shipAddr.state.trim().length > 0 &&
+    shipAddr.postcode.trim().length > 0 &&
+    shipAddr.city.trim().length > 0 &&
+    shipAddr.address_1.trim().length > 0;
+
+  // Debounced: when address is complete, update customer to fetch rates
+  useEffect(() => {
+    if (!needsShipping || cartEmpty || !addrReady) return;
+    const handle = setTimeout(async () => {
+      setRatesLoading(true);
+      setRatesError(null);
+      try {
+        const cart = await updateCustomer({
+          shipping_address: {
+            first_name: shipAddr.first_name,
+            last_name: shipAddr.last_name,
+            address_1: shipAddr.address_1,
+            address_2: shipAddr.address_2,
+            city: shipAddr.city,
+            state: shipAddr.state,
+            postcode: shipAddr.postcode,
+            country: shipAddr.country,
+          },
+        });
+        const pkg = cart.shipping_rates?.[0]?.shipping_rates ?? [];
+        setRates(pkg);
+        const preselected = pkg.find((r) => r.selected)?.rate_id;
+        const target = preselected || pkg[0]?.rate_id;
+        if (target) {
+          if (target !== selectedRateId) {
+            await selectShippingRate({ package_id: 0, rate_id: target });
+            setSelectedRateId(target);
+            await refresh();
+          } else {
+            setSelectedRateId(target);
+          }
+        } else {
+          setSelectedRateId("");
+        }
+      } catch (e) {
+        setRatesError(e instanceof Error ? e.message : "Could not load shipping rates.");
+      } finally {
+        setRatesLoading(false);
+      }
+    }, 500);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    needsShipping,
+    cartEmpty,
+    addrReady,
+    shipAddr.first_name,
+    shipAddr.last_name,
+    shipAddr.address_1,
+    shipAddr.address_2,
+    shipAddr.city,
+    shipAddr.state,
+    shipAddr.postcode,
+    shipAddr.country,
+  ]);
+
+  async function onSelectRate(rateId: string) {
+    setRatesLoading(true);
+    setRatesError(null);
+    try {
+      await selectShippingRate({ package_id: 0, rate_id: rateId });
+      setSelectedRateId(rateId);
+      await refresh();
+    } catch (e) {
+      setRatesError(e instanceof Error ? e.message : "Could not select shipping rate.");
+    } finally {
+      setRatesLoading(false);
+    }
+  }
+
 
   function bindBilling<K extends keyof AddressForm>(k: K) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
@@ -93,6 +189,7 @@ function CheckoutPage() {
       }
     }
     if (!paymentMethod) return "Select a payment method.";
+    if (needsShipping && !selectedRateId) return "Select a shipping method.";
     return null;
   }
 
@@ -250,6 +347,58 @@ function CheckoutPage() {
                   )}
                 </Section>
 
+                {needsShipping && (
+                  <Section title="Shipping method">
+                    {!addrReady ? (
+                      <p className="text-sm text-foreground/50">
+                        Enter your shipping address to see available rates.
+                      </p>
+                    ) : ratesLoading && rates.length === 0 ? (
+                      <p className="text-sm text-foreground/50 flex items-center gap-2">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading shipping rates…
+                      </p>
+                    ) : ratesError ? (
+                      <p className="text-sm text-red-300">{ratesError}</p>
+                    ) : rates.length === 0 ? (
+                      <p className="text-sm text-foreground/50">
+                        No shipping options available for this address.
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {rates.map((r) => {
+                          const cost = fromMinor(r.price, r.currency_minor_unit);
+                          return (
+                            <label
+                              key={r.rate_id}
+                              className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
+                                selectedRateId === r.rate_id
+                                  ? "border-brand-gold/60 bg-brand-gold/5"
+                                  : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                              }`}
+                            >
+                              <span className="flex items-center gap-3">
+                                <input
+                                  type="radio"
+                                  name="shipping_rate"
+                                  value={r.rate_id}
+                                  checked={selectedRateId === r.rate_id}
+                                  onChange={() => onSelectRate(r.rate_id)}
+                                  className="h-4 w-4 accent-brand-gold"
+                                />
+                                <span className="text-sm text-foreground">{r.name}</span>
+                              </span>
+                              <span className="text-sm text-foreground">
+                                {currency}
+                                {cost.toFixed(2)}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </Section>
+                )}
+
                 <Section title="Payment method">
                   {gateways.length === 0 ? (
                     <p className="text-sm text-foreground/50">
@@ -300,7 +449,12 @@ function CheckoutPage() {
 
                 <button
                   type="submit"
-                  disabled={submitting || cartLoading || gateways.length === 0}
+                  disabled={
+                    submitting ||
+                    cartLoading ||
+                    gateways.length === 0 ||
+                    (needsShipping && !selectedRateId)
+                  }
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {submitting ? (
@@ -344,10 +498,23 @@ function CheckoutPage() {
 
                   <div className="mt-5 pt-4 border-t border-white/5 space-y-2 text-sm">
                     <Row label="Subtotal" value={`${currency}${subtotal.toFixed(2)}`} />
-                    <Row
-                      label="Shipping"
-                      value={shippingTotal > 0 ? `${currency}${shippingTotal.toFixed(2)}` : "Calculated next"}
-                    />
+                    {(() => {
+                      const sel = rates.find((r) => r.rate_id === selectedRateId);
+                      let value: string;
+                      if (sel) {
+                        const cost = fromMinor(sel.price, sel.currency_minor_unit);
+                        value = `${sel.name} · ${currency}${cost.toFixed(2)}`;
+                      } else if (shippingTotal > 0) {
+                        value = `${currency}${shippingTotal.toFixed(2)}`;
+                      } else if (needsShipping && ratesLoading) {
+                        value = "Calculating…";
+                      } else if (needsShipping && !addrReady) {
+                        value = "Enter address";
+                      } else {
+                        value = "—";
+                      }
+                      return <Row label="Shipping" value={value} />;
+                    })()}
                     {taxTotal > 0 && (
                       <Row label="Tax" value={`${currency}${taxTotal.toFixed(2)}`} />
                     )}
