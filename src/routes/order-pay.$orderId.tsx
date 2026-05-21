@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
+import { fetchOrder, fromMinor, getOrderBillingEmail, type WooOrder } from "@/lib/woo";
 
 export const Route = createFileRoute("/order-pay/$orderId")({
   component: OrderPayPage,
@@ -25,9 +25,7 @@ const SOL_WALLET = "11111111111111111111111111111111";
 function OrderPayPage() {
   const { orderId } = Route.useParams();
   const { key } = Route.useSearch();
-  const billingEmail = typeof window !== "undefined"
-    ? window.sessionStorage.getItem(`clarum.woo.order-email.${orderId}`)?.trim() ?? ""
-    : "";
+  const billingEmail = getOrderBillingEmail(orderId);
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
