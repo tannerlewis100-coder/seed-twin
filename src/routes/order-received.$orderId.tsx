@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
+import { fetchOrder, fromMinor, getOrderBillingEmail, type WooOrder } from "@/lib/woo";
 
 export const Route = createFileRoute("/order-received/$orderId")({
   component: OrderReceivedPage,
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/order-received/$orderId")({
 function OrderReceivedPage() {
   const { orderId } = Route.useParams();
   const { key } = Route.useSearch();
+  const billingEmail = getOrderBillingEmail(orderId);
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,7 @@ function OrderReceivedPage() {
     (async () => {
       try {
         setLoading(true);
-        const o = await fetchOrder(orderId, key);
+        const o = await fetchOrder(orderId, key, billingEmail);
         if (!cancelled) setOrder(o);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
@@ -42,7 +43,7 @@ function OrderReceivedPage() {
     return () => {
       cancelled = true;
     };
-  }, [orderId, key]);
+  }, [orderId, key, billingEmail]);
 
   const currency = order?.totals.currency_symbol ?? "$";
   const minor = order?.totals.currency_minor_unit ?? 2;
