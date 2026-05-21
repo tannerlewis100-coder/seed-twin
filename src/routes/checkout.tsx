@@ -144,10 +144,7 @@ function CheckoutPage() {
             <span className="text-[#D4A63A] text-xs font-medium tracking-[0.3em] uppercase">
               Checkout
             </span>
-            <h1
-              className="text-5xl md:text-6xl font-light leading-tight text-white"
-              className-marker
-            >
+            <h1 className="font-display text-5xl md:text-6xl font-light leading-tight text-white">
               Complete your order
             </h1>
             <div className="flex items-center gap-2 text-white/40 text-sm">
