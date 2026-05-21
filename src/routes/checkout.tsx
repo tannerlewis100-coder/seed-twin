@@ -7,7 +7,9 @@ import { useCart } from "@/lib/cart";
 import {
   fromMinor,
   gatewayLabel,
+  selectShippingRate,
   submitCheckout,
+  updateCustomer,
   type WooAddress,
 } from "@/lib/woo";
 
