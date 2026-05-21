@@ -169,7 +169,15 @@ function ShopPage() {
                     const hasRange = price.min !== price.max;
                     const wooImg = firstImage(p);
                     const vial = wooImg ?? vialImageFor(p.name, p.slug);
-                    const cat = p.categories?.[0]?.name ?? "Research";
+                    const rawCat = p.categories?.[0]?.name ?? "Research";
+                    const cat = rawCat
+                      .replace(/&amp;/g, "&")
+                      .replace(/\s*&.*$/, "")
+                      .trim();
+                    const displayName = p.name
+                      .replace(/&amp;/g, "&")
+                      .replace(/\s*[—–-]\s.*$/, "")
+                      .trim();
                     const sizeCount = p.variations?.length ?? 0;
                     return (
                       <RevealOnScroll key={p.id} delay={Math.min(i * 40, 400)}>
@@ -191,8 +199,8 @@ function ShopPage() {
                             </div>
                           )}
 
-                          <h3 className="relative z-10 mt-14 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[85%] min-h-[4rem] flex items-center justify-center">
-                            {p.name}
+                          <h3 className="relative z-10 mt-14 font-display text-xl md:text-2xl text-foreground leading-tight max-w-[85%] min-h-[4rem] flex items-center justify-center break-words hyphens-auto">
+                            {displayName}
                           </h3>
 
                           <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
