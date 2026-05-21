@@ -1,0 +1,233 @@
+import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Loader2, Lock } from "lucide-react";
+import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
+
+export const Route = createFileRoute("/order-pay/$orderId")({
+  component: OrderPayPage,
+  validateSearch: (search: Record<string, unknown>) => ({
+    key: typeof search.key === "string" ? search.key : "",
+  }),
+  head: () => ({
+    meta: [
+      { title: "Complete payment | CLARUM" },
+      { name: "robots", content: "noindex,nofollow" },
+    ],
+  }),
+});
+
+// Placeholder receiving wallets — swap with real wallets in production.
+const EVM_WALLET = "0x0000000000000000000000000000000000000000";
+const SOL_WALLET = "11111111111111111111111111111111";
+
+function OrderPayPage() {
+  const { orderId } = Route.useParams();
+  const { key } = Route.useSearch();
+
+  const [order, setOrder] = useState<WooOrder | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [widgetError, setWidgetError] = useState<string | null>(null);
+  const widgetRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        setLoading(true);
+        const o = await fetchOrder(orderId, key);
+        if (!cancelled) setOrder(o);
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [orderId, key]);
+
+  useEffect(() => {
+    if (!order || !widgetRef.current) return;
+    if (order.needs_payment === false) return;
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const mod = await import("@depay/widgets");
+        if (cancelled) return;
+        const DePayWidgets = (mod as any).default ?? mod;
+        const total = fromMinor(order.totals.total_price, order.totals.currency_minor_unit);
+        const amount = total.toFixed(2);
+
+        DePayWidgets.Payment({
+          accept: [
+            { blockchain: "ethereum", amount, token: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", receiver: EVM_WALLET },
+            { blockchain: "polygon", amount, token: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174", receiver: EVM_WALLET },
+            { blockchain: "bsc", amount, token: "0x55d398326f99059ff775485246999027b3197955", receiver: EVM_WALLET },
+            { blockchain: "solana", amount, token: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", receiver: SOL_WALLET },
+          ],
+          document: widgetRef.current,
+          style: {
+            colors: {
+              primary: "#D4A745",
+              text: "#FFFFFF",
+              buttonText: "#000000",
+              icons: "#D4A745",
+            },
+            fontFamily: "Karla, sans-serif",
+          },
+          succeeded: async (transaction: unknown) => {
+            try {
+              await fetch(`https://admin.clarumpeptides.com/wp-json/clarum/v1/payment-confirm`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  order_id: order.id,
+                  order_key: order.order_key,
+                  transaction,
+                }),
+              });
+            } catch {
+              /* ignore — still take user to confirmation */
+            }
+            window.location.href = `/order-received/${order.id}?key=${encodeURIComponent(order.order_key)}`;
+          },
+        });
+      } catch (e) {
+        if (!cancelled) setWidgetError(e instanceof Error ? e.message : "Could not load payment widget.");
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [order]);
+
+  const currency = order?.totals.currency_symbol ?? "$";
+  const minor = order?.totals.currency_minor_unit ?? 2;
+  const subtotal = fromMinor(order?.totals.total_items, minor);
+  const shipping = fromMinor(order?.totals.total_shipping, minor);
+  const tax = fromMinor(order?.totals.total_tax, minor);
+  const total = fromMinor(order?.totals.total_price, minor);
+
+  return (
+    <div className="min-h-screen bg-brand-forest-deep text-foreground flex flex-col">
+      <AnnouncementBar />
+      <SiteHeader />
+
+      <main className="flex-1 px-4 sm:px-8 py-10 sm:py-16">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-10">
+            <p className="text-xs tracking-[0.2em] text-brand-gold/80 uppercase mb-2">Payment</p>
+            <h1 className="font-display text-3xl sm:text-5xl text-foreground">
+              {order ? <>Complete payment for order #{order.number ?? order.id}</> : "Complete payment"}
+            </h1>
+            <p className="text-sm text-foreground/50 mt-2 flex items-center gap-2">
+              <Lock className="h-3.5 w-3.5" /> Secure crypto checkout via DePay.
+            </p>
+          </div>
+
+          {loading ? (
+            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-12 text-center">
+              <Loader2 className="h-6 w-6 animate-spin text-brand-gold mx-auto mb-3" />
+              <p className="text-foreground/60">Loading order…</p>
+            </div>
+          ) : error ? (
+            <div className="rounded-2xl border border-red-500/30 bg-red-500/5 p-8 text-center">
+              <p className="text-red-300 mb-4">{error}</p>
+              <Link
+                to="/shop"
+                className="inline-block rounded-full bg-brand-gold text-brand-forest font-semibold px-6 py-2.5 hover:bg-brand-gold/90"
+              >
+                Back to shop
+              </Link>
+            </div>
+          ) : order ? (
+            <div className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
+              {/* DePay widget */}
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+                <h2 className="font-display text-2xl text-foreground mb-1">Pay with crypto</h2>
+                <p className="text-sm text-foreground/50 mb-6">
+                  Choose a network and wallet to complete your order.
+                </p>
+                {order.needs_payment === false ? (
+                  <p className="text-sm text-foreground/70">
+                    This order has already been paid.{" "}
+                    <Link
+                      to="/order-received/$orderId"
+                      params={{ orderId: String(order.id) }}
+                      search={{ key: order.order_key }}
+                      className="text-brand-gold hover:underline"
+                    >
+                      View confirmation →
+                    </Link>
+                  </p>
+                ) : widgetError ? (
+                  <p className="text-sm text-red-300">{widgetError}</p>
+                ) : (
+                  <div ref={widgetRef} id="depay-widget" className="min-h-[400px]" />
+                )}
+              </div>
+
+              {/* Order summary */}
+              <aside className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 h-fit">
+                <h2 className="font-display text-2xl text-foreground mb-6">Order summary</h2>
+                <ul className="space-y-4 mb-6">
+                  {order.items.map((item) => {
+                    const lineTotal = fromMinor(item.totals.line_total, item.totals.currency_minor_unit);
+                    return (
+                      <li key={item.id} className="flex items-start gap-3">
+                        {item.images?.[0]?.src && (
+                          <img
+                            src={item.images[0].src}
+                            alt={item.images[0].alt ?? item.name}
+                            className="h-14 w-14 rounded-md object-cover border border-white/10"
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-foreground truncate">{item.name}</p>
+                          <p className="text-xs text-foreground/50">Qty {item.quantity}</p>
+                        </div>
+                        <p className="text-sm text-foreground tabular-nums">
+                          {currency}
+                          {lineTotal.toFixed(2)}
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <div className="border-t border-white/10 pt-4 space-y-2 text-sm">
+                  <Row label="Subtotal" value={`${currency}${subtotal.toFixed(2)}`} />
+                  {shipping > 0 && <Row label="Shipping" value={`${currency}${shipping.toFixed(2)}`} />}
+                  {tax > 0 && <Row label="Tax" value={`${currency}${tax.toFixed(2)}`} />}
+                  <div className="border-t border-white/10 pt-3 mt-3 flex items-center justify-between">
+                    <span className="text-foreground/80">Total</span>
+                    <span className="font-display text-xl text-brand-gold tabular-nums">
+                      {currency}
+                      {total.toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          ) : null}
+        </div>
+      </main>
+      <SiteFooter />
+    </div>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between text-foreground/70">
+      <span>{label}</span>
+      <span className="tabular-nums text-foreground/90">{value}</span>
+    </div>
+  );
+}

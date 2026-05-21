@@ -19,6 +19,8 @@ import { Route as CoaLibraryRouteImport } from './routes/coa-library'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrderReceivedOrderIdRouteImport } from './routes/order-received.$orderId'
+import { Route as OrderPayOrderIdRouteImport } from './routes/order-pay.$orderId'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
 
@@ -72,6 +74,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrderReceivedOrderIdRoute = OrderReceivedOrderIdRouteImport.update({
+  id: '/order-received/$orderId',
+  path: '/order-received/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrderPayOrderIdRoute = OrderPayOrderIdRouteImport.update({
+  id: '/order-pay/$orderId',
+  path: '/order-pay/$orderId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OrderConfirmationOrderIdRoute =
   OrderConfirmationOrderIdRouteImport.update({
     id: '/order-confirmation/$orderId',
@@ -96,6 +108,8 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
+  '/order-pay/$orderId': typeof OrderPayOrderIdRoute
+  '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRoutesByTo {
@@ -110,6 +124,8 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
+  '/order-pay/$orderId': typeof OrderPayOrderIdRoute
+  '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRoutesById {
@@ -125,6 +141,8 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
+  '/order-pay/$orderId': typeof OrderPayOrderIdRoute
+  '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRouteTypes {
@@ -141,6 +159,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/order-confirmation/$orderId'
+    | '/order-pay/$orderId'
+    | '/order-received/$orderId'
     | '/api/public/woo-store'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -155,6 +175,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/order-confirmation/$orderId'
+    | '/order-pay/$orderId'
+    | '/order-received/$orderId'
     | '/api/public/woo-store'
   id:
     | '__root__'
@@ -169,6 +191,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/order-confirmation/$orderId'
+    | '/order-pay/$orderId'
+    | '/order-received/$orderId'
     | '/api/public/woo-store'
   fileRoutesById: FileRoutesById
 }
@@ -184,6 +208,8 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
+  OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
+  OrderReceivedOrderIdRoute: typeof OrderReceivedOrderIdRoute
   ApiPublicWooStoreRoute: typeof ApiPublicWooStoreRoute
 }
 
@@ -259,6 +285,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/order-received/$orderId': {
+      id: '/order-received/$orderId'
+      path: '/order-received/$orderId'
+      fullPath: '/order-received/$orderId'
+      preLoaderRoute: typeof OrderReceivedOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/order-pay/$orderId': {
+      id: '/order-pay/$orderId'
+      path: '/order-pay/$orderId'
+      fullPath: '/order-pay/$orderId'
+      preLoaderRoute: typeof OrderPayOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/order-confirmation/$orderId': {
       id: '/order-confirmation/$orderId'
       path: '/order-confirmation/$orderId'
@@ -288,6 +328,8 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
+  OrderPayOrderIdRoute: OrderPayOrderIdRoute,
+  OrderReceivedOrderIdRoute: OrderReceivedOrderIdRoute,
   ApiPublicWooStoreRoute: ApiPublicWooStoreRoute,
 }
 export const routeTree = rootRouteImport
