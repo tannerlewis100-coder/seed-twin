@@ -347,6 +347,58 @@ function CheckoutPage() {
                   )}
                 </Section>
 
+                {needsShipping && (
+                  <Section title="Shipping method">
+                    {!addrReady ? (
+                      <p className="text-sm text-foreground/50">
+                        Enter your shipping address to see available rates.
+                      </p>
+                    ) : ratesLoading && rates.length === 0 ? (
+                      <p className="text-sm text-foreground/50 flex items-center gap-2">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading shipping rates…
+                      </p>
+                    ) : ratesError ? (
+                      <p className="text-sm text-red-300">{ratesError}</p>
+                    ) : rates.length === 0 ? (
+                      <p className="text-sm text-foreground/50">
+                        No shipping options available for this address.
+                      </p>
+                    ) : (
+                      <div className="space-y-2">
+                        {rates.map((r) => {
+                          const cost = fromMinor(r.price, r.currency_minor_unit);
+                          return (
+                            <label
+                              key={r.rate_id}
+                              className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
+                                selectedRateId === r.rate_id
+                                  ? "border-brand-gold/60 bg-brand-gold/5"
+                                  : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                              }`}
+                            >
+                              <span className="flex items-center gap-3">
+                                <input
+                                  type="radio"
+                                  name="shipping_rate"
+                                  value={r.rate_id}
+                                  checked={selectedRateId === r.rate_id}
+                                  onChange={() => onSelectRate(r.rate_id)}
+                                  className="h-4 w-4 accent-brand-gold"
+                                />
+                                <span className="text-sm text-foreground">{r.name}</span>
+                              </span>
+                              <span className="text-sm text-foreground">
+                                {currency}
+                                {cost.toFixed(2)}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </Section>
+                )}
+
                 <Section title="Payment method">
                   {gateways.length === 0 ? (
                     <p className="text-sm text-foreground/50">
