@@ -30,6 +30,7 @@ type CartCtx = {
   items: CartItem[];
   count: number;
   subtotal: number;
+  raw: WooCart | null;
   isOpen: boolean;
   loading: boolean;
   error: string | null;
