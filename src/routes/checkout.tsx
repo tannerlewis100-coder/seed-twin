@@ -498,10 +498,23 @@ function CheckoutPage() {
 
                   <div className="mt-5 pt-4 border-t border-white/5 space-y-2 text-sm">
                     <Row label="Subtotal" value={`${currency}${subtotal.toFixed(2)}`} />
-                    <Row
-                      label="Shipping"
-                      value={shippingTotal > 0 ? `${currency}${shippingTotal.toFixed(2)}` : "Calculated next"}
-                    />
+                    {(() => {
+                      const sel = rates.find((r) => r.rate_id === selectedRateId);
+                      let value: string;
+                      if (sel) {
+                        const cost = fromMinor(sel.price, sel.currency_minor_unit);
+                        value = `${sel.name} · ${currency}${cost.toFixed(2)}`;
+                      } else if (shippingTotal > 0) {
+                        value = `${currency}${shippingTotal.toFixed(2)}`;
+                      } else if (needsShipping && ratesLoading) {
+                        value = "Calculating…";
+                      } else if (needsShipping && !addrReady) {
+                        value = "Enter address";
+                      } else {
+                        value = "—";
+                      }
+                      return <Row label="Shipping" value={value} />;
+                    })()}
                     {taxTotal > 0 && (
                       <Row label="Tax" value={`${currency}${taxTotal.toFixed(2)}`} />
                     )}
