@@ -194,7 +194,7 @@ function CheckoutPage() {
                       <input value={billing.city} onChange={bindBilling("city")} className={inputCls} autoComplete="address-level2" />
                     </Field>
                     <Field label="State" required>
-                      <input value={billing.state} onChange={bindBilling("state")} className={inputCls} autoComplete="address-level1" placeholder="e.g. TX" />
+                      <StateSelect value={billing.state} onChange={bindBilling("state")} autoComplete="address-level1" />
                     </Field>
                     <Field label="Postcode" required>
                       <input value={billing.postcode} onChange={bindBilling("postcode")} className={inputCls} autoComplete="postal-code" />
