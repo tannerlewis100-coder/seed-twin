@@ -236,7 +236,7 @@ function CheckoutPage() {
                         <input value={shipping.city} onChange={bindShipping("city")} className={inputCls} />
                       </Field>
                       <Field label="State" required>
-                        <input value={shipping.state} onChange={bindShipping("state")} className={inputCls} />
+                        <StateSelect value={shipping.state} onChange={bindShipping("state")} autoComplete="address-level1" />
                       </Field>
                       <Field label="Postcode" required>
                         <input value={shipping.postcode} onChange={bindShipping("postcode")} className={inputCls} />
