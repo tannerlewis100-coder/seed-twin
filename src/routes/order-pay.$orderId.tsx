@@ -25,6 +25,9 @@ const SOL_WALLET = "11111111111111111111111111111111";
 function OrderPayPage() {
   const { orderId } = Route.useParams();
   const { key } = Route.useSearch();
+  const billingEmail = typeof window !== "undefined"
+    ? window.sessionStorage.getItem(`clarum.woo.order-email.${orderId}`)?.trim() ?? ""
+    : "";
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,7 +40,7 @@ function OrderPayPage() {
     (async () => {
       try {
         setLoading(true);
-        const o = await fetchOrder(orderId, key);
+        const o = await fetchOrder(orderId, key, billingEmail);
         if (!cancelled) setOrder(o);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
@@ -48,7 +51,7 @@ function OrderPayPage() {
     return () => {
       cancelled = true;
     };
-  }, [orderId, key]);
+  }, [orderId, key, billingEmail]);
 
   useEffect(() => {
     if (!order || !widgetRef.current) return;
