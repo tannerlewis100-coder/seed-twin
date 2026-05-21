@@ -146,7 +146,7 @@ function CheckoutPage() {
             </span>
             <h1
               className="text-5xl md:text-6xl font-light leading-tight text-white"
-              style={{ fontFamily: "'Cormorant Garamond', serif" }}
+              className-marker
             >
               Complete your order
             </h1>
@@ -354,7 +354,7 @@ function CheckoutPage() {
                 <div className="bg-[#111111] border border-white/5 p-8 space-y-8">
                   <h2
                     className="text-2xl font-medium italic text-white"
-                    style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                    className-marker
                   >
                     Order Summary
                   </h2>
@@ -370,7 +370,7 @@ function CheckoutPage() {
                               className="w-full h-full object-contain"
                             />
                           ) : (
-                            <span className="text-[10px] text-white/30 italic" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                            <span className="text-[10px] text-white/30 italic" className-marker>
                               {item.name.split(" ")[0]}
                             </span>
                           )}
@@ -423,7 +423,7 @@ function CheckoutPage() {
                   <div className="pt-6 border-t border-white/10 flex justify-between items-baseline">
                     <span
                       className="text-lg font-light text-white"
-                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                      className-marker
                     >
                       Total
                     </span>
@@ -431,7 +431,7 @@ function CheckoutPage() {
                       <span className="text-xs text-white/30 block">USD</span>
                       <span
                         className="text-3xl font-light text-[#D4A63A]"
-                        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                        className-marker
                       >
                         {currency}
                         {total.toFixed(2)}
@@ -489,7 +489,7 @@ function SectionBlock({
     <section className="space-y-6">
       <h2
         className="text-2xl font-medium border-b border-white/10 pb-4 text-white"
-        style={{ fontFamily: "'Cormorant Garamond', serif" }}
+        className-marker
       >
         <span className="text-[#D4A63A] mr-2">{number}</span>
         {title}
