@@ -38,7 +38,7 @@ export function clearCartToken() {
 let currentNonce: string | null = null;
 
 async function wooFetch(path: string, init: RequestInit = {}): Promise<Response> {
-  const isCart = path.startsWith("/cart");
+  const needsCartSession = path.startsWith("/cart") || path.startsWith("/checkout");
   const token = getCartToken();
   const method = (init.method ?? "GET").toUpperCase();
   const isMutation = method === "POST" || method === "PUT" || method === "DELETE";
@@ -48,7 +48,7 @@ async function wooFetch(path: string, init: RequestInit = {}): Promise<Response>
     ...(init.body ? { "Content-Type": "application/json" } : {}),
     ...((init.headers as Record<string, string> | undefined) ?? {}),
   };
-  if (isCart && token) headers["Cart-Token"] = token;
+  if (needsCartSession && token) headers["Cart-Token"] = token;
   if (isMutation && currentNonce) headers["Nonce"] = currentNonce;
 
   const res = await fetch(`${BASE}${path}`, {
