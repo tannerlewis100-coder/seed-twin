@@ -96,7 +96,7 @@ function OrderPayPage() {
             } catch {
               /* ignore — still take user to confirmation */
             }
-            window.location.href = `/order-received/${order.id}?key=${encodeURIComponent(order.order_key)}`;
+            window.location.href = `/order-received/${order.id}?key=${encodeURIComponent(order.order_key)}&email=${encodeURIComponent(billingEmail || order.billing_address?.email || "")}`;
           },
         });
       } catch (e) {
