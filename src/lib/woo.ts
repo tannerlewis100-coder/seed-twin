@@ -1,8 +1,7 @@
-// Direct browser → WooCommerce Store API client.
+// Same-origin client for the Woo Store API proxy.
 // Cart-Token is persisted in localStorage and threaded on every request.
-// credentials: 'include' so Woo session cookies flow to the checkout redirect.
 
-const BASE = "https://admin.clarumpeptides.com/wp-json/wc/store/v1";
+const BASE = "/api/public/woo-store";
 const CHECKOUT_BASE = "https://admin.clarumpeptides.com/checkout";
 const TOKEN_KEY = "clarum.woo.cart-token";
 
@@ -51,7 +50,7 @@ async function wooFetch(path: string, init: RequestInit = {}): Promise<Response>
   if (needsCartSession && token) headers["Cart-Token"] = token;
   if (isMutation && currentNonce) headers["Nonce"] = currentNonce;
 
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await fetch(`${BASE}?path=${encodeURIComponent(path)}`, {
     ...init,
     credentials: "omit",
     headers,
