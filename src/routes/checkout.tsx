@@ -189,6 +189,7 @@ function CheckoutPage() {
       }
     }
     if (!paymentMethod) return "Select a payment method.";
+    if (needsShipping && !selectedRateId) return "Select a shipping method.";
     return null;
   }
 
