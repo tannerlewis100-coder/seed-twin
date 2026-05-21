@@ -87,7 +87,7 @@ const RULES: Array<[RegExp, string]> = [
   [/5-?amino-?1mq/i, amino1mq5],
   [/\bb-?12\b|cyanocobalamin|methylcobalamin/i, b12],
   [/aod-?9604/i, aod9604],
-  [/bpc-?157/i, bpc157],
+  
   [/\baicar\b/i, aicar],
   [/ace-?031/i, ace031],
   [/ara-?290/i, ara290],
