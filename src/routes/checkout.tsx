@@ -8,6 +8,7 @@ import {
   clearCartToken,
   fromMinor,
   gatewayLabel,
+  setOrderBillingEmail,
   selectShippingRate,
   submitCheckout,
   updateCustomer,
@@ -233,13 +234,14 @@ function CheckoutPage() {
         return;
       }
       if (res.order_id) {
+        setOrderBillingEmail(res.order_id, email);
         clearCartToken();
         try {
           await refresh();
         } catch {
           /* ignore */
         }
-        window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}`;
+        window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}&email=${encodeURIComponent(email)}`;
         return;
       }
       setError(result?.message || "Payment could not be processed.");

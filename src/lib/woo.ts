@@ -4,6 +4,7 @@
 const BASE = "/api/public/woo-store";
 const CHECKOUT_BASE = "https://admin.clarumpeptides.com/checkout";
 const TOKEN_KEY = "clarum.woo.cart-token";
+const ORDER_EMAIL_KEY_PREFIX = "clarum.woo.order-email.";
 
 export function getCartToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -29,6 +30,30 @@ export function clearCartToken() {
     window.localStorage.removeItem(TOKEN_KEY);
   } catch {
     /* ignore */
+  }
+}
+
+function orderEmailKey(orderId: number | string) {
+  return `${ORDER_EMAIL_KEY_PREFIX}${orderId}`;
+}
+
+export function setOrderBillingEmail(orderId: number | string, email: string) {
+  if (typeof window === "undefined") return;
+  const normalized = email.trim().toLowerCase();
+  if (!normalized) return;
+  try {
+    window.sessionStorage.setItem(orderEmailKey(orderId), normalized);
+  } catch {
+    /* ignore */
+  }
+}
+
+export function getOrderBillingEmail(orderId: number | string): string {
+  if (typeof window === "undefined") return "";
+  try {
+    return window.sessionStorage.getItem(orderEmailKey(orderId))?.trim() ?? "";
+  } catch {
+    return "";
   }
 }
 
@@ -330,8 +355,16 @@ export type WooOrder = {
   needs_payment?: boolean;
 };
 
-export async function fetchOrder(orderId: number | string, key: string): Promise<WooOrder> {
-  const res = await wooFetch(`/order/${orderId}?key=${encodeURIComponent(key)}`);
+export async function fetchOrder(
+  orderId: number | string,
+  key: string,
+  billingEmail?: string,
+): Promise<WooOrder> {
+  const params = new URLSearchParams({ key });
+  const email = billingEmail?.trim() || getOrderBillingEmail(orderId);
+  if (email) params.set("billing_email", email);
+
+  const res = await wooFetch(`/order/${orderId}?${params.toString()}`);
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     const msg = (data && (data.message || (data.data && data.data.message))) || `Order not found (${res.status})`;
