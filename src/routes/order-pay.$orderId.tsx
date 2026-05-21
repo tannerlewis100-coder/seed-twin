@@ -9,6 +9,7 @@ export const Route = createFileRoute("/order-pay/$orderId")({
   component: OrderPayPage,
   validateSearch: (search: Record<string, unknown>) => ({
     key: typeof search.key === "string" ? search.key : "",
+    email: typeof search.email === "string" ? search.email : "",
   }),
   head: () => ({
     meta: [
@@ -24,8 +25,8 @@ const SOL_WALLET = "11111111111111111111111111111111";
 
 function OrderPayPage() {
   const { orderId } = Route.useParams();
-  const { key } = Route.useSearch();
-  const billingEmail = getOrderBillingEmail(orderId);
+  const { key, email } = Route.useSearch();
+  const billingEmail = email || getOrderBillingEmail(orderId);
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
