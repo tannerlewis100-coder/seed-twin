@@ -475,10 +475,7 @@ function SectionBlock({
 }) {
   return (
     <section className="space-y-6">
-      <h2
-        className="text-2xl font-medium border-b border-white/10 pb-4 text-white"
-        className-marker
-      >
+      <h2 className="font-display text-2xl font-medium border-b border-white/10 pb-4 text-white">
         <span className="text-[#D4A63A] mr-2">{number}</span>
         {title}
       </h2>
