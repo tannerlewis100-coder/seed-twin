@@ -38,8 +38,16 @@ const EMPTY_ADDRESS: AddressForm = {
   phone: "",
 };
 
+type ShippingRate = {
+  rate_id: string;
+  name: string;
+  price: string;
+  currency_minor_unit: number;
+  selected: boolean;
+};
+
 function CheckoutPage() {
-  const { items, subtotal, raw, loading: cartLoading } = useCart();
+  const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -51,7 +59,13 @@ function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [rates, setRates] = useState<ShippingRate[]>([]);
+  const [selectedRateId, setSelectedRateId] = useState<string>("");
+  const [ratesLoading, setRatesLoading] = useState(false);
+  const [ratesError, setRatesError] = useState<string | null>(null);
+
   const gateways = raw?.payment_methods ?? [];
+  const needsShipping = raw?.needs_shipping ?? true;
 
   useEffect(() => {
     if (!paymentMethod && gateways.length) setPaymentMethod(gateways[0]);
@@ -64,6 +78,86 @@ function CheckoutPage() {
   const total = fromMinor(raw?.totals.total_price, minor) || subtotal;
 
   const cartEmpty = !cartLoading && items.length === 0;
+
+  // Effective shipping address for rate calculation
+  const shipAddr = shipSame ? billing : shipping;
+  const addrReady =
+    shipAddr.country.trim().length === 2 &&
+    shipAddr.state.trim().length > 0 &&
+    shipAddr.postcode.trim().length > 0 &&
+    shipAddr.city.trim().length > 0 &&
+    shipAddr.address_1.trim().length > 0;
+
+  // Debounced: when address is complete, update customer to fetch rates
+  useEffect(() => {
+    if (!needsShipping || cartEmpty || !addrReady) return;
+    const handle = setTimeout(async () => {
+      setRatesLoading(true);
+      setRatesError(null);
+      try {
+        const cart = await updateCustomer({
+          shipping_address: {
+            first_name: shipAddr.first_name,
+            last_name: shipAddr.last_name,
+            address_1: shipAddr.address_1,
+            address_2: shipAddr.address_2,
+            city: shipAddr.city,
+            state: shipAddr.state,
+            postcode: shipAddr.postcode,
+            country: shipAddr.country,
+          },
+        });
+        const pkg = cart.shipping_rates?.[0]?.shipping_rates ?? [];
+        setRates(pkg);
+        const preselected = pkg.find((r) => r.selected)?.rate_id;
+        const target = preselected || pkg[0]?.rate_id;
+        if (target) {
+          if (target !== selectedRateId) {
+            await selectShippingRate({ package_id: 0, rate_id: target });
+            setSelectedRateId(target);
+            await refresh();
+          } else {
+            setSelectedRateId(target);
+          }
+        } else {
+          setSelectedRateId("");
+        }
+      } catch (e) {
+        setRatesError(e instanceof Error ? e.message : "Could not load shipping rates.");
+      } finally {
+        setRatesLoading(false);
+      }
+    }, 500);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    needsShipping,
+    cartEmpty,
+    addrReady,
+    shipAddr.first_name,
+    shipAddr.last_name,
+    shipAddr.address_1,
+    shipAddr.address_2,
+    shipAddr.city,
+    shipAddr.state,
+    shipAddr.postcode,
+    shipAddr.country,
+  ]);
+
+  async function onSelectRate(rateId: string) {
+    setRatesLoading(true);
+    setRatesError(null);
+    try {
+      await selectShippingRate({ package_id: 0, rate_id: rateId });
+      setSelectedRateId(rateId);
+      await refresh();
+    } catch (e) {
+      setRatesError(e instanceof Error ? e.message : "Could not select shipping rate.");
+    } finally {
+      setRatesLoading(false);
+    }
+  }
+
 
   function bindBilling<K extends keyof AddressForm>(k: K) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
