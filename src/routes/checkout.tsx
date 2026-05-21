@@ -224,16 +224,13 @@ function CheckoutPage() {
         return;
       }
       if (res.order_id) {
-        const redirectUrl =
-          resolveCheckoutRedirect(res) ||
-          `https://admin.clarumpeptides.com/checkout/order-pay/${res.order_id}/?pay_for_order=true&key=${encodeURIComponent(res.order_key)}`;
         clearCartToken();
         try {
           await refresh();
         } catch {
           /* ignore */
         }
-        window.location.href = redirectUrl;
+        window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}`;
         return;
       }
       setError(result?.message || "Payment could not be processed.");
