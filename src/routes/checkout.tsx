@@ -64,11 +64,11 @@ function CheckoutPage() {
   const cartEmpty = !cartLoading && items.length === 0;
 
   function bindBilling<K extends keyof AddressForm>(k: K) {
-    return (e: React.ChangeEvent<HTMLInputElement>) =>
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
       setBilling((b) => ({ ...b, [k]: e.target.value }));
   }
   function bindShipping<K extends keyof AddressForm>(k: K) {
-    return (e: React.ChangeEvent<HTMLInputElement>) =>
+    return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
       setShipping((b) => ({ ...b, [k]: e.target.value }));
   }
 
