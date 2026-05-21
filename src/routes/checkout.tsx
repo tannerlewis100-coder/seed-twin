@@ -82,7 +82,6 @@ function CheckoutPage() {
       "state",
       "postcode",
       "country",
-      "phone",
     ];
     for (const k of req) {
       if (!String(billing[k] ?? "").trim()) return `Billing ${k.replace("_", " ")} is required.`;
