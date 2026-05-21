@@ -343,6 +343,14 @@ export function checkoutUrl(): string {
   return token ? `${CHECKOUT_BASE}?cart_token=${encodeURIComponent(token)}` : CHECKOUT_BASE;
 }
 
+function normalizeCheckoutRedirect(value: string | undefined): string | null {
+  const candidate = value?.trim();
+  if (!candidate) return null;
+  if (candidate.startsWith("#")) return null;
+  if (/^javascript:/i.test(candidate)) return null;
+  return candidate;
+}
+
 export function resolveCheckoutRedirect(input: WooCheckoutResponse): string | null {
   const details = input.payment_result?.payment_details ?? [];
   const detailMatch = details.find((entry) => {
@@ -351,11 +359,11 @@ export function resolveCheckoutRedirect(input: WooCheckoutResponse): string | nu
   })?.value;
 
   return (
-    input.payment_result?.redirect_url ||
-    input.payment_result?.payment_url ||
-    input.redirect_url ||
-    input.payment_url ||
-    detailMatch ||
+    normalizeCheckoutRedirect(input.payment_result?.redirect_url) ||
+    normalizeCheckoutRedirect(input.payment_result?.payment_url) ||
+    normalizeCheckoutRedirect(input.redirect_url) ||
+    normalizeCheckoutRedirect(input.payment_url) ||
+    normalizeCheckoutRedirect(detailMatch) ||
     null
   );
 }
