@@ -349,10 +349,7 @@ function CheckoutPage() {
               {/* Right: sticky summary */}
               <aside className="lg:sticky lg:top-12 self-start">
                 <div className="bg-[#111111] border border-white/5 p-8 space-y-8">
-                  <h2
-                    className="text-2xl font-medium italic text-white"
-                    className-marker
-                  >
+                  <h2 className="font-display text-2xl font-medium italic text-white">
                     Order Summary
                   </h2>
 
@@ -367,7 +364,7 @@ function CheckoutPage() {
                               className="w-full h-full object-contain"
                             />
                           ) : (
-                            <span className="text-[10px] text-white/30 italic" className-marker>
+                            <span className="font-display text-[10px] text-white/30 italic">
                               {item.name.split(" ")[0]}
                             </span>
                           )}
@@ -418,18 +415,12 @@ function CheckoutPage() {
                   </div>
 
                   <div className="pt-6 border-t border-white/10 flex justify-between items-baseline">
-                    <span
-                      className="text-lg font-light text-white"
-                      className-marker
-                    >
+                    <span className="font-display text-lg font-light text-white">
                       Total
                     </span>
                     <div className="text-right">
                       <span className="text-xs text-white/30 block">USD</span>
-                      <span
-                        className="text-3xl font-light text-[#D4A63A]"
-                        className-marker
-                      >
+                      <span className="font-display text-3xl font-light text-[#D4A63A]">
                         {currency}
                         {total.toFixed(2)}
                       </span>
