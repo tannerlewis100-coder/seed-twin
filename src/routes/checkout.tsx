@@ -243,8 +243,8 @@ function CheckoutPage() {
                       <Field label="Country" required>
                         <input value={shipping.country} onChange={bindShipping("country")} className={inputCls} maxLength={2} />
                       </Field>
-                      <Field label="Phone" required className="sm:col-span-2">
-                        <input type="tel" value={shipping.phone ?? ""} onChange={bindShipping("phone")} className={inputCls} />
+                      <Field label="Phone (optional)" className="sm:col-span-2">
+                        <input type="tel" value={shipping.phone ?? ""} onChange={bindShipping("phone")} className={inputCls} placeholder="(555) 123-4567" />
                       </Field>
                     </div>
                   )}
