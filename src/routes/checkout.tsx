@@ -462,7 +462,7 @@ function CheckoutPage() {
 }
 
 const inputCls =
-  "w-full bg-[#111111] border border-white/5 rounded-none px-4 py-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:ring-1 focus:ring-[#D4A63A] transition-all";
+  "w-full bg-[#111111] rounded-none px-4 py-4 text-sm text-white placeholder:text-white/30 outline-none transition-all border border-[rgba(212,167,69,0.18)] focus:border-[rgba(212,167,69,0.6)] focus:shadow-[0_0_0_3px_rgba(212,167,69,0.08)]";
 
 function SectionBlock({
   number,
