@@ -49,7 +49,7 @@ type ShippingRate = {
 
 function CheckoutPage() {
   const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
-  const navigate = useNavigate();
+  
 
   const [email, setEmail] = useState("");
   const [billing, setBilling] = useState<AddressForm>(EMPTY_ADDRESS);
