@@ -205,7 +205,17 @@ function CheckoutPage() {
     setSubmitting(true);
     try {
       const billingAddr: WooAddress = { ...billing, email };
-      const shippingAddr: WooAddress = shipSame ? { ...billing } : { ...shipping };
+      const shippingAddr: WooAddress = shipSame ? { ...billing, email } : { ...shipping };
+      // Sync customer session with billing email before submitting checkout.
+      // Woo Store API validates billing_address.email from session state.
+      try {
+        await updateCustomer({
+          billing_address: billingAddr,
+          shipping_address: shippingAddr,
+        });
+      } catch {
+        /* non-fatal — submitCheckout will surface the real error if any */
+      }
       const res = await submitCheckout({
         billing_address: billingAddr,
         shipping_address: shippingAddr,
