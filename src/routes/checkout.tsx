@@ -5,6 +5,7 @@ import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useCart } from "@/lib/cart";
 import {
+  clearCartToken,
   fromMinor,
   gatewayLabel,
   selectShippingRate,
@@ -212,9 +213,14 @@ function CheckoutPage() {
         payment_data: [],
         customer_note: note || undefined,
       });
+      // eslint-disable-next-line no-console
+      console.log("[checkout] response", res);
       const result = res.payment_result;
-      if (result?.payment_status === "success" || result?.payment_status === "pending") {
-        if (result.redirect_url) {
+      const status = result?.payment_status;
+      const failed = status === "failure" || status === "error";
+      if (!failed && res.order_id) {
+        clearCartToken();
+        if (result?.redirect_url) {
           window.location.assign(result.redirect_url);
           return;
         }
