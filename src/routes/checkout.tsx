@@ -455,12 +455,7 @@ function CheckoutPage() {
 
                 <button
                   type="submit"
-                  disabled={
-                    submitting ||
-                    cartLoading ||
-                    gateways.length === 0 ||
-                    (needsShipping && !selectedRateId)
-                  }
+                  disabled={submitting || cartLoading}
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                 >
                   {submitting ? (
