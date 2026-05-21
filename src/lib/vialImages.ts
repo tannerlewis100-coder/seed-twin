@@ -69,7 +69,7 @@ import amino1mq50 from "@/assets/products/5amino1mq-50mg.png";
 import amino1mq5 from "@/assets/products/5amino1mq-5mg.png";
 import b12 from "@/assets/products/b12-10ml.png";
 import aod9604 from "@/assets/products/aod9604-5mg.png";
-import bpc157 from "@/assets/products/bpc157-20mg.png";
+
 import aicar from "@/assets/products/aicar-50mg.png";
 import ace031 from "@/assets/products/ace031-1mg.png";
 import ara290 from "@/assets/products/ara290-10mg.png";
@@ -87,7 +87,7 @@ const RULES: Array<[RegExp, string]> = [
   [/5-?amino-?1mq/i, amino1mq5],
   [/\bb-?12\b|cyanocobalamin|methylcobalamin/i, b12],
   [/aod-?9604/i, aod9604],
-  [/bpc-?157/i, bpc157],
+  
   [/\baicar\b/i, aicar],
   [/ace-?031/i, ace031],
   [/ara-?290/i, ara290],
