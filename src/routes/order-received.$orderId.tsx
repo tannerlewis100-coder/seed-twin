@@ -21,8 +21,8 @@ export const Route = createFileRoute("/order-received/$orderId")({
 
 function OrderReceivedPage() {
   const { orderId } = Route.useParams();
-  const { key, email } = Route.useSearch();
-  const billingEmail = email || getOrderBillingEmail(orderId);
+  const { key, email: searchEmail } = Route.useSearch();
+  const billingEmail = searchEmail || getOrderBillingEmail(orderId);
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,7 +52,7 @@ function OrderReceivedPage() {
   const shipping = fromMinor(order?.totals.total_shipping, minor);
   const tax = fromMinor(order?.totals.total_tax, minor);
   const total = fromMinor(order?.totals.total_price, minor);
-  const email = order?.billing_address?.email;
+  const orderEmail = order?.billing_address?.email;
 
   return (
     <div className="min-h-screen bg-brand-forest-deep text-foreground flex flex-col">
@@ -87,10 +87,10 @@ function OrderReceivedPage() {
                 <h1 className="font-display text-4xl sm:text-5xl text-foreground mb-4">
                   Thanks for your order, #{order.number ?? order.id}!
                 </h1>
-                {email && (
+                {orderEmail && (
                   <p className="text-foreground/60">
                     We've sent a confirmation to{" "}
-                    <span className="text-foreground/80">{email}</span>.
+                    <span className="text-foreground/80">{orderEmail}</span>.
                   </p>
                 )}
               </div>
