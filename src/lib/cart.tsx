@@ -86,6 +86,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(m.items);
     setSubtotal(m.subtotal);
     setCount(m.count);
+    setRaw(cart);
   }, []);
 
   const refresh = useCallback(async () => {
