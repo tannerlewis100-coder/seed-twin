@@ -8,6 +8,7 @@ import {
   clearCartToken,
   fromMinor,
   gatewayLabel,
+  resolveCheckoutRedirect,
   selectShippingRate,
   submitCheckout,
   updateCustomer,
@@ -219,9 +220,10 @@ function CheckoutPage() {
       const status = result?.payment_status;
       const failed = status === "failure" || status === "error";
       if (!failed && res.order_id) {
+        const redirectUrl = resolveCheckoutRedirect(res);
         clearCartToken();
-        if (result?.redirect_url) {
-          window.location.assign(result.redirect_url);
+        if (redirectUrl) {
+          window.location.assign(redirectUrl);
           return;
         }
         navigate({ to: "/order-confirmation/$orderId", params: { orderId: String(res.order_id) } });
