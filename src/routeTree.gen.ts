@@ -20,6 +20,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
+import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -77,6 +78,11 @@ const OrderConfirmationOrderIdRoute =
     path: '/order-confirmation/$orderId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicWooStoreRoute = ApiPublicWooStoreRouteImport.update({
+  id: '/api/public/woo-store',
+  path: '/api/public/woo-store',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
+  '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -103,6 +110,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
+  '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
+  '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/order-confirmation/$orderId'
+    | '/api/public/woo-store'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/order-confirmation/$orderId'
+    | '/api/public/woo-store'
   id:
     | '__root__'
     | '/'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/order-confirmation/$orderId'
+    | '/api/public/woo-store'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -172,6 +184,7 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
+  ApiPublicWooStoreRoute: typeof ApiPublicWooStoreRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -253,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrderConfirmationOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/woo-store': {
+      id: '/api/public/woo-store'
+      path: '/api/public/woo-store'
+      fullPath: '/api/public/woo-store'
+      preLoaderRoute: typeof ApiPublicWooStoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -268,6 +288,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
+  ApiPublicWooStoreRoute: ApiPublicWooStoreRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
