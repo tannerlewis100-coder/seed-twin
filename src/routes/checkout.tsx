@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock, ShoppingBag } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -8,7 +8,6 @@ import {
   clearCartToken,
   fromMinor,
   gatewayLabel,
-  resolveCheckoutRedirect,
   selectShippingRate,
   submitCheckout,
   updateCustomer,
