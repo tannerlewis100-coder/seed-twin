@@ -16,8 +16,10 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CoaLibraryRouteImport } from './routes/coa-library'
+import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -54,6 +56,11 @@ const CoaLibraryRoute = CoaLibraryRouteImport.update({
   path: '/coa-library',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -64,10 +71,17 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrderConfirmationOrderIdRoute =
+  OrderConfirmationOrderIdRouteImport.update({
+    id: '/order-confirmation/$orderId',
+    path: '/order-confirmation/$orderId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/checkout': typeof CheckoutRoute
   '/coa-library': typeof CoaLibraryRoute
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
@@ -75,10 +89,12 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/checkout': typeof CheckoutRoute
   '/coa-library': typeof CoaLibraryRoute
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
@@ -86,11 +102,13 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/checkout': typeof CheckoutRoute
   '/coa-library': typeof CoaLibraryRoute
   '/contact': typeof ContactRoute
   '/disclaimer': typeof DisclaimerRoute
@@ -98,12 +116,14 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/checkout'
     | '/coa-library'
     | '/contact'
     | '/disclaimer'
@@ -111,10 +131,12 @@ export interface FileRouteTypes {
     | '/shop'
     | '/sign-in'
     | '/sign-up'
+    | '/order-confirmation/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/checkout'
     | '/coa-library'
     | '/contact'
     | '/disclaimer'
@@ -122,10 +144,12 @@ export interface FileRouteTypes {
     | '/shop'
     | '/sign-in'
     | '/sign-up'
+    | '/order-confirmation/$orderId'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/checkout'
     | '/coa-library'
     | '/contact'
     | '/disclaimer'
@@ -133,11 +157,13 @@ export interface FileRouteTypes {
     | '/shop'
     | '/sign-in'
     | '/sign-up'
+    | '/order-confirmation/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CheckoutRoute: typeof CheckoutRoute
   CoaLibraryRoute: typeof CoaLibraryRoute
   ContactRoute: typeof ContactRoute
   DisclaimerRoute: typeof DisclaimerRoute
@@ -145,6 +171,7 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
+  OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -198,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoaLibraryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -212,12 +246,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/order-confirmation/$orderId': {
+      id: '/order-confirmation/$orderId'
+      path: '/order-confirmation/$orderId'
+      fullPath: '/order-confirmation/$orderId'
+      preLoaderRoute: typeof OrderConfirmationOrderIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CheckoutRoute: CheckoutRoute,
   CoaLibraryRoute: CoaLibraryRoute,
   ContactRoute: ContactRoute,
   DisclaimerRoute: DisclaimerRoute,
@@ -225,7 +267,17 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
+  OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
