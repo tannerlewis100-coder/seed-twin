@@ -52,7 +52,7 @@ async function wooFetch(path: string, init: RequestInit = {}): Promise<Response>
 
   const res = await fetch(`${BASE}?path=${encodeURIComponent(path)}`, {
     ...init,
-    credentials: "omit",
+    credentials: "include",
     headers,
   });
   const nextToken = res.headers.get("Cart-Token");
