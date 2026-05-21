@@ -122,6 +122,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     items,
     count,
     subtotal,
+    raw,
     isOpen,
     loading,
     error,
