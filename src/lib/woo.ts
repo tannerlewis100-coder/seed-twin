@@ -173,10 +173,13 @@ export type WooCheckoutResponse = {
   billing_address?: WooAddress;
   shipping_address?: WooAddress;
   payment_method?: string;
+  redirect_url?: string;
+  payment_url?: string;
   payment_result: {
     payment_status: "success" | "failure" | "pending" | "error" | string;
     payment_details?: Array<{ key: string; value: string }>;
     redirect_url?: string;
+    payment_url?: string;
     message?: string;
   };
 };
@@ -338,6 +341,23 @@ export function firstImage(p: { images?: WooImage[] }): string | undefined {
 export function checkoutUrl(): string {
   const token = getCartToken();
   return token ? `${CHECKOUT_BASE}?cart_token=${encodeURIComponent(token)}` : CHECKOUT_BASE;
+}
+
+export function resolveCheckoutRedirect(input: WooCheckoutResponse): string | null {
+  const details = input.payment_result?.payment_details ?? [];
+  const detailMatch = details.find((entry) => {
+    const key = entry.key.toLowerCase();
+    return key.includes("redirect") || key.includes("payment") || key.includes("url");
+  })?.value;
+
+  return (
+    input.payment_result?.redirect_url ||
+    input.payment_result?.payment_url ||
+    input.redirect_url ||
+    input.payment_url ||
+    detailMatch ||
+    null
+  );
 }
 
 /** Strip HTML for short blurbs. */
