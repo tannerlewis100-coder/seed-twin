@@ -1,14 +1,16 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart";
-import { checkoutUrl } from "@/lib/woo";
+import { useNavigate } from "@tanstack/react-router";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 
 export function CartDrawer() {
   const { isOpen, closeCart, items, subtotal, updateQty, removeItem, loading } = useCart();
+  const navigate = useNavigate();
 
   function onCheckout() {
     if (!items.length) return;
-    window.location.assign(checkoutUrl());
+    closeCart();
+    navigate({ to: "/checkout" });
   }
 
   return (
