@@ -80,6 +80,7 @@ export const DEFAULT_VIAL = vialDefault;
 
 const RULES: Array<[RegExp, string]> = [
   [/reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water/i, bacWater],
+  [/bpc-?157/i, bpc157],
   [/cagrilintide.*glp|cagri.*glp/i, cagriGlp],
   [/\bcagrilintide\b|\bcagri\b/i, cagrilintide10],
   [/cagrilintide.*10mg|\bcagri\b.*10mg/i, cagrilintide10],
