@@ -294,6 +294,52 @@ export async function submitCheckout(input: WooCheckoutInput): Promise<WooChecko
   return data as WooCheckoutResponse;
 }
 
+export type WooOrderItem = {
+  id: number;
+  name: string;
+  quantity: number;
+  short_description?: string;
+  images?: WooImage[];
+  totals: {
+    line_subtotal: string;
+    line_total: string;
+    currency_minor_unit: number;
+    currency_code: string;
+    currency_symbol?: string;
+  };
+};
+
+export type WooOrder = {
+  id: number;
+  number?: string;
+  status: string;
+  order_key: string;
+  customer_id?: number;
+  billing_address?: WooAddress;
+  shipping_address?: WooAddress;
+  items: WooOrderItem[];
+  totals: {
+    total_price: string;
+    total_items: string;
+    total_shipping?: string;
+    total_tax?: string;
+    currency_minor_unit: number;
+    currency_code: string;
+    currency_symbol: string;
+  };
+  needs_payment?: boolean;
+};
+
+export async function fetchOrder(orderId: number | string, key: string): Promise<WooOrder> {
+  const res = await wooFetch(`/order/${orderId}?key=${encodeURIComponent(key)}`);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const msg = (data && (data.message || (data.data && data.data.message))) || `Order not found (${res.status})`;
+    throw new Error(msg);
+  }
+  return data as WooOrder;
+}
+
 /** Friendly label for known gateway IDs; otherwise humanize the slug. */
 export function gatewayLabel(id: string): string {
   const map: Record<string, string> = {
