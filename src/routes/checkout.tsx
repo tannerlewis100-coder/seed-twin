@@ -241,7 +241,7 @@ function CheckoutPage() {
         } catch {
           /* ignore */
         }
-        window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}`;
+        window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}&email=${encodeURIComponent(email)}`;
         return;
       }
       setError(result?.message || "Payment could not be processed.");
