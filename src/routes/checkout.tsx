@@ -5,6 +5,7 @@ import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useCart } from "@/lib/cart";
 import {
+  clearCartToken,
   fromMinor,
   gatewayLabel,
   selectShippingRate,
