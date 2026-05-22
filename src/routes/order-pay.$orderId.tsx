@@ -72,9 +72,17 @@ function OrderPayPage() {
           (window as typeof window & { Buffer?: typeof Buffer }).Buffer = Buffer;
         }
 
-        const mod = await import("@depay/widgets");
+        // Wait for the DePay script (loaded via <script> in __root.tsx) to be ready.
+        let waited = 0;
+        while (!window.DePayWidgets && waited < 5000) {
+          await new Promise((r) => setTimeout(r, 100));
+          waited += 100;
+        }
         if (cancelled) return;
-        const DePayWidgets = (mod as any).default ?? mod;
+        if (!window.DePayWidgets) {
+          throw new Error("Payment widget failed to load. Please refresh the page.");
+        }
+        const DePayWidgets = window.DePayWidgets;
         const total = fromMinor(order.totals.total_price, order.totals.currency_minor_unit);
         const amount = total.toFixed(2);
 
