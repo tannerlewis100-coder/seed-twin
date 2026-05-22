@@ -470,8 +470,28 @@ export function resolveCheckoutRedirect(input: WooCheckoutResponse): string | nu
   );
 }
 
+/** Decode common HTML entities (handles double-encoding like &amp;amp;). */
+export function decodeEntities(input: string | undefined): string {
+  if (!input) return "";
+  let out = input;
+  // Run twice to catch double-encoded entities (&amp;amp; -> &amp; -> &).
+  for (let i = 0; i < 2; i++) {
+    out = out
+      .replace(/&amp;/gi, "&")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+      .replace(/&quot;/gi, '"')
+      .replace(/&#0?39;/gi, "'")
+      .replace(/&apos;/gi, "'")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+      .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)));
+  }
+  return out;
+}
+
 /** Strip HTML for short blurbs. */
 export function stripHtml(html: string | undefined): string {
   if (!html) return "";
-  return html.replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+  return decodeEntities(html.replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim();
 }
