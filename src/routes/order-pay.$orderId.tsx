@@ -243,32 +243,6 @@ function OrderPayPage() {
                   </>
                 ) : (
                   <>
-                    {/* Tabs */}
-                    <div className="grid grid-cols-2 gap-2 p-1 rounded-xl border border-white/10 bg-white/[0.02] mb-6">
-                      <button
-                        type="button"
-                        onClick={() => setTab("depay")}
-                        className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                          tab === "depay"
-                            ? "bg-brand-gold text-brand-forest"
-                            : "text-foreground/70 hover:text-foreground"
-                        }`}
-                      >
-                        Connect Wallet (DePay)
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setTab("nowpayments")}
-                        className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                          tab === "nowpayments"
-                            ? "bg-brand-gold text-brand-forest"
-                            : "text-foreground/70 hover:text-foreground"
-                        }`}
-                      >
-                        Pay with Any Coin (NOWPayments)
-                      </button>
-                    </div>
-
                     {tab === "depay" ? (
                       <>
                         <h2 className="font-display text-2xl text-foreground mb-1">Pay with crypto</h2>
@@ -315,6 +289,7 @@ function OrderPayPage() {
                       </>
                     )}
                   </>
+
                 )}
               </div>
 
