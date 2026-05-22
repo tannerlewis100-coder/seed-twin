@@ -466,6 +466,7 @@ export async function fetchOrder(orderId: number | string, key: string): Promise
 export function gatewayLabel(id: string): string {
   const map: Record<string, string> = {
     depay_wc_payments: "Pay with Crypto (DePay)",
+    nowpayments: "Pay with Any Coin (NOWPayments — BTC, ETH, USDT, USDC, SOL, +200 more)",
     stripe: "Credit / Debit Card",
     stripe_cc: "Credit / Debit Card",
     paypal: "PayPal",
