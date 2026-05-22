@@ -9,7 +9,7 @@ import RevealOnScroll from "@/components/RevealOnScroll";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
 import { vialImageFor } from "@/lib/vialImages";
-import { fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
+import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
 export const Route = createFileRoute("/shop")({
   component: ShopPage,
@@ -63,7 +63,7 @@ function ShopPage() {
     const map = new Map<string, string>(); // slug → name
     for (const p of products) {
       for (const c of p.categories ?? []) {
-        if (!map.has(c.slug)) map.set(c.slug, c.name);
+        if (!map.has(c.slug)) map.set(c.slug, decodeEntities(c.name));
       }
     }
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
@@ -170,12 +170,10 @@ function ShopPage() {
                     const wooImg = firstImage(p);
                     const vial = wooImg ?? vialImageFor(p.name, p.slug);
                     const rawCat = p.categories?.[0]?.name ?? "Research";
-                    const cat = rawCat
-                      .replace(/&amp;/g, "&")
+                    const cat = decodeEntities(rawCat)
                       .replace(/\s*&.*$/, "")
                       .trim();
-                    const displayName = p.name
-                      .replace(/&amp;/g, "&")
+                    const displayName = decodeEntities(p.name)
                       .replace(/\s*[—–-]\s.*$/, "")
                       .trim();
                     const sizeCount = p.variations?.length ?? 0;

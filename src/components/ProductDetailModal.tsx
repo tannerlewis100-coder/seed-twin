@@ -4,6 +4,7 @@ import { useCart } from "@/lib/cart";
 import { Check, Loader2, ShoppingCart } from "lucide-react";
 import { vialImageFor } from "@/lib/vialImages";
 import {
+  decodeEntities,
   fetchClarumProduct,
   fetchVariations,
   firstImage,
@@ -72,7 +73,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   if (!product) return null;
 
   const display: WooProduct = activeVar ?? product;
-  const cat = product.categories?.[0]?.name ?? "Research";
+  const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
   const wooImg = firstImage(display) ?? firstImage(product);
   const vial = wooImg ?? vialImageFor(product.name, product.slug);
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
@@ -133,7 +134,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
             <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1 rounded-full">
               {cat}
             </span>
-            <h2 className="font-display text-2xl md:text-3xl mt-3 leading-tight">{product.name}</h2>
+            <h2 className="font-display text-2xl md:text-3xl mt-3 leading-tight">{decodeEntities(product.name)}</h2>
             {display.sku && (
               <p className="text-xs text-foreground/50 mt-2">SKU {display.sku}</p>
             )}
