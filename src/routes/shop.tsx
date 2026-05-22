@@ -9,7 +9,7 @@ import RevealOnScroll from "@/components/RevealOnScroll";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
 import { vialImageFor } from "@/lib/vialImages";
-import { fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
+import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
 export const Route = createFileRoute("/shop")({
   component: ShopPage,
