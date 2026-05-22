@@ -95,20 +95,22 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
     window.setTimeout(() => setAdded(false), 1500);
   };
 
-  // Build size label from variation attributes (first attribute, typically "Size").
+  // Pill label: prefer the Clarum endpoint's literal `size` (e.g. "5mg").
   const labelFor = (v: WooProduct) => {
-    // Prefer a dose pattern (mg/ml/iu/mcg/g) found anywhere in the
-    // variation name or product name — that's what customers care about.
-    const haystack = `${v.name} ${product.name}`;
-    const doseMatch = haystack.match(/(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|g)\b/i);
-    if (doseMatch) return `${doseMatch[1]} ${doseMatch[2].toLowerCase()}`;
+    const fromClarum = sizeById[v.id];
+    if (fromClarum) return fromClarum;
 
+    // Fallback: Woo attribute value (skip "any" placeholder).
     const attr = v.attributes?.[0];
     const fromAttr = attr?.value ?? attr?.option;
     if (fromAttr && fromAttr.toLowerCase() !== "any") return fromAttr;
 
-    const stripped = v.name.replace(product.name, "").replace(/^[\s\-–—:|()]+|[\s\-–—:|()]+$/g, "").trim();
-    return stripped || "Variant";
+    // Last-ditch: pull a dose pattern out of the variation/product name.
+    const haystack = `${v.name} ${product.name}`;
+    const doseMatch = haystack.match(/(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|g)\b/i);
+    if (doseMatch) return `${doseMatch[1]}${doseMatch[2].toLowerCase()}`;
+
+    return "Variant";
   };
 
   return (
