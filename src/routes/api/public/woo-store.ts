@@ -20,7 +20,12 @@ async function proxyToWoo(request: Request) {
     return Response.json({ message: "Missing or invalid path." }, { status: 400 });
   }
 
-  const target = new URL(`${WOO_BASE}${path}`);
+  // Paths starting with "/clarum/" go to /wp-json directly so we can hit
+  // the custom Clarum endpoints (e.g. /clarum/v1/products/{id}).
+  // Everything else is treated as a Woo Store API path.
+  const target = path.startsWith("/clarum/")
+    ? new URL(`${WP_JSON_BASE}${path}`)
+    : new URL(`${WOO_BASE}${path}`);
   const headers = new Headers();
 
   const accept = request.headers.get("accept");
