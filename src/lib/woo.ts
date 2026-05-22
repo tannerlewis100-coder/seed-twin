@@ -336,6 +336,18 @@ export async function selectShippingRate(input: {
   return res.json();
 }
 
+export async function applyCoupon(code: string): Promise<WooCart> {
+  const res = await wooFetch("/cart/apply-coupon", {
+    method: "POST",
+    body: JSON.stringify({ code }),
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || `Failed to apply coupon (${res.status})`);
+  }
+  return res.json();
+}
+
 export async function submitCheckout(input: WooCheckoutInput): Promise<WooCheckoutResponse> {
   const res = await wooFetch("/checkout", {
     method: "POST",
