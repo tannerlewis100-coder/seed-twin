@@ -149,6 +149,7 @@ export type WooCart = {
     total_items: string;
     total_shipping?: string;
     total_tax?: string;
+    total_discount?: string;
     currency_minor_unit: number;
     currency_code: string;
     currency_symbol: string;
@@ -408,7 +409,14 @@ export async function fetchOrder(
   const email = billingEmail?.trim() || getOrderBillingEmail(orderId);
   if (email) params.set("billing_email", email);
 
-  const res = await wooFetch(`/order/${orderId}?${params.toString()}`);
+  let res = await wooFetch(`/order/${orderId}?${params.toString()}`);
+  // If the server rejects because the email is missing/wrong, retry once with
+  // just the order key — the order itself contains the billing email and the
+  // page should not require it as a URL param.
+  if (!res.ok && email) {
+    const retry = await wooFetch(`/order/${orderId}?key=${encodeURIComponent(key)}`);
+    if (retry.ok) res = retry;
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     const msg = (data && (data.message || (data.data && data.data.message))) || `Order not found (${res.status})`;

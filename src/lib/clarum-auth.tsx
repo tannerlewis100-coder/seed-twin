@@ -141,10 +141,25 @@ export async function loginApi(input: {
 }
 
 export async function fetchMe(token: string): Promise<ClarumUser> {
-  return jsonFetch<ClarumUser>(`${API_BASE}/clarum/v1/me`, {
+  const raw = await jsonFetch<ClarumUser & {
+    welcome_coupon?: ClarumUser["welcome_coupon"] | string;
+    welcome_coupon_used?: boolean;
+  }>(`${API_BASE}/clarum/v1/me`, {
     method: "GET",
     headers: { Authorization: `Bearer ${token}` },
   });
+  // Normalize welcome_coupon: backend may return a string code with a sibling
+  // `welcome_coupon_used` flag, or an object with `code`/`used`.
+  let coupon: ClarumUser["welcome_coupon"] = null;
+  if (typeof raw.welcome_coupon === "string" && raw.welcome_coupon) {
+    coupon = { code: raw.welcome_coupon, used: raw.welcome_coupon_used === true };
+  } else if (raw.welcome_coupon && typeof raw.welcome_coupon === "object") {
+    coupon = {
+      ...raw.welcome_coupon,
+      used: raw.welcome_coupon.used ?? raw.welcome_coupon_used === true,
+    };
+  }
+  return { ...raw, welcome_coupon: coupon } as ClarumUser;
 }
 
 export type NewsletterResponse = { coupon: string | { code: string } };
