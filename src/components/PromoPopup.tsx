@@ -105,8 +105,6 @@ export function PromoPopup() {
     } finally {
       setSubmitting(false);
     }
-    // phone is optional — kept for parity but not sent to newsletter endpoint
-    void phone;
   };
 
 
