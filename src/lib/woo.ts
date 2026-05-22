@@ -230,6 +230,29 @@ export async function fetchVariations(parentId: number): Promise<WooProduct[]> {
   return res.json();
 }
 
+export type ClarumVariation = {
+  id: number;
+  size?: string;
+  price?: string;
+  attributes?: Array<{ name?: string; value?: string }>;
+};
+
+export type ClarumProduct = {
+  id: number;
+  variations?: ClarumVariation[];
+};
+
+/** Fetch the Clarum custom product payload (includes a real `size` per variation). */
+export async function fetchClarumProduct(id: number): Promise<ClarumProduct | null> {
+  const res = await wooFetch(`/clarum/v1/products/${id}`);
+  if (!res.ok) return null;
+  try {
+    return (await res.json()) as ClarumProduct;
+  } catch {
+    return null;
+  }
+}
+
 // ─── Cart ─────────────────────────────────────────────────────────────────
 
 export async function getCart(): Promise<WooCart> {
