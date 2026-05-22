@@ -54,16 +54,24 @@ function OrderPayPage() {
     if (!order || !widgetRef.current) return;
     if (order.needs_payment === false) return;
     let cancelled = false;
+    let unmountWidget: undefined | (() => void);
 
     (async () => {
       try {
+        const { Buffer } = await import("buffer");
+        if (!(window as typeof window & { Buffer?: typeof Buffer }).Buffer) {
+          (window as typeof window & { Buffer?: typeof Buffer }).Buffer = Buffer;
+        }
+
         const mod = await import("@depay/widgets");
         if (cancelled) return;
         const DePayWidgets = (mod as any).default ?? mod;
         const total = fromMinor(order.totals.total_price, order.totals.currency_minor_unit);
         const amount = total.toFixed(2);
 
-        DePayWidgets.Payment({
+        widgetRef.current.innerHTML = "";
+
+        const widget = await DePayWidgets.Payment({
           accept: [
             { blockchain: "ethereum", amount, token: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", receiver: EVM_WALLET },
             { blockchain: "ethereum", amount, token: "0xdac17f958d2ee523a2206206994597c13d831ec7", receiver: EVM_WALLET },
@@ -72,7 +80,8 @@ function OrderPayPage() {
             { blockchain: "arbitrum", amount, token: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", receiver: EVM_WALLET },
             { blockchain: "base", amount, token: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", receiver: EVM_WALLET },
           ],
-          document: widgetRef.current,
+          document,
+          container: widgetRef.current,
           style: {
             colors: {
               primary: "#D4A745",
@@ -99,6 +108,8 @@ function OrderPayPage() {
             window.location.href = `/order-received/${order.id}?key=${encodeURIComponent(order.order_key)}&email=${encodeURIComponent(billingEmail || order.billing_address?.email || "")}`;
           },
         });
+
+        unmountWidget = typeof widget?.unmount === "function" ? widget.unmount : undefined;
       } catch (e) {
         if (!cancelled) setWidgetError(e instanceof Error ? e.message : "Could not load payment widget.");
       }
@@ -106,6 +117,7 @@ function OrderPayPage() {
 
     return () => {
       cancelled = true;
+      unmountWidget?.();
     };
   }, [order]);
 
@@ -171,7 +183,7 @@ function OrderPayPage() {
                 ) : widgetError ? (
                   <p className="text-sm text-red-300">{widgetError}</p>
                 ) : (
-                  <div ref={widgetRef} id="depay-widget" className="min-h-[400px]" />
+                  <div ref={widgetRef} id="depay-widget" className="relative min-h-[400px]" />
                 )}
               </div>
 
