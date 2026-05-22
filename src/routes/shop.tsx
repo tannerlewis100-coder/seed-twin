@@ -170,12 +170,10 @@ function ShopPage() {
                     const wooImg = firstImage(p);
                     const vial = wooImg ?? vialImageFor(p.name, p.slug);
                     const rawCat = p.categories?.[0]?.name ?? "Research";
-                    const cat = rawCat
-                      .replace(/&amp;/g, "&")
+                    const cat = decodeEntities(rawCat)
                       .replace(/\s*&.*$/, "")
                       .trim();
-                    const displayName = p.name
-                      .replace(/&amp;/g, "&")
+                    const displayName = decodeEntities(p.name)
                       .replace(/\s*[—–-]\s.*$/, "")
                       .trim();
                     const sizeCount = p.variations?.length ?? 0;
