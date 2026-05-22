@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ShopRouteImport } from './routes/shop'
@@ -25,6 +26,11 @@ import { Route as OrderPayOrderIdRouteImport } from './routes/order-pay.$orderId
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
   path: '/sign-up',
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/signup': typeof SignupRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/signup': typeof SignupRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/signup': typeof SignupRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/sign-in'
     | '/sign-up'
+    | '/signup'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/sign-in'
     | '/sign-up'
+    | '/signup'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -202,6 +213,7 @@ export interface FileRouteTypes {
     | '/shop'
     | '/sign-in'
     | '/sign-up'
+    | '/signup'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -220,6 +232,7 @@ export interface RootRouteChildren {
   ShopRoute: typeof ShopRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
+  SignupRoute: typeof SignupRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
   OrderReceivedOrderIdRoute: typeof OrderReceivedOrderIdRoute
@@ -228,6 +241,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sign-up': {
       id: '/sign-up'
       path: '/sign-up'
@@ -348,6 +368,7 @@ const rootRouteChildren: RootRouteChildren = {
   ShopRoute: ShopRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
+  SignupRoute: SignupRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   OrderPayOrderIdRoute: OrderPayOrderIdRoute,
   OrderReceivedOrderIdRoute: OrderReceivedOrderIdRoute,
