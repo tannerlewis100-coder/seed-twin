@@ -149,6 +149,7 @@ export type WooCart = {
     total_items: string;
     total_shipping?: string;
     total_tax?: string;
+    total_discount?: string;
     currency_minor_unit: number;
     currency_code: string;
     currency_symbol: string;
