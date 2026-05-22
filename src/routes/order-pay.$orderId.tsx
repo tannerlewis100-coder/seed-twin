@@ -126,7 +126,7 @@ function OrderPayPage() {
           <div className="mb-10">
             <p className="text-xs tracking-[0.2em] text-brand-gold/80 uppercase mb-2">Payment</p>
             <h1 className="font-display text-3xl sm:text-5xl text-foreground">
-              {order ? <>Complete payment for order #{order.number ?? order.id}</> : "Complete payment"}
+              Complete payment
             </h1>
             <p className="text-sm text-foreground/50 mt-2 flex items-center gap-2">
               <Lock className="h-3.5 w-3.5" /> Secure crypto checkout via DePay.
