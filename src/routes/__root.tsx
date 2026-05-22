@@ -63,6 +63,9 @@ export const Route = createRootRoute({
         href: appCss,
       },
     ],
+    scripts: [
+      { src: "https://integrate.depay.com/widgets/v13.js" },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
