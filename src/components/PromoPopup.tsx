@@ -215,7 +215,7 @@ export function PromoPopup() {
                   onClick={copyCode}
                   className="group w-full rounded-md border-2 border-dashed border-primary/60 bg-primary/5 px-4 py-3.5 text-center font-mono text-lg tracking-[0.3em] text-foreground transition hover:border-primary hover:bg-primary/10"
                 >
-                  {PROMO_CODE}
+                  {code}
                   <span className="ml-2 text-xs tracking-normal text-muted-foreground group-hover:text-foreground">
                     (tap to copy)
                   </span>
