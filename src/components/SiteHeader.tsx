@@ -21,8 +21,7 @@ import {
 import clarumLogo from "@/assets/clarum-logo.png";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { peptides } from "@/data/peptides";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useClarumAuth } from "@/lib/clarum-auth";
 import { toast } from "sonner";
 import { useCart } from "@/lib/cart";
 
