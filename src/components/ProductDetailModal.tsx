@@ -20,6 +20,7 @@ type Props = {
 
 export default function ProductDetailModal({ product, open, onOpenChange }: Props) {
   const [variations, setVariations] = useState<WooProduct[]>([]);
+  const [sizeById, setSizeById] = useState<Record<number, string>>({});
   const [loadingVars, setLoadingVars] = useState(false);
   const [activeVarId, setActiveVarId] = useState<number | null>(null);
   const [added, setAdded] = useState(false);
@@ -32,17 +33,23 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   useEffect(() => {
     if (!product || !open || !isVariable) {
       setVariations([]);
+      setSizeById({});
       setActiveVarId(null);
       return;
     }
     let cancelled = false;
     setLoadingVars(true);
-    fetchVariations(product.id)
-      .then((vars) => {
+    Promise.all([fetchVariations(product.id), fetchClarumProduct(product.id)])
+      .then(([vars, clarum]) => {
         if (cancelled) return;
         const sorted = [...vars].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
         setVariations(sorted);
         setActiveVarId(sorted[0]?.id ?? null);
+        const map: Record<number, string> = {};
+        for (const v of clarum?.variations ?? []) {
+          if (v?.id != null && v.size) map[v.id] = v.size;
+        }
+        setSizeById(map);
       })
       .catch((e) => console.error("Failed to load variations:", e))
       .finally(() => {
