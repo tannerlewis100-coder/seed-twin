@@ -134,7 +134,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
             <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1 rounded-full">
               {cat}
             </span>
-            <h2 className="font-display text-2xl md:text-3xl mt-3 leading-tight">{product.name}</h2>
+            <h2 className="font-display text-2xl md:text-3xl mt-3 leading-tight">{decodeEntities(product.name)}</h2>
             {display.sku && (
               <p className="text-xs text-foreground/50 mt-2">SKU {display.sku}</p>
             )}
