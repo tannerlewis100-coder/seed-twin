@@ -18,12 +18,13 @@ export function PromoPopup() {
   const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [code, setCode] = useState(FALLBACK_CODE);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (sessionStorage.getItem(STORAGE_KEY)) return;
     if (localStorage.getItem(REVEALED_KEY)) {
-      // Already signed up before — don't pester them.
+      // Already signed up — don't pester them.
       return;
     }
 
@@ -34,25 +35,25 @@ export function PromoPopup() {
       if (triggered) return;
       triggered = true;
       cleanup();
-      timer = setTimeout(() => setOpen(true), DELAY_MS);
+      setOpen(true);
     };
 
     const cleanup = () => {
-      window.removeEventListener("click", trigger);
-      window.removeEventListener("scroll", trigger);
-      window.removeEventListener("keydown", trigger);
-      window.removeEventListener("touchstart", trigger);
-    };
-
-    window.addEventListener("click", trigger, { once: true });
-    window.addEventListener("scroll", trigger, { once: true, passive: true });
-    window.addEventListener("keydown", trigger, { once: true });
-    window.addEventListener("touchstart", trigger, { once: true, passive: true });
-
-    return () => {
-      cleanup();
+      document.removeEventListener("mouseout", onMouseOut);
       if (timer) clearTimeout(timer);
     };
+
+    const onMouseOut = (e: MouseEvent) => {
+      // Exit-intent: cursor leaves through the top of the viewport
+      if (e.relatedTarget) return;
+      if (e.clientY <= 0) trigger();
+    };
+
+    // 30s delay on first visit
+    timer = setTimeout(trigger, DELAY_MS);
+    document.addEventListener("mouseout", onMouseOut);
+
+    return cleanup;
   }, []);
 
   const close = () => {
@@ -64,47 +65,50 @@ export function PromoPopup() {
 
   const copyCode = async () => {
     try {
-      await navigator.clipboard.writeText(PROMO_CODE);
-      toast.success(`Copied ${PROMO_CODE}`);
+      await navigator.clipboard.writeText(code);
+      toast.success(`Copied ${code}`);
     } catch {
-      toast.error(`Couldn't copy. Code is ${PROMO_CODE}.`);
+      toast.error(`Couldn't copy. Code is ${code}.`);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedEmail = email.trim();
-    const trimmedPhone = phone.trim();
 
-    if (!trimmedEmail && !trimmedPhone) {
-      toast.error("Enter an email or phone number.");
+    if (!trimmedEmail) {
+      toast.error("Enter your email.");
       return;
     }
-
-    if (trimmedEmail && !emailRx.test(trimmedEmail)) {
+    if (!emailRx.test(trimmedEmail)) {
       toast.error("Enter a valid email.");
       return;
     }
 
     setSubmitting(true);
-    const { error } = await supabase
-      .from("promo_signups")
-      .insert({
-        ...(trimmedEmail ? { email: trimmedEmail } : {}),
-        ...(trimmedPhone ? { phone: trimmedPhone } : {}),
-        source: "popup",
-      } as any);
-    setSubmitting(false);
-
-    // Duplicate email is fine. Still reveal the code.
-    if (error && error.code !== "23505") {
-      toast.error("Something broke. Try again.");
-      return;
+    try {
+      const res = await newsletterApi(trimmedEmail);
+      const revealedCode = couponCode(res.coupon) || FALLBACK_CODE;
+      setCode(revealedCode);
+      localStorage.setItem(REVEALED_KEY, "1");
+      localStorage.setItem(REVEALED_CODE_KEY, revealedCode);
+      setRevealed(true);
+    } catch (err) {
+      // Even on duplicate / soft error, reveal the fallback code.
+      const msg = err instanceof Error ? err.message : "";
+      if (/already|exists|subscribed/i.test(msg)) {
+        localStorage.setItem(REVEALED_KEY, "1");
+        setRevealed(true);
+      } else {
+        toast.error(msg || "Something broke. Try again.");
+      }
+    } finally {
+      setSubmitting(false);
     }
-
-    localStorage.setItem(REVEALED_KEY, "1");
-    setRevealed(true);
+    // phone is optional — kept for parity but not sent to newsletter endpoint
+    void phone;
   };
+
 
   if (!open) return null;
 
