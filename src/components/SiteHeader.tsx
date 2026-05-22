@@ -393,13 +393,12 @@ export function SiteHeader() {
             }`}
           >
             {user ? (
-              <button
-                type="button"
-                onClick={handleSignOut}
+              <Link
+                to="/account"
                 className="hidden md:inline-flex items-center gap-1.5 text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
               >
-                <LogOut className="h-4 w-4" /> Sign out
-              </button>
+                Account
+              </Link>
             ) : (
               <Link
                 to="/sign-in"
