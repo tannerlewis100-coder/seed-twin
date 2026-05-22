@@ -236,7 +236,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [panelLeft, setPanelLeft] = useState(0);
-  const auth = useAuth();
+  const auth = useClarumAuth();
   const user = auth?.user ?? null;
   const { count, openCart } = useCart();
 
@@ -244,10 +244,9 @@ export function SiteHeader() {
   const navRowRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) toast.error(error.message);
-    else toast.success("Signed out");
+  const handleSignOut = () => {
+    auth.signOut();
+    toast.success("Signed out");
   };
 
   useEffect(() => {
