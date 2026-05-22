@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const WOO_BASE = "https://admin.clarumpeptides.com/wp-json/wc/store/v1";
+const WP_JSON_BASE = "https://admin.clarumpeptides.com/wp-json";
 
 function buildCorsHeaders(origin: string | null) {
   return {
