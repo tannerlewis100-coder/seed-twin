@@ -58,6 +58,9 @@ function OrderPayPage() {
 
     (async () => {
       try {
+        const container = widgetRef.current;
+        if (!container) return;
+
         const { Buffer } = await import("buffer");
         if (!(window as typeof window & { Buffer?: typeof Buffer }).Buffer) {
           (window as typeof window & { Buffer?: typeof Buffer }).Buffer = Buffer;
@@ -69,7 +72,7 @@ function OrderPayPage() {
         const total = fromMinor(order.totals.total_price, order.totals.currency_minor_unit);
         const amount = total.toFixed(2);
 
-        widgetRef.current.innerHTML = "";
+        container.innerHTML = "";
 
         const widget = await DePayWidgets.Payment({
           accept: [
@@ -81,7 +84,7 @@ function OrderPayPage() {
             { blockchain: "base", amount, token: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", receiver: EVM_WALLET },
           ],
           document,
-          container: widgetRef.current,
+          container,
           style: {
             colors: {
               primary: "#D4A745",
