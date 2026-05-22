@@ -52,6 +52,7 @@ type ShippingRate = {
 
 function CheckoutPage() {
   const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
+  const { user: clarumUser } = useClarumAuth();
   
 
   const [email, setEmail] = useState("");
