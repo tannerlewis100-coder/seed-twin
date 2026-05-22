@@ -157,9 +157,8 @@ export function PromoPopup() {
                 </div>
 
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Enter your email or phone number. Get the code and an alert
-                  when we drop new stuff. We don't waste your time with spam or
-                  daily emails.
+                  Enter your email. Get the code and an alert when we drop new
+                  batches. No spam, no daily emails.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-3">
@@ -169,14 +168,6 @@ export function PromoPopup() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    disabled={submitting}
-                  />
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone number"
                     className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     disabled={submitting}
                   />
