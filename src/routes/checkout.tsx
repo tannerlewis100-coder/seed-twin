@@ -5,6 +5,7 @@ import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useCart } from "@/lib/cart";
 import {
+  applyCoupon,
   clearCartToken,
   fromMinor,
   gatewayLabel,
@@ -14,6 +15,7 @@ import {
   updateCustomer,
   type WooAddress,
 } from "@/lib/woo";
+import { useClarumAuth } from "@/lib/clarum-auth";
 
 export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
