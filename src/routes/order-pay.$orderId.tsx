@@ -19,9 +19,7 @@ export const Route = createFileRoute("/order-pay/$orderId")({
   }),
 });
 
-// Placeholder receiving wallets — swap with real wallets in production.
-const EVM_WALLET = "0x0000000000000000000000000000000000000000";
-const SOL_WALLET = "11111111111111111111111111111111";
+const EVM_WALLET = "0xA2d94ee5716eA1C7AAB32eBb7e128476E015AEB4";
 
 function OrderPayPage() {
   const { orderId } = Route.useParams();
