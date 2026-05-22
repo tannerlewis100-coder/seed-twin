@@ -89,15 +89,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return (
-    <ClarumAuthProvider>
-      <CartProvider>
-        <Outlet />
-        <AgeGate />
-        <PromoPopup />
-        <CartDrawer />
-        <Toaster />
-      </CartProvider>
-    </ClarumAuthProvider>
-  );
+  return <ComingSoon />;
 }
+
