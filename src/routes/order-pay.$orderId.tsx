@@ -3,13 +3,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { fetchOrder, fromMinor, getOrderBillingEmail, type WooOrder } from "@/lib/woo";
+import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
 
 export const Route = createFileRoute("/order-pay/$orderId")({
   component: OrderPayPage,
   validateSearch: (search: Record<string, unknown>) => ({
     key: typeof search.key === "string" ? search.key : "",
-    email: typeof search.email === "string" ? search.email : "",
   }),
   head: () => ({
     meta: [
@@ -29,8 +28,7 @@ declare global {
 
 function OrderPayPage() {
   const { orderId } = Route.useParams();
-  const { key, email } = Route.useSearch();
-  const billingEmail = email || getOrderBillingEmail(orderId);
+  const { key } = Route.useSearch();
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +41,7 @@ function OrderPayPage() {
     (async () => {
       try {
         setLoading(true);
-        const o = await fetchOrder(orderId, key, billingEmail);
+        const o = await fetchOrder(orderId, key);
         if (!cancelled) setOrder(o);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
@@ -54,7 +52,7 @@ function OrderPayPage() {
     return () => {
       cancelled = true;
     };
-  }, [orderId, key, billingEmail]);
+  }, [orderId, key]);
 
   useEffect(() => {
     if (!order || !widgetRef.current) return;
@@ -135,7 +133,7 @@ function OrderPayPage() {
             } catch {
               /* ignore — still take user to confirmation */
             }
-            window.location.href = `/order-received/${order.id}?key=${encodeURIComponent(order.order_key)}&email=${encodeURIComponent(billingEmail || order.billing_address?.email || "")}`;
+            window.location.href = `/order-received/${order.id}?key=${encodeURIComponent(order.order_key)}`;
           },
         });
 
