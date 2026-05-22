@@ -21,6 +21,12 @@ export const Route = createFileRoute("/order-pay/$orderId")({
 
 const EVM_WALLET = "0xA2d94ee5716eA1C7AAB32eBb7e128476E015AEB4";
 
+declare global {
+  interface Window {
+    DePayWidgets?: any;
+  }
+}
+
 function OrderPayPage() {
   const { orderId } = Route.useParams();
   const { key, email } = Route.useSearch();
