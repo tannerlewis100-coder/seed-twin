@@ -63,7 +63,7 @@ function ShopPage() {
     const map = new Map<string, string>(); // slug → name
     for (const p of products) {
       for (const c of p.categories ?? []) {
-        if (!map.has(c.slug)) map.set(c.slug, c.name);
+        if (!map.has(c.slug)) map.set(c.slug, decodeEntities(c.name));
       }
     }
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
