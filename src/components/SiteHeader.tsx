@@ -301,7 +301,10 @@ export function SiteHeader() {
     [openMenu],
   );
 
-  const floating = scrolled || !!openMenu;
+  // Always use the floating pill style so the header blends across pages
+  // instead of appearing as a solid rectangle block on non-scrolled inner pages.
+  void scrolled;
+  const floating = true;
 
   const navItem = (key: Exclude<MenuKey, null>, label: string) => {
     const isOpen = openMenu === key;
