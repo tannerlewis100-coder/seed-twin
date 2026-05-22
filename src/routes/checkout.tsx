@@ -93,8 +93,8 @@ function CheckoutPage() {
     if (clarumUser.welcome_coupon.used) return;
     if (cartLoading || items.length === 0) return;
     const code = clarumUser.welcome_coupon.code;
-    const applied = (raw?.coupons ?? []).some(
-      (c: { code?: string }) => c?.code?.toLowerCase() === code.toLowerCase(),
+    const applied = ((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons ?? []).some(
+      (c) => c?.code?.toLowerCase() === code.toLowerCase(),
     );
     if (applied) return;
     const key = `clarum_coupon_applied_${code}`;
