@@ -89,12 +89,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <CartProvider>
-      <Outlet />
-      <AgeGate />
-      <PromoPopup />
-      <CartDrawer />
-      <Toaster />
-    </CartProvider>
+    <ClarumAuthProvider>
+      <CartProvider>
+        <Outlet />
+        <AgeGate />
+        <PromoPopup />
+        <CartDrawer />
+        <Toaster />
+      </CartProvider>
+    </ClarumAuthProvider>
   );
 }
