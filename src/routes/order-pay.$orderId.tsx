@@ -66,9 +66,11 @@ function OrderPayPage() {
         DePayWidgets.Payment({
           accept: [
             { blockchain: "ethereum", amount, token: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", receiver: EVM_WALLET },
+            { blockchain: "ethereum", amount, token: "0xdac17f958d2ee523a2206206994597c13d831ec7", receiver: EVM_WALLET },
             { blockchain: "polygon", amount, token: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174", receiver: EVM_WALLET },
             { blockchain: "bsc", amount, token: "0x55d398326f99059ff775485246999027b3197955", receiver: EVM_WALLET },
-            { blockchain: "solana", amount, token: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", receiver: SOL_WALLET },
+            { blockchain: "arbitrum", amount, token: "0xaf88d065e77c8cC2239327C5EDb3A432268e5831", receiver: EVM_WALLET },
+            { blockchain: "base", amount, token: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", receiver: EVM_WALLET },
           ],
           document: widgetRef.current,
           style: {
