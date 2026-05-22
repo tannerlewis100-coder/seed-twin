@@ -3,6 +3,7 @@
 
 const BASE = "/api/public/woo-store";
 const CHECKOUT_BASE = "https://admin.clarumpeptides.com/checkout";
+const WP_JSON_BASE = "https://admin.clarumpeptides.com/wp-json";
 const TOKEN_KEY = "clarum.woo.cart-token";
 const ORDER_EMAIL_KEY_PREFIX = "clarum.woo.order-email.";
 
@@ -400,29 +401,63 @@ export type WooOrder = {
   needs_payment?: boolean;
 };
 
-export async function fetchOrder(
-  orderId: number | string,
-  key: string,
-  billingEmail?: string,
-): Promise<WooOrder> {
-  const params = new URLSearchParams({ key });
-  const email = billingEmail?.trim() || getOrderBillingEmail(orderId);
-  if (email) params.set("billing_email", email);
-
-  let res = await wooFetch(`/order/${orderId}?${params.toString()}`);
-  // If the server rejects because the email is missing/wrong, retry once with
-  // just the order key — the order itself contains the billing email and the
-  // page should not require it as a URL param.
-  if (!res.ok && email) {
-    const retry = await wooFetch(`/order/${orderId}?key=${encodeURIComponent(key)}`);
-    if (retry.ok) res = retry;
+function currencySymbol(code: string | undefined): string {
+  switch ((code || "").toUpperCase()) {
+    case "USD":
+      return "$";
+    case "EUR":
+      return "€";
+    case "GBP":
+      return "£";
+    default:
+      return "$";
   }
+}
+
+export async function fetchOrder(orderId: number | string, key: string): Promise<WooOrder> {
+  const res = await fetch(`${WP_JSON_BASE}/clarum/v1/order/${orderId}?key=${encodeURIComponent(key)}`);
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     const msg = (data && (data.message || (data.data && data.data.message))) || `Order not found (${res.status})`;
     throw new Error(msg);
   }
-  return data as WooOrder;
+
+  const code = typeof data.currency === "string" ? data.currency : "USD";
+  const symbol = currencySymbol(code);
+
+  return {
+    id: Number(data.id),
+    number: typeof data.order_number === "string" ? data.order_number : String(data.id ?? orderId),
+    status: typeof data.status === "string" ? data.status : "pending",
+    order_key: typeof data.order_key === "string" ? data.order_key : key,
+    billing_address: data.billing_address,
+    shipping_address: data.shipping_address,
+    items: Array.isArray(data.items)
+      ? data.items.map((item: any) => ({
+          id: Number(item.id),
+          name: item.name ?? "Item",
+          quantity: Number(item.quantity ?? 0),
+          images: [],
+          totals: {
+            line_subtotal: String(item.line_subtotal ?? item.price ?? 0),
+            line_total: String(item.line_total ?? item.line_subtotal ?? item.price ?? 0),
+            currency_minor_unit: 0,
+            currency_code: code,
+            currency_symbol: symbol,
+          },
+        }))
+      : [],
+    totals: {
+      total_price: String(data.totals?.total ?? 0),
+      total_items: String(data.totals?.subtotal ?? 0),
+      total_shipping: String(data.totals?.shipping_total ?? 0),
+      total_tax: String(data.totals?.tax_total ?? 0),
+      currency_minor_unit: 0,
+      currency_code: code,
+      currency_symbol: symbol,
+    },
+    needs_payment: data.is_paid !== true,
+  } satisfies WooOrder;
 }
 
 /** Friendly label for known gateway IDs; otherwise humanize the slug. */

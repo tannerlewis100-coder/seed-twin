@@ -3,13 +3,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { fetchOrder, fromMinor, getOrderBillingEmail, type WooOrder } from "@/lib/woo";
+import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
 
 export const Route = createFileRoute("/order-received/$orderId")({
   component: OrderReceivedPage,
   validateSearch: (search: Record<string, unknown>) => ({
     key: typeof search.key === "string" ? search.key : "",
-    email: typeof search.email === "string" ? search.email : "",
   }),
   head: () => ({
     meta: [
@@ -21,8 +20,7 @@ export const Route = createFileRoute("/order-received/$orderId")({
 
 function OrderReceivedPage() {
   const { orderId } = Route.useParams();
-  const { key, email: searchEmail } = Route.useSearch();
-  const billingEmail = searchEmail || getOrderBillingEmail(orderId);
+  const { key } = Route.useSearch();
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,7 +31,7 @@ function OrderReceivedPage() {
     (async () => {
       try {
         setLoading(true);
-        const o = await fetchOrder(orderId, key, billingEmail);
+        const o = await fetchOrder(orderId, key);
         if (!cancelled) setOrder(o);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
@@ -44,7 +42,7 @@ function OrderReceivedPage() {
     return () => {
       cancelled = true;
     };
-  }, [orderId, key, billingEmail]);
+  }, [orderId, key]);
 
   const currency = order?.totals.currency_symbol ?? "$";
   const minor = order?.totals.currency_minor_unit ?? 2;
