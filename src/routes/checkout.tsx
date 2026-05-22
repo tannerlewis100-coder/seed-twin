@@ -112,7 +112,7 @@ function CheckoutPage() {
   const currency = raw?.totals.currency_symbol ?? "$";
   const minor = raw?.totals.currency_minor_unit ?? 2;
   const itemsSubtotal = fromMinor(raw?.totals.total_items, minor) || subtotal;
-  const shippingTotal = fromMinor(raw?.totals.total_shipping, minor);
+  void fromMinor(raw?.totals.total_shipping, minor);
   const taxTotal = fromMinor(raw?.totals.total_tax, minor);
   const discountTotal = fromMinor(raw?.totals.total_discount, minor);
   const total = fromMinor(raw?.totals.total_price, minor) || subtotal;
