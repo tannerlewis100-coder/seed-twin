@@ -19,6 +19,9 @@ export const Route = createFileRoute("/order-pay/$orderId")({
 });
 
 const EVM_WALLET = "0xA2d94ee5716eA1C7AAB32eBb7e128476E015AEB4";
+const WP_BASE = "https://admin.clarumpeptides.com/wp-json/clarum/v1";
+
+type PaymentTab = "depay" | "nowpayments";
 
 declare global {
   interface Window {
@@ -34,6 +37,10 @@ function OrderPayPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [widgetError, setWidgetError] = useState<string | null>(null);
+  const [tab, setTab] = useState<PaymentTab>("depay");
+  const [tabInitialized, setTabInitialized] = useState(false);
+  const [nowLoading, setNowLoading] = useState(false);
+  const [nowError, setNowError] = useState<string | null>(null);
   const widgetRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -42,7 +49,13 @@ function OrderPayPage() {
       try {
         setLoading(true);
         const o = await fetchOrder(orderId, key);
-        if (!cancelled) setOrder(o);
+        if (!cancelled) {
+          setOrder(o);
+          if (!tabInitialized) {
+            setTab(o.payment_method === "nowpayments" ? "nowpayments" : "depay");
+            setTabInitialized(true);
+          }
+        }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
       } finally {
@@ -52,11 +65,13 @@ function OrderPayPage() {
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, key]);
 
   useEffect(() => {
     if (!order || !widgetRef.current) return;
     if (order.needs_payment === false) return;
+    if (tab !== "depay") return;
     let cancelled = false;
     let unmountWidget: undefined | (() => void);
 
@@ -70,7 +85,6 @@ function OrderPayPage() {
           (window as typeof window & { Buffer?: typeof Buffer }).Buffer = Buffer;
         }
 
-        // Wait for the DePay script (loaded via <script> in __root.tsx) to be ready.
         let waited = 0;
         while (!window.DePayWidgets && waited < 5000) {
           await new Promise((r) => setTimeout(r, 100));
@@ -121,7 +135,7 @@ function OrderPayPage() {
           },
           succeeded: async (transaction: unknown) => {
             try {
-              await fetch(`https://admin.clarumpeptides.com/wp-json/clarum/v1/payment-confirm`, {
+              await fetch(`${WP_BASE}/payment-confirm`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -131,9 +145,9 @@ function OrderPayPage() {
                 }),
               });
             } catch {
-              /* ignore — still take user to confirmation */
+              /* ignore */
             }
-            window.location.href = `/order-received/${order.id}?key=${encodeURIComponent(order.order_key)}`;
+            window.location.href = `/order-confirmation/${order.id}?key=${encodeURIComponent(order.order_key)}`;
           },
         });
 
@@ -147,7 +161,28 @@ function OrderPayPage() {
       cancelled = true;
       unmountWidget?.();
     };
-  }, [order]);
+  }, [order, tab]);
+
+  async function generateInvoice() {
+    if (!order) return;
+    setNowError(null);
+    setNowLoading(true);
+    try {
+      const res = await fetch(`${WP_BASE}/nowpayments/create-invoice`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_id: order.id, key: order.order_key }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data?.invoice_url) {
+        throw new Error(data?.message || "Could not create invoice.");
+      }
+      window.location.href = data.invoice_url as string;
+    } catch (e) {
+      setNowError(e instanceof Error ? e.message : "Could not create invoice.");
+      setNowLoading(false);
+    }
+  }
 
   const currency = order?.totals.currency_symbol ?? "$";
   const minor = order?.totals.currency_minor_unit ?? 2;
@@ -169,7 +204,7 @@ function OrderPayPage() {
               Complete payment
             </h1>
             <p className="text-sm text-foreground/50 mt-2 flex items-center gap-2">
-              <Lock className="h-3.5 w-3.5" /> Secure crypto checkout via DePay.
+              <Lock className="h-3.5 w-3.5" /> Secure crypto checkout.
             </p>
           </div>
 
@@ -190,33 +225,96 @@ function OrderPayPage() {
             </div>
           ) : order ? (
             <div className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
-              {/* DePay widget */}
               <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-                <h2 className="font-display text-2xl text-foreground mb-1">Pay with crypto</h2>
-                <p className="text-sm text-foreground/50 mb-6">
-                  Choose a network and wallet to complete your order.
-                </p>
                 {order.needs_payment === false ? (
-                  <p className="text-sm text-foreground/70">
-                    This order has already been paid.{" "}
-                    <Link
-                      to="/order-received/$orderId"
-                      params={{ orderId: String(order.id) }}
-                      search={{ key: order.order_key }}
-                      className="text-brand-gold hover:underline"
-                    >
-                      View confirmation →
-                    </Link>
-                  </p>
-                ) : widgetError ? (
-                  <p className="text-sm text-red-300">{widgetError}</p>
+                  <>
+                    <h2 className="font-display text-2xl text-foreground mb-1">Payment received</h2>
+                    <p className="text-sm text-foreground/70">
+                      This order has already been paid.{" "}
+                      <Link
+                        to="/order-confirmation/$orderId"
+                        params={{ orderId: String(order.id) }}
+                        search={{ key: order.order_key }}
+                        className="text-brand-gold hover:underline"
+                      >
+                        View confirmation →
+                      </Link>
+                    </p>
+                  </>
                 ) : (
-                  <div
-                    ref={widgetRef}
-                    id="depay-widget"
-                    className="relative w-full overflow-hidden rounded-xl"
-                    style={{ minHeight: "620px", height: "620px" }}
-                  />
+                  <>
+                    {/* Tabs */}
+                    <div className="grid grid-cols-2 gap-2 p-1 rounded-xl border border-white/10 bg-white/[0.02] mb-6">
+                      <button
+                        type="button"
+                        onClick={() => setTab("depay")}
+                        className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                          tab === "depay"
+                            ? "bg-brand-gold text-brand-forest"
+                            : "text-foreground/70 hover:text-foreground"
+                        }`}
+                      >
+                        Connect Wallet (DePay)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTab("nowpayments")}
+                        className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                          tab === "nowpayments"
+                            ? "bg-brand-gold text-brand-forest"
+                            : "text-foreground/70 hover:text-foreground"
+                        }`}
+                      >
+                        Pay with Any Coin (NOWPayments)
+                      </button>
+                    </div>
+
+                    {tab === "depay" ? (
+                      <>
+                        <h2 className="font-display text-2xl text-foreground mb-1">Pay with crypto</h2>
+                        <p className="text-sm text-foreground/50 mb-6">
+                          Choose a network and wallet to complete your order.
+                        </p>
+                        {widgetError ? (
+                          <p className="text-sm text-red-300">{widgetError}</p>
+                        ) : (
+                          <div
+                            ref={widgetRef}
+                            id="depay-widget"
+                            className="relative w-full overflow-hidden rounded-xl"
+                            style={{ minHeight: "620px", height: "620px" }}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <h2 className="font-display text-2xl text-foreground mb-1">Pay with any coin</h2>
+                        <p className="text-sm text-foreground/50 mb-6">
+                          Generate a secure NOWPayments invoice. Supports BTC, ETH, USDT, USDC, SOL, and 200+ more.
+                        </p>
+                        {nowError && (
+                          <p className="text-sm text-red-300 mb-4">{nowError}</p>
+                        )}
+                        <button
+                          type="button"
+                          onClick={generateInvoice}
+                          disabled={nowLoading}
+                          className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                        >
+                          {nowLoading ? (
+                            <>
+                              <Loader2 className="h-4 w-4 animate-spin" /> Redirecting to secure payment…
+                            </>
+                          ) : (
+                            <>Generate Payment Invoice · {currency}{total.toFixed(2)}</>
+                          )}
+                        </button>
+                        <p className="text-[11px] text-foreground/40 mt-4 text-center">
+                          You'll be redirected to NOWPayments to complete payment, then sent back here.
+                        </p>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
 
