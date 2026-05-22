@@ -4,6 +4,7 @@ import { useCart } from "@/lib/cart";
 import { Check, Loader2, ShoppingCart } from "lucide-react";
 import { vialImageFor } from "@/lib/vialImages";
 import {
+  fetchClarumProduct,
   fetchVariations,
   firstImage,
   fromMinor,
@@ -19,6 +20,7 @@ type Props = {
 
 export default function ProductDetailModal({ product, open, onOpenChange }: Props) {
   const [variations, setVariations] = useState<WooProduct[]>([]);
+  const [sizeById, setSizeById] = useState<Record<number, string>>({});
   const [loadingVars, setLoadingVars] = useState(false);
   const [activeVarId, setActiveVarId] = useState<number | null>(null);
   const [added, setAdded] = useState(false);
@@ -31,17 +33,23 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   useEffect(() => {
     if (!product || !open || !isVariable) {
       setVariations([]);
+      setSizeById({});
       setActiveVarId(null);
       return;
     }
     let cancelled = false;
     setLoadingVars(true);
-    fetchVariations(product.id)
-      .then((vars) => {
+    Promise.all([fetchVariations(product.id), fetchClarumProduct(product.id)])
+      .then(([vars, clarum]) => {
         if (cancelled) return;
         const sorted = [...vars].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
         setVariations(sorted);
         setActiveVarId(sorted[0]?.id ?? null);
+        const map: Record<number, string> = {};
+        for (const v of clarum?.variations ?? []) {
+          if (v?.id != null && v.size) map[v.id] = v.size;
+        }
+        setSizeById(map);
       })
       .catch((e) => console.error("Failed to load variations:", e))
       .finally(() => {
@@ -87,20 +95,22 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
     window.setTimeout(() => setAdded(false), 1500);
   };
 
-  // Build size label from variation attributes (first attribute, typically "Size").
+  // Pill label: prefer the Clarum endpoint's literal `size` (e.g. "5mg").
   const labelFor = (v: WooProduct) => {
-    // Prefer a dose pattern (mg/ml/iu/mcg/g) found anywhere in the
-    // variation name or product name — that's what customers care about.
-    const haystack = `${v.name} ${product.name}`;
-    const doseMatch = haystack.match(/(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|g)\b/i);
-    if (doseMatch) return `${doseMatch[1]} ${doseMatch[2].toLowerCase()}`;
+    const fromClarum = sizeById[v.id];
+    if (fromClarum) return fromClarum;
 
+    // Fallback: Woo attribute value (skip "any" placeholder).
     const attr = v.attributes?.[0];
     const fromAttr = attr?.value ?? attr?.option;
     if (fromAttr && fromAttr.toLowerCase() !== "any") return fromAttr;
 
-    const stripped = v.name.replace(product.name, "").replace(/^[\s\-–—:|()]+|[\s\-–—:|()]+$/g, "").trim();
-    return stripped || "Variant";
+    // Last-ditch: pull a dose pattern out of the variation/product name.
+    const haystack = `${v.name} ${product.name}`;
+    const doseMatch = haystack.match(/(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|g)\b/i);
+    if (doseMatch) return `${doseMatch[1]}${doseMatch[2].toLowerCase()}`;
+
+    return "Variant";
   };
 
   return (
