@@ -86,7 +86,9 @@ function CheckoutPage() {
     }));
   }, [clarumUser]);
 
-  // Auto-apply unused welcome coupon once per cart session
+  // Auto-apply unused welcome coupon once per cart session.
+  // Woo's coupon engine validates against billing_address.email in the cart
+  // session, so we must push the user's email to the cart BEFORE applying.
   useEffect(() => {
     if (!clarumUser?.welcome_coupon?.code) return;
     if (clarumUser.welcome_coupon.used) return;
@@ -99,11 +101,30 @@ function CheckoutPage() {
     const key = `clarum_coupon_applied_${code}`;
     if (sessionStorage.getItem(key)) return;
     sessionStorage.setItem(key, "1");
-    applyCoupon(code)
-      .then(() => refresh())
-      .catch(() => {
+    (async () => {
+      try {
+        await updateCustomer({
+          billing_address: {
+            first_name: clarumUser.first_name || "",
+            last_name: clarumUser.last_name || "",
+            address_1: "",
+            city: "",
+            state: "",
+            postcode: "",
+            country: "US",
+            email: clarumUser.email,
+          } as WooAddress,
+        });
+      } catch {
+        /* non-fatal — try the coupon anyway */
+      }
+      try {
+        await applyCoupon(code);
+        await refresh();
+      } catch {
         // silent — coupon might already be used server-side
-      });
+      }
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clarumUser, cartLoading, items.length]);
 
