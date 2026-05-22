@@ -68,7 +68,10 @@ function CheckoutPage() {
   const [ratesLoading, setRatesLoading] = useState(false);
   const [ratesError, setRatesError] = useState<string | null>(null);
 
-  const gateways = raw?.payment_methods ?? [];
+  const baseGateways = raw?.payment_methods ?? [];
+  const gateways = baseGateways.includes("nowpayments")
+    ? baseGateways
+    : [...baseGateways, "nowpayments"];
   const needsShipping = raw?.needs_shipping ?? true;
 
   useEffect(() => {

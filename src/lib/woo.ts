@@ -399,6 +399,7 @@ export type WooOrder = {
     currency_symbol: string;
   };
   needs_payment?: boolean;
+  payment_method?: string;
 };
 
 function currencySymbol(code: string | undefined): string {
@@ -457,6 +458,7 @@ export async function fetchOrder(orderId: number | string, key: string): Promise
       currency_symbol: symbol,
     },
     needs_payment: data.is_paid !== true,
+    payment_method: typeof data.payment_method === "string" ? data.payment_method : undefined,
   } satisfies WooOrder;
 }
 
@@ -464,6 +466,7 @@ export async function fetchOrder(orderId: number | string, key: string): Promise
 export function gatewayLabel(id: string): string {
   const map: Record<string, string> = {
     depay_wc_payments: "Pay with Crypto (DePay)",
+    nowpayments: "Pay with Any Coin (NOWPayments — BTC, ETH, USDT, USDC, SOL, +200 more)",
     stripe: "Credit / Debit Card",
     stripe_cc: "Credit / Debit Card",
     paypal: "PayPal",
