@@ -399,6 +399,7 @@ export type WooOrder = {
     currency_symbol: string;
   };
   needs_payment?: boolean;
+  payment_method?: string;
 };
 
 function currencySymbol(code: string | undefined): string {
