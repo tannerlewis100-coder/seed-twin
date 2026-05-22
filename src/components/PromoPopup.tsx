@@ -156,7 +156,7 @@ export function PromoPopup() {
 
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   Enter your email. Get the code and an alert when we drop new
-                  batches. No spam, no daily emails.
+                  batches.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-3">
