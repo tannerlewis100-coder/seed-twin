@@ -4,6 +4,7 @@ import { PromoPopup } from "@/components/PromoPopup";
 import { AgeGate } from "@/components/AgeGate";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/CartDrawer";
+import { ClarumAuthProvider } from "@/lib/clarum-auth";
 
 import appCss from "../styles.css?url";
 
@@ -88,12 +89,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <CartProvider>
-      <Outlet />
-      <AgeGate />
-      <PromoPopup />
-      <CartDrawer />
-      <Toaster />
-    </CartProvider>
+    <ClarumAuthProvider>
+      <CartProvider>
+        <Outlet />
+        <AgeGate />
+        <PromoPopup />
+        <CartDrawer />
+        <Toaster />
+      </CartProvider>
+    </ClarumAuthProvider>
   );
 }

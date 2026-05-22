@@ -21,8 +21,7 @@ import {
 import clarumLogo from "@/assets/clarum-logo.png";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { peptides } from "@/data/peptides";
-import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useClarumAuth } from "@/lib/clarum-auth";
 import { toast } from "sonner";
 import { useCart } from "@/lib/cart";
 
@@ -237,7 +236,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [panelLeft, setPanelLeft] = useState(0);
-  const auth = useAuth();
+  const auth = useClarumAuth();
   const user = auth?.user ?? null;
   const { count, openCart } = useCart();
 
@@ -245,10 +244,9 @@ export function SiteHeader() {
   const navRowRef = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
 
-  const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) toast.error(error.message);
-    else toast.success("Signed out");
+  const handleSignOut = () => {
+    auth.signOut();
+    toast.success("Signed out");
   };
 
   useEffect(() => {
@@ -395,13 +393,12 @@ export function SiteHeader() {
             }`}
           >
             {user ? (
-              <button
-                type="button"
-                onClick={handleSignOut}
+              <Link
+                to="/account"
                 className="hidden md:inline-flex items-center gap-1.5 text-[15px] text-foreground/85 hover:text-brand-gold transition-colors"
               >
-                <LogOut className="h-4 w-4" /> Sign out
-              </button>
+                Account
+              </Link>
             ) : (
               <Link
                 to="/sign-in"

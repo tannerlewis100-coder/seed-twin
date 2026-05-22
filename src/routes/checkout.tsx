@@ -5,6 +5,7 @@ import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useCart } from "@/lib/cart";
 import {
+  applyCoupon,
   clearCartToken,
   fromMinor,
   gatewayLabel,
@@ -14,6 +15,7 @@ import {
   updateCustomer,
   type WooAddress,
 } from "@/lib/woo";
+import { useClarumAuth } from "@/lib/clarum-auth";
 
 export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
@@ -50,6 +52,7 @@ type ShippingRate = {
 
 function CheckoutPage() {
   const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
+  const { user: clarumUser } = useClarumAuth();
   
 
   const [email, setEmail] = useState("");
@@ -72,6 +75,39 @@ function CheckoutPage() {
   useEffect(() => {
     if (!paymentMethod && gateways.length) setPaymentMethod(gateways[0]);
   }, [gateways, paymentMethod]);
+
+  // Auto-fill from logged-in Clarum account
+  useEffect(() => {
+    if (!clarumUser) return;
+    setEmail((prev) => prev || clarumUser.email || "");
+    setBilling((prev) => ({
+      ...prev,
+      first_name: prev.first_name || clarumUser.first_name || "",
+      last_name: prev.last_name || clarumUser.last_name || "",
+    }));
+  }, [clarumUser]);
+
+  // Auto-apply unused welcome coupon once per cart session
+  useEffect(() => {
+    if (!clarumUser?.welcome_coupon?.code) return;
+    if (clarumUser.welcome_coupon.used) return;
+    if (cartLoading || items.length === 0) return;
+    const code = clarumUser.welcome_coupon.code;
+    const applied = ((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons ?? []).some(
+      (c) => c?.code?.toLowerCase() === code.toLowerCase(),
+    );
+    if (applied) return;
+    const key = `clarum_coupon_applied_${code}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+    applyCoupon(code)
+      .then(() => refresh())
+      .catch(() => {
+        // silent — coupon might already be used server-side
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clarumUser, cartLoading, items.length]);
+
 
   const currency = raw?.totals.currency_symbol ?? "$";
   const minor = raw?.totals.currency_minor_unit ?? 2;

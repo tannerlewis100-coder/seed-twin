@@ -2,27 +2,29 @@ import { useEffect, useState } from "react";
 import { X, Check } from "lucide-react";
 import promoVials from "@/assets/promo-vials.png";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { newsletterApi, couponCode } from "@/lib/clarum-auth";
 
 const STORAGE_KEY = "clarum_promo_dismissed";
 const REVEALED_KEY = "clarum_promo_revealed";
-const DELAY_MS = 4000;
-const PROMO_CODE = "CLARUM10";
+const REVEALED_CODE_KEY = "clarum_promo_code";
+const DELAY_MS = 30000; // 30s on first visit
+const FALLBACK_CODE = "CLARUM10";
 
 const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function PromoPopup() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  
   const [submitting, setSubmitting] = useState(false);
   const [revealed, setRevealed] = useState(false);
+  const [code, setCode] = useState(FALLBACK_CODE);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     if (sessionStorage.getItem(STORAGE_KEY)) return;
     if (localStorage.getItem(REVEALED_KEY)) {
-      // Already signed up before — don't pester them.
+      // Already signed up — don't pester them.
       return;
     }
 
@@ -33,25 +35,25 @@ export function PromoPopup() {
       if (triggered) return;
       triggered = true;
       cleanup();
-      timer = setTimeout(() => setOpen(true), DELAY_MS);
+      setOpen(true);
     };
 
     const cleanup = () => {
-      window.removeEventListener("click", trigger);
-      window.removeEventListener("scroll", trigger);
-      window.removeEventListener("keydown", trigger);
-      window.removeEventListener("touchstart", trigger);
-    };
-
-    window.addEventListener("click", trigger, { once: true });
-    window.addEventListener("scroll", trigger, { once: true, passive: true });
-    window.addEventListener("keydown", trigger, { once: true });
-    window.addEventListener("touchstart", trigger, { once: true, passive: true });
-
-    return () => {
-      cleanup();
+      document.removeEventListener("mouseout", onMouseOut);
       if (timer) clearTimeout(timer);
     };
+
+    const onMouseOut = (e: MouseEvent) => {
+      // Exit-intent: cursor leaves through the top of the viewport
+      if (e.relatedTarget) return;
+      if (e.clientY <= 0) trigger();
+    };
+
+    // 30s delay on first visit
+    timer = setTimeout(trigger, DELAY_MS);
+    document.addEventListener("mouseout", onMouseOut);
+
+    return cleanup;
   }, []);
 
   const close = () => {
@@ -63,47 +65,48 @@ export function PromoPopup() {
 
   const copyCode = async () => {
     try {
-      await navigator.clipboard.writeText(PROMO_CODE);
-      toast.success(`Copied ${PROMO_CODE}`);
+      await navigator.clipboard.writeText(code);
+      toast.success(`Copied ${code}`);
     } catch {
-      toast.error(`Couldn't copy. Code is ${PROMO_CODE}.`);
+      toast.error(`Couldn't copy. Code is ${code}.`);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedEmail = email.trim();
-    const trimmedPhone = phone.trim();
 
-    if (!trimmedEmail && !trimmedPhone) {
-      toast.error("Enter an email or phone number.");
+    if (!trimmedEmail) {
+      toast.error("Enter your email.");
       return;
     }
-
-    if (trimmedEmail && !emailRx.test(trimmedEmail)) {
+    if (!emailRx.test(trimmedEmail)) {
       toast.error("Enter a valid email.");
       return;
     }
 
     setSubmitting(true);
-    const { error } = await supabase
-      .from("promo_signups")
-      .insert({
-        ...(trimmedEmail ? { email: trimmedEmail } : {}),
-        ...(trimmedPhone ? { phone: trimmedPhone } : {}),
-        source: "popup",
-      } as any);
-    setSubmitting(false);
-
-    // Duplicate email is fine. Still reveal the code.
-    if (error && error.code !== "23505") {
-      toast.error("Something broke. Try again.");
-      return;
+    try {
+      const res = await newsletterApi(trimmedEmail);
+      const revealedCode = couponCode(res.coupon) || FALLBACK_CODE;
+      setCode(revealedCode);
+      localStorage.setItem(REVEALED_KEY, "1");
+      localStorage.setItem(REVEALED_CODE_KEY, revealedCode);
+      setRevealed(true);
+    } catch (err) {
+      // Even on duplicate / soft error, reveal the fallback code.
+      const msg = err instanceof Error ? err.message : "";
+      if (/already|exists|subscribed/i.test(msg)) {
+        localStorage.setItem(REVEALED_KEY, "1");
+        setRevealed(true);
+      } else {
+        toast.error(msg || "Something broke. Try again.");
+      }
+    } finally {
+      setSubmitting(false);
     }
-
-    localStorage.setItem(REVEALED_KEY, "1");
-    setRevealed(true);
   };
+
 
   if (!open) return null;
 
@@ -152,9 +155,8 @@ export function PromoPopup() {
                 </div>
 
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Enter your email or phone number. Get the code and an alert
-                  when we drop new stuff. We don't waste your time with spam or
-                  daily emails.
+                  Enter your email. Get the code and an alert when we drop new
+                  batches. No spam, no daily emails.
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-3">
@@ -164,14 +166,6 @@ export function PromoPopup() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="your@email.com"
-                    className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    disabled={submitting}
-                  />
-                  <input
-                    type="tel"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Phone number"
                     className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     disabled={submitting}
                   />
@@ -210,7 +204,7 @@ export function PromoPopup() {
                   onClick={copyCode}
                   className="group w-full rounded-md border-2 border-dashed border-primary/60 bg-primary/5 px-4 py-3.5 text-center font-mono text-lg tracking-[0.3em] text-foreground transition hover:border-primary hover:bg-primary/10"
                 >
-                  {PROMO_CODE}
+                  {code}
                   <span className="ml-2 text-xs tracking-normal text-muted-foreground group-hover:text-foreground">
                     (tap to copy)
                   </span>
