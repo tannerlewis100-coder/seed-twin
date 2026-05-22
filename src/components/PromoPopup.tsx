@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { X, Check } from "lucide-react";
 import promoVials from "@/assets/promo-vials.png";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { newsletterApi, couponCode } from "@/lib/clarum-auth";
 
 const STORAGE_KEY = "clarum_promo_dismissed";
 const REVEALED_KEY = "clarum_promo_revealed";
-const DELAY_MS = 4000;
-const PROMO_CODE = "CLARUM10";
+const REVEALED_CODE_KEY = "clarum_promo_code";
+const DELAY_MS = 30000; // 30s on first visit
+const FALLBACK_CODE = "CLARUM10";
 
 const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
