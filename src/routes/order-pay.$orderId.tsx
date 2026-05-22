@@ -89,10 +89,23 @@ function OrderPayPage() {
             colors: {
               primary: "#D4A745",
               text: "#FFFFFF",
+              background: "#0B0B0B",
+              cardBackground: "#141414",
+              warning: "#D4A745",
+              mixActive: "#FFFFFF",
               buttonText: "#000000",
               icons: "#D4A745",
             },
             fontFamily: "Karla, sans-serif",
+          },
+          error: (error: unknown) => {
+            console.error("DePay widget error", error);
+          },
+          critical: (error: unknown) => {
+            console.error("DePay widget critical", error);
+            if (!cancelled) {
+              setWidgetError(error instanceof Error ? error.message : "Could not load payment widget.");
+            }
           },
           succeeded: async (transaction: unknown) => {
             try {
@@ -186,7 +199,12 @@ function OrderPayPage() {
                 ) : widgetError ? (
                   <p className="text-sm text-red-300">{widgetError}</p>
                 ) : (
-                  <div ref={widgetRef} id="depay-widget" className="relative min-h-[400px]" />
+                  <div
+                    ref={widgetRef}
+                    id="depay-widget"
+                    className="relative w-full overflow-hidden rounded-xl"
+                    style={{ minHeight: "620px", height: "620px" }}
+                  />
                 )}
               </div>
 
