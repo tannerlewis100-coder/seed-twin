@@ -212,9 +212,18 @@ export type WooCheckoutResponse = {
 // ─── Products ─────────────────────────────────────────────────────────────
 
 export async function fetchProducts(): Promise<WooProduct[]> {
-  const res = await wooFetch("/products?per_page=100");
-  if (!res.ok) throw new Error(`Failed to load products (${res.status})`);
-  return res.json();
+  const all: WooProduct[] = [];
+  for (let page = 1; page <= 20; page++) {
+    const res = await wooFetch(`/products?per_page=100&page=${page}`);
+    if (!res.ok) {
+      if (page === 1) throw new Error(`Failed to load products (${res.status})`);
+      break;
+    }
+    const batch = (await res.json()) as WooProduct[];
+    all.push(...batch);
+    if (batch.length < 100) break;
+  }
+  return all;
 }
 
 export async function fetchProduct(id: number): Promise<WooProduct> {
