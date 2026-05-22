@@ -73,7 +73,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   if (!product) return null;
 
   const display: WooProduct = activeVar ?? product;
-  const cat = product.categories?.[0]?.name ?? "Research";
+  const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
   const wooImg = firstImage(display) ?? firstImage(product);
   const vial = wooImg ?? vialImageFor(product.name, product.slug);
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
