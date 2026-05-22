@@ -4,6 +4,7 @@ import { useCart } from "@/lib/cart";
 import { Check, Loader2, ShoppingCart } from "lucide-react";
 import { vialImageFor } from "@/lib/vialImages";
 import {
+  fetchClarumProduct,
   fetchVariations,
   firstImage,
   fromMinor,
