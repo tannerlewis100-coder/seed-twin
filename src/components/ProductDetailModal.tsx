@@ -91,9 +91,23 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   const labelFor = (v: WooProduct) => {
     const attr = v.attributes?.[0];
     const fromAttr = attr?.value ?? attr?.option;
-    if (fromAttr) return fromAttr;
-    const stripped = v.name.replace(product.name, "").trim();
-    return stripped || "Variant";
+    if (fromAttr && fromAttr.toLowerCase() !== "any") return fromAttr;
+
+    // Try to extract dose/size from variation name, e.g.
+    // "BPC-157 - 20 mg", "BPC-157 (20 mg)", "GLP-1 S 20mg"
+    const stripped = v.name.replace(product.name, "").replace(/^[\s\-–—:|()]+|[\s\-–—:|()]+$/g, "").trim();
+    if (stripped) return stripped;
+
+    // Fallback: pull a dose pattern from anywhere in the name
+    const doseMatch = v.name.match(/(\d+(?:\.\d+)?\s*(?:mg|ml|iu|mcg|µg|g))/i);
+    if (doseMatch) return doseMatch[1];
+
+    // Fallback: SKU suffix
+    if (v.sku) {
+      const skuTail = v.sku.split(/[-_]/).pop();
+      if (skuTail) return skuTail;
+    }
+    return "Variant";
   };
 
   return (
