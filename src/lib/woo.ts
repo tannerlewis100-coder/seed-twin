@@ -458,6 +458,7 @@ export async function fetchOrder(orderId: number | string, key: string): Promise
       currency_symbol: symbol,
     },
     needs_payment: data.is_paid !== true,
+    payment_method: typeof data.payment_method === "string" ? data.payment_method : undefined,
   } satisfies WooOrder;
 }
 
