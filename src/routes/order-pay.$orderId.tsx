@@ -58,6 +58,7 @@ function OrderPayPage() {
   const [bankPaid, setBankPaid] = useState(false);
   const [memoCopied, setMemoCopied] = useState(false);
   const widgetRef = useRef<HTMLDivElement | null>(null);
+  const bankFetchedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
