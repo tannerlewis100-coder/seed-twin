@@ -265,14 +265,6 @@ function AccountPage() {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-3">
-      <dt className="text-foreground/50">{label}</dt>
-      <dd className="text-foreground text-right truncate">{value}</dd>
-    </div>
-  );
-}
 
 const PROFILE_API = "https://admin.clarumpeptides.com/wp-json/clarum/v1/me/profile";
 const NEWSLETTER_API = "https://admin.clarumpeptides.com/wp-json/clarum/v1/me/newsletter";
