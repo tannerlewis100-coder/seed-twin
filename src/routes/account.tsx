@@ -341,9 +341,9 @@ function RecentOrdersSection({
                     <span className={pillClasses(tone)}>{label}</span>
                     <p className="text-sm text-foreground mt-2 truncate">{itemsText}</p>
                     <p className="text-[12px] text-foreground/50 mt-1">
-                      Order #{o.id}
-                      {o.date ? ` · ${relativeTime(o.date)}` : ""}
+                      {o.date ? relativeTime(o.date) : ""}
                     </p>
+
                   </div>
                   <div className="text-right shrink-0">
                     <p className="text-sm text-foreground">{fmtMoney(o.total, o.currency)}</p>
