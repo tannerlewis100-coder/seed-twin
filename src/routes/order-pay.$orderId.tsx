@@ -537,6 +537,26 @@ function BankTransferPanel({
     );
   }
 
+  if (reportedAt && !paid) {
+    const reportedDate = new Date(reportedAt);
+    const reportedStr = isNaN(reportedDate.getTime())
+      ? reportedAt
+      : reportedDate.toLocaleString();
+    return (
+      <>
+        <h2 className="font-display text-2xl text-foreground mb-2 flex items-center gap-2">
+          <CheckCircle2 className="h-6 w-6 text-brand-gold" /> Transfer reported
+        </h2>
+        <p className="text-sm text-foreground/70 mb-4">
+          We'll confirm payment within 1–3 business days. You'll get an email the moment it lands.
+        </p>
+        <p className="text-xs text-foreground/40">Reported {reportedStr}</p>
+        <p className="text-[11px] text-foreground/40 mt-6 flex items-center gap-2">
+          <Loader2 className="h-3 w-3 animate-spin" /> Still watching for the deposit — this page auto-updates.
+        </p>
+      </>
+    );
+
   if (loading && !bank) {
     return (
       <p className="text-sm text-foreground/60 flex items-center gap-2">
