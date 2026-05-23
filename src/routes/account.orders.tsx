@@ -302,7 +302,7 @@ function AwaitingCard({ order }: { order: OrderRow }) {
               href={`/order-pay/${order.id}?key=${encodeURIComponent(order.key)}`}
               className="mt-3 inline-flex items-center gap-1 rounded-full bg-brand-gold px-4 py-2 text-xs font-semibold text-brand-forest-deep hover:bg-brand-gold/90"
             >
-              View payment instructions <ArrowRight className="h-3.5 w-3.5" />
+              {isBank ? "View payment instructions" : "Complete payment"} <ArrowRight className="h-3.5 w-3.5" />
             </a>
           )}
         </div>
