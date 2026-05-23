@@ -51,6 +51,11 @@ function OrderPayPage() {
   const [tabInitialized, setTabInitialized] = useState(false);
   const [nowLoading, setNowLoading] = useState(false);
   const [nowError, setNowError] = useState<string | null>(null);
+  const [bank, setBank] = useState<BankInstructions | null>(null);
+  const [bankLoading, setBankLoading] = useState(false);
+  const [bankError, setBankError] = useState<string | null>(null);
+  const [bankPaid, setBankPaid] = useState(false);
+  const [memoCopied, setMemoCopied] = useState(false);
   const widgetRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -62,9 +67,17 @@ function OrderPayPage() {
         if (!cancelled) {
           setOrder(o);
           if (!tabInitialized) {
-            setTab(o.payment_method === "nowpayments" ? "nowpayments" : "depay");
+            const pm = o.payment_method;
+            setTab(
+              pm === "clarum_bank_transfer"
+                ? "bank"
+                : pm === "nowpayments"
+                ? "nowpayments"
+                : "depay",
+            );
             setTabInitialized(true);
           }
+          if (o.needs_payment === false) setBankPaid(true);
         }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
@@ -77,6 +90,53 @@ function OrderPayPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, key]);
+
+  // Fetch bank transfer instructions
+  useEffect(() => {
+    if (tab !== "bank" || !order || !key) return;
+    if (bank || bankLoading) return;
+    let cancelled = false;
+    setBankLoading(true);
+    setBankError(null);
+    (async () => {
+      try {
+        const res = await fetch(
+          `${WP_BASE}/bank-transfer/instructions?order_id=${encodeURIComponent(orderId)}&key=${encodeURIComponent(key)}`,
+        );
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.message || "Could not load bank instructions.");
+        if (!cancelled) setBank(data as BankInstructions);
+      } catch (e) {
+        if (!cancelled) setBankError(e instanceof Error ? e.message : "Could not load bank instructions.");
+      } finally {
+        if (!cancelled) setBankLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [tab, order, key, orderId, bank, bankLoading]);
+
+  // Poll order status every 30s for bank transfer
+  useEffect(() => {
+    if (tab !== "bank" || !order || !key || bankPaid) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `${WP_BASE}/order/${encodeURIComponent(orderId)}?key=${encodeURIComponent(key)}`,
+        );
+        const data = await res.json().catch(() => ({}));
+        if (data?.is_paid === true || data?.needs_payment === false) {
+          setBankPaid(true);
+          clearInterval(interval);
+        }
+      } catch {
+        /* ignore */
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [tab, order, key, orderId, bankPaid]);
+
 
   useEffect(() => {
     if (!order || !widgetRef.current) return;
