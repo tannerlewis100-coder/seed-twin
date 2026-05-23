@@ -67,12 +67,15 @@ function TermsPage() {
         jurisdictions, or violate these Terms.
       </p>
 
-      <LegalH2>6. Restricted Jurisdictions</LegalH2>
+      <LegalH2>6. Jurisdictional Compliance</LegalH2>
       <p>
-        We do not ship to jurisdictions where the sale or possession of research peptides is
-        restricted or prohibited. You are solely responsible for ensuring that ordering,
-        importing, possessing, and using our products is lawful in your jurisdiction. Any
-        duties, taxes, or fees imposed by your jurisdiction are your sole responsibility.
+        You are solely responsible for ensuring that ordering, importing, possessing, and using
+        our products is lawful in your state, locality, and jurisdiction. By placing an order,
+        you represent and warrant that the purchase, receipt, and intended research use of the
+        products is legal where you reside and where the products will be shipped. Any duties,
+        taxes, or fees imposed by your jurisdiction are your sole responsibility. If you are
+        uncertain about local regulations, consult an attorney before ordering. We reserve the
+        right to refuse or cancel any order at our sole discretion.
       </p>
 
       <LegalH2>7. No Refunds or Returns</LegalH2>
