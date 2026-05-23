@@ -507,12 +507,13 @@ function BankTransferPanel({
 
   if (!bank) return null;
 
-  const amountDisplay =
-    bank.amount != null
-      ? typeof bank.amount === "number"
-        ? `${currency}${bank.amount.toFixed(2)}`
-        : String(bank.amount)
-      : `${currency}${total.toFixed(2)}`;
+  const amountNum =
+    typeof bank.amount === "number"
+      ? bank.amount
+      : bank.amount != null
+      ? Number(bank.amount)
+      : total;
+  const amountDisplay = `${currency}${(Number.isFinite(amountNum) ? amountNum : total).toFixed(2)} ${bank.currency ?? "USD"}`;
 
   return (
     <>
