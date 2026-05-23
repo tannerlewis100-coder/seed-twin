@@ -57,8 +57,45 @@ function OrderPayPage() {
   const [bankError, setBankError] = useState<string | null>(null);
   const [bankPaid, setBankPaid] = useState(false);
   const [memoCopied, setMemoCopied] = useState(false);
+  const [reportedAt, setReportedAt] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      return localStorage.getItem(`clarum_bt_reported_${orderId}`);
+    } catch {
+      return null;
+    }
+  });
+  const [reporting, setReporting] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
   const widgetRef = useRef<HTMLDivElement | null>(null);
   const bankFetchedRef = useRef(false);
+
+  async function markTransferSent() {
+    if (reporting || reportedAt) return;
+    setReporting(true);
+    setReportError(null);
+    try {
+      const res = await fetch(`${WP_BASE}/bank-transfer/mark-sent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_id: Number(orderId), key }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data?.message || `Failed (${res.status})`);
+      }
+      const ts = new Date().toISOString();
+      setReportedAt(ts);
+      try {
+        localStorage.setItem(`clarum_bt_reported_${orderId}`, ts);
+      } catch { /* ignore */ }
+    } catch (e) {
+      console.error("mark-sent failed", e);
+      setReportError(e instanceof Error ? e.message : "Could not report transfer.");
+    } finally {
+      setReporting(false);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -379,6 +416,10 @@ function OrderPayPage() {
                         currency={currency}
                         total={total}
                         memoCopied={memoCopied}
+                        reportedAt={reportedAt}
+                        reporting={reporting}
+                        reportError={reportError}
+                        onMarkSent={markTransferSent}
                         onCopyMemo={() => {
                           if (!bank?.memo) return;
                           navigator.clipboard?.writeText(bank.memo).then(
@@ -464,6 +505,10 @@ function BankTransferPanel({
   currency,
   total,
   memoCopied,
+  reportedAt,
+  reporting,
+  reportError,
+  onMarkSent,
   onCopyMemo,
 }: {
   bank: BankInstructions | null;
@@ -473,6 +518,10 @@ function BankTransferPanel({
   currency: string;
   total: number;
   memoCopied: boolean;
+  reportedAt: string | null;
+  reporting: boolean;
+  reportError: string | null;
+  onMarkSent: () => void;
   onCopyMemo: () => void;
 }) {
   if (paid) {
@@ -487,6 +536,29 @@ function BankTransferPanel({
       </>
     );
   }
+
+  if (reportedAt && !paid) {
+    const reportedDate = new Date(reportedAt);
+    const reportedStr = isNaN(reportedDate.getTime())
+      ? reportedAt
+      : reportedDate.toLocaleString();
+    return (
+      <>
+        <h2 className="font-display text-2xl text-foreground mb-2 flex items-center gap-2">
+          <CheckCircle2 className="h-6 w-6 text-brand-gold" /> Transfer reported
+        </h2>
+        <p className="text-sm text-foreground/70 mb-4">
+          We'll confirm payment within 1–3 business days. You'll get an email the moment it lands.
+        </p>
+        <p className="text-xs text-foreground/40">Reported {reportedStr}</p>
+        <p className="text-[11px] text-foreground/40 mt-6 flex items-center gap-2">
+          <Loader2 className="h-3 w-3 animate-spin" /> Still watching for the deposit — this page auto-updates.
+        </p>
+      </>
+    );
+  }
+
+
 
   if (loading && !bank) {
     return (
@@ -555,6 +627,22 @@ function BankTransferPanel({
             Must include this exact memo or payment won't be matched.
           </p>
         </div>
+      )}
+
+      <button
+        type="button"
+        onClick={onMarkSent}
+        disabled={reporting}
+        className="w-full rounded-xl bg-amber-400 hover:bg-amber-300 text-brand-forest font-semibold text-lg py-4 mb-3 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+      >
+        {reporting ? (
+          <><Loader2 className="h-5 w-5 animate-spin" /> Reporting…</>
+        ) : (
+          <><CheckCircle2 className="h-5 w-5" /> I've sent the transfer</>
+        )}
+      </button>
+      {reportError && (
+        <p className="text-sm text-red-300 mb-3 text-center">{reportError}</p>
       )}
 
       <p className="text-[11px] text-foreground/40 text-center flex items-center justify-center gap-2">
