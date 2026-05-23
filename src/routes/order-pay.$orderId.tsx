@@ -505,6 +505,10 @@ function BankTransferPanel({
   currency,
   total,
   memoCopied,
+  reportedAt,
+  reporting,
+  reportError,
+  onMarkSent,
   onCopyMemo,
 }: {
   bank: BankInstructions | null;
@@ -514,6 +518,10 @@ function BankTransferPanel({
   currency: string;
   total: number;
   memoCopied: boolean;
+  reportedAt: string | null;
+  reporting: boolean;
+  reportError: string | null;
+  onMarkSent: () => void;
   onCopyMemo: () => void;
 }) {
   if (paid) {
