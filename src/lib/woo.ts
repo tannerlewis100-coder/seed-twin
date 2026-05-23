@@ -62,6 +62,15 @@ export function getOrderBillingEmail(orderId: number | string): string {
 // re-bootstrap via the initial GET /cart fired by CartProvider on mount.
 let currentNonce: string | null = null;
 
+function getClarumJwt(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem("clarum_jwt");
+  } catch {
+    return null;
+  }
+}
+
 async function wooFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const needsCartSession = path.startsWith("/cart") || path.startsWith("/checkout");
   const token = getCartToken();
@@ -75,6 +84,15 @@ async function wooFetch(path: string, init: RequestInit = {}): Promise<Response>
   };
   if (needsCartSession && token) headers["Cart-Token"] = token;
   if (isMutation && currentNonce) headers["Nonce"] = currentNonce;
+
+  // Attach JWT on cart/checkout calls so Woo associates the order with the
+  // logged-in user instead of creating a guest (customer_id: 0).
+  if (needsCartSession) {
+    const jwt = getClarumJwt();
+    if (jwt && !headers["Authorization"]) {
+      headers["Authorization"] = `Bearer ${jwt}`;
+    }
+  }
 
   const res = await fetch(`${BASE}?path=${encodeURIComponent(path)}`, {
     ...init,

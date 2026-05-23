@@ -7,7 +7,7 @@ function buildCorsHeaders(origin: string | null) {
   return {
     "Access-Control-Allow-Origin": origin ?? "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Accept, Cart-Token, Nonce",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, Cart-Token, Nonce, Authorization",
     Vary: "Origin",
   };
 }
@@ -39,6 +39,9 @@ async function proxyToWoo(request: Request) {
 
   const nonce = request.headers.get("nonce");
   if (nonce) headers.set("Nonce", nonce);
+
+  const authorization = request.headers.get("authorization");
+  if (authorization) headers.set("Authorization", authorization);
 
   const init: RequestInit = {
     method: request.method,
