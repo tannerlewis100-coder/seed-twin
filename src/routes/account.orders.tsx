@@ -250,12 +250,13 @@ function CardShell({ children }: { children: React.ReactNode }) {
 }
 
 function OrderMeta({ order }: { order: OrderRow }) {
+  const parts = [
+    order.date ? relativeTime(order.date) : "",
+    order.payment_label ?? "",
+  ].filter(Boolean);
+  if (!parts.length) return null;
   return (
-    <div className="text-[12px] text-foreground/50 mt-1">
-      Order #{order.id}
-      {order.date ? ` · ${relativeTime(order.date)}` : ""}
-      {order.payment_label ? ` · ${order.payment_label}` : ""}
-    </div>
+    <div className="text-[12px] text-foreground/50 mt-1">{parts.join(" · ")}</div>
   );
 }
 
