@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Loader2, Lock } from "lucide-react";
+import { CheckCircle2, Copy, Loader2, Lock } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
@@ -21,7 +21,17 @@ export const Route = createFileRoute("/order-pay/$orderId")({
 const EVM_WALLET = "0xA2d94ee5716eA1C7AAB32eBb7e128476E015AEB4";
 const WP_BASE = "https://admin.clarumpeptides.com/wp-json/clarum/v1";
 
-type PaymentTab = "depay" | "nowpayments";
+type PaymentTab = "depay" | "nowpayments" | "bank";
+
+type BankInstructions = {
+  beneficiary?: string;
+  address?: string;
+  bank?: string;
+  routing?: string;
+  account?: string;
+  memo?: string;
+  amount?: string | number;
+};
 
 declare global {
   interface Window {
