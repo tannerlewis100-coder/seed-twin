@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { CheckCircle2, Copy, Loader2, Lock } from "lucide-react";
+import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
