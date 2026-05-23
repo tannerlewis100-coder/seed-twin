@@ -350,19 +350,19 @@ function RecentOrdersSection({
                   </div>
                 </div>
 
-                {isAwaiting && isBank && o.memo && (
+                {isAwaiting && o.key && (
                   <div className="mt-3 flex flex-wrap items-center gap-3">
-                    <span className="font-mono text-[12px] font-bold text-brand-gold tracking-wider">
-                      {o.memo}
-                    </span>
-                    {o.key && (
-                      <a
-                        href={`/order-pay/${o.id}?key=${encodeURIComponent(o.key)}`}
-                        className="inline-flex items-center gap-1 text-[12px] text-brand-gold hover:underline"
-                      >
-                        View payment details <ArrowRight className="h-3 w-3" />
-                      </a>
+                    {isBank && o.memo && (
+                      <span className="font-mono text-[12px] font-bold text-brand-gold tracking-wider">
+                        {o.memo}
+                      </span>
                     )}
+                    <a
+                      href={`/order-pay/${o.id}?key=${encodeURIComponent(o.key)}`}
+                      className="inline-flex items-center gap-1 text-[12px] text-brand-gold hover:underline"
+                    >
+                      {isBank ? "View payment details" : "Complete payment"} <ArrowRight className="h-3 w-3" />
+                    </a>
                   </div>
                 )}
               </li>
