@@ -69,9 +69,12 @@ function CheckoutPage() {
   const [ratesError, setRatesError] = useState<string | null>(null);
 
   const baseGateways = raw?.payment_methods ?? [];
-  const gateways = baseGateways.includes("nowpayments")
+  const withNow = baseGateways.includes("nowpayments")
     ? baseGateways
     : [...baseGateways, "nowpayments"];
+  const gateways = withNow.includes("clarum_bank_transfer")
+    ? withNow
+    : [...withNow, "clarum_bank_transfer"];
   const needsShipping = raw?.needs_shipping ?? true;
 
   useEffect(() => {

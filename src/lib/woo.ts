@@ -467,6 +467,7 @@ export function gatewayLabel(id: string): string {
   const map: Record<string, string> = {
     depay_wc_payments: "Pay with Crypto (DePay)",
     nowpayments: "Pay with Any Coin (NOWPayments — BTC, ETH, USDT, USDC, SOL, +200 more)",
+    clarum_bank_transfer: "Bank Transfer (ACH/Wire) — lowest fees, 1–3 business day settlement",
     stripe: "Credit / Debit Card",
     stripe_cc: "Credit / Debit Card",
     paypal: "PayPal",
