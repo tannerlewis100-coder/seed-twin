@@ -556,6 +556,9 @@ function BankTransferPanel({
         </p>
       </>
     );
+  }
+
+
 
   if (loading && !bank) {
     return (
