@@ -60,47 +60,50 @@ function ShippingPolicyPage() {
 
       <LegalH2>6. Tracking</LegalH2>
       <p>
-        Once your order ships, you will receive a confirmation email with a tracking number.
-        Tracking information is also available from your account order history. Please allow up
-        to 24 hours after shipment for tracking events to appear with the carrier.
+        You will receive an email with a tracking number once your order ships. Allow up to 24
+        hours for tracking information to appear in the carrier's system.
       </p>
 
       <LegalH2>7. Lost or Stolen Packages</LegalH2>
+      <p>Risk of loss transfers to you when the carrier accepts the package.</p>
+      <ul className="list-disc pl-6 space-y-1.5">
+        <li>If tracking shows "delivered" but you did not receive the package, file a claim with the carrier first.</li>
+        <li>If tracking shows the package as lost in transit for more than 14 days past the estimated delivery date, contact us. We will work with the carrier and may, at our sole discretion, ship a replacement.</li>
+        <li>We are not responsible for theft after delivery. We recommend shipping to a secure address.</li>
+      </ul>
+
+      <LegalH2>8. Incorrect Address</LegalH2>
       <p>
-        A package is considered lost if tracking shows no movement for 10 consecutive business
-        days, or if the carrier marks it as lost. In that case, contact us at{" "}
+        You are responsible for providing a complete and accurate shipping address. If the
+        package is returned to us due to an incorrect address, you must pay the reshipping cost
+        before we send it out again. If the package is destroyed by the carrier as
+        undeliverable, no refund or replacement will be issued.
+      </p>
+
+      <LegalH2>9. Package Inspection</LegalH2>
+      <p>
+        Inspect your package within 48 hours of delivery. If contents are damaged or incorrect,
+        contact{" "}
         <a className="text-brand-gold hover:underline" href="mailto:clarumpeps@gmail.com">
           clarumpeps@gmail.com
         </a>{" "}
-        and we will open a carrier investigation. If the carrier confirms the package is lost,
-        we will reship the order at no cost to you.
-      </p>
-      <p>
-        Packages marked "delivered" by the carrier but reported missing are presumed stolen and
-        are not eligible for replacement. We recommend shipping to a secure address where
-        someone can receive the package.
+        within 48 hours with photos. See our Refund Policy for available remedies.
       </p>
 
-      <LegalH2>8. Discreet Packaging</LegalH2>
+      <LegalH2>10. Signatures and Discreet Packaging</LegalH2>
       <p>
-        All orders ship in plain, unbranded packaging. The sender address is generic and no
-        product information appears on the outside of the package.
+        All packages ship in plain, discreet packaging with no external indication of contents.
+        Signature confirmation is available on request and may be required for higher-value
+        orders.
       </p>
 
-      <LegalH2>9. Storage on Arrival</LegalH2>
+      <LegalH2>11. Contact</LegalH2>
       <p>
-        Lyophilized peptides are stable at room temperature for short periods during transit,
-        but should be refrigerated or frozen promptly on arrival per the storage instructions
-        included with your order. Improper storage after delivery is the buyer's responsibility.
-      </p>
-
-      <LegalH2>10. Contact</LegalH2>
-      <p>
-        Shipping questions or issues? Email{" "}
+        Questions about a shipment? Email{" "}
         <a className="text-brand-gold hover:underline" href="mailto:clarumpeps@gmail.com">
           clarumpeps@gmail.com
         </a>{" "}
-        with your order number.
+        with your order details.
       </p>
     </LegalPage>
   );
