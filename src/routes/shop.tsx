@@ -201,15 +201,7 @@ function ShopPage() {
                             {displayName}
                           </h3>
 
-                          <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
-                            <img
-                              src={vial}
-                              alt={`${p.name} vial`}
-                              loading="lazy"
-                              draggable={false}
-                              className="h-56 w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
-                            />
-                          </div>
+                          <div className="relative z-10 flex-1 w-full mt-2 mb-4" />
 
                           <div className="relative z-10 w-full">
                             <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
