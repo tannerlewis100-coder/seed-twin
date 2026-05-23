@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Loader2, LogOut, Package, Ticket, Check, Copy, ArrowRight } from "lucide-react";
+import { Loader2, LogOut, Package, Ticket, Check, Copy, ArrowRight, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { useClarumAuth } from "@/lib/clarum-auth";
+import { useClarumAuth, type ClarumUser } from "@/lib/clarum-auth";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+
 
 type RecentOrder = {
   id: number;
