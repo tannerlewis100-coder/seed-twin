@@ -58,6 +58,7 @@ function OrderPayPage() {
   const [bankPaid, setBankPaid] = useState(false);
   const [memoCopied, setMemoCopied] = useState(false);
   const widgetRef = useRef<HTMLDivElement | null>(null);
+  const bankFetchedRef = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -92,12 +93,12 @@ function OrderPayPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, key]);
 
-  // Fetch bank transfer instructions
+  // Fetch bank transfer instructions (runs once per order)
   useEffect(() => {
     if (!order || !key) return;
     if (order.payment_method !== "clarum_bank_transfer") return;
-    if (bank || bankLoading) return;
-    let cancelled = false;
+    if (bankFetchedRef.current) return;
+    bankFetchedRef.current = true;
     setBankLoading(true);
     setBankError(null);
     (async () => {
@@ -116,23 +117,17 @@ function OrderPayPage() {
           console.error("Bank instructions error response", { status: res.status, data });
           throw new Error(data?.message || `Bank instructions failed (${res.status})`);
         }
-        if (data?.fallback) {
-          console.warn("Bank instructions returned fallback", data);
-          throw new Error(data?.message || "Bank instructions temporarily unavailable.");
-        }
         console.info("Bank instructions loaded", data);
-        if (!cancelled) setBank(data as BankInstructions);
+        setBank(data as BankInstructions);
       } catch (e) {
         console.error("Bank instructions fetch failed", e);
-        if (!cancelled) setBankError(e instanceof Error ? e.message : "Could not load bank instructions.");
+        setBankError(e instanceof Error ? e.message : "Could not load bank instructions.");
+        bankFetchedRef.current = false; // allow retry on remount
       } finally {
-        if (!cancelled) setBankLoading(false);
+        setBankLoading(false);
       }
     })();
-    return () => {
-      cancelled = true;
-    };
-  }, [order, key, orderId, bank, bankLoading]);
+  }, [order, key, orderId]);
 
   // Poll order status every 30s for bank transfer
   useEffect(() => {
