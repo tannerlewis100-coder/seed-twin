@@ -250,17 +250,8 @@ function AccountPage() {
                 )}
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-                <h3 className="font-display text-lg mb-3">Account info</h3>
-                <dl className="space-y-2 text-sm">
-                  <Row label="Name" value={[user.first_name, user.last_name].filter(Boolean).join(" ") || "—"} />
-                  <Row label="Email" value={user.email} />
-                  <Row
-                    label="Newsletter"
-                    value={user.marketing_opt_in ? "Subscribed" : "Not subscribed"}
-                  />
-                </dl>
-              </div>
+              <AccountInfoCard />
+
             </aside>
           </div>
         </div>
