@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Loader2, Lock } from "lucide-react";
+import { CheckCircle2, Copy, Loader2, Lock } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
@@ -21,7 +21,17 @@ export const Route = createFileRoute("/order-pay/$orderId")({
 const EVM_WALLET = "0xA2d94ee5716eA1C7AAB32eBb7e128476E015AEB4";
 const WP_BASE = "https://admin.clarumpeptides.com/wp-json/clarum/v1";
 
-type PaymentTab = "depay" | "nowpayments";
+type PaymentTab = "depay" | "nowpayments" | "bank";
+
+type BankInstructions = {
+  beneficiary?: string;
+  address?: string;
+  bank?: string;
+  routing?: string;
+  account?: string;
+  memo?: string;
+  amount?: string | number;
+};
 
 declare global {
   interface Window {
@@ -41,6 +51,11 @@ function OrderPayPage() {
   const [tabInitialized, setTabInitialized] = useState(false);
   const [nowLoading, setNowLoading] = useState(false);
   const [nowError, setNowError] = useState<string | null>(null);
+  const [bank, setBank] = useState<BankInstructions | null>(null);
+  const [bankLoading, setBankLoading] = useState(false);
+  const [bankError, setBankError] = useState<string | null>(null);
+  const [bankPaid, setBankPaid] = useState(false);
+  const [memoCopied, setMemoCopied] = useState(false);
   const widgetRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -52,9 +67,17 @@ function OrderPayPage() {
         if (!cancelled) {
           setOrder(o);
           if (!tabInitialized) {
-            setTab(o.payment_method === "nowpayments" ? "nowpayments" : "depay");
+            const pm = o.payment_method;
+            setTab(
+              pm === "clarum_bank_transfer"
+                ? "bank"
+                : pm === "nowpayments"
+                ? "nowpayments"
+                : "depay",
+            );
             setTabInitialized(true);
           }
+          if (o.needs_payment === false) setBankPaid(true);
         }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load order.");
@@ -67,6 +90,53 @@ function OrderPayPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, key]);
+
+  // Fetch bank transfer instructions
+  useEffect(() => {
+    if (tab !== "bank" || !order || !key) return;
+    if (bank || bankLoading) return;
+    let cancelled = false;
+    setBankLoading(true);
+    setBankError(null);
+    (async () => {
+      try {
+        const res = await fetch(
+          `${WP_BASE}/bank-transfer/instructions?order_id=${encodeURIComponent(orderId)}&key=${encodeURIComponent(key)}`,
+        );
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.message || "Could not load bank instructions.");
+        if (!cancelled) setBank(data as BankInstructions);
+      } catch (e) {
+        if (!cancelled) setBankError(e instanceof Error ? e.message : "Could not load bank instructions.");
+      } finally {
+        if (!cancelled) setBankLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [tab, order, key, orderId, bank, bankLoading]);
+
+  // Poll order status every 30s for bank transfer
+  useEffect(() => {
+    if (tab !== "bank" || !order || !key || bankPaid) return;
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(
+          `${WP_BASE}/order/${encodeURIComponent(orderId)}?key=${encodeURIComponent(key)}`,
+        );
+        const data = await res.json().catch(() => ({}));
+        if (data?.is_paid === true || data?.needs_payment === false) {
+          setBankPaid(true);
+          clearInterval(interval);
+        }
+      } catch {
+        /* ignore */
+      }
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [tab, order, key, orderId, bankPaid]);
+
 
   useEffect(() => {
     if (!order || !widgetRef.current) return;
@@ -260,7 +330,7 @@ function OrderPayPage() {
                           />
                         )}
                       </>
-                    ) : (
+                    ) : tab === "nowpayments" ? (
                       <>
                         <h2 className="font-display text-2xl text-foreground mb-1">Pay with any coin</h2>
                         <p className="text-sm text-foreground/50 mb-6">
@@ -287,8 +357,29 @@ function OrderPayPage() {
                           You'll be redirected to NOWPayments to complete payment, then sent back here.
                         </p>
                       </>
+                    ) : (
+                      <BankTransferPanel
+                        bank={bank}
+                        loading={bankLoading}
+                        error={bankError}
+                        paid={bankPaid}
+                        currency={currency}
+                        total={total}
+                        memoCopied={memoCopied}
+                        onCopyMemo={() => {
+                          if (!bank?.memo) return;
+                          navigator.clipboard?.writeText(bank.memo).then(
+                            () => {
+                              setMemoCopied(true);
+                              setTimeout(() => setMemoCopied(false), 2000);
+                            },
+                            () => {/* ignore */},
+                          );
+                        }}
+                      />
                     )}
                   </>
+
 
                 )}
               </div>
@@ -351,3 +442,137 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function BankTransferPanel({
+  bank,
+  loading,
+  error,
+  paid,
+  currency,
+  total,
+  memoCopied,
+  onCopyMemo,
+}: {
+  bank: BankInstructions | null;
+  loading: boolean;
+  error: string | null;
+  paid: boolean;
+  currency: string;
+  total: number;
+  memoCopied: boolean;
+  onCopyMemo: () => void;
+}) {
+  if (paid) {
+    return (
+      <>
+        <h2 className="font-display text-2xl text-foreground mb-1 flex items-center gap-2">
+          <CheckCircle2 className="h-6 w-6 text-emerald-400" /> Payment received
+        </h2>
+        <p className="text-sm text-foreground/70">
+          We've matched your bank transfer to this order. A confirmation email is on its way.
+        </p>
+      </>
+    );
+  }
+
+  if (loading && !bank) {
+    return (
+      <p className="text-sm text-foreground/60 flex items-center gap-2">
+        <Loader2 className="h-4 w-4 animate-spin" /> Loading bank instructions…
+      </p>
+    );
+  }
+
+  if (error) {
+    return <p className="text-sm text-red-300">{error}</p>;
+  }
+
+  if (!bank) return null;
+
+  const amountDisplay =
+    bank.amount != null
+      ? typeof bank.amount === "number"
+        ? `${currency}${bank.amount.toFixed(2)}`
+        : String(bank.amount)
+      : `${currency}${total.toFixed(2)}`;
+
+  return (
+    <>
+      <h2 className="font-display text-2xl text-foreground mb-1">Bank Transfer (ACH / Wire)</h2>
+      <p className="text-sm text-foreground/50 mb-6">
+        Send the exact amount below from your bank. Settlement typically takes 1–3 business days.
+      </p>
+
+      <dl className="rounded-xl border border-white/10 bg-white/[0.02] divide-y divide-white/5 mb-5">
+        <InstructionRow label="Bank" value={bank.bank} />
+        <InstructionRow label="Routing" value={bank.routing} mono />
+        <InstructionRow label="Account" value={bank.account} mono />
+        <InstructionRow label="Beneficiary" value={bank.beneficiary} />
+        {bank.address && <InstructionRow label="Address" value={bank.address} />}
+        <InstructionRow label="Amount" value={amountDisplay} highlight />
+      </dl>
+
+      {bank.memo && (
+        <div className="rounded-xl border border-brand-gold/40 bg-brand-gold/5 p-5 mb-4">
+          <p className="text-xs uppercase tracking-[0.2em] text-brand-gold/80 mb-2">
+            Memo (Required)
+          </p>
+          <div className="flex items-center gap-3 flex-wrap">
+            <code className="font-mono text-2xl sm:text-3xl font-bold text-foreground tracking-wider break-all">
+              {bank.memo}
+            </code>
+            <button
+              type="button"
+              onClick={onCopyMemo}
+              className="inline-flex items-center gap-1.5 rounded-full bg-brand-gold text-brand-forest font-semibold px-4 py-2 text-sm hover:bg-brand-gold/90"
+            >
+              {memoCopied ? (
+                <>
+                  <CheckCircle2 className="h-4 w-4" /> Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" /> Copy
+                </>
+              )}
+            </button>
+          </div>
+          <p className="text-xs text-red-300/90 mt-3">
+            Must include this exact memo or payment won't be matched.
+          </p>
+        </div>
+      )}
+
+      <p className="text-[11px] text-foreground/40 text-center flex items-center justify-center gap-2">
+        <Loader2 className="h-3 w-3 animate-spin" /> Waiting for payment. This page auto-updates every 30 seconds.
+      </p>
+    </>
+  );
+}
+
+function InstructionRow({
+  label,
+  value,
+  mono,
+  highlight,
+}: {
+  label: string;
+  value?: string;
+  mono?: boolean;
+  highlight?: boolean;
+}) {
+  if (!value) return null;
+  return (
+    <div className="flex items-center justify-between gap-4 px-4 py-3">
+      <span className="text-xs uppercase tracking-[0.15em] text-foreground/50">{label}</span>
+      <span
+        className={`text-right ${mono ? "font-mono" : ""} ${
+          highlight ? "text-brand-gold font-display text-lg" : "text-foreground"
+        }`}
+      >
+        {value}
+      </span>
+    </div>
+  );
+}
+
