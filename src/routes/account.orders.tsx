@@ -26,7 +26,7 @@ type OrderRow = {
   payment_method?: string;
   payment_label?: string;
   memo?: string | null;
-  items_preview?: string;
+  items_preview?: string | Array<{ qty?: number; quantity?: number; name?: string } | string>;
   date?: string;
   bt_user_reported?: boolean;
 };
@@ -62,6 +62,24 @@ function fmtMoney(total?: string | number, currency?: string): string {
   const sym = (currency ?? "USD") === "USD" ? "$" : `${currency} `;
   return `${sym}${(n || 0).toFixed(2)}`;
 }
+
+function formatItemsPreview(
+  preview?: string | Array<{ qty?: number; quantity?: number; name?: string } | string>
+): string {
+  if (!preview) return "—";
+  if (typeof preview === "string") return preview;
+  const parts = preview
+    .map((it) => {
+      if (typeof it === "string") return it;
+      const qty = it.qty ?? it.quantity;
+      const name = it.name ?? "";
+      if (!name) return "";
+      return qty && qty > 1 ? `${qty}× ${name}` : `1× ${name}`;
+    })
+    .filter(Boolean);
+  return parts.length ? parts.join(", ") : "—";
+}
+
 
 function OrdersPage() {
   const { token, loading: authLoading } = useClarumAuth();
@@ -262,7 +280,7 @@ function AwaitingCard({ order }: { order: OrderRow }) {
               <StatusPill tone="green">✓ Reported</StatusPill>
             )}
           </div>
-          <p className="text-sm text-foreground mt-2 truncate">{order.items_preview || "—"}</p>
+          <p className="text-sm text-foreground mt-2 truncate">{formatItemsPreview(order.items_preview)}</p>
           <OrderMeta order={order} />
           {isBank && order.memo && (
             <div className="mt-3">
@@ -299,7 +317,7 @@ function ActiveCard({ order }: { order: OrderRow }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <StatusPill tone="blue">{order.status || "Processing"}</StatusPill>
-          <p className="text-sm text-foreground mt-2 truncate">{order.items_preview || "—"}</p>
+          <p className="text-sm text-foreground mt-2 truncate">{formatItemsPreview(order.items_preview)}</p>
           <OrderMeta order={order} />
         </div>
         <div className="text-right">
@@ -324,7 +342,7 @@ function PastCard({ order }: { order: OrderRow }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <StatusPill tone={isCompleted ? "green" : "gray"}>{order.status || "Closed"}</StatusPill>
-          <p className="text-sm text-foreground mt-2 truncate">{order.items_preview || "—"}</p>
+          <p className="text-sm text-foreground mt-2 truncate">{formatItemsPreview(order.items_preview)}</p>
           <OrderMeta order={order} />
         </div>
         <div className="text-right">

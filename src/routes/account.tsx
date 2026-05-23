@@ -15,7 +15,7 @@ type RecentOrder = {
   payment_method?: string;
   payment_label?: string;
   memo?: string | null;
-  items_preview?: string | string[];
+  items_preview?: string | Array<{ qty?: number; quantity?: number; name?: string } | string>;
   date?: string;
 };
 
@@ -51,6 +51,24 @@ function fmtMoney(total?: string | number, currency?: string): string {
   const sym = (currency ?? "USD") === "USD" ? "$" : `${currency} `;
   return `${sym}${(n || 0).toFixed(2)}`;
 }
+
+function formatItemsPreview(
+  preview?: string | Array<{ qty?: number; quantity?: number; name?: string } | string>
+): string {
+  if (!preview) return "—";
+  if (typeof preview === "string") return preview;
+  const parts = preview
+    .map((it) => {
+      if (typeof it === "string") return it;
+      const qty = it.qty ?? it.quantity;
+      const name = it.name ?? "";
+      if (!name) return "";
+      return qty && qty > 1 ? `${qty}× ${name}` : `1× ${name}`;
+    })
+    .filter(Boolean);
+  return parts.length ? parts.join(", ") : "—";
+}
+
 
 function statusTone(status?: string, paymentMethod?: string, isAwaiting?: boolean): {
   tone: "amber" | "blue" | "green" | "gray";
@@ -313,9 +331,8 @@ function RecentOrdersSection({
           {top3.map((o) => {
             const isAwaiting = awaiting.some((a) => a.id === o.id);
             const { tone, label } = statusTone(o.status, o.payment_method, isAwaiting);
-            const itemsText = Array.isArray(o.items_preview)
-              ? o.items_preview.join(", ")
-              : o.items_preview || "—";
+            const itemsText = formatItemsPreview(o.items_preview);
+
             const isBank = o.payment_method === "clarum_bank_transfer";
             return (
               <li key={o.id} className="py-4">
