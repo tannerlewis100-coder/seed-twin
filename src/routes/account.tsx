@@ -96,6 +96,10 @@ export const Route = createFileRoute("/account")({
 function AccountPage() {
   const { user, loading, signOut, token } = useClarumAuth();
   const navigate = useNavigate();
+  const [orders, setOrders] = useState<OrdersResponse | null>(null);
+  const [ordersLoading, setOrdersLoading] = useState(true);
+  const [ordersError, setOrdersError] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (!loading && !token) {
