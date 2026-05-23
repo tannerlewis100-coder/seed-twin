@@ -31,6 +31,7 @@ type BankInstructions = {
   account?: string;
   memo?: string;
   amount?: string | number;
+  currency?: string;
 };
 
 declare global {
