@@ -188,6 +188,7 @@ type Ctx = {
   setSession: (token: string, user?: ClarumUser | null) => Promise<void>;
   signOut: () => void;
   refresh: () => Promise<void>;
+  updateUser: (patch: Partial<ClarumUser>) => void;
 };
 
 const ClarumAuthCtx = createContext<Ctx | null>(null);
@@ -242,13 +243,17 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, []);
 
+  const updateUser = useCallback((patch: Partial<ClarumUser>) => {
+    setUser((prev) => (prev ? { ...prev, ...patch } : prev));
+  }, []);
+
   useEffect(() => {
     captureUtmFromUrl();
     refresh();
   }, [refresh]);
 
   return (
-    <ClarumAuthCtx.Provider value={{ user, token, loading, setSession, signOut, refresh }}>
+    <ClarumAuthCtx.Provider value={{ user, token, loading, setSession, signOut, refresh, updateUser }}>
       {children}
     </ClarumAuthCtx.Provider>
   );

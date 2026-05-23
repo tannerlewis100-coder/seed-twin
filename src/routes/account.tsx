@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Loader2, LogOut, Package, Ticket, Check, Copy, ArrowRight } from "lucide-react";
+import { Loader2, LogOut, Package, Ticket, Check, Copy, ArrowRight, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { useClarumAuth } from "@/lib/clarum-auth";
+import { useClarumAuth, type ClarumUser } from "@/lib/clarum-auth";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+
 
 type RecentOrder = {
   id: number;
@@ -166,10 +169,8 @@ function AccountPage() {
 
   const coupon = user.welcome_coupon;
   const couponUsed = coupon?.used === true;
-  const name =
-    user.display_name ||
-    [user.first_name, user.last_name].filter(Boolean).join(" ") ||
-    user.email;
+  const greeting = user.first_name || user.display_name || user.email;
+
 
   const copyCoupon = async () => {
     if (!coupon?.code) return;
@@ -197,7 +198,7 @@ function AccountPage() {
           <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
             <div>
               <p className="text-xs tracking-[0.2em] text-brand-gold/80 uppercase mb-2">Your account</p>
-              <h1 className="font-display text-3xl sm:text-5xl">Hi, {name}.</h1>
+              <h1 className="font-display text-3xl sm:text-5xl">Hi, {greeting}.</h1>
               <p className="text-sm text-foreground/50 mt-2">{user.email}</p>
             </div>
             <button
@@ -252,17 +253,8 @@ function AccountPage() {
                 )}
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-                <h3 className="font-display text-lg mb-3">Account info</h3>
-                <dl className="space-y-2 text-sm">
-                  <Row label="Name" value={[user.first_name, user.last_name].filter(Boolean).join(" ") || "—"} />
-                  <Row label="Email" value={user.email} />
-                  <Row
-                    label="Newsletter"
-                    value={user.marketing_opt_in ? "Subscribed" : "Not subscribed"}
-                  />
-                </dl>
-              </div>
+              <AccountInfoCard />
+
             </aside>
           </div>
         </div>
@@ -273,14 +265,180 @@ function AccountPage() {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+
+const PROFILE_API = "https://admin.clarumpeptides.com/wp-json/clarum/v1/me/profile";
+const NEWSLETTER_API = "https://admin.clarumpeptides.com/wp-json/clarum/v1/me/newsletter";
+
+function AccountInfoCard() {
+  const { user, token, updateUser } = useClarumAuth();
+  const [editing, setEditing] = useState(false);
+  const [firstName, setFirstName] = useState(user?.first_name ?? "");
+  const [lastName, setLastName] = useState(user?.last_name ?? "");
+  const [savingName, setSavingName] = useState(false);
+  const [savingNl, setSavingNl] = useState(false);
+
+  useEffect(() => {
+    if (!editing) {
+      setFirstName(user?.first_name ?? "");
+      setLastName(user?.last_name ?? "");
+    }
+  }, [user?.first_name, user?.last_name, editing]);
+
+  if (!user) return null;
+
+  const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ") || "—";
+  const subscribed = user.marketing_opt_in === true;
+
+  const saveName = async () => {
+    if (!token) return;
+    const trimmedFirst = firstName.trim();
+    const trimmedLast = lastName.trim();
+    const prev: Partial<ClarumUser> = {
+      first_name: user.first_name,
+      last_name: user.last_name,
+    };
+    setSavingName(true);
+    updateUser({ first_name: trimmedFirst, last_name: trimmedLast });
+    setEditing(false);
+    try {
+      const res = await fetch(PROFILE_API, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ first_name: trimmedFirst, last_name: trimmedLast }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.ok === false) {
+        throw new Error(data?.message || `Save failed (${res.status})`);
+      }
+      toast.success("Name updated");
+    } catch (err) {
+      console.error("[profile] save failed", err);
+      updateUser(prev);
+      setFirstName(prev.first_name ?? "");
+      setLastName(prev.last_name ?? "");
+      setEditing(true);
+      toast.error(err instanceof Error ? err.message : "Failed to update name");
+    } finally {
+      setSavingName(false);
+    }
+  };
+
+  const cancelEdit = () => {
+    setFirstName(user.first_name ?? "");
+    setLastName(user.last_name ?? "");
+    setEditing(false);
+  };
+
+  const toggleNewsletter = async (next: boolean) => {
+    if (!token || savingNl) return;
+    setSavingNl(true);
+    updateUser({ marketing_opt_in: next });
+    try {
+      const res = await fetch(NEWSLETTER_API, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ subscribed: next }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data?.ok === false) {
+        throw new Error(data?.message || `Request failed (${res.status})`);
+      }
+      const confirmed = typeof data?.subscribed === "boolean" ? data.subscribed : next;
+      updateUser({ marketing_opt_in: confirmed });
+      toast.success(confirmed ? "✓ Subscribed" : "Unsubscribed");
+    } catch (err) {
+      console.error("[newsletter] toggle failed", err);
+      updateUser({ marketing_opt_in: !next });
+      toast.error(err instanceof Error ? err.message : "Failed to update subscription");
+    } finally {
+      setSavingNl(false);
+    }
+  };
+
   return (
-    <div className="flex items-baseline justify-between gap-3">
-      <dt className="text-foreground/50">{label}</dt>
-      <dd className="text-foreground text-right truncate">{value}</dd>
+    <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
+      <h3 className="font-display text-lg mb-4">Account info</h3>
+
+      {/* Name */}
+      <div className="mb-4">
+        <div className="text-[12px] uppercase tracking-wider text-foreground/50 mb-1.5">Name</div>
+        {editing ? (
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <Input
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="First name"
+                autoFocus
+                disabled={savingName}
+              />
+              <Input
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="Last name"
+                disabled={savingName}
+              />
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={saveName}
+                disabled={savingName}
+                className="inline-flex items-center gap-1 rounded-full bg-brand-gold px-3 py-1.5 text-xs font-semibold text-brand-forest-deep hover:bg-brand-gold/90 disabled:opacity-60"
+              >
+                {savingName && <Loader2 className="h-3 w-3 animate-spin" />} Save
+              </button>
+              <button
+                onClick={cancelEdit}
+                disabled={savingName}
+                className="rounded-full border border-white/15 px-3 py-1.5 text-xs text-foreground/80 hover:border-white/30"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => setEditing(true)}
+            className="group flex w-full items-center justify-between gap-2 text-left text-sm text-foreground hover:text-brand-gold"
+          >
+            <span className="truncate">{fullName}</span>
+            <Pencil className="h-3.5 w-3.5 text-foreground/40 group-hover:text-brand-gold" />
+          </button>
+        )}
+      </div>
+
+      {/* Email (readonly) */}
+      <div className="mb-4">
+        <div className="text-[12px] uppercase tracking-wider text-foreground/50 mb-1.5">Email</div>
+        <div className="text-sm text-foreground truncate">{user.email}</div>
+      </div>
+
+      {/* Newsletter */}
+      <div className="pt-4 border-t border-white/5">
+        <div className="flex items-center justify-between gap-3">
+          <div className="text-[12px] uppercase tracking-wider text-foreground/50">Newsletter</div>
+          <Switch
+            checked={subscribed}
+            onCheckedChange={toggleNewsletter}
+            disabled={savingNl}
+          />
+        </div>
+        <p className="text-[12px] text-foreground/60 mt-2">
+          {subscribed
+            ? "You'll receive monthly product updates."
+            : "Get peptide drops + 10% off your next order."}
+        </p>
+      </div>
     </div>
   );
 }
+
 
 function RecentOrdersSection({
   loading,
