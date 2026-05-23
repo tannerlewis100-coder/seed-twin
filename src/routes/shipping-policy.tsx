@@ -18,16 +18,18 @@ function ShippingPolicyPage() {
     <LegalPage eyebrow="Legal" title="Shipping Policy" lastUpdated="May 23, 2026">
       <LegalH2>1. Shipping Destinations</LegalH2>
       <p>
-        We currently ship only within the United States. We do not ship to: Hawaii, Alaska,
-        U.S. territories, P.O. boxes, APO/FPO addresses, or internationally.
+        We currently ship within the United States. We do not ship to: Hawaii, Alaska, U.S.
+        territories, P.O. boxes, APO/FPO addresses, or internationally.
       </p>
 
-      <LegalH2>2. Restricted States</LegalH2>
+      <LegalH2>2. Jurisdictional Compliance</LegalH2>
       <p>
-        We do not ship to jurisdictions where the sale of research peptides is restricted.
-        Orders placed with shipping addresses in restricted states will be cancelled. You are
-        responsible for ensuring our products may be lawfully received at your delivery
-        address.
+        You are responsible for ensuring our products may be lawfully received at your delivery
+        address. By placing an order, you confirm that receipt and use of the products at your
+        shipping address complies with all applicable state and local laws. Clarum is not
+        responsible for orders that cannot be delivered or that result in legal issues at your
+        end due to local regulations. We reserve the right to refuse or cancel any order at our
+        sole discretion.
       </p>
 
       <LegalH2>3. Processing Time</LegalH2>
