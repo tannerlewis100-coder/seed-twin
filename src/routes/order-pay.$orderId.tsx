@@ -416,6 +416,10 @@ function OrderPayPage() {
                         currency={currency}
                         total={total}
                         memoCopied={memoCopied}
+                        reportedAt={reportedAt}
+                        reporting={reporting}
+                        reportError={reportError}
+                        onMarkSent={markTransferSent}
                         onCopyMemo={() => {
                           if (!bank?.memo) return;
                           navigator.clipboard?.writeText(bank.memo).then(
