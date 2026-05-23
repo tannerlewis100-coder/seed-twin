@@ -188,6 +188,7 @@ type Ctx = {
   setSession: (token: string, user?: ClarumUser | null) => Promise<void>;
   signOut: () => void;
   refresh: () => Promise<void>;
+  updateUser: (patch: Partial<ClarumUser>) => void;
 };
 
 const ClarumAuthCtx = createContext<Ctx | null>(null);
