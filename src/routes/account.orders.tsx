@@ -280,7 +280,7 @@ function AwaitingCard({ order }: { order: OrderRow }) {
               <StatusPill tone="green">✓ Reported</StatusPill>
             )}
           </div>
-          <p className="text-sm text-foreground mt-2 truncate">{order.items_preview || "—"}</p>
+          <p className="text-sm text-foreground mt-2 truncate">{formatItemsPreview(order.items_preview)}</p>
           <OrderMeta order={order} />
           {isBank && order.memo && (
             <div className="mt-3">
@@ -317,7 +317,7 @@ function ActiveCard({ order }: { order: OrderRow }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <StatusPill tone="blue">{order.status || "Processing"}</StatusPill>
-          <p className="text-sm text-foreground mt-2 truncate">{order.items_preview || "—"}</p>
+          <p className="text-sm text-foreground mt-2 truncate">{formatItemsPreview(order.items_preview)}</p>
           <OrderMeta order={order} />
         </div>
         <div className="text-right">
@@ -342,7 +342,7 @@ function PastCard({ order }: { order: OrderRow }) {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <StatusPill tone={isCompleted ? "green" : "gray"}>{order.status || "Closed"}</StatusPill>
-          <p className="text-sm text-foreground mt-2 truncate">{order.items_preview || "—"}</p>
+          <p className="text-sm text-foreground mt-2 truncate">{formatItemsPreview(order.items_preview)}</p>
           <OrderMeta order={order} />
         </div>
         <div className="text-right">
