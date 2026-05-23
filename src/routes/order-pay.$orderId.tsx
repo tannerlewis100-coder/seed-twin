@@ -57,8 +57,45 @@ function OrderPayPage() {
   const [bankError, setBankError] = useState<string | null>(null);
   const [bankPaid, setBankPaid] = useState(false);
   const [memoCopied, setMemoCopied] = useState(false);
+  const [reportedAt, setReportedAt] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      return localStorage.getItem(`clarum_bt_reported_${orderId}`);
+    } catch {
+      return null;
+    }
+  });
+  const [reporting, setReporting] = useState(false);
+  const [reportError, setReportError] = useState<string | null>(null);
   const widgetRef = useRef<HTMLDivElement | null>(null);
   const bankFetchedRef = useRef(false);
+
+  async function markTransferSent() {
+    if (reporting || reportedAt) return;
+    setReporting(true);
+    setReportError(null);
+    try {
+      const res = await fetch(`${WP_BASE}/bank-transfer/mark-sent`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_id: Number(orderId), key }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data?.message || `Failed (${res.status})`);
+      }
+      const ts = new Date().toISOString();
+      setReportedAt(ts);
+      try {
+        localStorage.setItem(`clarum_bt_reported_${orderId}`, ts);
+      } catch { /* ignore */ }
+    } catch (e) {
+      console.error("mark-sent failed", e);
+      setReportError(e instanceof Error ? e.message : "Could not report transfer.");
+    } finally {
+      setReporting(false);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
