@@ -192,59 +192,12 @@ function AccountPage() {
 
           <div className="grid lg:grid-cols-[1fr_360px] gap-6">
             {/* Orders */}
-            <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-              <div className="flex items-center justify-between mb-5">
-                <h2 className="font-display text-xl flex items-center gap-2">
-                  <Package className="h-5 w-5 text-brand-gold" /> Recent orders
-                  {user.orders && user.orders.length > 0 && (
-                    <span className="text-xs text-foreground/40 font-sans">({user.orders.length})</span>
-                  )}
-                </h2>
-                {user.orders && user.orders.length > 0 && (
-                  <Link to="/account/orders" className="text-[12px] text-brand-gold hover:underline">
-                    View all →
-                  </Link>
-                )}
-              </div>
-              {user.orders && user.orders.length > 0 ? (
-                <ul className="divide-y divide-white/5">
-                  {user.orders.slice(0, 2).map((o) => (
-                    <li key={o.id} className="py-4 flex flex-wrap items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm text-foreground">Order #{o.number ?? o.id}</p>
-                        <p className="text-[12px] text-foreground/50">
-                          {o.date_created ? new Date(o.date_created).toLocaleDateString() : ""}
-                          {o.status ? ` · ${o.status}` : ""}
-                        </p>
-                        {o.items && o.items.length > 0 && (
-                          <p className="text-[12px] text-foreground/60 mt-1">
-                            {o.items.map((i) => `${i.name} ×${i.quantity}`).join(", ")}
-                          </p>
-                        )}
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-foreground">
-                          {o.currency === "USD" ? "$" : (o.currency ?? "$")}
-                          {o.total ?? "0.00"}
-                        </p>
-                        <Link
-                          to="/order-confirmation/$orderId"
-                          params={{ orderId: String(o.id) }}
-                          className="text-[12px] text-brand-gold hover:underline"
-                        >
-                          View
-                        </Link>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="py-10 text-center text-sm text-foreground/50">
-                  No orders yet.{" "}
-                  <Link to="/shop" className="text-brand-gold hover:underline">Browse the catalog →</Link>
-                </div>
-              )}
-            </section>
+            <RecentOrdersSection
+              loading={ordersLoading}
+              error={ordersError}
+              data={orders}
+            />
+
 
             {/* Welcome coupon + account */}
             <aside className="space-y-6">
