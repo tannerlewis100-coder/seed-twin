@@ -74,6 +74,15 @@ const sections: FooterSection[] = [
       { label: "Create account", to: "/sign-up" },
     ],
   },
+  {
+    title: "Legal",
+    links: [
+      { label: "Terms of Service", to: "/terms" },
+      { label: "Privacy Policy", to: "/privacy" },
+      { label: "Refund Policy", to: "/refund-policy" },
+      { label: "Shipping Policy", to: "/shipping-policy" },
+    ],
+  },
 ];
 
 const socials = [
@@ -160,7 +169,7 @@ export default function StickyFooter() {
 
             <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-8 h-full flex flex-col">
               {/* Top: brand + nav */}
-              <div className="grid md:grid-cols-5 gap-10">
+              <div className="grid md:grid-cols-6 gap-10">
                 <motion.div variants={itemVariants} className="md:col-span-2 space-y-4">
                   <Link
                     to="/"
