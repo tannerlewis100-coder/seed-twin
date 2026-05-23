@@ -74,6 +74,15 @@ const sections: FooterSection[] = [
       { label: "Create account", to: "/sign-up" },
     ],
   },
+  {
+    title: "Legal",
+    links: [
+      { label: "Terms of Service", to: "/terms" },
+      { label: "Privacy Policy", to: "/privacy" },
+      { label: "Refund Policy", to: "/refund-policy" },
+      { label: "Shipping Policy", to: "/shipping-policy" },
+    ],
+  },
 ];
 
 const socials = [
