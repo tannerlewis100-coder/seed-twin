@@ -40,6 +40,9 @@ async function proxyToWoo(request: Request) {
   const nonce = request.headers.get("nonce");
   if (nonce) headers.set("Nonce", nonce);
 
+  const authorization = request.headers.get("authorization");
+  if (authorization) headers.set("Authorization", authorization);
+
   const init: RequestInit = {
     method: request.method,
     headers,
