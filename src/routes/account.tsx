@@ -1,10 +1,86 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Loader2, LogOut, Package, Ticket, Check, Copy } from "lucide-react";
+import { Loader2, LogOut, Package, Ticket, Check, Copy, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useClarumAuth } from "@/lib/clarum-auth";
+
+type RecentOrder = {
+  id: number;
+  key?: string;
+  status?: string;
+  total?: string | number;
+  currency?: string;
+  payment_method?: string;
+  payment_label?: string;
+  memo?: string | null;
+  items_preview?: string | string[];
+  date?: string;
+};
+
+type OrdersResponse = {
+  awaiting?: RecentOrder[];
+  active?: RecentOrder[];
+  past?: RecentOrder[];
+  counts?: { awaiting?: number; active?: number; past?: number; total?: number };
+};
+
+const ORDERS_API = "https://admin.clarumpeptides.com/wp-json/clarum/v1/me/orders";
+
+function relativeTime(date?: string): string {
+  if (!date) return "";
+  const t = new Date(date).getTime();
+  if (Number.isNaN(t)) return "";
+  const diff = Date.now() - t;
+  const min = Math.round(diff / 60000);
+  if (min < 1) return "just now";
+  if (min < 60) return `${min} min ago`;
+  const hr = Math.round(min / 60);
+  if (hr < 24) return hr < 6 ? `${hr} hour${hr === 1 ? "" : "s"} ago` : "Today";
+  const d = Math.round(hr / 24);
+  if (d === 1) return "Yesterday";
+  if (d < 30) return `${d} days ago`;
+  const mo = Math.round(d / 30);
+  if (mo < 12) return `${mo} month${mo === 1 ? "" : "s"} ago`;
+  return new Date(date).toLocaleDateString();
+}
+
+function fmtMoney(total?: string | number, currency?: string): string {
+  const n = typeof total === "string" ? parseFloat(total) : total ?? 0;
+  const sym = (currency ?? "USD") === "USD" ? "$" : `${currency} `;
+  return `${sym}${(n || 0).toFixed(2)}`;
+}
+
+function statusTone(status?: string, paymentMethod?: string, isAwaiting?: boolean): {
+  tone: "amber" | "blue" | "green" | "gray";
+  label: string;
+} {
+  const s = (status || "").toLowerCase();
+  if (isAwaiting || s === "pending" || s === "on-hold" || s === "awaiting-payment") {
+    return { tone: "amber", label: "Awaiting Payment" };
+  }
+  if (s === "completed") return { tone: "green", label: "Completed" };
+  if (s === "cancelled" || s === "failed" || s === "refunded") {
+    return { tone: "gray", label: status ? status[0].toUpperCase() + status.slice(1) : "Closed" };
+  }
+  if (s === "processing" || s === "shipped" || s === "in-transit") {
+    return { tone: "blue", label: status ? status[0].toUpperCase() + status.slice(1) : "Processing" };
+  }
+  void paymentMethod;
+  return { tone: "blue", label: status || "Processing" };
+}
+
+function pillClasses(tone: "amber" | "blue" | "green" | "gray"): string {
+  const styles = {
+    amber: "bg-amber-500/15 text-amber-300 border-amber-500/30",
+    blue: "bg-sky-500/15 text-sky-300 border-sky-500/30",
+    gray: "bg-white/5 text-foreground/60 border-white/10",
+    green: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
+  } as const;
+  return `inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-medium uppercase tracking-wider ${styles[tone]}`;
+}
+
 
 export const Route = createFileRoute("/account")({
   head: () => ({
