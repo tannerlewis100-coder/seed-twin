@@ -28,6 +28,7 @@ type OrderRow = {
   memo?: string | null;
   items_preview?: string;
   date?: string;
+  bt_user_reported?: boolean;
 };
 
 type OrdersResponse = {
