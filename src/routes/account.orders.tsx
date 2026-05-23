@@ -63,6 +63,24 @@ function fmtMoney(total?: string | number, currency?: string): string {
   return `${sym}${(n || 0).toFixed(2)}`;
 }
 
+function formatItemsPreview(
+  preview?: string | Array<{ qty?: number; quantity?: number; name?: string } | string>
+): string {
+  if (!preview) return "—";
+  if (typeof preview === "string") return preview;
+  const parts = preview
+    .map((it) => {
+      if (typeof it === "string") return it;
+      const qty = it.qty ?? it.quantity;
+      const name = it.name ?? "";
+      if (!name) return "";
+      return qty && qty > 1 ? `${qty}× ${name}` : `1× ${name}`;
+    })
+    .filter(Boolean);
+  return parts.length ? parts.join(", ") : "—";
+}
+
+
 function OrdersPage() {
   const { token, loading: authLoading } = useClarumAuth();
   const navigate = useNavigate();
