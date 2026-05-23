@@ -87,12 +87,22 @@ function AccountPage() {
           <div className="grid lg:grid-cols-[1fr_360px] gap-6">
             {/* Orders */}
             <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-              <h2 className="font-display text-xl mb-5 flex items-center gap-2">
-                <Package className="h-5 w-5 text-brand-gold" /> Recent orders
-              </h2>
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="font-display text-xl flex items-center gap-2">
+                  <Package className="h-5 w-5 text-brand-gold" /> Recent orders
+                  {user.orders && user.orders.length > 0 && (
+                    <span className="text-xs text-foreground/40 font-sans">({user.orders.length})</span>
+                  )}
+                </h2>
+                {user.orders && user.orders.length > 0 && (
+                  <Link to="/account/orders" className="text-[12px] text-brand-gold hover:underline">
+                    View all →
+                  </Link>
+                )}
+              </div>
               {user.orders && user.orders.length > 0 ? (
                 <ul className="divide-y divide-white/5">
-                  {user.orders.map((o) => (
+                  {user.orders.slice(0, 2).map((o) => (
                     <li key={o.id} className="py-4 flex flex-wrap items-center justify-between gap-3">
                       <div>
                         <p className="text-sm text-foreground">Order #{o.number ?? o.id}</p>

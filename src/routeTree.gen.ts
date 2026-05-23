@@ -25,6 +25,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrderReceivedOrderIdRouteImport } from './routes/order-received.$orderId'
 import { Route as OrderPayOrderIdRouteImport } from './routes/order-pay.$orderId'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
+import { Route as AccountOrdersRouteImport } from './routes/account.orders'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
 
 const SignupRoute = SignupRouteImport.update({
@@ -108,6 +109,11 @@ const OrderConfirmationOrderIdRoute =
     path: '/order-confirmation/$orderId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AccountOrdersRoute = AccountOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AccountRoute,
+} as any)
 const ApiPublicWooStoreRoute = ApiPublicWooStoreRouteImport.update({
   id: '/api/public/woo-store',
   path: '/api/public/woo-store',
@@ -117,7 +123,7 @@ const ApiPublicWooStoreRoute = ApiPublicWooStoreRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/account': typeof AccountRoute
+  '/account': typeof AccountRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/coa-library': typeof CoaLibraryRoute
   '/contact': typeof ContactRoute
@@ -128,6 +134,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -136,7 +143,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/account': typeof AccountRoute
+  '/account': typeof AccountRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/coa-library': typeof CoaLibraryRoute
   '/contact': typeof ContactRoute
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -156,7 +164,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/account': typeof AccountRoute
+  '/account': typeof AccountRouteWithChildren
   '/checkout': typeof CheckoutRoute
   '/coa-library': typeof CoaLibraryRoute
   '/contact': typeof ContactRoute
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -188,6 +197,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/account/orders'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/account/orders'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/account/orders'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -235,7 +247,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AccountRoute: typeof AccountRoute
+  AccountRoute: typeof AccountRouteWithChildren
   CheckoutRoute: typeof CheckoutRoute
   CoaLibraryRoute: typeof CoaLibraryRoute
   ContactRoute: typeof ContactRoute
@@ -366,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrderConfirmationOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/account/orders': {
+      id: '/account/orders'
+      path: '/orders'
+      fullPath: '/account/orders'
+      preLoaderRoute: typeof AccountOrdersRouteImport
+      parentRoute: typeof AccountRoute
+    }
     '/api/public/woo-store': {
       id: '/api/public/woo-store'
       path: '/api/public/woo-store'
@@ -376,10 +395,21 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AccountRouteChildren {
+  AccountOrdersRoute: typeof AccountOrdersRoute
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountOrdersRoute: AccountOrdersRoute,
+}
+
+const AccountRouteWithChildren =
+  AccountRoute._addFileChildren(AccountRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AccountRoute: AccountRoute,
+  AccountRoute: AccountRouteWithChildren,
   CheckoutRoute: CheckoutRoute,
   CoaLibraryRoute: CoaLibraryRoute,
   ContactRoute: ContactRoute,
