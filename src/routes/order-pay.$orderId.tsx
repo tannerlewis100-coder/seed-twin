@@ -44,6 +44,7 @@ declare global {
 function OrderPayPage() {
   const { orderId } = Route.useParams();
   const { key } = Route.useSearch();
+  const navigate = useNavigate();
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
