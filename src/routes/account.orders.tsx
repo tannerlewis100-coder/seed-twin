@@ -28,6 +28,7 @@ type OrderRow = {
   memo?: string | null;
   items_preview?: string;
   date?: string;
+  bt_user_reported?: boolean;
 };
 
 type OrdersResponse = {
@@ -255,8 +256,11 @@ function AwaitingCard({ order }: { order: OrderRow }) {
     <CardShell>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <StatusPill tone="amber">Awaiting payment</StatusPill>
+            {order.bt_user_reported === true && (
+              <StatusPill tone="green">✓ Reported</StatusPill>
+            )}
           </div>
           <p className="text-sm text-foreground mt-2 truncate">{order.items_preview || "—"}</p>
           <OrderMeta order={order} />

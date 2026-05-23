@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { CheckCircle2, Copy, Loader2, Lock } from "lucide-react";
+import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { fetchOrder, fromMinor, type WooOrder } from "@/lib/woo";
@@ -43,6 +44,7 @@ declare global {
 function OrderPayPage() {
   const { orderId } = Route.useParams();
   const { key } = Route.useSearch();
+  const navigate = useNavigate();
 
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(true);
@@ -89,6 +91,10 @@ function OrderPayPage() {
       try {
         localStorage.setItem(`clarum_bt_reported_${orderId}`, ts);
       } catch { /* ignore */ }
+      toast.success("Transfer reported — we'll email you when it lands");
+      setTimeout(() => {
+        navigate({ to: "/account/orders" });
+      }, 1000);
     } catch (e) {
       console.error("mark-sent failed", e);
       setReportError(e instanceof Error ? e.message : "Could not report transfer.");
