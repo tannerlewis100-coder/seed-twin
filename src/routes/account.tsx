@@ -195,7 +195,7 @@ function AccountPage() {
           <div className="flex flex-wrap items-end justify-between gap-4 mb-10">
             <div>
               <p className="text-xs tracking-[0.2em] text-brand-gold/80 uppercase mb-2">Your account</p>
-              <h1 className="font-display text-3xl sm:text-5xl">Hi, {name}.</h1>
+              <h1 className="font-display text-3xl sm:text-5xl">Hi, {greeting}.</h1>
               <p className="text-sm text-foreground/50 mt-2">{user.email}</p>
             </div>
             <button
