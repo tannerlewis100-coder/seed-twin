@@ -629,6 +629,22 @@ function BankTransferPanel({
         </div>
       )}
 
+      <button
+        type="button"
+        onClick={onMarkSent}
+        disabled={reporting}
+        className="w-full rounded-xl bg-amber-400 hover:bg-amber-300 text-brand-forest font-semibold text-lg py-4 mb-3 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+      >
+        {reporting ? (
+          <><Loader2 className="h-5 w-5 animate-spin" /> Reporting…</>
+        ) : (
+          <><CheckCircle2 className="h-5 w-5" /> I've sent the transfer</>
+        )}
+      </button>
+      {reportError && (
+        <p className="text-sm text-red-300 mb-3 text-center">{reportError}</p>
+      )}
+
       <p className="text-[11px] text-foreground/40 text-center flex items-center justify-center gap-2">
         <Loader2 className="h-3 w-3 animate-spin" /> Waiting for payment. This page auto-updates every 30 seconds.
       </p>
