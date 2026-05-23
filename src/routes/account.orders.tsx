@@ -26,7 +26,7 @@ type OrderRow = {
   payment_method?: string;
   payment_label?: string;
   memo?: string | null;
-  items_preview?: string;
+  items_preview?: string | Array<{ qty?: number; quantity?: number; name?: string } | string>;
   date?: string;
   bt_user_reported?: boolean;
 };
