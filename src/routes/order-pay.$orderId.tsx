@@ -93,20 +93,36 @@ function OrderPayPage() {
 
   // Fetch bank transfer instructions
   useEffect(() => {
-    if (tab !== "bank" || !order || !key) return;
+    if (!order || !key) return;
+    if (order.payment_method !== "clarum_bank_transfer") return;
     if (bank || bankLoading) return;
     let cancelled = false;
     setBankLoading(true);
     setBankError(null);
     (async () => {
       try {
-        const res = await fetch(
-          `${WP_BASE}/bank-transfer/instructions?order_id=${encodeURIComponent(orderId)}&key=${encodeURIComponent(key)}`,
-        );
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data?.message || "Could not load bank instructions.");
+        const url = `${WP_BASE}/bank-transfer/instructions?order_id=${encodeURIComponent(orderId)}&key=${encodeURIComponent(key)}`;
+        const res = await fetch(url);
+        const text = await res.text();
+        let data: any = null;
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch (parseErr) {
+          console.error("Bank instructions: non-JSON response", { status: res.status, text, parseErr });
+          throw new Error("Invalid response from bank instructions endpoint.");
+        }
+        if (!res.ok) {
+          console.error("Bank instructions error response", { status: res.status, data });
+          throw new Error(data?.message || `Bank instructions failed (${res.status})`);
+        }
+        if (data?.fallback) {
+          console.warn("Bank instructions returned fallback", data);
+          throw new Error(data?.message || "Bank instructions temporarily unavailable.");
+        }
+        console.info("Bank instructions loaded", data);
         if (!cancelled) setBank(data as BankInstructions);
       } catch (e) {
+        console.error("Bank instructions fetch failed", e);
         if (!cancelled) setBankError(e instanceof Error ? e.message : "Could not load bank instructions.");
       } finally {
         if (!cancelled) setBankLoading(false);
@@ -115,11 +131,12 @@ function OrderPayPage() {
     return () => {
       cancelled = true;
     };
-  }, [tab, order, key, orderId, bank, bankLoading]);
+  }, [order, key, orderId, bank, bankLoading]);
 
   // Poll order status every 30s for bank transfer
   useEffect(() => {
-    if (tab !== "bank" || !order || !key || bankPaid) return;
+    if (!order || !key || bankPaid) return;
+    if (order.payment_method !== "clarum_bank_transfer") return;
     const interval = setInterval(async () => {
       try {
         const res = await fetch(
@@ -130,12 +147,12 @@ function OrderPayPage() {
           setBankPaid(true);
           clearInterval(interval);
         }
-      } catch {
-        /* ignore */
+      } catch (e) {
+        console.error("Bank status poll failed", e);
       }
     }, 30000);
     return () => clearInterval(interval);
-  }, [tab, order, key, orderId, bankPaid]);
+  }, [order, key, orderId, bankPaid]);
 
 
   useEffect(() => {
