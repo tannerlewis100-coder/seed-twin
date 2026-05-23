@@ -157,6 +157,15 @@ function ContactPage() {
               onSubmit={handleSubmit}
               className="bg-background rounded-3xl border border-white/5 p-7 space-y-4"
             >
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                style={{ position: "absolute", left: "-9999px" }}
+                aria-hidden="true"
+              />
               <div className="grid sm:grid-cols-2 gap-4">
                 <Field
                   label="Name"
