@@ -35,9 +35,10 @@ const contactInfo = [
 
 function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [website, setWebsite] = useState(""); // honeypot
   const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = {
       name: form.name.trim(),
@@ -45,16 +46,42 @@ function ContactPage() {
       subject: form.subject.trim(),
       message: form.message.trim(),
     };
-    if (!trimmed.name || !trimmed.email || !trimmed.subject || !trimmed.message) {
-      toast.error("Please fill in all fields.");
+    if (trimmed.name.length < 2) {
+      toast.error("Please enter your name (at least 2 characters).");
       return;
     }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    if (trimmed.message.length < 10) {
+      toast.error("Message must be at least 10 characters.");
+      return;
+    }
+    if (trimmed.message.length > 5000) {
+      toast.error("Message must be 5000 characters or less.");
+      return;
+    }
+
     setSending(true);
-    setTimeout(() => {
-      toast.success("Message sent! We'll be in touch soon.");
-      setForm({ name: "", email: "", subject: "", message: "" });
+    try {
+      const res = await fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...trimmed, website }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data?.ok) {
+        toast.success("✓ Message sent — we'll get back to you within 1 business day");
+        setForm({ name: "", email: "", subject: "", message: "" });
+      } else {
+        toast.error(data?.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      toast.error("Network error. Please try again.");
+    } finally {
       setSending(false);
-    }, 600);
+    }
   };
 
   return (
