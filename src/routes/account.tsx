@@ -302,9 +302,10 @@ function AccountInfoCard() {
     setEditing(false);
     try {
       const res = await fetch(PROFILE_API, {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-HTTP-Method-Override": "PUT",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ first_name: trimmedFirst, last_name: trimmedLast }),
