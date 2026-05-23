@@ -330,7 +330,7 @@ function OrderPayPage() {
                           />
                         )}
                       </>
-                    ) : (
+                    ) : tab === "nowpayments" ? (
                       <>
                         <h2 className="font-display text-2xl text-foreground mb-1">Pay with any coin</h2>
                         <p className="text-sm text-foreground/50 mb-6">
@@ -357,8 +357,29 @@ function OrderPayPage() {
                           You'll be redirected to NOWPayments to complete payment, then sent back here.
                         </p>
                       </>
+                    ) : (
+                      <BankTransferPanel
+                        bank={bank}
+                        loading={bankLoading}
+                        error={bankError}
+                        paid={bankPaid}
+                        currency={currency}
+                        total={total}
+                        memoCopied={memoCopied}
+                        onCopyMemo={() => {
+                          if (!bank?.memo) return;
+                          navigator.clipboard?.writeText(bank.memo).then(
+                            () => {
+                              setMemoCopied(true);
+                              setTimeout(() => setMemoCopied(false), 2000);
+                            },
+                            () => {/* ignore */},
+                          );
+                        }}
+                      />
                     )}
                   </>
+
 
                 )}
               </div>
