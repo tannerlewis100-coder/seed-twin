@@ -313,9 +313,8 @@ function RecentOrdersSection({
           {top3.map((o) => {
             const isAwaiting = awaiting.some((a) => a.id === o.id);
             const { tone, label } = statusTone(o.status, o.payment_method, isAwaiting);
-            const itemsText = Array.isArray(o.items_preview)
-              ? o.items_preview.join(", ")
-              : o.items_preview || "—";
+            const itemsText = formatItemsPreview(o.items_preview);
+
             const isBank = o.payment_method === "clarum_bank_transfer";
             return (
               <li key={o.id} className="py-4">
