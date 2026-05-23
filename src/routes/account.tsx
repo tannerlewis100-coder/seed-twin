@@ -107,6 +107,32 @@ function AccountPage() {
     }
   }, [loading, token, navigate]);
 
+  useEffect(() => {
+    if (!token) return;
+    let cancelled = false;
+    (async () => {
+      setOrdersLoading(true);
+      setOrdersError(null);
+      try {
+        const res = await fetch(ORDERS_API, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const json = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(json?.message || `Request failed (${res.status})`);
+        if (!cancelled) setOrders(json as OrdersResponse);
+      } catch (err) {
+        console.error("[account/orders] fetch failed", err);
+        if (!cancelled) setOrdersError(err instanceof Error ? err.message : "Failed to load orders");
+      } finally {
+        if (!cancelled) setOrdersLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [token]);
+
+
   if (loading || !user) {
     return (
       <div className="min-h-screen bg-brand-forest-deep text-foreground flex flex-col">
