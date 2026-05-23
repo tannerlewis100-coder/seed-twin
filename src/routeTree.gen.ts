@@ -9,10 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
@@ -28,6 +30,11 @@ import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-con
 import { Route as AccountOrdersRouteImport } from './routes/account.orders'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
@@ -46,6 +53,11 @@ const SignInRoute = SignInRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -130,10 +142,12 @@ export interface FileRoutesByFullPath {
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
@@ -150,10 +164,12 @@ export interface FileRoutesByTo {
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
@@ -171,10 +187,12 @@ export interface FileRoutesById {
   '/disclaimer': typeof DisclaimerRoute
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
   '/shop': typeof ShopRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
@@ -193,10 +211,12 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/faq'
     | '/login'
+    | '/privacy'
     | '/shop'
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/terms'
     | '/account/orders'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
@@ -213,10 +233,12 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/faq'
     | '/login'
+    | '/privacy'
     | '/shop'
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/terms'
     | '/account/orders'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
@@ -233,10 +255,12 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/faq'
     | '/login'
+    | '/privacy'
     | '/shop'
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/terms'
     | '/account/orders'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
@@ -254,10 +278,12 @@ export interface RootRouteChildren {
   DisclaimerRoute: typeof DisclaimerRoute
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
   ShopRoute: typeof ShopRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   SignupRoute: typeof SignupRoute
+  TermsRoute: typeof TermsRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
   OrderReceivedOrderIdRoute: typeof OrderReceivedOrderIdRoute
@@ -266,6 +292,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/signup': {
       id: '/signup'
       path: '/signup'
@@ -292,6 +325,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -416,10 +456,12 @@ const rootRouteChildren: RootRouteChildren = {
   DisclaimerRoute: DisclaimerRoute,
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
   ShopRoute: ShopRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   SignupRoute: SignupRoute,
+  TermsRoute: TermsRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   OrderPayOrderIdRoute: OrderPayOrderIdRoute,
   OrderReceivedOrderIdRoute: OrderReceivedOrderIdRoute,
@@ -428,3 +470,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
