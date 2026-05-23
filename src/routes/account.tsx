@@ -263,3 +263,96 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function RecentOrdersSection({
+  loading,
+  error,
+  data,
+}: {
+  loading: boolean;
+  error: string | null;
+  data: OrdersResponse | null;
+}) {
+  const awaiting = data?.awaiting ?? [];
+  const active = data?.active ?? [];
+  const past = data?.past ?? [];
+  const total =
+    data?.counts?.total ?? awaiting.length + active.length + past.length;
+
+  const top3: RecentOrder[] = [...awaiting, ...active, ...past].slice(0, 3);
+
+  return (
+    <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="font-display text-xl flex items-center gap-2">
+          <Package className="h-5 w-5 text-brand-gold" /> Recent orders
+          {total > 0 && (
+            <span className="text-xs text-foreground/40 font-sans">({total})</span>
+          )}
+        </h2>
+        {total > 0 && (
+          <Link to="/account/orders" className="text-[12px] text-brand-gold hover:underline">
+            View all orders →
+          </Link>
+        )}
+      </div>
+
+      {loading ? (
+        <div className="py-10 grid place-items-center">
+          <Loader2 className="h-5 w-5 animate-spin text-brand-gold/60" />
+        </div>
+      ) : error ? (
+        <div className="py-6 text-center text-sm text-destructive/80">{error}</div>
+      ) : total === 0 ? (
+        <div className="py-10 text-center text-sm text-foreground/50">
+          No orders yet.{" "}
+          <Link to="/shop" className="text-brand-gold hover:underline">Browse the catalog →</Link>
+        </div>
+      ) : (
+        <ul className="divide-y divide-white/5">
+          {top3.map((o) => {
+            const isAwaiting = awaiting.some((a) => a.id === o.id);
+            const { tone, label } = statusTone(o.status, o.payment_method, isAwaiting);
+            const itemsText = Array.isArray(o.items_preview)
+              ? o.items_preview.join(", ")
+              : o.items_preview || "—";
+            const isBank = o.payment_method === "clarum_bank_transfer";
+            return (
+              <li key={o.id} className="py-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <span className={pillClasses(tone)}>{label}</span>
+                    <p className="text-sm text-foreground mt-2 truncate">{itemsText}</p>
+                    <p className="text-[12px] text-foreground/50 mt-1">
+                      Order #{o.id}
+                      {o.date ? ` · ${relativeTime(o.date)}` : ""}
+                    </p>
+                  </div>
+                  <div className="text-right shrink-0">
+                    <p className="text-sm text-foreground">{fmtMoney(o.total, o.currency)}</p>
+                  </div>
+                </div>
+
+                {isAwaiting && isBank && o.memo && (
+                  <div className="mt-3 flex flex-wrap items-center gap-3">
+                    <span className="font-mono text-[12px] font-bold text-brand-gold tracking-wider">
+                      {o.memo}
+                    </span>
+                    {o.key && (
+                      <a
+                        href={`/order-pay/${o.id}?key=${encodeURIComponent(o.key)}`}
+                        className="inline-flex items-center gap-1 text-[12px] text-brand-gold hover:underline"
+                      >
+                        View payment details <ArrowRight className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
+  );
+}
