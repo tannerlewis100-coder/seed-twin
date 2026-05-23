@@ -91,6 +91,10 @@ function OrderPayPage() {
       try {
         localStorage.setItem(`clarum_bt_reported_${orderId}`, ts);
       } catch { /* ignore */ }
+      toast.success("Transfer reported — we'll email you when it lands");
+      setTimeout(() => {
+        navigate({ to: "/account/orders" });
+      }, 1000);
     } catch (e) {
       console.error("mark-sent failed", e);
       setReportError(e instanceof Error ? e.message : "Could not report transfer.");
