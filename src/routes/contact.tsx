@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, Clock, MapPin, Send } from "lucide-react";
+import { Mail, Clock, MapPin, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -33,52 +33,64 @@ const contactInfo = [
   { icon: Clock, label: "Hours", value: "Mon to Fri · 9 to 5 EST" },
 ];
 
+type FormErrors = Partial<Record<"name" | "email" | "message", string>>;
+
 function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [website, setWebsite] = useState(""); // honeypot
   const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const validate = (): FormErrors => {
+    const errs: FormErrors = {};
+    const name = form.name.trim();
+    const email = form.email.trim();
+    const message = form.message.trim();
+    if (name.length < 2) errs.name = "Please enter your name (at least 2 characters).";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      errs.email = "Please enter a valid email address.";
+    if (message.length < 10) errs.message = "Message must be at least 10 characters.";
+    else if (message.length > 5000) errs.message = "Message must be 5000 characters or less.";
+    return errs;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmed = {
-      name: form.name.trim(),
-      email: form.email.trim(),
-      subject: form.subject.trim(),
-      message: form.message.trim(),
-    };
-    if (trimmed.name.length < 2) {
-      toast.error("Please enter your name (at least 2 characters).");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed.email)) {
-      toast.error("Please enter a valid email address.");
-      return;
-    }
-    if (trimmed.message.length < 10) {
-      toast.error("Message must be at least 10 characters.");
-      return;
-    }
-    if (trimmed.message.length > 5000) {
-      toast.error("Message must be 5000 characters or less.");
-      return;
-    }
+    const errs = validate();
+    setErrors(errs);
+    if (Object.keys(errs).length > 0) return;
 
     setSending(true);
     try {
       const res = await fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...trimmed, website }),
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          subject: form.subject.trim(),
+          message: form.message.trim(),
+          website,
+        }),
       });
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => ({}) as { ok?: boolean; error?: string });
+
       if (res.ok && data?.ok) {
-        toast.success("✓ Message sent — we'll get back to you within 1 business day");
+        toast.success("Message sent — we'll get back to you within 1 business day");
         setForm({ name: "", email: "", subject: "", message: "" });
+        setErrors({});
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 5000);
+      } else if (res.status === 429) {
+        toast.error("Too many messages — try again in an hour");
+      } else if (res.status === 400) {
+        toast.error(data?.error || "Please check the form and try again.");
       } else {
-        toast.error(data?.error || "Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please email clarumpeps@gmail.com directly.");
       }
     } catch {
-      toast.error("Network error. Please try again.");
+      toast.error("Something went wrong. Please email clarumpeps@gmail.com directly.");
     } finally {
       setSending(false);
     }
@@ -153,57 +165,93 @@ function ContactPage() {
               </div>
             </aside>
 
-            <form
-              onSubmit={handleSubmit}
-              className="bg-background rounded-3xl border border-white/5 p-7 space-y-4"
-            >
-              <input
-                type="text"
-                tabIndex={-1}
-                autoComplete="off"
-                value={website}
-                onChange={(e) => setWebsite(e.target.value)}
-                style={{ position: "absolute", left: "-9999px" }}
-                aria-hidden="true"
-              />
-              <div className="grid sm:grid-cols-2 gap-4">
-                <Field
-                  label="Name"
-                  value={form.name}
-                  onChange={(v) => setForm((f) => ({ ...f, name: v }))}
-                />
-                <Field
-                  label="Email"
-                  type="email"
-                  value={form.email}
-                  onChange={(v) => setForm((f) => ({ ...f, email: v }))}
-                />
-              </div>
-              <Field
-                label="Subject"
-                value={form.subject}
-                onChange={(v) => setForm((f) => ({ ...f, subject: v }))}
-              />
-              <div>
-                <label className="text-[10px] uppercase tracking-wider text-foreground/55">
-                  Message
-                </label>
-                <textarea
-                  value={form.message}
-                  onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-                  rows={6}
-                  className="mt-1.5 w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-brand-gold/50 transition-colors resize-none"
-                  placeholder="Tell us what you need…"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={sending}
-                className="inline-flex items-center gap-2 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors disabled:opacity-60"
+            <div className="space-y-4">
+              {showSuccess && (
+                <div className="flex items-start gap-3 rounded-2xl border border-brand-gold/30 bg-brand-gold/10 p-4">
+                  <CheckCircle2 className="h-5 w-5 text-brand-gold shrink-0 mt-0.5" />
+                  <div className="text-sm text-foreground">
+                    <div className="font-medium">Message sent.</div>
+                    <div className="text-foreground/70">
+                      We'll get back to you within 1 business day.
+                    </div>
+                  </div>
+                </div>
+              )}
+              <form
+                onSubmit={handleSubmit}
+                noValidate
+                className="bg-background rounded-3xl border border-white/5 p-7 space-y-4"
               >
-                <Send className="h-4 w-4" /> {sending ? "Sending…" : "Send Message"}
-              </button>
-            </form>
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  aria-hidden="true"
+                  style={{
+                    position: "absolute",
+                    left: "-9999px",
+                    width: "1px",
+                    height: "1px",
+                    opacity: 0,
+                  }}
+                />
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <Field
+                    label="Name"
+                    value={form.name}
+                    onChange={(v) => setForm((f) => ({ ...f, name: v }))}
+                    error={errors.name}
+                  />
+                  <Field
+                    label="Email"
+                    type="email"
+                    value={form.email}
+                    onChange={(v) => setForm((f) => ({ ...f, email: v }))}
+                    error={errors.email}
+                  />
+                </div>
+                <Field
+                  label="Subject"
+                  value={form.subject}
+                  onChange={(v) => setForm((f) => ({ ...f, subject: v }))}
+                />
+                <div>
+                  <label className="text-[10px] uppercase tracking-wider text-foreground/55">
+                    Message
+                  </label>
+                  <textarea
+                    value={form.message}
+                    onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                    rows={6}
+                    maxLength={5000}
+                    aria-invalid={!!errors.message}
+                    className="mt-1.5 w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-brand-gold/50 transition-colors resize-none"
+                    placeholder="Tell us what you need…"
+                  />
+                  {errors.message && (
+                    <p className="mt-1.5 text-xs text-red-400">{errors.message}</p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className="inline-flex items-center gap-2 rounded-full bg-brand-gold text-brand-forest px-7 py-3.5 text-sm font-medium hover:bg-brand-gold-light transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {sending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Sending…
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4" /> Send Message
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
           </div>
         </section>
       </main>
@@ -217,11 +265,13 @@ function Field({
   value,
   onChange,
   type = "text",
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
+  error?: string;
 }) {
   return (
     <div>
@@ -230,8 +280,10 @@ function Field({
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        aria-invalid={!!error}
         className="mt-1.5 w-full bg-card border border-white/10 rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-brand-gold/50 transition-colors"
       />
+      {error && <p className="mt-1.5 text-xs text-red-400">{error}</p>}
     </div>
   );
 }
