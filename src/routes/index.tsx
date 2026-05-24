@@ -385,7 +385,7 @@ const SHOWCASE_SLUGS = [
   "nad-500mg",
   "glp-1-s-20mg",
   "wolverine-10mg",
-  "klow-blend",
+  "glow-blend",
   "ghk-cu-50mg",
   "tb-500-10mg",
 ];
