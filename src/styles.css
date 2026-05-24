@@ -322,3 +322,9 @@ img:not([data-allow-transform]) {
   transform: none;
   will-change: auto;
 }
+
+@keyframes clarum-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(212,167,69,0.45); }
+  70% { box-shadow: 0 0 0 18px rgba(212,167,69,0); }
+  100% { box-shadow: 0 0 0 0 rgba(212,167,69,0); }
+}
