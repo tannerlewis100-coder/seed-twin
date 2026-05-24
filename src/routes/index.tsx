@@ -456,6 +456,7 @@ function ProductCard({ peptide }: { peptide: (typeof peptides)[number] }) {
           src={img}
           alt={peptide.name}
           draggable={false}
+          data-allow-transform
           className="h-full w-auto object-contain select-none transition-transform duration-700 group-hover:scale-105"
           style={{ filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.55))" }}
         />
