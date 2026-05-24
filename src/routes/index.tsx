@@ -60,56 +60,134 @@ export const Route = createFileRoute("/")({
 /* ---------------- Hero ---------------- */
 
 function Hero() {
-  const featured = peptides[0];
+  const headlineWhite = "Research peptides,".split(" ");
+  const headlineGold = "without the guesswork.".split(" ");
+  const allWords = [
+    ...headlineWhite.map((w) => ({ word: w, gold: false })),
+    ...headlineGold.map((w) => ({ word: w, gold: true })),
+  ];
+
   return (
-    <section className="relative bg-background border-b border-white/[0.08]">
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-12 sm:pt-16 lg:pt-28 pb-16 sm:pb-20 lg:pb-32 grid lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-center min-h-[60vh]">
-        <div className="order-2 lg:order-1 lg:col-span-7 max-w-2xl">
-          <Badge
-            variant="outline"
-            className="border-brand-gold/40 text-brand-gold/90 bg-transparent rounded-full px-3 py-1 mb-6 sm:mb-8 text-[11px] tracking-[0.18em] uppercase font-medium"
-          >
-            Independently lab-tested
-          </Badge>
-          <h1 className="font-display text-[36px] sm:text-[44px] md:text-6xl lg:text-[80px] leading-[1.05] lg:leading-[1.02] text-foreground tracking-[-0.02em]">
-            <RevealText text={"No secrets here.\nAll testing done."} stagger={55} />
-          </h1>
-          <RevealOnScroll
-            as="p"
-            delay={250}
-            className="mt-6 sm:mt-8 text-[15px] lg:text-[17px] text-foreground/60 leading-[1.6] max-w-lg"
-          >
-            Five tests performed on each batch. HPLC, MS, metals, microbiology,
-            and endotoxin. The full report is added to the COA database the
-            same week the batch ships.
-          </RevealOnScroll>
-          <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4">
-            <Button
-              asChild
-              size="lg"
-              className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px] w-full sm:w-auto"
+    <section className="relative bg-black border-b border-white/[0.08]">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-20 pb-[60px] min-h-[90vh] flex items-center">
+        <div className="w-full grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
+          {/* Left column 60% */}
+          <div className="order-2 lg:order-1 lg:col-span-3">
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-[11px] tracking-[0.22em] uppercase font-medium text-[#D4A93E] mb-6"
             >
-              <Link to="/shop">Shop the Catalog</Link>
-            </Button>
-            <Button
-              asChild
-              variant="ghost"
-              size="lg"
-              className="rounded-full text-foreground hover:text-brand-gold hover:bg-transparent h-12 px-2 text-[14px] w-full sm:w-auto"
+              Independently Lab-Tested
+            </motion.div>
+
+            <h1 className="font-display text-[40px] sm:text-[52px] lg:text-[64px] leading-[1.05] tracking-[-0.02em] text-white">
+              {allWords.map((w, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.5, ease: "easeOut" }}
+                  className={
+                    w.gold
+                      ? "inline-block italic text-[#D4A93E] mr-[0.25em]"
+                      : "inline-block mr-[0.25em]"
+                  }
+                >
+                  {w.word}
+                </motion.span>
+              ))}
+            </h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: allWords.length * 0.05 + 0.1, duration: 0.5 }}
+              className="mt-6 text-[18px] leading-[1.6] text-[#A0A0A0] max-w-[480px]"
             >
-              <Link to="/coa-library">
+              Every batch tested across 5 assays. Every COA published the week it ships.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: allWords.length * 0.05 + 0.2, duration: 0.5 }}
+              className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4"
+            >
+              <Link
+                to="/shop"
+                className="inline-flex items-center justify-center rounded-full bg-[#D4A93E] text-black h-12 px-7 text-[14px] font-medium transition-transform duration-200 hover:-translate-y-0.5 hover:bg-[#e0b955]"
+              >
+                Shop the Catalog
+              </Link>
+              <Link
+                to="/coa-library"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D4A93E] text-[#D4A93E] bg-transparent h-12 px-7 text-[14px] font-medium transition-colors hover:bg-[#D4A93E]/10"
+              >
                 View COA Library <ArrowRight className="h-4 w-4" />
               </Link>
-            </Button>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: allWords.length * 0.05 + 0.35, duration: 0.6 }}
+              className="mt-8 text-[14px] text-[#777]"
+            >
+              HPLC · MS · Heavy Metals · Microbial · Endotoxin
+            </motion.div>
           </div>
-        </div>
-        <div className="order-1 lg:order-2 lg:col-span-5 flex justify-center lg:justify-end">
-          <CoaCard peptide={featured} />
+
+          {/* Right column 40% */}
+          <div className="order-1 lg:order-2 lg:col-span-2 relative hidden lg:flex justify-center items-center">
+            <div
+              aria-hidden
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            >
+              <div
+                className="w-[420px] h-[420px] rounded-full"
+                style={{
+                  background: "#D4A93E",
+                  opacity: 0.08,
+                  filter: "blur(80px)",
+                }}
+              />
+            </div>
+            <motion.img
+              src="https://admin.clarumpeptides.com/cdn/hero/hero-vials.png"
+              alt="Clarum research peptide vials"
+              className="relative w-full h-auto object-contain"
+              animate={{ y: [-8, 8, -8] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+
+          {/* Mobile image */}
+          <div className="order-1 lg:hidden relative w-full flex justify-center items-center" style={{ height: 380 }}>
+            <div
+              aria-hidden
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            >
+              <div
+                className="w-[320px] h-[320px] rounded-full"
+                style={{ background: "#D4A93E", opacity: 0.08, filter: "blur(80px)" }}
+              />
+            </div>
+            <motion.img
+              src="https://admin.clarumpeptides.com/cdn/hero/hero-vials.png"
+              alt="Clarum research peptide vials"
+              className="relative max-h-[380px] w-auto object-contain"
+              animate={{ y: [-8, 8, -8] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
 
 /* ---------------- Stats band ---------------- */
 
