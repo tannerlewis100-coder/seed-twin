@@ -1,6 +1,7 @@
 import type React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
+import heroVials from "@/assets/hero-vials.png";
 import {
   ArrowRight,
   Check,
@@ -155,7 +156,7 @@ function Hero() {
               />
             </div>
             <motion.img
-              src="https://admin.clarumpeptides.com/cdn/hero/hero-vials.png"
+              src={heroVials}
               alt="Clarum research peptide vials"
               className="relative w-full h-auto object-contain"
               animate={{ y: [-8, 8, -8] }}
@@ -175,7 +176,7 @@ function Hero() {
               />
             </div>
             <motion.img
-              src="https://admin.clarumpeptides.com/cdn/hero/hero-vials.png"
+              src={heroVials}
               alt="Clarum research peptide vials"
               className="relative max-h-[380px] w-auto object-contain"
               animate={{ y: [-8, 8, -8] }}
