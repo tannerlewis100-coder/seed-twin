@@ -388,7 +388,7 @@ export function SiteHeader() {
             onMouseEnter={() => setOpenMenu(null)}
             className={`flex items-center gap-2 sm:gap-3 transition-all duration-200 ease-out ${
               floating
-                ? "h-12 md:h-14 pl-3 sm:pl-5 pr-2 rounded-full bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
+                ? "h-12 md:h-14 pl-3 sm:pl-5 pr-2 rounded-full bg-background/95 sm:bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
                 : "h-full"
             }`}
           >
