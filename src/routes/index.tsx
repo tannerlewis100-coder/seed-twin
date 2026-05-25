@@ -70,7 +70,7 @@ function Hero() {
 
   return (
     <section className="relative bg-black border-b border-white/[0.08]">
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-20 pb-[60px] min-h-[90vh] flex items-center">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-10 sm:pt-20 pb-[60px] min-h-[70vh] sm:min-h-[90vh] flex items-center">
         <div className="w-full grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
           {/* Left column 60% */}
           <div className="order-2 lg:order-1 lg:col-span-3">
@@ -165,20 +165,20 @@ function Hero() {
           </div>
 
           {/* Mobile image */}
-          <div className="order-1 lg:hidden relative w-full flex justify-center items-center" style={{ height: 380 }}>
+          <div className="order-1 lg:hidden relative w-full flex justify-center items-center" style={{ height: 260 }}>
             <div
               aria-hidden
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
             >
               <div
-                className="w-[320px] h-[320px] rounded-full"
+                className="w-[240px] h-[240px] rounded-full"
                 style={{ background: "#D4A93E", opacity: 0.08, filter: "blur(80px)" }}
               />
             </div>
             <motion.img
               src={heroVials}
               alt="Clarum research peptide vials"
-              className="relative max-h-[380px] w-auto object-contain"
+              className="relative max-h-[260px] w-auto object-contain"
               animate={{ y: [-8, 8, -8] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
