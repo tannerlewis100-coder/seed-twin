@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GooeyTextProps {
   texts: string[];
@@ -18,10 +19,29 @@ export function GooeyText({
   className,
   textClassName,
 }: GooeyTextProps) {
+  const isMobile = useIsMobile();
   const text1Ref = React.useRef<HTMLSpanElement>(null);
   const text2Ref = React.useRef<HTMLSpanElement>(null);
 
   React.useEffect(() => {
+    // Mobile: simple crossfade, no per-frame blur/SVG filter.
+    if (isMobile) {
+      let textIndex = 0;
+      if (text1Ref.current && text2Ref.current) {
+        text1Ref.current.textContent = texts[textIndex];
+        text1Ref.current.style.opacity = "100%";
+        text1Ref.current.style.filter = "";
+        text2Ref.current.style.opacity = "0%";
+        text2Ref.current.style.filter = "";
+      }
+      const cycleMs = (morphTime + cooldownTime) * 1000;
+      const interval = setInterval(() => {
+        textIndex = (textIndex + 1) % texts.length;
+        if (text1Ref.current) text1Ref.current.textContent = texts[textIndex];
+      }, cycleMs);
+      return () => clearInterval(interval);
+    }
+
     let textIndex = texts.length - 1;
     let time = new Date();
     let morph = 0;
@@ -95,36 +115,39 @@ export function GooeyText({
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, [texts, morphTime, cooldownTime]);
+  }, [texts, morphTime, cooldownTime, isMobile]);
 
   return (
     <div className={cn("relative", className)}>
-      <svg className="absolute h-0 w-0" aria-hidden="true" focusable="false">
-        <defs>
-          <filter id="threshold">
-            <feColorMatrix
-              in="SourceGraphic"
-              type="matrix"
-              values="1 0 0 0 0
-                      0 1 0 0 0
-                      0 0 1 0 0
-                      0 0 0 255 -140"
-            />
-          </filter>
-        </defs>
-      </svg>
+      {!isMobile && (
+        <svg className="absolute h-0 w-0" aria-hidden="true" focusable="false">
+          <defs>
+            <filter id="threshold">
+              <feColorMatrix
+                in="SourceGraphic"
+                type="matrix"
+                values="1 0 0 0 0
+                        0 1 0 0 0
+                        0 0 1 0 0
+                        0 0 0 255 -140"
+              />
+            </filter>
+          </defs>
+        </svg>
+      )}
 
       <div
         className="flex items-center justify-center"
-        style={{ filter: "url(#threshold)" }}
+        style={isMobile ? undefined : { filter: "url(#threshold)" }}
       >
         <span
           ref={text1Ref}
           className={cn(
             "absolute inline-block select-none text-center text-6xl md:text-[60pt]",
-            "text-foreground",
+            "text-foreground transition-opacity",
             textClassName,
           )}
+          style={isMobile ? { transition: "opacity 400ms ease" } : undefined}
         />
         <span
           ref={text2Ref}
