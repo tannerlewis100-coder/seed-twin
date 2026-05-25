@@ -165,20 +165,20 @@ function Hero() {
           </div>
 
           {/* Mobile image */}
-          <div className="order-1 lg:hidden relative w-full flex justify-center items-center" style={{ height: 380 }}>
+          <div className="order-1 lg:hidden relative w-full flex justify-center items-center" style={{ height: 260 }}>
             <div
               aria-hidden
               className="absolute inset-0 flex items-center justify-center pointer-events-none"
             >
               <div
-                className="w-[320px] h-[320px] rounded-full"
+                className="w-[240px] h-[240px] rounded-full"
                 style={{ background: "#D4A93E", opacity: 0.08, filter: "blur(80px)" }}
               />
             </div>
             <motion.img
               src={heroVials}
               alt="Clarum research peptide vials"
-              className="relative max-h-[380px] w-auto object-contain"
+              className="relative max-h-[260px] w-auto object-contain"
               animate={{ y: [-8, 8, -8] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
