@@ -356,7 +356,7 @@ export function SiteHeader() {
           <div
             className={`flex items-center gap-8 lg:gap-12 transition-all duration-200 ease-out ${
               floating
-                ? "h-12 md:h-14 px-4 sm:px-5 md:px-7 rounded-full bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
+                ? "h-12 md:h-14 px-4 sm:px-5 md:px-7 rounded-full bg-background/95 sm:bg-background/80 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.7)]"
                 : "h-full"
             }`}
           >
