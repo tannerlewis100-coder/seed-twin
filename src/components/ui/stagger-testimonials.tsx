@@ -84,7 +84,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
     <div
       onClick={() => handleMove(position)}
       className={cn(
-        "absolute left-1/2 top-1/2 cursor-pointer border-2 p-8 transition-all duration-500 ease-in-out",
+        "absolute left-1/2 top-1/2 cursor-pointer border-2 p-5 sm:p-8 transition-all duration-500 ease-in-out",
         isCenter
           ? "z-10 bg-brand-gold text-brand-forest-deep border-brand-gold"
           : "z-0 bg-zinc-950 text-foreground border-white/10 hover:border-brand-gold/50"
@@ -92,7 +92,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
       style={{
         width: cardSize,
         height: cardSize,
-        clipPath: `polygon(50px 0%, calc(100% - 50px) 0%, 100% 50px, 100% 100%, calc(100% - 50px) 100%, 50px 100%, 0 100%, 0 0)`,
+        clipPath: `polygon(40px 0%, calc(100% - 40px) 0%, 100% 40px, 100% 100%, calc(100% - 40px) 100%, 40px 100%, 0 100%, 0 0)`,
         transform: `
           translate(-50%, -50%)
           translateX(${(cardSize / 1.5) * position}px)
@@ -104,31 +104,31 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
     >
       <span
         className="absolute block origin-top-right rotate-45 bg-white/10"
-        style={{ right: -2, top: 48, width: SQRT_5000, height: 2 }}
+        style={{ right: -2, top: 40, width: SQRT_5000, height: 2 }}
       />
       <img
         src={testimonial.imgSrc}
         alt={testimonial.by.split(",")[0]}
-        className="mb-4 h-14 w-12 bg-muted object-cover object-top"
+        className="mb-3 h-12 w-10 sm:h-14 sm:w-12 bg-muted object-cover object-top"
         style={{ boxShadow: "3px 3px 0px hsl(var(--background))" }}
       />
       <h3
         className={cn(
-          "text-sm sm:text-base font-medium leading-snug overflow-hidden",
+          "text-xs sm:text-base font-medium leading-snug overflow-hidden",
           isCenter ? "text-brand-forest-deep" : "text-foreground"
         )}
         style={{
           display: "-webkit-box",
-          WebkitLineClamp: 6,
+          WebkitLineClamp: 5,
           WebkitBoxOrient: "vertical",
-          paddingBottom: 48,
+          paddingBottom: 44,
         }}
       >
         "{testimonial.testimonial}"
       </h3>
       <p
         className={cn(
-          "absolute bottom-8 left-8 right-8 mt-2 text-sm italic",
+          "absolute bottom-4 left-5 right-5 sm:bottom-8 sm:left-8 sm:right-8 mt-2 text-[11px] sm:text-sm italic",
           isCenter ? "text-brand-forest-deep/75" : "text-foreground/55"
         )}
       >
