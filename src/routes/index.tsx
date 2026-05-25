@@ -70,7 +70,7 @@ function Hero() {
 
   return (
     <section className="relative bg-black border-b border-white/[0.08]">
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-20 pb-[60px] min-h-[90vh] flex items-center">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 pt-10 sm:pt-20 pb-[60px] min-h-[70vh] sm:min-h-[90vh] flex items-center">
         <div className="w-full grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
           {/* Left column 60% */}
           <div className="order-2 lg:order-1 lg:col-span-3">
