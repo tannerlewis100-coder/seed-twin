@@ -131,7 +131,7 @@ export function PromoPopup() {
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="relative hidden md:block w-full overflow-hidden bg-black md:aspect-auto md:min-h-[480px]">
+          <div className="relative w-full overflow-hidden bg-black aspect-[4/3] md:aspect-auto md:min-h-[480px]">
             <img
               src={promoVials}
               alt="Clarum research peptide vials"
