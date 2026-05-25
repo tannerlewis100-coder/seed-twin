@@ -1,38 +1,36 @@
-## Context
+## Mobile issues found
 
-Products on /shop are pulled live from the WooCommerce backend at `admin.clarumpeptides.com`. The frontend doesn't define products — it only maps each product name/slug to a vial image via `src/lib/vialImages.ts`. The ProductDetailModal already handles any number of variation sizes automatically (it reads them from Woo).
+Walked through the homepage at 390×844. Three real problems, plus a couple of small polish items.
 
-So "add the products the same way as before" = you create them in Woo admin, I make sure the frontend has vial-image mappings for every new size. Right now there are gaps.
+### 1. Sticky header overlaps content (highest priority)
+The floating header (logo pill + menu pill) sits on top of the page, but section titles and CTAs scroll *under* it with no padding offset. Visible cases:
+- "BPC-157" product card title hidden behind logo
+- "View the COA Library" announcement button half-covered
+- "Shop Catalog" CTA in the bottom section completely hidden behind the logo
 
-## Current image coverage
+**Fix:** Give the sticky header a subtle background/blur on mobile so content underneath is at least readable, *and* nudge first-section top padding so headings don't collide on scroll-stop. Simplest version — add `backdrop-blur` + semi-opaque background to the header pill container on `<sm` so it stops being transparent on dark backgrounds.
 
-Already mapped (assets exist):
-- GLP-1S: 10mg, 20mg, 30mg
-- GLP-2TZ: 10mg, 20mg, 40mg, 50mg, 60mg
-- GLP-3RT: 10mg, 20mg, 40mg, 60mg
+### 2. Promo popup has a huge blank black area on mobile
+On mobile the popup stacks vertically and shows a 16:9 black box at top where the `promo-vials.png` image should be — image isn't rendering / is empty. Takes up ~40% of the popup before the headline.
 
-Missing for the sizes you listed:
-- GLP-2TZ **30mg**
-- GLP-3RT **30mg**, **50mg**
+**Fix:** Hide the image block entirely on mobile (`hidden md:block`) so the popup opens compact, or shrink to a small banner. Keep the desktop split-screen layout untouched.
 
-## Changes
+### 3. Hero pushes text below the fold
+On 390px the hero vials image takes the full viewport and "Research peptides, without the guesswork." only appears after a scroll. The headline is the whole point.
 
-**1. `src/lib/vialImages.ts`** — add explicit size matchers for the three missing sizes. Until you upload dedicated renders, point them at the closest existing vial:
-- GLP-2TZ 30mg → reuse `glp2-tz-20mg.png`
-- GLP-3RT 30mg → reuse `glp3-rt-20mg.png`
-- GLP-3RT 50mg → reuse `glp3-rt-40mg.png`
+**Fix:** Shrink the hero image height on mobile (e.g. `h-[55vh]` instead of full) and tighten top padding so the headline peeks above the fold.
 
-Matchers go ABOVE the generic `/glp-?2/` and `/glp-?3/` fallbacks so they win.
+### Smaller polish (optional, group into same pass)
+- Stat row (70+ / 5 / 100% / ≥99%) — gold numbers are nice but the 2×2 grid has uneven vertical rhythm; tighten gap.
+- COA cards: right-aligned values (`99.8%`, `<20ppb`) sit tight against the edge — add a hair more right padding.
 
-**2. No other code changes needed.** The shop card, the variation pills, COA lookup, cart, and checkout all key off the Woo product/variation ID, so once you add the sizes in Woo they show up automatically with the right price, SKU, and stock state.
+### Out of scope
+- Testimonials (already fixed last turn)
+- Product modal — not re-checked here; can audit in a follow-up if you want.
 
-## What you need to do in Woo admin
+### Files I'd touch
+- `src/components/SiteHeader.tsx` — mobile background/blur
+- `src/routes/index.tsx` — hero height, section top padding, stat/COA spacing
+- `src/components/PromoPopup.tsx` — hide image on mobile
 
-For each parent product (GLP-1S, GLP-2TZ, GLP-3RT), add the new size variations under the existing variable product (don't create new parent products) so the "size" pills in the modal stay grouped. Make sure each variation has:
-- size attribute (e.g. "30mg")
-- price, SKU, stock
-- COA file/link if you publish them per-size
-
-## Follow-up (optional)
-
-When you have proper vial renders for 2TZ-30, 3RT-30, 3RT-50, drop them in `src/assets/products/` as `glp2-tz-30mg.png` etc. and I'll swap the mapping in one line each.
+Want me to ship all three, or just #1 and #2?
