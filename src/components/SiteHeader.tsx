@@ -136,7 +136,7 @@ function ShopMenu() {
           <QuickLink to="/shop">Shop all</QuickLink>
           <QuickLink to="/shop">Bestsellers</QuickLink>
           <QuickLink to="/shop">New arrivals</QuickLink>
-          <QuickLink to="/shop">Bundles</QuickLink>
+          
         </div>
         <div className="mt-3 mx-2 rounded-xl border border-brand-gold/20 bg-brand-gold/[0.06] p-3">
           <div className="flex items-center gap-1.5 text-brand-gold text-[11px] font-semibold uppercase tracking-wider">
