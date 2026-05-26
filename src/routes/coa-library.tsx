@@ -126,7 +126,7 @@ function CoaLibraryPage() {
                       <div>
                         <div className="flex items-center justify-between mb-3">
                           <span className="text-[10px] uppercase tracking-[0.2em] text-brand-gold/70">
-                            Batch {p.batch}
+                            {available ? `Batch ${p.batch}` : "Batch pending"}
                           </span>
                           {available ? (
                             <span className="text-[10px] uppercase tracking-wider font-bold bg-emerald-500/15 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20">
