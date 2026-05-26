@@ -96,15 +96,35 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
     window.setTimeout(() => setAdded(false), 1500);
   };
 
+  // Collapse blend doses ("5mg-5mg", "5+5mg", "50mg/10mg/10mg/10mg") into a single total.
+  const sumBlendDose = (raw: string): string => {
+    const parts = raw.split(/[-+/]/).map((s) => s.trim()).filter(Boolean);
+    if (parts.length < 2) return raw;
+    const nums: number[] = [];
+    let unit: string | null = null;
+    for (const part of parts) {
+      const m = part.match(/^(\d+(?:\.\d+)?)\s*([a-zµ]+)?$/i);
+      if (!m) return raw;
+      nums.push(parseFloat(m[1]));
+      if (m[2]) {
+        if (unit && unit !== m[2].toLowerCase()) return raw;
+        unit = m[2].toLowerCase();
+      }
+    }
+    if (!unit) return raw;
+    const total = nums.reduce((a, b) => a + b, 0);
+    return `${total}${unit}`;
+  };
+
   // Pill label: prefer the Clarum endpoint's literal `size` (e.g. "5mg").
   const labelFor = (v: WooProduct) => {
     const fromClarum = sizeById[v.id];
-    if (fromClarum) return fromClarum;
+    if (fromClarum) return sumBlendDose(fromClarum);
 
     // Fallback: Woo attribute value (skip "any" placeholder).
     const attr = v.attributes?.[0];
     const fromAttr = attr?.value ?? attr?.option;
-    if (fromAttr && fromAttr.toLowerCase() !== "any") return fromAttr;
+    if (fromAttr && fromAttr.toLowerCase() !== "any") return sumBlendDose(fromAttr);
 
     // Last-ditch: pull a dose pattern out of the variation/product name.
     const haystack = `${v.name} ${product.name}`;
