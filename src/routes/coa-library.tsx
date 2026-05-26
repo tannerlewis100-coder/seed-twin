@@ -126,7 +126,7 @@ function CoaLibraryPage() {
                       <div>
                         <div className="flex items-center justify-between mb-3">
                           <span className="text-[10px] uppercase tracking-[0.2em] text-brand-gold/70">
-                            Batch {p.batch}
+                            {available ? `Batch ${p.batch}` : "Batch pending"}
                           </span>
                           {available ? (
                             <span className="text-[10px] uppercase tracking-wider font-bold bg-emerald-500/15 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20">
@@ -162,19 +162,27 @@ function CoaLibraryPage() {
                         </button>
                       )}
                     </div>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-white/5">
-                      {rows.map((row) => (
-                        <div key={row.label} className="p-5 flex flex-col gap-1.5">
-                          <span className="text-[10px] uppercase tracking-wider text-foreground/45">
-                            {row.label}
-                          </span>
-                          <span className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-                            <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                            {row.value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                    {available ? (
+                      <div className="grid sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-white/5">
+                        {rows.map((row) => (
+                          <div key={row.label} className="p-5 flex flex-col gap-1.5">
+                            <span className="text-[10px] uppercase tracking-wider text-foreground/45">
+                              {row.label}
+                            </span>
+                            <span className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                              <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                              {row.value}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="p-7 flex items-center justify-center">
+                        <p className="text-xs text-foreground/40 text-center">
+                          Testing results will be published once this batch is released.
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Expanded COA panel */}
