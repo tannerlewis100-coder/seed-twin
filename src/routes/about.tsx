@@ -152,7 +152,7 @@ function AboutPage() {
           </div>
         </section>
 
-        {/* 5-Panel standard as a numbered methodology table */}
+        {/* Test panel as a numbered methodology table */}
         <section className="bg-background border-b border-white/5">
           <div className="mx-auto max-w-5xl px-5 sm:px-6 py-16 md:py-24">
             <div className="mb-10">
@@ -160,7 +160,7 @@ function AboutPage() {
                 Methodology
               </span>
               <h2 className="font-display text-3xl lg:text-5xl text-foreground mt-2">
-                <RevealText text="The 5-Panel Standard" />
+                <RevealText text="The Test Panel" />
               </h2>
             </div>
             <div className="border-t border-white/10">
