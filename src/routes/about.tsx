@@ -108,10 +108,9 @@ function AboutPage() {
                     vendors made that easy. Reliable. Consistent.
                   </p>
                   <p>
-                    Then the cracks showed. Vendor after vendor cut the same corners: skip identity
-                    testing, skip heavy metals, skip endotoxin, run an HPLC, call it
-                    "third-party tested." Enough to look legitimate. Not enough to actually protect
-                    the research.
+                    Then the cracks showed. Vendor after vendor cut the same corners: skip the
+                    harder panels, run one quick test, call it "third-party tested." Enough to
+                    look legitimate. Not enough to actually protect the research.
                   </p>
                   <p>
                     It was cheaper. It was faster. Most customers couldn't tell the difference, so
