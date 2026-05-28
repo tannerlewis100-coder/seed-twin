@@ -9,8 +9,11 @@ import {
   Atom,
   Shield,
   Bug,
-  Syringe,
+  Beaker,
   FileText,
+  QrCode,
+  Smartphone,
+  Clock,
 } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
