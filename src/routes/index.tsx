@@ -199,7 +199,7 @@ const heroStats = [
   ["70+", "Compounds"],
   ["5", "Tests Per Batch"],
   ["100%", "COA Documented"],
-  ["≥99%", "HPLC Purity"],
+  ["≥98%", "Percent Purity"],
 ];
 
 function StatsBand() {
