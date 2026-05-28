@@ -45,7 +45,7 @@ const defaultTestimonials = [
   {
     tempId: 5,
     testimonial:
-      "Three batches of BPC-157 over four months, HPLC traces within a hair of each other. Reproducibility starts here.",
+      "Three batches of BPC-157 over four months, purity numbers within a hair of each other. Reproducibility starts here.",
     by: "Prof. L. Tanaka, University Lab",
     imgSrc: "https://i.pravatar.cc/150?img=47",
   },
