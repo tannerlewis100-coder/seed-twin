@@ -139,7 +139,7 @@ function Hero() {
               transition={{ delay: allWords.length * 0.05 + 0.35, duration: 0.6 }}
               className="mt-8 text-[14px] text-[#777]"
             >
-              HPLC · MS · Heavy Metals · Microbial · Endotoxin
+              Identity · Purity · Label-Claim Assay · Heavy Metals · Microbial
             </motion.div>
           </div>
 
