@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, FlaskConical, Atom, Shield, Bug, Syringe } from "lucide-react";
+import { ArrowRight, FlaskConical, Atom, Shield, Bug, Beaker } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import RevealText from "@/components/RevealText";
