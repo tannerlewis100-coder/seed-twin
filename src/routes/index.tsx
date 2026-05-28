@@ -323,8 +323,8 @@ function FeaturedProducts() {
 function QualityCollage() {
   const checks = [
     "Batch-specific COA, not a generic certificate recycled across runs",
-    "Full 5-panel analytical testing on every single batch we ship",
-    "QR code on the vial. Scan it, see your batch, on your phone, in 4 seconds.",
+    "Full analytical panel on every single batch we ship",
+    "Independent third-party lab. Same panel on every run.",
     "Public COA library. No login. No email gate.",
   ];
   return (
