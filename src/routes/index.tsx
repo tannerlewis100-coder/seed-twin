@@ -434,34 +434,34 @@ function QualityCollage() {
 
 const testingPanels = [
   {
-    icon: FlaskConical,
+    icon: Beaker,
     num: "01",
-    title: "HPLC Purity",
-    desc: "Confirms ≥99% purity. You see the exact percentage, not a range.",
+    title: "Qualitative ID",
+    desc: "Confirms molecular identity by UV/Vis λmax match against a characteristic reference standard.",
+  },
+  {
+    icon: FlaskConical,
+    num: "02",
+    title: "Percent Purity",
+    desc: "Correlation-coefficient purity, spec NLT 98%. You see the exact percentage, not a range.",
   },
   {
     icon: Atom,
-    num: "02",
-    title: "Mass Spectrometry",
-    desc: "LC-MS confirms molecular identity at the atomic level. No substitutions.",
+    num: "03",
+    title: "Quantitative Assay",
+    desc: "Beer-Lambert assay confirms the vial actually contains the labeled amount — NLT 95% of label claim.",
   },
   {
     icon: Shield,
-    num: "03",
+    num: "04",
     title: "Heavy Metals",
-    desc: "ICP-MS screens for arsenic, lead, mercury, and cadmium.",
+    desc: "Total heavy metals, spec NMT 150 ppb/vial: Pb, Cd, Hg, Ni, Fe, Co.",
   },
   {
     icon: Bug,
-    num: "04",
-    title: "Microbial & Yeast",
-    desc: "Total aerobic count, yeast, and mold to lab-cleanliness standards.",
-  },
-  {
-    icon: Syringe,
     num: "05",
-    title: "Endotoxin (LAL)",
-    desc: "The test most peptide vendors skip. We run it on every batch. Spec: < 1 EU/mg.",
+    title: "Microbial & Mold",
+    desc: "TAMC (aerobic, NMT 1,000 CFU) and TYMC (yeast & mold, NMT 100 CFU).",
   },
 ];
 
