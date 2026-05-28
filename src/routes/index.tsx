@@ -515,6 +515,113 @@ function HowTested() {
   );
 }
 
+/* ---------------- Scan the Vial (QR → batch COA) ---------------- */
+
+function ScanTheVial() {
+  const points = [
+    {
+      icon: QrCode,
+      text: "Batch-specific. Tied to the lot in your hand, not the product line.",
+    },
+    {
+      icon: Smartphone,
+      text: "No login, no email gate. The link is public the second you scan.",
+    },
+    {
+      icon: Clock,
+      text: "Four seconds from cap to COA.",
+    },
+  ];
+  return (
+    <section className="relative bg-background border-b border-white/[0.08] overflow-hidden">
+      <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-60" />
+      <div className="absolute -top-32 right-1/4 w-[520px] h-[420px] rounded-full bg-brand-gold/[0.05] blur-[140px]" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="lg:col-span-7">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.22em] uppercase font-medium"
+          >
+            Scan the Vial
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText
+              text={"Your batch. On your phone.\nBefore you break the seal."}
+            />
+          </h2>
+          <RevealOnScroll
+            as="p"
+            delay={200}
+            className="mt-6 text-foreground/60 leading-[1.7] max-w-2xl"
+          >
+            Every vial ships with a QR code. Scan it and you're looking at
+            the exact certificate of analysis for the batch your peptide came
+            from — not a generic doc, not a recycled report, the actual
+            numbers for your actual vial.
+          </RevealOnScroll>
+          <ul className="mt-10 grid sm:grid-cols-3 gap-6 max-w-3xl">
+            {points.map((p, i) => (
+              <RevealOnScroll
+                as="li"
+                key={p.text}
+                delay={i * 80}
+                className="flex flex-col gap-3"
+              >
+                <span className="w-10 h-10 rounded-full border border-brand-gold/30 bg-brand-gold/[0.06] flex items-center justify-center">
+                  <p.icon className="h-4 w-4 text-brand-gold" />
+                </span>
+                <span className="text-[14px] text-foreground/75 leading-[1.55]">
+                  {p.text}
+                </span>
+              </RevealOnScroll>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:col-span-5">
+          <RevealOnScroll delay={120}>
+            <div className="relative mx-auto w-full max-w-sm aspect-[4/5] rounded-3xl border border-brand-gold/15 bg-zinc-950 p-6 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/[0.06] via-transparent to-transparent" />
+              <div className="relative h-full flex flex-col">
+                <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.22em] text-foreground/45">
+                  <span>Batch CLR-2026-014</span>
+                  <span className="text-emerald-400">● Pass</span>
+                </div>
+                <div className="mt-5 font-display text-2xl text-foreground leading-tight">
+                  BPC-157 <span className="text-foreground/50 text-base">(10 mg)</span>
+                </div>
+                <div className="mt-auto flex items-end justify-between gap-6">
+                  <div className="space-y-2.5 text-[12px]">
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Identity</span>
+                      <span className="text-foreground/90">λmax match</span>
+                    </div>
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Purity</span>
+                      <span className="text-foreground/90 tabular-nums">99.2%</span>
+                    </div>
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Assay</span>
+                      <span className="text-foreground/90">98% label</span>
+                    </div>
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Heavy Metals</span>
+                      <span className="text-foreground/90">&lt;20 ppb</span>
+                    </div>
+                  </div>
+                  <div className="w-24 h-24 rounded-xl border border-brand-gold/30 bg-black flex items-center justify-center shrink-0">
+                    <QrCode className="h-16 w-16 text-brand-gold" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- COA Library teaser (4 floating preview cards) ---------------- */
 
 function CoaTeaser() {
