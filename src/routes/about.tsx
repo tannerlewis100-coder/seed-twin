@@ -13,12 +13,12 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Why we built Clarum. The vague COAs, the skipped endotoxin tests, and the 5-panel batch reports we publish in response.",
+          "Why we built Clarum. The vague COAs, the skipped tests, and the full batch reports we publish in response.",
       },
       { property: "og:title", content: "About Clarum — Built on Transparency" },
       {
         property: "og:description",
-        content: "Our story, our values, and the 5-panel testing standard behind every batch.",
+        content: "Our story, our values, and the analytical testing standard behind every batch.",
       },
     ],
   }),
