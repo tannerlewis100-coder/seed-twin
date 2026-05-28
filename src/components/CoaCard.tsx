@@ -25,7 +25,7 @@ export default function CoaCard({ peptide, variant = "full", showLink = true }: 
         </div>
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-white/60">HPLC Purity</span>
+            <span className="text-xs text-white/60">Percent Purity</span>
             <span className="text-xs font-semibold text-white tabular-nums">{peptide.purity}</span>
           </div>
           <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
