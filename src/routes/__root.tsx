@@ -39,7 +39,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Analytically tested research peptides with full 5-panel independent lab testing. Every batch documented. For in vitro laboratory research use only.",
+          "Analytically tested research peptides with full independent third-party lab testing on every batch. Every batch documented. For in vitro laboratory research use only.",
       },
       { name: "author", content: "Clarum" },
       { property: "og:title", content: "C Research Peptides" },
