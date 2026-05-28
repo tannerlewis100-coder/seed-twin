@@ -20,7 +20,7 @@ export const Route = createFileRoute("/faq")({
       {
         name: "description",
         content:
-          "Answers to common questions about research peptides, our 5-panel COA process, shipping, storage, and Research Use Only compliance.",
+          "Answers to common questions about research peptides, our COA process, shipping, storage, and Research Use Only compliance.",
       },
       { property: "og:title", content: "Frequently Asked Questions | CLARUM" },
       {
@@ -56,15 +56,15 @@ const groups: Group[] = [
     items: [
       {
         q: "How do I read a Certificate of Analysis (COA)?",
-        a: "COA includes the name of the compound, batch numbers, and information about all the tests carried out. COA should have details such as HPLC purity greater than 99%, mass spectrometry, no detectable heavy metals, and levels of microbial and endotoxins.",
+        a: "A COA includes the name of the compound, batch numbers, and the results of every test in the panel. Ours show qualitative identity (UV/Vis λmax match), percent purity (NLT 98%), quantitative label-claim assay (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial/mold counts (TAMC and TYMC).",
       },
       {
-        q: "What is endotoxin testing and why does it matter?",
-        a: "Endotoxin detection (LAL test) is used to identify endotoxins, which are toxins produced from gram-negative bacteria. Most peptide suppliers do not conduct this test at all. Clarum conducts this test on all batches, since contamination with endotoxins may affect experimental results.",
+        q: "What does the microbial and mold testing cover?",
+        a: "Every batch is screened with TAMC (Total Aerobic Microbial Count, spec NMT 1,000 CFU) and TYMC (Total Yeast & Mold Count, spec NMT 100 CFU). Many vendors skip microbial testing entirely. We run it on every batch and publish the numbers.",
       },
       {
         q: "What makes Clarum's testing different from other vendors?",
-        a: "This is where most vendors will stop. Our batches, however, go through a complete 5-panel test that includes HPLC purity, LC-MS identity, ICP-MS heavy metals, microbial and yeast counts, and LAL endotoxin. The entire test results are uploaded to the publicly accessible COA library before shipment.",
+        a: "This is where most vendors stop. Every Clarum batch runs the full panel — qualitative ID by UV/Vis λmax, percent purity by correlation coefficient (NLT 98%), a Beer-Lambert quantitative assay confirming the vial actually contains the labeled amount (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial/mold (TAMC + TYMC). All results are uploaded to the publicly accessible COA library before shipment.",
       },
       {
         q: "Can I see the COA before I purchase?",

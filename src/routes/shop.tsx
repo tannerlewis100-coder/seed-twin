@@ -19,7 +19,7 @@ export const Route = createFileRoute("/shop")({
       {
         name: "description",
         content:
-          "Browse Clarum's catalog of batch-tested research peptides. Every product ships with a public 5-panel Certificate of Analysis. For in vitro laboratory research use only.",
+          "Browse Clarum's catalog of batch-tested research peptides. Every product ships with a public Certificate of Analysis. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "Shop Research Peptides | CLARUM" },
       {
@@ -103,8 +103,8 @@ function ShopPage() {
               <RevealText text="Research Peptides" />
             </h1>
             <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55 max-w-xl mx-auto">
-              Every compound below runs the full 5-panel. Tap a card to pull
-              up the current batch COA.
+              Every compound below runs the full analytical panel. Tap a card
+              to pull up the current batch COA.
             </RevealOnScroll>
           </div>
         </section>

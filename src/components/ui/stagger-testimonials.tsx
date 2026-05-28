@@ -38,14 +38,14 @@ const defaultTestimonials = [
   {
     tempId: 4,
     testimonial:
-      "GHK-Cu arrived Tuesday. The COA was already published before the box hit my desk. Endotoxin under 1 EU/mg. Clean.",
+      "GHK-Cu arrived Tuesday. The COA was already published before the box hit my desk. Microbial counts well under spec. Clean.",
     by: "J. Okafor, Analytical Chemist",
     imgSrc: "https://i.pravatar.cc/150?img=52",
   },
   {
     tempId: 5,
     testimonial:
-      "Three batches of BPC-157 over four months, HPLC traces within a hair of each other. Reproducibility starts here.",
+      "Three batches of BPC-157 over four months, purity numbers within a hair of each other. Reproducibility starts here.",
     by: "Prof. L. Tanaka, University Lab",
     imgSrc: "https://i.pravatar.cc/150?img=47",
   },

@@ -160,9 +160,9 @@ function ShopMenu() {
 function CoaMenu() {
   const rows: Row[] = [
     { to: "/coa-library", title: "All Batch Reports", desc: "Every COA, every compound.", icon: FileCheck },
-    { to: "/coa-library", title: "HPLC Purity", desc: "≥99% verified by lab.", icon: Beaker },
-    { to: "/coa-library", title: "Mass Spectrometry", desc: "Molecular identity confirmed.", icon: Microscope },
-    { to: "/coa-library", title: "Heavy Metals & Endotoxin", desc: "The tests most vendors skip.", icon: ShieldCheck },
+    { to: "/coa-library", title: "Percent Purity", desc: "NLT 98% per batch.", icon: Beaker },
+    { to: "/coa-library", title: "Identity & Assay", desc: "λmax match + label-claim assay.", icon: Microscope },
+    { to: "/coa-library", title: "Heavy Metals & Microbial", desc: "The tests most vendors skip.", icon: ShieldCheck },
   ];
   return (
     <div className="grid grid-cols-[1fr_220px] gap-2 p-3 w-[600px]">
@@ -182,7 +182,7 @@ function CoaMenu() {
           <QuickLink to="/about">How we test</QuickLink>
         </div>
         <div className="mt-auto mx-2 mt-3 text-[11.5px] text-foreground/45 leading-snug">
-          Full 5-panel
+          Full panel
           <br />
           on every batch
         </div>
@@ -194,8 +194,8 @@ function CoaMenu() {
 function AboutMenu() {
   const rows: Row[] = [
     { to: "/about", title: "Our Story", desc: "Why we built Clarum.", icon: BookOpen },
-    { to: "/about", title: "5-Panel Testing", desc: "What we test on every batch.", icon: Microscope },
-    { to: "/about", title: "How We Test", desc: "Our full 5-panel standard.", icon: ShieldCheck },
+    { to: "/about", title: "Our Test Panel", desc: "What we test on every batch.", icon: Microscope },
+    { to: "/about", title: "How We Test", desc: "Our full analytical standard.", icon: ShieldCheck },
     { to: "/contact", title: "Contact", desc: "Questions about a batch?", icon: Mail },
   ];
   return (

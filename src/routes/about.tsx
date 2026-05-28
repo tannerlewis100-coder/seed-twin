@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, FlaskConical, Atom, Shield, Bug, Syringe } from "lucide-react";
+import { ArrowRight, FlaskConical, Atom, Shield, Bug, Beaker } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import RevealText from "@/components/RevealText";
@@ -13,23 +13,23 @@ export const Route = createFileRoute("/about")({
       {
         name: "description",
         content:
-          "Why we built Clarum. The vague COAs, the skipped endotoxin tests, and the 5-panel batch reports we publish in response.",
+          "Why we built Clarum. The vague COAs, the skipped tests, and the full batch reports we publish in response.",
       },
       { property: "og:title", content: "About Clarum — Built on Transparency" },
       {
         property: "og:description",
-        content: "Our story, our values, and the 5-panel testing standard behind every batch.",
+        content: "Our story, our values, and the analytical testing standard behind every batch.",
       },
     ],
   }),
 });
 
 const panels = [
-  { icon: FlaskConical, title: "HPLC Purity", desc: "≥99% specification" },
-  { icon: Atom, title: "Mass Spec (LC-MS)", desc: "Molecular identity" },
-  { icon: Shield, title: "Heavy Metals (ICP-MS)", desc: "As, Pb, Hg, Cd" },
-  { icon: Bug, title: "Microbial & Yeast", desc: "Aerobic count, mold" },
-  { icon: Syringe, title: "Endotoxin (LAL)", desc: "Bacterial endotoxin" },
+  { icon: Beaker, title: "Qualitative ID", desc: "UV/Vis λmax match" },
+  { icon: FlaskConical, title: "Percent Purity", desc: "NLT 98%" },
+  { icon: Atom, title: "Quantitative Assay", desc: "NLT 95% of label claim" },
+  { icon: Shield, title: "Heavy Metals", desc: "NMT 150 ppb total" },
+  { icon: Bug, title: "Microbial & Mold", desc: "TAMC + TYMC" },
 ];
 
 const stats = [
@@ -108,10 +108,9 @@ function AboutPage() {
                     vendors made that easy. Reliable. Consistent.
                   </p>
                   <p>
-                    Then the cracks showed. Vendor after vendor cut the same corners: skip identity
-                    testing, skip heavy metals, skip endotoxin, run an HPLC, call it
-                    "third-party tested." Enough to look legitimate. Not enough to actually protect
-                    the research.
+                    Then the cracks showed. Vendor after vendor cut the same corners: skip the
+                    harder panels, run one quick test, call it "third-party tested." Enough to
+                    look legitimate. Not enough to actually protect the research.
                   </p>
                   <p>
                     It was cheaper. It was faster. Most customers couldn't tell the difference, so
@@ -134,13 +133,13 @@ function AboutPage() {
                 </h2>
                 <RevealOnScroll as="div" delay={300} className="space-y-5 text-foreground/60 leading-[1.8]">
                   <p>
-                    "Good enough" wasn't going to cut it, and a single HPLC number with a trust-me
-                    attitude felt insulting to anyone reading the report.
+                    "Good enough" wasn't going to cut it, and a single purity number with a
+                    trust-me attitude felt insulting to anyone reading the report.
                   </p>
                   <p>
-                    Five independent panels per batch: HPLC purity, mass spec identity, heavy
-                    metals (ICP-MS), microbial, endotoxin (LAL). Same panel, every time. We do it
-                    on every run.
+                    An independent panel on every batch: identity (UV/Vis λmax), percent purity
+                    (NLT 98%), quantitative label-claim assay, heavy metals (NMT 150 ppb), and
+                    microbial/mold (TAMC + TYMC). Same panel, every time. We do it on every run.
                   </p>
                   <p>
                     Then we publish the full results. No login. No paywall. Every Certificate of
@@ -153,7 +152,7 @@ function AboutPage() {
           </div>
         </section>
 
-        {/* 5-Panel standard as a numbered methodology table */}
+        {/* Test panel as a numbered methodology table */}
         <section className="bg-background border-b border-white/5">
           <div className="mx-auto max-w-5xl px-5 sm:px-6 py-16 md:py-24">
             <div className="mb-10">
@@ -161,7 +160,7 @@ function AboutPage() {
                 Methodology
               </span>
               <h2 className="font-display text-3xl lg:text-5xl text-foreground mt-2">
-                <RevealText text="The 5-Panel Standard" />
+                <RevealText text="The Test Panel" />
               </h2>
             </div>
             <div className="border-t border-white/10">

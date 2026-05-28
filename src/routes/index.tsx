@@ -9,8 +9,11 @@ import {
   Atom,
   Shield,
   Bug,
-  Syringe,
+  Beaker,
   FileText,
+  QrCode,
+  Smartphone,
+  Clock,
 } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -46,7 +49,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Research peptides with a 5-panel Certificate of Analysis on every batch: HPLC, mass spec, heavy metals, microbial, endotoxin. For in vitro laboratory research use only.",
+          "Research peptides with a Certificate of Analysis on every batch: identity, percent purity, label-claim assay, heavy metals, and microbial/mold. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "CLARUM — Nothing Hidden. Everything Tested." },
       {
@@ -136,7 +139,7 @@ function Hero() {
               transition={{ delay: allWords.length * 0.05 + 0.35, duration: 0.6 }}
               className="mt-8 text-[14px] text-[#777]"
             >
-              HPLC · MS · Heavy Metals · Microbial · Endotoxin
+              Identity · Purity · Label-Claim Assay · Heavy Metals · Microbial
             </motion.div>
           </div>
 
@@ -196,7 +199,7 @@ const heroStats = [
   ["70+", "Compounds"],
   ["5", "Tests Per Batch"],
   ["100%", "COA Documented"],
-  ["≥99%", "HPLC Purity"],
+  ["≥98%", "Percent Purity"],
 ];
 
 function StatsBand() {
@@ -244,10 +247,10 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Each molecule goes through the complete 5-panel process: HPLC,
-              mass spectroscopy, heavy metals, microbe, and endotoxin. Grab
-              the batch test report prior to checkout. Or post-checkout. We
-              don't mind.
+              Every batch runs the full panel: identity, percent purity,
+              quantitative label-claim assay, heavy metals, and
+              microbial/mold. Pull the batch report before checkout — or
+              after. We don't mind.
             </RevealOnScroll>
             <Button
               asChild
@@ -320,8 +323,8 @@ function FeaturedProducts() {
 function QualityCollage() {
   const checks = [
     "Batch-specific COA, not a generic certificate recycled across runs",
-    "Full 5-panel analytical testing on every single batch we ship",
-    "QR code on the vial. Scan it, see your batch, on your phone, in 4 seconds.",
+    "Full analytical panel on every single batch we ship",
+    "Independent third-party lab. Same panel on every run.",
     "Public COA library. No login. No email gate.",
   ];
   return (
@@ -431,34 +434,34 @@ function QualityCollage() {
 
 const testingPanels = [
   {
-    icon: FlaskConical,
+    icon: Beaker,
     num: "01",
-    title: "HPLC Purity",
-    desc: "Confirms ≥99% purity. You see the exact percentage, not a range.",
+    title: "Qualitative ID",
+    desc: "Confirms molecular identity by UV/Vis λmax match against a characteristic reference standard.",
+  },
+  {
+    icon: FlaskConical,
+    num: "02",
+    title: "Percent Purity",
+    desc: "Correlation-coefficient purity, spec NLT 98%. You see the exact percentage, not a range.",
   },
   {
     icon: Atom,
-    num: "02",
-    title: "Mass Spectrometry",
-    desc: "LC-MS confirms molecular identity at the atomic level. No substitutions.",
+    num: "03",
+    title: "Quantitative Assay",
+    desc: "Beer-Lambert assay confirms the vial actually contains the labeled amount — NLT 95% of label claim.",
   },
   {
     icon: Shield,
-    num: "03",
+    num: "04",
     title: "Heavy Metals",
-    desc: "ICP-MS screens for arsenic, lead, mercury, and cadmium.",
+    desc: "Total heavy metals, spec NMT 150 ppb/vial: Pb, Cd, Hg, Ni, Fe, Co.",
   },
   {
     icon: Bug,
-    num: "04",
-    title: "Microbial & Yeast",
-    desc: "Total aerobic count, yeast, and mold to lab-cleanliness standards.",
-  },
-  {
-    icon: Syringe,
     num: "05",
-    title: "Endotoxin (LAL)",
-    desc: "The test most peptide vendors skip. We run it on every batch. Spec: < 1 EU/mg.",
+    title: "Microbial & Mold",
+    desc: "TAMC (aerobic, NMT 1,000 CFU) and TYMC (yeast & mold, NMT 100 CFU).",
   },
 ];
 
@@ -506,6 +509,113 @@ function HowTested() {
               </Card>
             </RevealOnScroll>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Scan the Vial (QR → batch COA) ---------------- */
+
+function ScanTheVial() {
+  const points = [
+    {
+      icon: QrCode,
+      text: "Batch-specific. Tied to the lot in your hand, not the product line.",
+    },
+    {
+      icon: Smartphone,
+      text: "No login, no email gate. The link is public the second you scan.",
+    },
+    {
+      icon: Clock,
+      text: "Four seconds from cap to COA.",
+    },
+  ];
+  return (
+    <section className="relative bg-background border-b border-white/[0.08] overflow-hidden">
+      <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-60" />
+      <div className="absolute -top-32 right-1/4 w-[520px] h-[420px] rounded-full bg-brand-gold/[0.05] blur-[140px]" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="lg:col-span-7">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.22em] uppercase font-medium"
+          >
+            Scan the Vial
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText
+              text={"Your batch. On your phone.\nBefore you break the seal."}
+            />
+          </h2>
+          <RevealOnScroll
+            as="p"
+            delay={200}
+            className="mt-6 text-foreground/60 leading-[1.7] max-w-2xl"
+          >
+            Every vial ships with a QR code. Scan it and you're looking at
+            the exact certificate of analysis for the batch your peptide came
+            from — not a generic doc, not a recycled report, the actual
+            numbers for your actual vial.
+          </RevealOnScroll>
+          <ul className="mt-10 grid sm:grid-cols-3 gap-6 max-w-3xl">
+            {points.map((p, i) => (
+              <RevealOnScroll
+                as="li"
+                key={p.text}
+                delay={i * 80}
+                className="flex flex-col gap-3"
+              >
+                <span className="w-10 h-10 rounded-full border border-brand-gold/30 bg-brand-gold/[0.06] flex items-center justify-center">
+                  <p.icon className="h-4 w-4 text-brand-gold" />
+                </span>
+                <span className="text-[14px] text-foreground/75 leading-[1.55]">
+                  {p.text}
+                </span>
+              </RevealOnScroll>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:col-span-5">
+          <RevealOnScroll delay={120}>
+            <div className="relative mx-auto w-full max-w-sm aspect-[4/5] rounded-3xl border border-brand-gold/15 bg-zinc-950 p-6 overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/[0.06] via-transparent to-transparent" />
+              <div className="relative h-full flex flex-col">
+                <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.22em] text-foreground/45">
+                  <span>Batch CLR-2026-014</span>
+                  <span className="text-emerald-400">● Pass</span>
+                </div>
+                <div className="mt-5 font-display text-2xl text-foreground leading-tight">
+                  BPC-157 <span className="text-foreground/50 text-base">(10 mg)</span>
+                </div>
+                <div className="mt-auto flex items-end justify-between gap-6">
+                  <div className="space-y-2.5 text-[12px]">
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Identity</span>
+                      <span className="text-foreground/90">λmax match</span>
+                    </div>
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Purity</span>
+                      <span className="text-foreground/90 tabular-nums">99.2%</span>
+                    </div>
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Assay</span>
+                      <span className="text-foreground/90">98% label</span>
+                    </div>
+                    <div className="flex justify-between gap-6">
+                      <span className="text-foreground/45">Heavy Metals</span>
+                      <span className="text-foreground/90">&lt;20 ppb</span>
+                    </div>
+                  </div>
+                  <div className="w-24 h-24 rounded-xl border border-brand-gold/30 bg-black flex items-center justify-center shrink-0">
+                    <QrCode className="h-16 w-16 text-brand-gold" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </RevealOnScroll>
         </div>
       </div>
     </section>
@@ -575,16 +685,16 @@ function CoaTeaser() {
                   <div className="text-[13px] text-foreground/50 mb-4">{p.size}</div>
                   <Separator className="bg-white/[0.08] mb-4" />
                   <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[12px]">
-                    <dt className="text-foreground/45">HPLC Purity</dt>
+                    <dt className="text-foreground/45">Percent Purity</dt>
                     <dd className="text-foreground/90 text-right tabular-nums font-medium">
                       {p.purity}
                     </dd>
-                    <dt className="text-foreground/45">Mass Spec ID</dt>
-                    <dd className="text-foreground/90 text-right">Confirmed</dd>
+                    <dt className="text-foreground/45">Identity (λmax)</dt>
+                    <dd className="text-foreground/90 text-right">Match</dd>
                     <dt className="text-foreground/45">Heavy Metals</dt>
                     <dd className="text-foreground/90 text-right">{p.coa.heavyMetals}</dd>
-                    <dt className="text-foreground/45">Endotoxin</dt>
-                    <dd className="text-foreground/90 text-right">&lt; 1 EU/mg</dd>
+                    <dt className="text-foreground/45">Microbial</dt>
+                    <dd className="text-foreground/90 text-right">Pass</dd>
                   </dl>
                 </CardContent>
               </Card>
@@ -670,6 +780,7 @@ function Index() {
         <StatsBand />
         <FeaturedProducts />
         <HowTested />
+        <ScanTheVial />
         <QualityCollage />
         <CoaTeaser />
         <Testimonials />

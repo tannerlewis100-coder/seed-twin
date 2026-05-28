@@ -332,10 +332,10 @@ export type CoaRow = { label: string; value: string };
 
 export function sampleCoa(p: Peptide): CoaRow[] {
   return [
-    { label: "HPLC Purity", value: p.purity },
-    { label: "Mass Spec ID", value: p.coa.identity },
+    { label: "Percent Purity", value: p.purity },
+    { label: "Identity (λmax)", value: "Match" },
     { label: "Heavy Metals", value: p.coa.heavyMetals },
-    { label: "Microbial Count", value: p.coa.tamc },
-    { label: "Endotoxin (LAL)", value: "< 1 EU/mg" },
+    { label: "TAMC", value: p.coa.tamc },
+    { label: "TYMC", value: p.coa.tymc },
   ];
 }
