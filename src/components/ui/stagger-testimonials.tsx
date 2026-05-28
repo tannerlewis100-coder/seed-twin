@@ -38,7 +38,7 @@ const defaultTestimonials = [
   {
     tempId: 4,
     testimonial:
-      "GHK-Cu arrived Tuesday. The COA was already published before the box hit my desk. Endotoxin under 1 EU/mg. Clean.",
+      "GHK-Cu arrived Tuesday. The COA was already published before the box hit my desk. Microbial counts well under spec. Clean.",
     by: "J. Okafor, Analytical Chemist",
     imgSrc: "https://i.pravatar.cc/150?img=52",
   },
