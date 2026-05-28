@@ -103,8 +103,8 @@ function ShopPage() {
               <RevealText text="Research Peptides" />
             </h1>
             <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55 max-w-xl mx-auto">
-              Every compound below runs the full 5-panel. Tap a card to pull
-              up the current batch COA.
+              Every compound below runs the full analytical panel. Tap a card
+              to pull up the current batch COA.
             </RevealOnScroll>
           </div>
         </section>
