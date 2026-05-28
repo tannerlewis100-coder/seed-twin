@@ -133,13 +133,13 @@ function AboutPage() {
                 </h2>
                 <RevealOnScroll as="div" delay={300} className="space-y-5 text-foreground/60 leading-[1.8]">
                   <p>
-                    "Good enough" wasn't going to cut it, and a single HPLC number with a trust-me
-                    attitude felt insulting to anyone reading the report.
+                    "Good enough" wasn't going to cut it, and a single purity number with a
+                    trust-me attitude felt insulting to anyone reading the report.
                   </p>
                   <p>
-                    Five independent panels per batch: HPLC purity, mass spec identity, heavy
-                    metals (ICP-MS), microbial, endotoxin (LAL). Same panel, every time. We do it
-                    on every run.
+                    An independent panel on every batch: identity (UV/Vis λmax), percent purity
+                    (NLT 98%), quantitative label-claim assay, heavy metals (NMT 150 ppb), and
+                    microbial/mold (TAMC + TYMC). Same panel, every time. We do it on every run.
                   </p>
                   <p>
                     Then we publish the full results. No login. No paywall. Every Certificate of
