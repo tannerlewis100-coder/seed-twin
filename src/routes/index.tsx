@@ -780,6 +780,7 @@ function Index() {
         <StatsBand />
         <FeaturedProducts />
         <HowTested />
+        <ScanTheVial />
         <QualityCollage />
         <CoaTeaser />
         <Testimonials />
