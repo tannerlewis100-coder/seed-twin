@@ -194,8 +194,8 @@ function CoaMenu() {
 function AboutMenu() {
   const rows: Row[] = [
     { to: "/about", title: "Our Story", desc: "Why we built Clarum.", icon: BookOpen },
-    { to: "/about", title: "5-Panel Testing", desc: "What we test on every batch.", icon: Microscope },
-    { to: "/about", title: "How We Test", desc: "Our full 5-panel standard.", icon: ShieldCheck },
+    { to: "/about", title: "Our Test Panel", desc: "What we test on every batch.", icon: Microscope },
+    { to: "/about", title: "How We Test", desc: "Our full analytical standard.", icon: ShieldCheck },
     { to: "/contact", title: "Contact", desc: "Questions about a batch?", icon: Mail },
   ];
   return (
