@@ -578,16 +578,16 @@ function CoaTeaser() {
                   <div className="text-[13px] text-foreground/50 mb-4">{p.size}</div>
                   <Separator className="bg-white/[0.08] mb-4" />
                   <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[12px]">
-                    <dt className="text-foreground/45">HPLC Purity</dt>
+                    <dt className="text-foreground/45">Percent Purity</dt>
                     <dd className="text-foreground/90 text-right tabular-nums font-medium">
                       {p.purity}
                     </dd>
-                    <dt className="text-foreground/45">Mass Spec ID</dt>
-                    <dd className="text-foreground/90 text-right">Confirmed</dd>
+                    <dt className="text-foreground/45">Identity (λmax)</dt>
+                    <dd className="text-foreground/90 text-right">Match</dd>
                     <dt className="text-foreground/45">Heavy Metals</dt>
                     <dd className="text-foreground/90 text-right">{p.coa.heavyMetals}</dd>
-                    <dt className="text-foreground/45">Endotoxin</dt>
-                    <dd className="text-foreground/90 text-right">&lt; 1 EU/mg</dd>
+                    <dt className="text-foreground/45">Microbial</dt>
+                    <dd className="text-foreground/90 text-right">Pass</dd>
                   </dl>
                 </CardContent>
               </Card>
