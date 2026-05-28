@@ -19,7 +19,7 @@ export const Route = createFileRoute("/shop")({
       {
         name: "description",
         content:
-          "Browse Clarum's catalog of batch-tested research peptides. Every product ships with a public 5-panel Certificate of Analysis. For in vitro laboratory research use only.",
+          "Browse Clarum's catalog of batch-tested research peptides. Every product ships with a public Certificate of Analysis. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "Shop Research Peptides | CLARUM" },
       {
