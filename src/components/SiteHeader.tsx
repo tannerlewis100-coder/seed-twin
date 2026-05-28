@@ -182,7 +182,7 @@ function CoaMenu() {
           <QuickLink to="/about">How we test</QuickLink>
         </div>
         <div className="mt-auto mx-2 mt-3 text-[11.5px] text-foreground/45 leading-snug">
-          Full 5-panel
+          Full panel
           <br />
           on every batch
         </div>
