@@ -25,11 +25,11 @@ export const Route = createFileRoute("/about")({
 });
 
 const panels = [
-  { icon: FlaskConical, title: "HPLC Purity", desc: "≥99% specification" },
-  { icon: Atom, title: "Mass Spec (LC-MS)", desc: "Molecular identity" },
-  { icon: Shield, title: "Heavy Metals (ICP-MS)", desc: "As, Pb, Hg, Cd" },
-  { icon: Bug, title: "Microbial & Yeast", desc: "Aerobic count, mold" },
-  { icon: Syringe, title: "Endotoxin (LAL)", desc: "Bacterial endotoxin" },
+  { icon: Beaker, title: "Qualitative ID", desc: "UV/Vis λmax match" },
+  { icon: FlaskConical, title: "Percent Purity", desc: "NLT 98%" },
+  { icon: Atom, title: "Quantitative Assay", desc: "NLT 95% of label claim" },
+  { icon: Shield, title: "Heavy Metals", desc: "NMT 150 ppb total" },
+  { icon: Bug, title: "Microbial & Mold", desc: "TAMC + TYMC" },
 ];
 
 const stats = [
