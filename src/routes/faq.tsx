@@ -20,7 +20,7 @@ export const Route = createFileRoute("/faq")({
       {
         name: "description",
         content:
-          "Answers to common questions about research peptides, our 5-panel COA process, shipping, storage, and Research Use Only compliance.",
+          "Answers to common questions about research peptides, our COA process, shipping, storage, and Research Use Only compliance.",
       },
       { property: "og:title", content: "Frequently Asked Questions | CLARUM" },
       {
