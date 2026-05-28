@@ -578,45 +578,15 @@ function ScanTheVial() {
           </ul>
         </div>
 
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-5 flex justify-center">
           <RevealOnScroll delay={120}>
-            <div className="relative mx-auto w-full max-w-sm aspect-[4/5] rounded-3xl border border-brand-gold/15 bg-zinc-950 p-6 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/[0.06] via-transparent to-transparent" />
-              <div className="relative h-full flex flex-col">
-                <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.22em] text-foreground/45">
-                  <span>Batch CLR-2026-014</span>
-                  <span className="text-emerald-400">● Pass</span>
-                </div>
-                <div className="mt-5 font-display text-2xl text-foreground leading-tight">
-                  BPC-157 <span className="text-foreground/50 text-base">(10 mg)</span>
-                </div>
-                <div className="mt-auto flex items-end justify-between gap-6">
-                  <div className="space-y-2.5 text-[12px]">
-                    <div className="flex justify-between gap-6">
-                      <span className="text-foreground/45">Identity</span>
-                      <span className="text-foreground/90">λmax match</span>
-                    </div>
-                    <div className="flex justify-between gap-6">
-                      <span className="text-foreground/45">Purity</span>
-                      <span className="text-foreground/90 tabular-nums">99.2%</span>
-                    </div>
-                    <div className="flex justify-between gap-6">
-                      <span className="text-foreground/45">Assay</span>
-                      <span className="text-foreground/90">98% label</span>
-                    </div>
-                    <div className="flex justify-between gap-6">
-                      <span className="text-foreground/45">Heavy Metals</span>
-                      <span className="text-foreground/90">&lt;20 ppb</span>
-                    </div>
-                  </div>
-                  <div className="w-24 h-24 rounded-xl border border-brand-gold/30 bg-black flex items-center justify-center shrink-0">
-                    <QrCode className="h-16 w-16 text-brand-gold" />
-                  </div>
-                </div>
-              </div>
-            </div>
+            {(() => {
+              const bpc = peptides.find((p) => p.slug === "bpc-157-10mg");
+              return bpc ? <CoaCard peptide={bpc} /> : null;
+            })()}
           </RevealOnScroll>
         </div>
+
       </div>
     </section>
   );
