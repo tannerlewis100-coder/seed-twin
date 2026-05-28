@@ -247,10 +247,10 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Each molecule goes through the complete 5-panel process: HPLC,
-              mass spectroscopy, heavy metals, microbe, and endotoxin. Grab
-              the batch test report prior to checkout. Or post-checkout. We
-              don't mind.
+              Every batch runs the full panel: identity, percent purity,
+              quantitative label-claim assay, heavy metals, and
+              microbial/mold. Pull the batch report before checkout — or
+              after. We don't mind.
             </RevealOnScroll>
             <Button
               asChild
