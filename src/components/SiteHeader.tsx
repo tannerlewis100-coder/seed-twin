@@ -160,9 +160,9 @@ function ShopMenu() {
 function CoaMenu() {
   const rows: Row[] = [
     { to: "/coa-library", title: "All Batch Reports", desc: "Every COA, every compound.", icon: FileCheck },
-    { to: "/coa-library", title: "HPLC Purity", desc: "≥99% verified by lab.", icon: Beaker },
-    { to: "/coa-library", title: "Mass Spectrometry", desc: "Molecular identity confirmed.", icon: Microscope },
-    { to: "/coa-library", title: "Heavy Metals & Endotoxin", desc: "The tests most vendors skip.", icon: ShieldCheck },
+    { to: "/coa-library", title: "Percent Purity", desc: "NLT 98% per batch.", icon: Beaker },
+    { to: "/coa-library", title: "Identity & Assay", desc: "λmax match + label-claim assay.", icon: Microscope },
+    { to: "/coa-library", title: "Heavy Metals & Microbial", desc: "The tests most vendors skip.", icon: ShieldCheck },
   ];
   return (
     <div className="grid grid-cols-[1fr_220px] gap-2 p-3 w-[600px]">
