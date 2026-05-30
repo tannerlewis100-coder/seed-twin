@@ -122,14 +122,13 @@ export function GooeyText({
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <filter id="gooey-text-filter">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
             <feColorMatrix
               in="blur"
               type="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
               result="goo"
             />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
           </filter>
         </defs>
       </svg>
