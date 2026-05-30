@@ -50,12 +50,12 @@ export function GooeyText({
 
     const setMorph = (fraction: number) => {
       if (text1Ref.current && text2Ref.current) {
-        text2Ref.current.style.filter = `blur(${Math.min(4 / fraction - 4, 40)}px)`;
-        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.8) * 100}%`;
+        text2Ref.current.style.filter = `blur(${Math.min(2 / fraction - 2, 20)}px)`;
+        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.9) * 100}%`;
 
         fraction = 1 - fraction;
-        text1Ref.current.style.filter = `blur(${Math.min(4 / fraction - 4, 40)}px)`;
-        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.8) * 100}%`;
+        text1Ref.current.style.filter = `blur(${Math.min(2 / fraction - 2, 20)}px)`;
+        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.9) * 100}%`;
       }
     };
 
@@ -122,11 +122,11 @@ export function GooeyText({
       <svg className="absolute h-0 w-0" aria-hidden="true">
         <defs>
           <filter id="gooey-text-filter">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
             <feColorMatrix
               in="blur"
               type="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 14 -5"
               result="goo"
             />
           </filter>
