@@ -204,7 +204,7 @@ function ShopPage() {
                       <RevealOnScroll key={p.id} delay={Math.min(i * 40, 400)}>
                         <button
                           type="button"
-                          onClick={() => setActiveProduct(p)}
+                          onClick={() => openProduct(p)}
                           className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
                         >
                           <div className="absolute top-5 left-5 z-10">
