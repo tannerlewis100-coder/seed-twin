@@ -56,7 +56,7 @@ const groups: Group[] = [
     items: [
       {
         q: "How do I read a Certificate of Analysis (COA)?",
-        a: "A COA includes the name of the compound, batch numbers, and the results of every test in the panel. Ours show qualitative identity (UV/Vis λmax match), percent purity (NLT 98%), quantitative label-claim assay (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial/mold counts (TAMC and TYMC).",
+        a: "A COA includes the name of the compound, batch numbers, and the results of every test in the panel. Ours show qualitative identity (UV/Vis λmax match), percent purity (NLT 98%), quantitative label-claim assay (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold counts (TAMC and TYMC).",
       },
       {
         q: "What does the microbial and mold testing cover?",
