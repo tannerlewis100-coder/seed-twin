@@ -75,6 +75,8 @@ import ace031 from "@/assets/products/ace031-1mg.png";
 import ara290 from "@/assets/products/ara290-10mg.png";
 import bacWater from "@/assets/products/bac-water-3ml.png";
 import bpc157 from "@/assets/products/bpc157-20mg.png";
+import kpv10 from "@/assets/products/kpv-10mg.png";
+import naEpitalon5 from "@/assets/products/na-epitalon-5mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
@@ -152,9 +154,11 @@ const RULES: Array<[RegExp, string]> = [
   [/gdf-?8|myostatin/i, gdf8],
   [/ll-?37/i, ll37],
   [/\blpv\b/i, lpv],
+  [/\bkpv\b|lysine[-\s]*proline[-\s]*valine/i, kpv10],
   [/igf-?des|igf\s*des/i, igfdes],
   [/igf-?1\s*lr3.*0\.?1mg|igf-?1-?lr3-?0/i, igf1lr3Small],
   [/igf-?1\s*lr3|igf-1-lr3/i, igf1lr3],
+  [/n[-\s]*acetyl[-\s]*epitalon|na[-\s]*epitalon/i, naEpitalon5],
   [/epitalon.*50mg|epithalon.*50mg/i, epitalon50],
   [/epitalon|epithalon/i, epitalon10],
   [/nad\+.*500mg/i, nad500],
