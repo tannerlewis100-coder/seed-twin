@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GooeyTextProps {
   texts: string[];
@@ -19,27 +18,13 @@ export function GooeyText({
   className,
   textClassName,
 }: GooeyTextProps) {
-  const isMobile = useIsMobile();
+  const filterId = React.useId().replace(/:/g, "");
   const text1Ref = React.useRef<HTMLSpanElement>(null);
   const text2Ref = React.useRef<HTMLSpanElement>(null);
 
   React.useEffect(() => {
-    // Mobile: simple crossfade, no per-frame blur/SVG filter.
-    if (isMobile) {
-      let textIndex = 0;
-      if (text1Ref.current && text2Ref.current) {
-        text1Ref.current.textContent = texts[textIndex];
-        text1Ref.current.style.opacity = "100%";
-        text1Ref.current.style.filter = "";
-        text2Ref.current.style.opacity = "0%";
-        text2Ref.current.style.filter = "";
-      }
-      const cycleMs = (morphTime + cooldownTime) * 1000;
-      const interval = setInterval(() => {
-        textIndex = (textIndex + 1) % texts.length;
-        if (text1Ref.current) text1Ref.current.textContent = texts[textIndex];
-      }, cycleMs);
-      return () => clearInterval(interval);
+    if (texts.length === 0) {
+      return;
     }
 
     let textIndex = texts.length - 1;
@@ -50,12 +35,14 @@ export function GooeyText({
 
     const setMorph = (fraction: number) => {
       if (text1Ref.current && text2Ref.current) {
-        text2Ref.current.style.filter = `blur(${Math.min(2 / fraction - 2, 20)}px)`;
-        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.9) * 100}%`;
+        const safeFraction = Math.max(fraction, 0.0001);
 
-        fraction = 1 - fraction;
-        text1Ref.current.style.filter = `blur(${Math.min(2 / fraction - 2, 20)}px)`;
-        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.9) * 100}%`;
+        text2Ref.current.style.filter = `blur(${Math.min(8 / safeFraction - 8, 100)}px)`;
+        text2Ref.current.style.opacity = `${Math.pow(safeFraction, 0.4) * 100}%`;
+
+        const inverseFraction = Math.max(1 - fraction, 0.0001);
+        text1Ref.current.style.filter = `blur(${Math.min(8 / inverseFraction - 8, 100)}px)`;
+        text1Ref.current.style.opacity = `${Math.pow(inverseFraction, 0.4) * 100}%`;
       }
     };
 
@@ -115,41 +102,51 @@ export function GooeyText({
     return () => {
       cancelAnimationFrame(rafId);
     };
-  }, [texts, morphTime, cooldownTime, isMobile]);
+  }, [texts, morphTime, cooldownTime]);
 
   return (
-    <div className={cn("relative", className)}>
-      <svg className="absolute h-0 w-0" aria-hidden="true">
+    <div
+      className={cn(
+        "relative flex items-center justify-center overflow-visible px-[0.16em] py-[0.32em]",
+        className,
+      )}
+    >
+      <svg className="pointer-events-none absolute h-0 w-0" aria-hidden="true">
         <defs>
-          <filter id="gooey-text-filter">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur" />
+          <filter
+            id={filterId}
+            x="-35%"
+            y="-90%"
+            width="170%"
+            height="280%"
+            colorInterpolationFilters="sRGB"
+          >
+            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
             <feColorMatrix
               in="blur"
               type="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 14 -5"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
               result="goo"
             />
           </filter>
         </defs>
       </svg>
+
       <div
-        className="flex items-center justify-center"
-        style={isMobile ? undefined : { filter: "url(#gooey-text-filter)" }}
+        className="grid min-h-[1.2em] w-full place-items-center overflow-visible"
+        style={{ filter: `url(#${filterId})` }}
       >
         <span
           ref={text1Ref}
           className={cn(
-            "absolute inline-block select-none text-center text-6xl md:text-[60pt]",
-            "text-foreground transition-opacity",
+            "col-start-1 row-start-1 inline-block whitespace-nowrap px-[0.12em] text-center text-6xl leading-[0.88] text-foreground transition-opacity md:text-[60pt]",
             textClassName,
           )}
-          style={isMobile ? { transition: "opacity 400ms ease" } : undefined}
         />
         <span
           ref={text2Ref}
           className={cn(
-            "absolute inline-block select-none text-center text-6xl md:text-[60pt]",
-            "text-foreground",
+            "col-start-1 row-start-1 inline-block whitespace-nowrap px-[0.12em] text-center text-6xl leading-[0.88] text-foreground md:text-[60pt]",
             textClassName,
           )}
         />
