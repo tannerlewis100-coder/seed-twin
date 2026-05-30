@@ -252,6 +252,13 @@ export async function fetchProduct(id: number): Promise<WooProduct> {
   return res.json();
 }
 
+export async function fetchProductBySlug(slug: string): Promise<WooProduct | null> {
+  const res = await wooFetch(`/products?slug=${encodeURIComponent(slug)}`);
+  if (!res.ok) return null;
+  const arr = (await res.json()) as WooProduct[];
+  return arr.find((p) => p.slug === slug && p.type !== "variation") ?? arr[0] ?? null;
+}
+
 /** Fetch full variation product objects for a variable product. */
 export async function fetchVariations(parentId: number): Promise<WooProduct[]> {
   const res = await wooFetch(`/products?per_page=100&type=variation&parent=${parentId}`);

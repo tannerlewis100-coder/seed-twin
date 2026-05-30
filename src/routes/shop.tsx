@@ -39,6 +39,29 @@ function ShopPage() {
   const [query, setQuery] = useState("");
   const [activeProduct, setActiveProduct] = useState<WooProduct | null>(null);
 
+  // Sync modal open/close with URL so /shop/<slug> is shareable.
+  const openProduct = (p: WooProduct) => {
+    setActiveProduct(p);
+    if (typeof window !== "undefined" && p.slug) {
+      window.history.pushState({ shopModal: p.slug }, "", `/shop/${p.slug}`);
+    }
+  };
+  const closeProduct = (fromPopState = false) => {
+    setActiveProduct(null);
+    if (!fromPopState && typeof window !== "undefined" && window.location.pathname !== "/shop") {
+      window.history.pushState({}, "", "/shop");
+    }
+  };
+
+  useEffect(() => {
+    const onPop = () => {
+      // Browser back/forward — close any open quick-view modal.
+      setActiveProduct(null);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
@@ -181,7 +204,7 @@ function ShopPage() {
                       <RevealOnScroll key={p.id} delay={Math.min(i * 40, 400)}>
                         <button
                           type="button"
-                          onClick={() => setActiveProduct(p)}
+                          onClick={() => openProduct(p)}
                           className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
                         >
                           <div className="absolute top-5 left-5 z-10">
@@ -246,7 +269,7 @@ function ShopPage() {
       <ProductDetailModal
         product={activeProduct}
         open={!!activeProduct}
-        onOpenChange={(o) => !o && setActiveProduct(null)}
+        onOpenChange={(o) => !o && closeProduct()}
       />
     </div>
   );
