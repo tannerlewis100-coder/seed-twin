@@ -176,3 +176,19 @@ export function vialImageFor(name: string, slug?: string): string {
   }
   return vialDefault;
 }
+
+// Products where we want our local vial photo to override the WooCommerce image.
+const FORCED_OVERRIDES: RegExp[] = [
+  /\bkpv\b|lysine[-\s]*proline[-\s]*valine/i,
+  /n[-\s]*acetyl[-\s]*epitalon|na[-\s]*epitalon/i,
+  /\bklow\b/i,
+  /\bglow\b/i,
+];
+
+export function forcedVialImage(name: string, slug?: string): string | null {
+  const haystack = `${name} ${slug ?? ""}`;
+  if (FORCED_OVERRIDES.some((re) => re.test(haystack))) {
+    return vialImageFor(name, slug);
+  }
+  return null;
+}
