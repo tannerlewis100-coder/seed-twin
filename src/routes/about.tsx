@@ -29,7 +29,7 @@ const panels = [
   { icon: FlaskConical, title: "Percent Purity", desc: "NLT 98%" },
   { icon: Atom, title: "Quantitative Assay", desc: "NLT 95% of label claim" },
   { icon: Shield, title: "Heavy Metals", desc: "NMT 150 ppb total" },
-  { icon: Bug, title: "Microbial & Mold", desc: "TAMC + TYMC" },
+  { icon: Bug, title: "Microbial & Yeast/Mold", desc: "TAMC + TYMC" },
 ];
 
 const stats = [
