@@ -460,7 +460,7 @@ const testingPanels = [
   {
     icon: Bug,
     num: "05",
-    title: "Microbial & Mold",
+    title: "Microbial & Yeast/Mold",
     desc: "TAMC (aerobic, NMT 1,000 CFU) and TYMC (yeast & mold, NMT 100 CFU).",
   },
 ];
