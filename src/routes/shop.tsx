@@ -269,7 +269,7 @@ function ShopPage() {
       <ProductDetailModal
         product={activeProduct}
         open={!!activeProduct}
-        onOpenChange={(o) => !o && setActiveProduct(null)}
+        onOpenChange={(o) => !o && closeProduct()}
       />
     </div>
   );
