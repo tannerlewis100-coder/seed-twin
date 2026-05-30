@@ -26,6 +26,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
 import { Route as OrderReceivedOrderIdRouteImport } from './routes/order-received.$orderId'
 import { Route as OrderPayOrderIdRouteImport } from './routes/order-pay.$orderId'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
@@ -117,6 +118,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopSlugRoute = ShopSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ShopRoute,
+} as any)
 const OrderReceivedOrderIdRoute = OrderReceivedOrderIdRouteImport.update({
   id: '/order-received/$orderId',
   path: '/order-received/$orderId',
@@ -157,7 +163,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/shipping-policy': typeof ShippingPolicyRoute
-  '/shop': typeof ShopRoute
+  '/shop': typeof ShopRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRoutesByTo {
@@ -181,7 +188,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/shipping-policy': typeof ShippingPolicyRoute
-  '/shop': typeof ShopRoute
+  '/shop': typeof ShopRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRoutesById {
@@ -206,7 +214,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/shipping-policy': typeof ShippingPolicyRoute
-  '/shop': typeof ShopRoute
+  '/shop': typeof ShopRouteWithChildren
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
 }
 export interface FileRouteTypes {
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
+    | '/shop/$slug'
     | '/api/public/woo-store'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
+    | '/shop/$slug'
     | '/api/public/woo-store'
   id:
     | '__root__'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
+    | '/shop/$slug'
     | '/api/public/woo-store'
   fileRoutesById: FileRoutesById
 }
@@ -305,7 +317,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RefundPolicyRoute: typeof RefundPolicyRoute
   ShippingPolicyRoute: typeof ShippingPolicyRoute
-  ShopRoute: typeof ShopRoute
+  ShopRoute: typeof ShopRouteWithChildren
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   SignupRoute: typeof SignupRoute
@@ -437,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop/$slug': {
+      id: '/shop/$slug'
+      path: '/$slug'
+      fullPath: '/shop/$slug'
+      preLoaderRoute: typeof ShopSlugRouteImport
+      parentRoute: typeof ShopRoute
+    }
     '/order-received/$orderId': {
       id: '/order-received/$orderId'
       path: '/order-received/$orderId'
@@ -486,6 +505,16 @@ const AccountRouteChildren: AccountRouteChildren = {
 const AccountRouteWithChildren =
   AccountRoute._addFileChildren(AccountRouteChildren)
 
+interface ShopRouteChildren {
+  ShopSlugRoute: typeof ShopSlugRoute
+}
+
+const ShopRouteChildren: ShopRouteChildren = {
+  ShopSlugRoute: ShopSlugRoute,
+}
+
+const ShopRouteWithChildren = ShopRoute._addFileChildren(ShopRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -499,7 +528,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RefundPolicyRoute: RefundPolicyRoute,
   ShippingPolicyRoute: ShippingPolicyRoute,
-  ShopRoute: ShopRoute,
+  ShopRoute: ShopRouteWithChildren,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   SignupRoute: SignupRoute,

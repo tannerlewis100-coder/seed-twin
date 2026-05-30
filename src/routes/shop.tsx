@@ -39,6 +39,29 @@ function ShopPage() {
   const [query, setQuery] = useState("");
   const [activeProduct, setActiveProduct] = useState<WooProduct | null>(null);
 
+  // Sync modal open/close with URL so /shop/<slug> is shareable.
+  const openProduct = (p: WooProduct) => {
+    setActiveProduct(p);
+    if (typeof window !== "undefined" && p.slug) {
+      window.history.pushState({ shopModal: p.slug }, "", `/shop/${p.slug}`);
+    }
+  };
+  const closeProduct = (fromPopState = false) => {
+    setActiveProduct(null);
+    if (!fromPopState && typeof window !== "undefined" && window.location.pathname !== "/shop") {
+      window.history.pushState({}, "", "/shop");
+    }
+  };
+
+  useEffect(() => {
+    const onPop = () => {
+      // Browser back/forward — close any open quick-view modal.
+      setActiveProduct(null);
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
