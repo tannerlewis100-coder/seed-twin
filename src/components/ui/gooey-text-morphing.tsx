@@ -119,27 +119,7 @@ export function GooeyText({
 
   return (
     <div className={cn("relative", className)}>
-      {!isMobile && (
-        <svg className="absolute h-0 w-0" aria-hidden="true" focusable="false">
-          <defs>
-            <filter id="threshold">
-              <feColorMatrix
-                in="SourceGraphic"
-                type="matrix"
-                values="1 0 0 0 0
-                        0 1 0 0 0
-                        0 0 1 0 0
-                        0 0 0 255 -140"
-              />
-            </filter>
-          </defs>
-        </svg>
-      )}
-
-      <div
-        className="flex items-center justify-center"
-        style={isMobile ? undefined : { filter: "url(#threshold)" }}
-      >
+      <div className="flex items-center justify-center">
         <span
           ref={text1Ref}
           className={cn(
