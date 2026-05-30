@@ -335,7 +335,7 @@ function QualityCollage() {
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySs37}
-              alt="SS-37 vial"
+              alt="SS-31 vial"
               loading="eager"
               decoding="async"
               fetchPriority="high"
