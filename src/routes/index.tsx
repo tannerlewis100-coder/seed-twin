@@ -663,7 +663,7 @@ function CoaTeaser() {
                     <dd className="text-foreground/90 text-right">Match</dd>
                     <dt className="text-foreground/45">Heavy Metals</dt>
                     <dd className="text-foreground/90 text-right">{p.coa.heavyMetals}</dd>
-                    <dt className="text-foreground/45">Microbial</dt>
+                    <dt className="text-foreground/45">Microbial & Yeast/Mold</dt>
                     <dd className="text-foreground/90 text-right">Pass</dd>
                   </dl>
                 </CardContent>
