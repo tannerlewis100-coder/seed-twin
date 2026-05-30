@@ -244,7 +244,12 @@ function ProductBody({
 }) {
   const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
   const wooImg = firstImage(display) ?? firstImage(product);
-  const vial = forcedVialImage(product.name, product.slug) ?? wooImg ?? vialImageFor(product.name, product.slug);
+  const vial = variantVialImage({
+    name: product.name,
+    slug: product.slug,
+    size: activeVar ? labelFor(activeVar) : undefined,
+    fallbackSrc: wooImg,
+  });
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
   const description =
     stripHtml(product.description) || stripHtml(product.short_description) || "";
