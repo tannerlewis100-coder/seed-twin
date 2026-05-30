@@ -29,7 +29,7 @@ const panels = [
   { icon: FlaskConical, title: "Percent Purity", desc: "NLT 98%" },
   { icon: Atom, title: "Quantitative Assay", desc: "NLT 95% of label claim" },
   { icon: Shield, title: "Heavy Metals", desc: "NMT 150 ppb total" },
-  { icon: Bug, title: "Microbial & Mold", desc: "TAMC + TYMC" },
+  { icon: Bug, title: "Microbial & Yeast/Mold", desc: "TAMC + TYMC" },
 ];
 
 const stats = [
@@ -139,7 +139,7 @@ function AboutPage() {
                   <p>
                     An independent panel on every batch: identity (UV/Vis λmax), percent purity
                     (NLT 98%), quantitative label-claim assay, heavy metals (NMT 150 ppb), and
-                    microbial/mold (TAMC + TYMC). Same panel, every time. We do it on every run.
+                    microbial & yeast/mold (TAMC + TYMC). Same panel, every time. We do it on every run.
                   </p>
                   <p>
                     Then we publish the full results. No login. No paywall. Every Certificate of

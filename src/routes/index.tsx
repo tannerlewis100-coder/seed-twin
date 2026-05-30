@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Research peptides with a Certificate of Analysis on every batch: identity, percent purity, label-claim assay, heavy metals, and microbial/mold. For in vitro laboratory research use only.",
+          "Research peptides with a Certificate of Analysis on every batch: identity, percent purity, label-claim assay, heavy metals, and microbial & yeast/mold. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "CLARUM — Nothing Hidden. Everything Tested." },
       {
@@ -139,7 +139,7 @@ function Hero() {
               transition={{ delay: allWords.length * 0.05 + 0.35, duration: 0.6 }}
               className="mt-8 text-[14px] text-[#777]"
             >
-              Identity · Purity · Label-Claim Assay · Heavy Metals · Microbial
+              Identity · Purity · Label-Claim Assay · Heavy Metals · Microbial & Yeast/Mold
             </motion.div>
           </div>
 
@@ -248,8 +248,8 @@ function FeaturedProducts() {
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
               Every batch runs the full panel: identity, percent purity,
-              quantitative label-claim assay, heavy metals, and
-              microbial/mold. Pull the batch report before checkout — or
+              quantitative label-claim assay, heavy metals, and microbial &
+              yeast/mold. Pull the batch report before checkout — or
               after. We don't mind.
             </RevealOnScroll>
             <Button
@@ -335,7 +335,7 @@ function QualityCollage() {
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
               src={qualitySs37}
-              alt="SS-37 vial"
+              alt="SS-31 vial"
               loading="eager"
               decoding="async"
               fetchPriority="high"
@@ -371,7 +371,7 @@ function QualityCollage() {
               src={qualityTrio}
               width={1920}
               height={1280}
-              alt="BPC-157, SELANK, and GHK-CU vials"
+              alt="BPC-157, Selank, and GHK-Cu vials"
               loading="eager"
               decoding="async"
               fetchPriority="high"
@@ -460,7 +460,7 @@ const testingPanels = [
   {
     icon: Bug,
     num: "05",
-    title: "Microbial & Mold",
+    title: "Microbial & Yeast/Mold",
     desc: "TAMC (aerobic, NMT 1,000 CFU) and TYMC (yeast & mold, NMT 100 CFU).",
   },
 ];
@@ -663,7 +663,7 @@ function CoaTeaser() {
                     <dd className="text-foreground/90 text-right">Match</dd>
                     <dt className="text-foreground/45">Heavy Metals</dt>
                     <dd className="text-foreground/90 text-right">{p.coa.heavyMetals}</dd>
-                    <dt className="text-foreground/45">Microbial</dt>
+                    <dt className="text-foreground/45">Microbial & Yeast/Mold</dt>
                     <dd className="text-foreground/90 text-right">Pass</dd>
                   </dl>
                 </CardContent>
