@@ -371,7 +371,7 @@ function QualityCollage() {
               src={qualityTrio}
               width={1920}
               height={1280}
-              alt="BPC-157, SELANK, and GHK-CU vials"
+              alt="BPC-157, Selank, and GHK-Cu vials"
               loading="eager"
               decoding="async"
               fetchPriority="high"
