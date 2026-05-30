@@ -248,8 +248,8 @@ function FeaturedProducts() {
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
               Every batch runs the full panel: identity, percent purity,
-              quantitative label-claim assay, heavy metals, and
-              microbial/mold. Pull the batch report before checkout — or
+              quantitative label-claim assay, heavy metals, and microbial &
+              yeast/mold. Pull the batch report before checkout — or
               after. We don't mind.
             </RevealOnScroll>
             <Button
