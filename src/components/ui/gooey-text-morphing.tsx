@@ -50,12 +50,12 @@ export function GooeyText({
 
     const setMorph = (fraction: number) => {
       if (text1Ref.current && text2Ref.current) {
-        text2Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text2Ref.current.style.filter = `blur(${Math.min(4 / fraction - 4, 40)}px)`;
+        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.8) * 100}%`;
 
         fraction = 1 - fraction;
-        text1Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text1Ref.current.style.filter = `blur(${Math.min(4 / fraction - 4, 40)}px)`;
+        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.8) * 100}%`;
       }
     };
 
@@ -119,7 +119,24 @@ export function GooeyText({
 
   return (
     <div className={cn("relative", className)}>
-      <div className="flex items-center justify-center">
+      <svg className="absolute h-0 w-0" aria-hidden="true">
+        <defs>
+          <filter id="gooey-text-filter">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+            <feColorMatrix
+              in="blur"
+              type="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+      <div
+        className="flex items-center justify-center"
+        style={isMobile ? undefined : { filter: "url(#gooey-text-filter)" }}
+      >
         <span
           ref={text1Ref}
           className={cn(
