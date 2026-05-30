@@ -177,18 +177,20 @@ export function vialImageFor(name: string, slug?: string): string {
   return vialDefault;
 }
 
-// Products where we want our local vial photo to override the WooCommerce image.
-const FORCED_OVERRIDES: RegExp[] = [
-  /\bkpv\b|lysine[-\s]*proline[-\s]*valine/i,
-  /n[-\s]*acetyl[-\s]*epitalon|na[-\s]*epitalon/i,
-  /\bklow\b/i,
-  /\bglow\b/i,
+// Products where we want our local vial photo to override the WooCommerce image
+// AND to bypass the RULES list (so component-peptide names in a blend's title
+// like "BPC-157" don't grab the wrong rule first).
+const FORCED_OVERRIDE_MAP: Array<[RegExp, string]> = [
+  [/\bkpv\b|lysine[-\s]*proline[-\s]*valine/i, kpv10],
+  [/n[-\s]*acetyl[-\s]*epitalon|na[-\s]*epitalon/i, naEpitalon5],
+  [/\bklow\b/i, klowBlend],
+  [/\bglow\b/i, glowBlend],
 ];
 
 export function forcedVialImage(name: string, slug?: string): string | null {
   const haystack = `${name} ${slug ?? ""}`;
-  if (FORCED_OVERRIDES.some((re) => re.test(haystack))) {
-    return vialImageFor(name, slug);
+  for (const [re, img] of FORCED_OVERRIDE_MAP) {
+    if (re.test(haystack)) return img;
   }
   return null;
 }
