@@ -49,7 +49,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Research peptides with a Certificate of Analysis on every batch: identity, percent purity, label-claim assay, heavy metals, and microbial/mold. For in vitro laboratory research use only.",
+          "Research peptides with a Certificate of Analysis on every batch: identity, percent purity, label-claim assay, heavy metals, and microbial & yeast/mold. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "CLARUM — Nothing Hidden. Everything Tested." },
       {
