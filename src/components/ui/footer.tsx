@@ -192,14 +192,14 @@ export default function StickyFooter() {
               {/* Wordmark */}
               <motion.div
                 variants={itemVariants}
-                className="mt-auto pt-12 select-none flex items-center justify-center"
+                className="mt-auto pt-12 select-none flex items-center justify-center overflow-visible"
               >
                 <GooeyText
                   texts={["CLARUM", "PURITY", "TESTED", "TRUSTED"]}
                   morphTime={1.2}
                   cooldownTime={1.5}
-                  className="h-[14vw] md:h-[10vw] w-full"
-                  textClassName="font-display !text-[10vw] md:!text-[7vw] leading-none tracking-tight text-brand-gold drop-shadow-[0_0_40px_rgba(212,175,55,0.45)]"
+                  className="min-h-[18vw] md:min-h-[12vw] w-full overflow-visible"
+                  textClassName="font-display !text-[10vw] md:!text-[7vw] leading-[0.88] tracking-tight text-brand-gold drop-shadow-[0_0_40px_rgba(212,175,55,0.45)]"
                 />
               </motion.div>
 
