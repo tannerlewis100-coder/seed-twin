@@ -37,12 +37,12 @@ export function GooeyText({
       if (text1Ref.current && text2Ref.current) {
         const safeFraction = Math.max(fraction, 0.0001);
 
-        text2Ref.current.style.filter = `blur(${Math.min(8 / safeFraction - 8, 100)}px)`;
-        text2Ref.current.style.opacity = `${Math.pow(safeFraction, 0.4) * 100}%`;
+        text2Ref.current.style.filter = `blur(${Math.min(4 / safeFraction - 4, 28)}px)`;
+        text2Ref.current.style.opacity = `${Math.pow(safeFraction, 0.65) * 100}%`;
 
         const inverseFraction = Math.max(1 - fraction, 0.0001);
-        text1Ref.current.style.filter = `blur(${Math.min(8 / inverseFraction - 8, 100)}px)`;
-        text1Ref.current.style.opacity = `${Math.pow(inverseFraction, 0.4) * 100}%`;
+        text1Ref.current.style.filter = `blur(${Math.min(4 / inverseFraction - 4, 28)}px)`;
+        text1Ref.current.style.opacity = `${Math.pow(inverseFraction, 0.65) * 100}%`;
       }
     };
 
@@ -121,11 +121,11 @@ export function GooeyText({
             height="280%"
             colorInterpolationFilters="sRGB"
           >
-            <feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
             <feColorMatrix
               in="blur"
               type="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 14 -5"
               result="goo"
             />
           </filter>
