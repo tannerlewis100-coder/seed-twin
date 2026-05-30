@@ -50,12 +50,12 @@ export function GooeyText({
 
     const setMorph = (fraction: number) => {
       if (text1Ref.current && text2Ref.current) {
-        text2Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text2Ref.current.style.filter = `blur(${Math.min(4 / fraction - 4, 40)}px)`;
+        text2Ref.current.style.opacity = `${Math.pow(fraction, 0.8) * 100}%`;
 
         fraction = 1 - fraction;
-        text1Ref.current.style.filter = `blur(${Math.min(8 / fraction - 8, 100)}px)`;
-        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.4) * 100}%`;
+        text1Ref.current.style.filter = `blur(${Math.min(4 / fraction - 4, 40)}px)`;
+        text1Ref.current.style.opacity = `${Math.pow(fraction, 0.8) * 100}%`;
       }
     };
 
