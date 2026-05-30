@@ -181,10 +181,12 @@ export function vialImageFor(name: string, slug?: string): string {
 // AND to bypass the RULES list (so component-peptide names in a blend's title
 // like "BPC-157" don't grab the wrong rule first).
 const FORCED_OVERRIDE_MAP: Array<[RegExp, string]> = [
-  [/\bkpv\b|lysine[-\s]*proline[-\s]*valine/i, kpv10],
-  [/n[-\s]*acetyl[-\s]*epitalon|na[-\s]*epitalon/i, naEpitalon5],
+  // Blends FIRST — their WooCommerce titles often list component peptides
+  // (e.g. "KLOW Blend (KPV + ...)") that would otherwise match the KPV rule below.
   [/\bklow\b/i, klowBlend],
   [/\bglow\b/i, glowBlend],
+  [/\bkpv\b|lysine[-\s]*proline[-\s]*valine/i, kpv10],
+  [/n[-\s]*acetyl[-\s]*epitalon|na[-\s]*epitalon/i, naEpitalon5],
 ];
 
 export function forcedVialImage(name: string, slug?: string): string | null {
