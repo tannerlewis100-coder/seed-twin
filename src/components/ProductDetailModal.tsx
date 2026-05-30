@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useCart } from "@/lib/cart";
 import { Check, Loader2, ShoppingCart } from "lucide-react";
-import { vialImageFor, forcedVialImage } from "@/lib/vialImages";
+import { variantVialImage } from "@/lib/vialImages";
 import {
   decodeEntities,
   fetchClarumProduct,

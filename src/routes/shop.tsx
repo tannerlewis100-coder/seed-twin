@@ -8,7 +8,7 @@ import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
-import { vialImageFor, forcedVialImage } from "@/lib/vialImages";
+import { variantVialImage } from "@/lib/vialImages";
 import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
 export const Route = createFileRoute("/shop")({

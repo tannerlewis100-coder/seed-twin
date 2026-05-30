@@ -4,7 +4,7 @@ import { Check, Loader2, ShoppingCart, ArrowLeft, FileText } from "lucide-react"
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useCart } from "@/lib/cart";
-import { vialImageFor, forcedVialImage } from "@/lib/vialImages";
+import { variantVialImage } from "@/lib/vialImages";
 import {
   decodeEntities,
   fetchClarumProduct,
