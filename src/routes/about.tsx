@@ -139,7 +139,7 @@ function AboutPage() {
                   <p>
                     An independent panel on every batch: identity (UV/Vis λmax), percent purity
                     (NLT 98%), quantitative label-claim assay, heavy metals (NMT 150 ppb), and
-                    microbial/mold (TAMC + TYMC). Same panel, every time. We do it on every run.
+                    microbial & yeast/mold (TAMC + TYMC). Same panel, every time. We do it on every run.
                   </p>
                   <p>
                     Then we publish the full results. No login. No paywall. Every Certificate of
