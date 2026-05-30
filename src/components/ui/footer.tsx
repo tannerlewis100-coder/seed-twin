@@ -11,7 +11,6 @@ function TikTokIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-import { GooeyText } from "@/components/ui/gooey-text-morphing";
 import clarumLogo from "@/assets/clarum-logo.png";
 
 const containerVariants: Variants = {
@@ -194,13 +193,9 @@ export default function StickyFooter() {
                 variants={itemVariants}
                 className="mt-auto pt-12 select-none flex items-center justify-center overflow-visible"
               >
-                <GooeyText
-                  texts={["CLARUM", "PURITY", "TESTED", "TRUSTED"]}
-                  morphTime={1.2}
-                  cooldownTime={1.5}
-                  className="min-h-[18vw] md:min-h-[12vw] w-full overflow-visible"
-                  textClassName="font-display !text-[10vw] md:!text-[7vw] leading-[0.88] tracking-tight text-brand-gold drop-shadow-[0_0_40px_rgba(212,175,55,0.45)]"
-                />
+                <h2 className="w-full text-center font-display text-[11vw] leading-none tracking-tight text-brand-gold drop-shadow-[0_0_40px_rgba(212,175,55,0.45)] md:text-[6.8vw]">
+                  Clarun Purity and Tested.
+                </h2>
               </motion.div>
 
               {/* Bottom row */}
