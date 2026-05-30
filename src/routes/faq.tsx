@@ -64,7 +64,7 @@ const groups: Group[] = [
       },
       {
         q: "What makes Clarum's testing different from other vendors?",
-        a: "This is where most vendors stop. Every Clarum batch runs the full panel — qualitative ID by UV/Vis λmax, percent purity by correlation coefficient (NLT 98%), a Beer-Lambert quantitative assay confirming the vial actually contains the labeled amount (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial/mold (TAMC + TYMC). All results are uploaded to the publicly accessible COA library before shipment.",
+        a: "This is where most vendors stop. Every Clarum batch runs the full panel — qualitative ID by UV/Vis λmax, percent purity by correlation coefficient (NLT 98%), a Beer-Lambert quantitative assay confirming the vial actually contains the labeled amount (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold (TAMC + TYMC). All results are uploaded to the publicly accessible COA library before shipment.",
       },
       {
         q: "Can I see the COA before I purchase?",
