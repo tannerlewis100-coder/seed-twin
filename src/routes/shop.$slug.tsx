@@ -30,8 +30,8 @@ export const Route = createFileRoute("/shop/$slug")({
         property: "og:description",
         content: `${humanize(params.slug)} research peptide with full third-party lab COA.`,
       },
-      { rel: "canonical", href: `/shop/${params.slug}` } as never,
     ],
+    links: [{ rel: "canonical", href: `/shop/${params.slug}` }],
   }),
 });
 
