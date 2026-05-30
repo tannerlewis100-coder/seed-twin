@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useCart } from "@/lib/cart";
 import { Check, Loader2, ShoppingCart } from "lucide-react";
-import { vialImageFor, forcedVialImage } from "@/lib/vialImages";
+import { variantVialImage } from "@/lib/vialImages";
 import {
   decodeEntities,
   fetchClarumProduct,
@@ -74,8 +74,6 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
 
   const display: WooProduct = activeVar ?? product;
   const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
-  const wooImg = firstImage(display) ?? firstImage(product);
-  const vial = forcedVialImage(product.name, product.slug) ?? wooImg ?? vialImageFor(product.name, product.slug);
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
   const description =
     stripHtml(product.description) || stripHtml(product.short_description) || "";
@@ -133,6 +131,14 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
 
     return "Variant";
   };
+
+  const wooImg = firstImage(display) ?? firstImage(product);
+  const vial = variantVialImage({
+    name: product.name,
+    slug: product.slug,
+    size: activeVar ? labelFor(activeVar) : undefined,
+    fallbackSrc: wooImg,
+  });
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -1,13 +1,10 @@
 import vialDefault from "@/assets/vial/vial-1.png";
-import glp1s from "@/assets/products/glp1-s-20mg.png";
 import blend4x from "@/assets/products/blend-4x.png";
 import blend8x from "@/assets/products/blend-8x.png";
 import ss31 from "@/assets/products/ss31-10mg.png";
 import cjcNoDac from "@/assets/products/cjc-no-dac.png";
 import tesamorelin from "@/assets/products/tesamorelin.png";
 import dsip from "@/assets/products/dsip.png";
-import glp3rt from "@/assets/products/glp3-rt.png";
-import glp2tz from "@/assets/products/glp2-tz-40mg.png";
 import snap8 from "@/assets/products/snap8.png";
 import pnc27 from "@/assets/products/pnc27.png";
 import cjcIpaBlend from "@/assets/products/cjc-ipa-blend.png";
@@ -22,11 +19,8 @@ import motsc from "@/assets/products/motsc.png";
 import cjcWithDac from "@/assets/products/cjc-with-dac.png";
 import tb500 from "@/assets/products/tb500.png";
 import semax from "@/assets/products/semax.png";
-import epitalon from "@/assets/products/epitalon.png";
 import sermorelin from "@/assets/products/sermorelin-10mg.png";
 import hmg from "@/assets/products/hmg-75iu.png";
-import glp2tz20 from "@/assets/products/glp2-tz-20mg.png";
-import glp2tz50 from "@/assets/products/glp2-tz-50mg.png";
 import klowBlend from "@/assets/products/klow-blend.png";
 import igf1lr3 from "@/assets/products/igf1lr3-1mg.png";
 import nad1000 from "@/assets/products/nad-1000mg.png";
@@ -38,8 +32,19 @@ import epitalon50 from "@/assets/products/epitalon-50mg.png";
 import selank from "@/assets/products/selank-10mg.png";
 import survodutide from "@/assets/products/survodutide-10mg.png";
 import glp1s10 from "@/assets/products/glp1-s-10mg.png";
+import glp1s20 from "@/assets/products/glp1-s-20mg.png";
+import glp1s30 from "@/assets/products/glp1-s-30mg.png";
 import glp2tz10 from "@/assets/products/glp2-tz-10mg.png";
+import glp2tz20 from "@/assets/products/glp2-tz-20mg.png";
+import glp2tz30 from "@/assets/products/glp2-tz-30mg.png";
+import glp2tz40 from "@/assets/products/glp2-tz-40mg.png";
+import glp2tz50 from "@/assets/products/glp2-tz-50mg.png";
+import glp2tz60 from "@/assets/products/glp2-tz-60mg.png";
 import glp3rt10 from "@/assets/products/glp3-rt-10mg.png";
+import glp3rt20 from "@/assets/products/glp3-rt-20mg.png";
+import glp3rt30 from "@/assets/products/glp3-rt-30mg.png";
+import glp3rt40 from "@/assets/products/glp3-rt-40mg.png";
+import glp3rt50 from "@/assets/products/glp3-rt-50mg.png";
 import glp3rt60 from "@/assets/products/glp3-rt-60mg.png";
 import melanotan2 from "@/assets/products/melanotan2-10mg.png";
 import wolverine20 from "@/assets/products/wolverine-20mg.png";
@@ -53,13 +58,9 @@ import ipamorelin from "@/assets/products/ipamorelin-10mg.png";
 import thymalin from "@/assets/products/thymalin-10mg.png";
 import pinealon from "@/assets/products/pinealon-20mg.png";
 import vip10 from "@/assets/products/vip10-10mg.png";
-import glp3rt20 from "@/assets/products/glp3-rt-20mg.png";
-import glp3rt40 from "@/assets/products/glp3-rt-40mg.png";
 import mazdutide from "@/assets/products/mazdutide-100mg.png";
 import foxo4 from "@/assets/products/foxo4-10mg.png";
 import glutathione1500 from "@/assets/products/glutathione-1500mg.png";
-import glp2tz60 from "@/assets/products/glp2-tz-60mg.png";
-import glp1s30 from "@/assets/products/glp1-s-30mg.png";
 import igfdes from "@/assets/products/igfdes-0-1mg.png";
 import cagrilintide10 from "@/assets/products/cagrilintide-10mg.png";
 import kisspeptin from "@/assets/products/kisspeptin-10mg.png";
@@ -69,7 +70,6 @@ import amino1mq50 from "@/assets/products/5amino1mq-50mg.png";
 import amino1mq5 from "@/assets/products/5amino1mq-5mg.png";
 import b12 from "@/assets/products/b12-10ml.png";
 import aod9604 from "@/assets/products/aod9604-5mg.png";
-
 import aicar from "@/assets/products/aicar-50mg.png";
 import ace031 from "@/assets/products/ace031-1mg.png";
 import ara290 from "@/assets/products/ara290-10mg.png";
@@ -79,6 +79,30 @@ import kpv10 from "@/assets/products/kpv-10mg.png";
 import naEpitalon5 from "@/assets/products/na-epitalon-5mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
+
+const PRODUCT_IMAGE_MODULES = import.meta.glob("../assets/products/*.png", {
+  eager: true,
+  import: "default",
+}) as Record<string, string>;
+
+const PRODUCT_IMAGE_BY_FILE = Object.fromEntries(
+  Object.entries(PRODUCT_IMAGE_MODULES).map(([path, url]) => [path.split("/").pop()!.toLowerCase(), url]),
+);
+
+function normalizeImageToken(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/&nbsp;/g, " ")
+    .replace(/µ/g, "u")
+    .replace(/(\d)\s+(mg|ml|iu|mcg|ug|g)\b/g, "$1$2")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function productImageByFileName(fileName?: string | null): string | null {
+  if (!fileName) return null;
+  return PRODUCT_IMAGE_BY_FILE[fileName.toLowerCase()] ?? null;
+}
 
 const RULES: Array<[RegExp, string]> = [
   [/reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water/i, bacWater],
@@ -91,28 +115,27 @@ const RULES: Array<[RegExp, string]> = [
   [/5-?amino-?1mq/i, amino1mq5],
   [/\bb-?12\b|cyanocobalamin|methylcobalamin/i, b12],
   [/aod-?9604/i, aod9604],
-  
   [/\baicar\b/i, aicar],
   [/ace-?031/i, ace031],
   [/ara-?290/i, ara290],
   [/glp-?1\s*s.*30mg/i, glp1s30],
-  [/glp-?1\s*s.*20mg/i, glp1s],
+  [/glp-?1\s*s.*20mg/i, glp1s20],
   [/glp-?1\s*s.*10mg/i, glp1s10],
-  [/glp-?1\s*s/i, glp1s],
+  [/glp-?1\s*s/i, glp1s10],
   [/glp-?2.*60mg/i, glp2tz60],
   [/glp-?2.*50mg|glp-?2-tz-50mg/i, glp2tz50],
-  [/glp-?2.*40mg|glp-?2-tz-40mg/i, glp2tz],
-  [/glp-?2.*30mg|glp-?2-tz-30mg/i, glp2tz20],
+  [/glp-?2.*40mg|glp-?2-tz-40mg/i, glp2tz40],
+  [/glp-?2.*30mg|glp-?2-tz-30mg/i, glp2tz30],
   [/glp-?2.*20mg|glp-?2-tz-20mg/i, glp2tz20],
   [/glp-?2.*10mg|glp-?2-tz-10mg/i, glp2tz10],
-  [/glp-?2/i, glp2tz],
+  [/glp-?2/i, glp2tz10],
   [/glp-?3.*60mg/i, glp3rt60],
-  [/glp-?3.*50mg/i, glp3rt40],
+  [/glp-?3.*50mg/i, glp3rt50],
   [/glp-?3.*40mg/i, glp3rt40],
-  [/glp-?3.*30mg/i, glp3rt20],
+  [/glp-?3.*30mg/i, glp3rt30],
   [/glp-?3.*20mg/i, glp3rt20],
   [/glp-?3.*10mg/i, glp3rt10],
-  [/glp-?3/i, glp3rt],
+  [/glp-?3/i, glp3rt10],
   [/pinealon/i, pinealon],
   [/\bvip-?10\b|\bvip\b/i, vip10],
   [/mazdutide/i, mazdutide],
@@ -177,12 +200,7 @@ export function vialImageFor(name: string, slug?: string): string {
   return vialDefault;
 }
 
-// Products where we want our local vial photo to override the WooCommerce image
-// AND to bypass the RULES list (so component-peptide names in a blend's title
-// like "BPC-157" don't grab the wrong rule first).
 const FORCED_OVERRIDE_MAP: Array<[RegExp, string]> = [
-  // Blends FIRST — their WooCommerce titles often list component peptides
-  // (e.g. "KLOW Blend (KPV + ...)") that would otherwise match the KPV rule below.
   [/\bklow\b/i, klowBlend],
   [/\bglow\b/i, glowBlend],
   [/\bkpv\b|lysine[-\s]*proline[-\s]*valine/i, kpv10],
@@ -195,4 +213,22 @@ export function forcedVialImage(name: string, slug?: string): string | null {
     if (re.test(haystack)) return img;
   }
   return null;
+}
+
+export function variantVialImage({
+  name,
+  slug,
+  size,
+  fallbackSrc,
+}: {
+  name: string;
+  slug?: string;
+  size?: string | null;
+  fallbackSrc?: string;
+}): string {
+  const sizedLocal = slug && size ? productImageByFileName(`${slug}-${normalizeImageToken(size)}.png`) : null;
+  const forced = forcedVialImage(name, slug);
+  const exactLocal = slug ? productImageByFileName(`${slug}.png`) : null;
+
+  return sizedLocal ?? forced ?? exactLocal ?? fallbackSrc ?? vialImageFor(name, slug);
 }

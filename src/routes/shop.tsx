@@ -8,7 +8,7 @@ import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
-import { vialImageFor, forcedVialImage } from "@/lib/vialImages";
+import { variantVialImage } from "@/lib/vialImages";
 import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
 export const Route = createFileRoute("/shop")({
@@ -191,7 +191,11 @@ function ShopPage() {
                     const price = productPrice(p);
                     const hasRange = price.min !== price.max;
                     const wooImg = firstImage(p);
-                    const vial = forcedVialImage(p.name, p.slug) ?? wooImg ?? vialImageFor(p.name, p.slug);
+                    const vial = variantVialImage({
+                      name: p.name,
+                      slug: p.slug,
+                      fallbackSrc: wooImg,
+                    });
                     const rawCat = p.categories?.[0]?.name ?? "Research";
                     const cat = decodeEntities(rawCat)
                       .replace(/\s*&.*$/, "")
