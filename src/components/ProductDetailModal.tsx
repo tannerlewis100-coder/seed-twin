@@ -132,6 +132,14 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
     return "Variant";
   };
 
+  const wooImg = firstImage(display) ?? firstImage(product);
+  const vial = variantVialImage({
+    name: product.name,
+    slug: product.slug,
+    size: activeVar ? labelFor(activeVar) : undefined,
+    fallbackSrc: wooImg,
+  });
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl bg-brand-forest-deep border-white/10 text-foreground p-0 overflow-hidden">
