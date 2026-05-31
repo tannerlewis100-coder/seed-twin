@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useCart } from "@/lib/cart";
 import { Check, Loader2, ShoppingCart } from "lucide-react";
 import { variantVialImage } from "@/lib/vialImages";
