@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
+
 const qualitySemax = "/quality-semax-v2.png";
 const qualitySs37 = "/quality-ss37-v2.png";
 const qualityTb500 = "/quality-glp1s-v2.png";
@@ -680,30 +680,6 @@ function CoaTeaser() {
   );
 }
 
-/* ---------------- Testimonials (Stagger) ---------------- */
-
-function Testimonials() {
-  return (
-    <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-12 md:py-16 lg:py-20">
-        <div className="max-w-2xl mb-10">
-          <Badge
-            variant="outline"
-            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
-          >
-            Researcher voices
-          </Badge>
-          <h2 className="font-display text-4xl md:text-5xl text-foreground leading-[1.05] tracking-[-0.02em]">
-            <RevealText text={"Trusted by people\nwho read the data."} />
-          </h2>
-        </div>
-        <RevealOnScroll>
-          <StaggerTestimonials />
-        </RevealOnScroll>
-      </div>
-    </section>
-  );
-}
 
 /* ---------------- CTA banner ---------------- */
 
@@ -757,7 +733,6 @@ function Index() {
         <ScanTheVial />
         <QualityCollage />
         <CoaTeaser />
-        <Testimonials />
         <FinalCta />
       </main>
       <SiteFooter />
