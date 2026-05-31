@@ -12,7 +12,6 @@ function TikTokIcon({ className }: { className?: string }) {
   );
 }
 import clarumLogo from "@/assets/clarum-logo.png";
-import { GooeyText } from "@/components/ui/gooey-text-morphing";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
