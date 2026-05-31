@@ -219,10 +219,15 @@ function ContactPage() {
                   onChange={(v) => setForm((f) => ({ ...f, subject: v }))}
                 />
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-foreground/55">
+                  <label
+                    htmlFor="contact-message"
+                    className="text-[10px] uppercase tracking-wider text-foreground/55"
+                  >
                     Message
                   </label>
                   <textarea
+                    id="contact-message"
+                    name="message"
                     value={form.message}
                     onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                     rows={6}
