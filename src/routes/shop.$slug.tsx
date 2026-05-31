@@ -293,7 +293,7 @@ function ProductBody({
             src={vial}
             alt={`${product.name} vial`}
             draggable={false}
-            className="relative h-96 w-auto max-w-full object-contain select-none drop-shadow-2xl"
+            className="relative h-96 w-auto max-w-full object-contain select-none"
           />
         </div>
 
