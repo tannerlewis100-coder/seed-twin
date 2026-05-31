@@ -90,6 +90,15 @@ const PRODUCT_IMAGE_BY_FILE = Object.fromEntries(
   Object.entries(PRODUCT_IMAGE_MODULES).map(([path, url]) => [path.split("/").pop()!.toLowerCase(), url]),
 );
 
+// Same map but keyed by an alphanumeric-only token so "5-amino-1mq-50mg.png"
+// and "5amino1mq-50mg.png" both resolve from a slug+size lookup.
+const PRODUCT_IMAGE_BY_NORMALIZED = Object.fromEntries(
+  Object.entries(PRODUCT_IMAGE_MODULES).map(([path, url]) => {
+    const file = path.split("/").pop()!.toLowerCase().replace(/\.png$/, "");
+    return [file.replace(/[^a-z0-9]+/g, ""), url];
+  }),
+);
+
 function normalizeImageToken(value: string): string {
   return value
     .toLowerCase()
@@ -102,7 +111,12 @@ function normalizeImageToken(value: string): string {
 
 function productImageByFileName(fileName?: string | null): string | null {
   if (!fileName) return null;
-  return PRODUCT_IMAGE_BY_FILE[fileName.toLowerCase()] ?? null;
+  const lower = fileName.toLowerCase();
+  return (
+    PRODUCT_IMAGE_BY_FILE[lower] ??
+    PRODUCT_IMAGE_BY_NORMALIZED[lower.replace(/\.png$/, "").replace(/[^a-z0-9]+/g, "")] ??
+    null
+  );
 }
 
 const RULES: Array<[RegExp, string]> = [
