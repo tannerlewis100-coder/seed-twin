@@ -71,6 +71,30 @@ function getClarumJwt(): string | null {
   }
 }
 
+function clearClarumJwt() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem("clarum_jwt");
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Decode JWT payload and check exp. Returns true if expired or unparseable. */
+export function isJwtExpired(token: string): boolean {
+  try {
+    const payload = token.split(".")[1];
+    if (!payload) return true;
+    const b64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const json = atob(b64);
+    const data = JSON.parse(json) as { exp?: number };
+    if (typeof data.exp !== "number") return false;
+    return Date.now() / 1000 >= data.exp - 30;
+  } catch {
+    return true;
+  }
+}
+
 async function wooFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const needsCartSession = path.startsWith("/cart") || path.startsWith("/checkout");
   const token = getCartToken();
@@ -86,19 +110,39 @@ async function wooFetch(path: string, init: RequestInit = {}): Promise<Response>
   if (isMutation && currentNonce) headers["Nonce"] = currentNonce;
 
   // Attach JWT on cart/checkout calls so Woo associates the order with the
-  // logged-in user instead of creating a guest (customer_id: 0).
+  // logged-in user. Skip expired tokens — Woo rejects the entire request with
+  // 403 jwt_auth_invalid_token otherwise, breaking the cart.
   if (needsCartSession) {
     const jwt = getClarumJwt();
     if (jwt && !headers["Authorization"]) {
-      headers["Authorization"] = `Bearer ${jwt}`;
+      if (isJwtExpired(jwt)) {
+        clearClarumJwt();
+      } else {
+        headers["Authorization"] = `Bearer ${jwt}`;
+      }
     }
   }
 
-  const res = await fetch(`${BASE}?path=${encodeURIComponent(path)}`, {
-    ...init,
-    credentials: "include",
-    headers,
-  });
+  const doFetch = (h: Record<string, string>) =>
+    fetch(`${BASE}?path=${encodeURIComponent(path)}`, {
+      ...init,
+      credentials: "include",
+      headers: h,
+    });
+
+  let res = await doFetch(headers);
+
+  // If Woo still rejects the JWT (e.g. revoked server-side), drop it and retry
+  // once anonymously so cart actions don't dead-end.
+  if (res.status === 403 && headers["Authorization"]) {
+    const text = await res.clone().text().catch(() => "");
+    if (/jwt_auth_invalid_token|expired token/i.test(text)) {
+      clearClarumJwt();
+      const { Authorization: _drop, ...retryHeaders } = headers;
+      res = await doFetch(retryHeaders);
+    }
+  }
+
   const nextToken = res.headers.get("Cart-Token");
   if (nextToken) setCartToken(nextToken);
   const nextNonce = res.headers.get("Nonce");
