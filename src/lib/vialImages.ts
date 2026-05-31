@@ -242,9 +242,16 @@ export function variantVialImage({
   size?: string | null;
   fallbackSrc?: string;
 }): string {
-  const sizedLocal = slug && size ? productImageByFileName(`${slug}-${normalizeImageToken(size)}.png`) : null;
+  const normalizedSize = size ? normalizeImageToken(size) : null;
+  const unitlessBlendSize = size
+    ? normalizeImageToken(size.replace(/\b(mg|ml|iu|mcg|ug|g)\b/gi, ""))
+    : null;
+  const sizedLocal =
+    slug && normalizedSize ? productImageByFileName(`${slug}-${normalizedSize}.png`) : null;
+  const sizedBlendLocal =
+    slug && unitlessBlendSize ? productImageByFileName(`${slug}-${unitlessBlendSize}.png`) : null;
   const forced = forcedVialImage(name, slug);
   const exactLocal = slug ? productImageByFileName(`${slug}.png`) : null;
 
-  return sizedLocal ?? forced ?? exactLocal ?? fallbackSrc ?? vialImageFor(name, slug);
+  return sizedLocal ?? sizedBlendLocal ?? forced ?? exactLocal ?? fallbackSrc ?? vialImageFor(name, slug);
 }

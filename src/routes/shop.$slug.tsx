@@ -224,6 +224,11 @@ function ProductPage() {
             activeVarId={activeVarId}
             setActiveVarId={setActiveVarId}
             labelFor={labelFor}
+            currentVariantSize={
+              activeVar
+                ? sizeById[activeVar.id] ?? activeVar.attributes?.[0]?.value ?? activeVar.attributes?.[0]?.option
+                : undefined
+            }
             onAdd={onAdd}
             cartLoading={cartLoading}
             added={added}
@@ -245,6 +250,7 @@ function ProductBody({
   activeVarId,
   setActiveVarId,
   labelFor,
+  currentVariantSize,
   onAdd,
   cartLoading,
   added,
@@ -258,6 +264,7 @@ function ProductBody({
   activeVarId: number | null;
   setActiveVarId: (id: number) => void;
   labelFor: (v: WooProduct) => string;
+  currentVariantSize?: string;
   onAdd: () => Promise<void>;
   cartLoading: boolean;
   added: boolean;
@@ -268,7 +275,7 @@ function ProductBody({
   const vial = variantVialImage({
     name: product.name,
     slug: product.slug,
-    size: activeVar ? labelFor(activeVar) : undefined,
+    size: currentVariantSize,
     fallbackSrc: wooImg,
   });
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
