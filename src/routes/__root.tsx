@@ -45,6 +45,13 @@ export const Route = createRootRoute({
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Clarum Peptides" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
+      { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
+      { name: "description", content: "Clarum is a website that replicates seed.com, showcasing products and scientific data with enhanced payment functionality." },
+      { property: "og:description", content: "Clarum is a website that replicates seed.com, showcasing products and scientific data with enhanced payment functionality." },
+      { name: "twitter:description", content: "Clarum is a website that replicates seed.com, showcasing products and scientific data with enhanced payment functionality." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X5gQK5nRTfeQihegZZToeIiKOcB2/social-images/social-1780199654346-ChatGPT_Image_May_30,_2026,_10_54_02_PM.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X5gQK5nRTfeQihegZZToeIiKOcB2/social-images/social-1780199654346-ChatGPT_Image_May_30,_2026,_10_54_02_PM.webp" },
     ],
 
     links: [
