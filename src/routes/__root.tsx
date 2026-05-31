@@ -35,7 +35,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CLARUM — Batch-Tested Research Peptides | Nothing Hidden. Everything Tested." },
+      { title: "Clarum — Batch-Tested Research Peptides" },
       {
         name: "description",
         content:
@@ -44,17 +44,7 @@ export const Route = createRootRoute({
       { name: "author", content: "Clarum Peptides" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Clarum Peptides" },
-      { property: "og:title", content: "CLARUM — Batch-Tested Research Peptides | Nothing Hidden. Everything Tested." },
-      { property: "og:description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
-      { property: "og:url", content: "https://clarumpeptides.com" },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X5gQK5nRTfeQihegZZToeIiKOcB2/social-images/social-1780197713011-ChatGPT_Image_May_30,_2026,_10_21_29_PM.webp" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "CLARUM — Batch-Tested Research Peptides | Nothing Hidden. Everything Tested." },
-      { name: "twitter:description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X5gQK5nRTfeQihegZZToeIiKOcB2/social-images/social-1780197713011-ChatGPT_Image_May_30,_2026,_10_21_29_PM.webp" },
-      { name: "description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
     ],
 
     links: [
@@ -67,6 +57,25 @@ export const Route = createRootRoute({
     ],
     scripts: [
       { src: "https://integrate.depay.com/widgets/v13.js" },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Clarum Peptides",
+          url: "https://clarumpeptides.com",
+          logo: "https://clarumpeptides.com/favicon.png",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Clarum Peptides",
+          url: "https://clarumpeptides.com",
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,

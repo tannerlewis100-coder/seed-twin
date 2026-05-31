@@ -16,17 +16,34 @@ export const Route = createFileRoute("/faq")({
   component: FaqPage,
   head: () => ({
     meta: [
-      { title: "FAQ — Research Peptides, COAs & Testing Explained | CLARUM" },
+      { title: "FAQ — Research Peptides, COAs & Testing | Clarum" },
       {
         name: "description",
         content:
-          "Answers to common questions about research peptides, our COA process, shipping, storage, and Research Use Only compliance.",
+          "Answers about research peptides, our COA process, shipping, storage, and Research Use Only compliance.",
       },
-      { property: "og:title", content: "Frequently Asked Questions | CLARUM" },
+      { property: "og:title", content: "Frequently Asked Questions | Clarum" },
       {
         property: "og:description",
-        content:
-          "Answers about research peptides, our COA process, shipping, and RUO compliance.",
+        content: "Answers about research peptides, our COA process, shipping, and RUO compliance.",
+      },
+      { property: "og:url", content: "https://clarumpeptides.com/faq" },
+    ],
+    links: [{ rel: "canonical", href: "https://clarumpeptides.com/faq" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: groups.flatMap((g) =>
+            g.items.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          ),
+        }),
       },
     ],
   }),

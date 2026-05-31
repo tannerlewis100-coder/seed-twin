@@ -43,7 +43,7 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "CLARUM — Batch-Tested Research Peptides | Nothing Hidden. Everything Tested." },
+      { title: "Clarum — Batch-Tested Research Peptides with Full COAs" },
       {
         name: "description",
         content:
@@ -54,14 +54,17 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs.",
       },
+      { property: "og:url", content: "https://clarumpeptides.com/" },
+      { property: "og:image", content: "https://clarumpeptides.com/og-image.png" },
       { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         name: "twitter:description",
         content: "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs.",
       },
+      { name: "twitter:image", content: "https://clarumpeptides.com/og-image.png" },
     ],
     links: [
-      { rel: "canonical", href: "https://clarumpeptides.com" },
+      { rel: "canonical", href: "https://clarumpeptides.com/" },
     ],
   }),
 

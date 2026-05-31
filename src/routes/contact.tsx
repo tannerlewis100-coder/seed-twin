@@ -12,7 +12,7 @@ export const Route = createFileRoute("/contact")({
   component: ContactPage,
   head: () => ({
     meta: [
-      { title: "Contact Clarum — Support, COAs & Bulk Inquiries | CLARUM" },
+      { title: "Contact Clarum — Support, COAs & Bulk Inquiries" },
       {
         name: "description",
         content:
@@ -22,6 +22,34 @@ export const Route = createFileRoute("/contact")({
       {
         property: "og:description",
         content: "Get in touch for product, COA, and bulk research inquiries.",
+      },
+      { property: "og:url", content: "https://clarumpeptides.com/contact" },
+    ],
+    links: [{ rel: "canonical", href: "https://clarumpeptides.com/contact" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "Clarum Peptides",
+          url: "https://clarumpeptides.com",
+          email: "clarumpeps@gmail.com",
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: "Keller",
+            addressRegion: "TX",
+            addressCountry: "US",
+          },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "09:00",
+              closes: "17:00",
+            },
+          ],
+        }),
       },
     ],
   }),
