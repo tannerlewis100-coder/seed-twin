@@ -43,22 +43,28 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      {
-        title: "CLARUM — Batch-Tested Research Peptides | Nothing Hidden. Everything Tested.",
-      },
+      { title: "CLARUM — Batch-Tested Research Peptides | Nothing Hidden. Everything Tested." },
       {
         name: "description",
         content:
-          "Research peptides with a Certificate of Analysis on every batch: identity, percent purity, label-claim assay, heavy metals, and microbial & yeast/mold. For in vitro laboratory research use only.",
+          "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs. Free U.S. shipping over $150.",
       },
-      { property: "og:title", content: "CLARUM — Nothing Hidden. Everything Tested." },
+      { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         property: "og:description",
-        content:
-          "Full-panel tested research peptides. Every batch ships with a public Certificate of Analysis.",
+        content: "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs.",
+      },
+      { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
+      {
+        name: "twitter:description",
+        content: "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs.",
       },
     ],
+    links: [
+      { rel: "canonical", href: "https://clarumpeptides.com" },
+    ],
   }),
+
 });
 
 /* ---------------- Hero ---------------- */
