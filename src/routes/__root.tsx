@@ -42,6 +42,7 @@ export const Route = createRootRoute({
           "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs. Free U.S. shipping over $150.",
       },
       { name: "author", content: "Clarum Peptides" },
+      { name: "google-site-verification", content: "ae0hIMBxZwn8c3qXOrzHE8_B_ISHPQJRjm_fi4bOItY" },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Clarum Peptides" },
       { name: "twitter:card", content: "summary_large_image" },
