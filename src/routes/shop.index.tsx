@@ -11,7 +11,7 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 import { variantVialImage } from "@/lib/vialImages";
 import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/shop/")({
   component: ShopPage,
   head: () => ({
     meta: [
