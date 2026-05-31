@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
@@ -37,6 +38,11 @@ import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-s
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignupRoute = SignupRouteImport.update({
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
@@ -198,6 +205,7 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
@@ -225,6 +233,7 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/signup': typeof SignupRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/account/orders': typeof AccountOrdersRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
@@ -253,6 +262,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/account/orders'
     | '/order-confirmation/$orderId'
@@ -278,6 +288,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/account/orders'
     | '/order-confirmation/$orderId'
@@ -304,6 +315,7 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/signup'
+    | '/sitemap.xml'
     | '/terms'
     | '/account/orders'
     | '/order-confirmation/$orderId'
@@ -331,6 +343,7 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
   SignupRoute: typeof SignupRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
@@ -345,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signup': {
@@ -551,6 +571,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
   SignupRoute: SignupRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   OrderPayOrderIdRoute: OrderPayOrderIdRoute,
