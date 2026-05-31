@@ -283,14 +283,10 @@ export const categories = [
 ];
 
 const FEATURED_SLUGS = [
-  "bpc-157-10mg",
-  "tb-500-10mg",
-  "epitalon-10mg",
-  "mots-c-10mg",
-  "ghk-cu-50mg",
+  "glp-3-rt-10mg",
   "nad-500mg",
-  "wolverine-5mg",
-  "wolverine-10mg",
+  "mots-c-10mg",
+  "bpc-157-5mg",
 ];
 
 export const featuredPeptides: Peptide[] = FEATURED_SLUGS.map(

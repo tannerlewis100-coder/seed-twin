@@ -107,7 +107,7 @@ function QuickLink({ to, children }: { to: LinkTo; children: React.ReactNode }) 
 }
 
 function ShopMenu() {
-  const featuredSlugs = ["bpc-157-5mg", "ghk-cu-50mg", "ipamorelin", "nad-500mg"];
+  const featuredSlugs = ["glp-3-rt-10mg", "nad-500mg", "mots-c-10mg", "bpc-157-5mg"];
   const featured = featuredSlugs
     .map((s) => peptides.find((p) => p.slug === s))
     .filter((p): p is (typeof peptides)[number] => Boolean(p));
@@ -116,14 +116,13 @@ function ShopMenu() {
       <div>
         <ColumnLabel>Featured</ColumnLabel>
         <div className="flex flex-col">
-          {featured.map((p, i) => (
+          {featured.map((p) => (
             <MenuRow
               key={p.slug}
               row={{
                 to: "/shop",
                 title: `${p.name} ${p.size}`,
                 desc: p.tag ?? p.category,
-                badge: i === 1 ? "Save 25%" : undefined,
                 icon: FlaskConical,
               }}
             />
