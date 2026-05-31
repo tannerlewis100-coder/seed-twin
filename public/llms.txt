@@ -1,0 +1,20 @@
+# Clarum Peptides
+
+> Batch-tested research peptides with full Certificates of Analysis. Every batch independently verified by ISO-accredited labs for identity, purity, quantitative assay, heavy metals, and microbial counts.
+
+## Pages
+
+- [Home](/): Overview of Clarum's batch-testing approach and featured research peptides.
+- [Shop](/shop): Full catalog of research peptides available for purchase.
+- [COA Library](/coa-library): Public library of Certificates of Analysis for every batch.
+- [About](/about): How Clarum tests peptides and why batch verification matters.
+- [FAQ](/faq): Answers about research peptides, COAs, shipping, storage, and RUO compliance.
+- [Contact](/contact): Support, COA, and bulk research inquiries.
+
+## Optional
+
+- [Shipping Policy](/shipping-policy)
+- [Refund Policy](/refund-policy)
+- [Privacy](/privacy)
+- [Terms](/terms)
+- [Disclaimer](/disclaimer)
