@@ -158,7 +158,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
               src={vial}
               alt={`${product.name} vial`}
               draggable={false}
-              className="h-80 w-auto max-w-full object-contain select-none drop-shadow-2xl"
+              className="h-80 w-auto max-w-full object-contain select-none"
             />
           </div>
 
