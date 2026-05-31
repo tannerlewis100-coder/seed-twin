@@ -177,7 +177,6 @@ function CoaMenu() {
       <div className="border-l border-white/5 pl-2 flex flex-col">
         <ColumnLabel>Reference</ColumnLabel>
         <div className="flex flex-col">
-          <QuickLink to="/coa-library">How to read a COA</QuickLink>
           <QuickLink to="/coa-library">Verify by batch #</QuickLink>
           <QuickLink to="/about">How we test</QuickLink>
         </div>
