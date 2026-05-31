@@ -130,6 +130,25 @@ function ProductPage() {
     [variations, activeVarId],
   );
 
+  // Warm the browser cache for every variant vial so size swaps are instant.
+  useEffect(() => {
+    if (!product || variations.length === 0) return;
+    for (const v of variations) {
+      const size = sizeById[v.id] ?? v.attributes?.[0]?.value ?? v.attributes?.[0]?.option;
+      const url = variantVialImage({
+        name: product.name,
+        slug: product.slug,
+        size: size ?? undefined,
+        fallbackSrc: firstImage(v) ?? firstImage(product),
+      });
+      if (url) {
+        const img = new Image();
+        img.src = url;
+      }
+    }
+  }, [product, variations, sizeById]);
+
+
   const labelFor = (v: WooProduct) => {
     const fromClarum = sizeById[v.id];
     if (fromClarum) return sumBlendDose(fromClarum);
