@@ -219,10 +219,15 @@ function ContactPage() {
                   onChange={(v) => setForm((f) => ({ ...f, subject: v }))}
                 />
                 <div>
-                  <label className="text-[10px] uppercase tracking-wider text-foreground/55">
+                  <label
+                    htmlFor="contact-message"
+                    className="text-[10px] uppercase tracking-wider text-foreground/55"
+                  >
                     Message
                   </label>
                   <textarea
+                    id="contact-message"
+                    name="message"
                     value={form.message}
                     onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
                     rows={6}
@@ -273,10 +278,15 @@ function Field({
   type?: string;
   error?: string;
 }) {
+  const id = `contact-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   return (
     <div>
-      <label className="text-[10px] uppercase tracking-wider text-foreground/55">{label}</label>
+      <label htmlFor={id} className="text-[10px] uppercase tracking-wider text-foreground/55">
+        {label}
+      </label>
       <input
+        id={id}
+        name={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}

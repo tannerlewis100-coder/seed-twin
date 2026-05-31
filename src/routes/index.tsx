@@ -95,13 +95,17 @@ function Hero() {
                   transition={{ delay: i * 0.05, duration: 0.5, ease: "easeOut" }}
                   className={
                     w.gold
-                      ? "inline-block italic text-[#D4A93E] mr-[0.25em]"
-                      : "inline-block mr-[0.25em]"
+                      ? "inline-block italic text-[#D4A93E]"
+                      : "inline-block"
                   }
                 >
                   {w.word}
                 </motion.span>
-              ))}
+              )).reduce<React.ReactNode[]>((acc, node, i) => {
+                if (i > 0) acc.push(" ");
+                acc.push(node);
+                return acc;
+              }, [])}
             </h1>
 
             <motion.p
