@@ -144,6 +144,12 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl bg-brand-forest-deep border-white/10 text-foreground p-0 overflow-hidden">
+        <VisuallyHidden.Root>
+          <DialogTitle>{decodeEntities(product.name)}</DialogTitle>
+          <DialogDescription>
+            Product details, available sizes, and add-to-cart for {decodeEntities(product.name)}.
+          </DialogDescription>
+        </VisuallyHidden.Root>
         <div className="grid md:grid-cols-2">
           {/* Vial */}
           <div className="group/card relative bg-gradient-to-br from-brand-forest to-brand-forest-deep p-10 flex items-center justify-center min-h-[320px] border-b md:border-b-0 md:border-r border-white/5">
