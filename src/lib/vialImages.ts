@@ -74,6 +74,7 @@ import aicar from "@/assets/products/aicar-50mg.png";
 import ace031 from "@/assets/products/ace031-1mg.png";
 import ara290 from "@/assets/products/ara290-10mg.png";
 import bacWater from "@/assets/products/bac-water-3ml.png";
+import bacWater10 from "@/assets/products/bac-water-10ml.png";
 import bpc157 from "@/assets/products/bpc157-20mg.png";
 import kpv10 from "@/assets/products/kpv-10mg.png";
 import naEpitalon5 from "@/assets/products/na-epitalon-5mg.png";
@@ -105,14 +106,15 @@ function productImageByFileName(fileName?: string | null): string | null {
 }
 
 const RULES: Array<[RegExp, string]> = [
+  [/reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water.*10ml/i, bacWater10],
   [/reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water/i, bacWater],
   [/bpc-?157/i, bpc157],
   [/cagrilintide.*glp|cagri.*glp/i, cagriGlp],
   [/\bcagrilintide\b|\bcagri\b/i, cagrilintide10],
   [/cagrilintide.*10mg|\bcagri\b.*10mg/i, cagrilintide10],
-  [/5-?amino-?1mq.*50mg|5amino1mq.*50mg/i, amino1mq50],
-  [/5-?amino-?1mq.*5mg|5amino1mq.*5mg/i, amino1mq5],
-  [/5-?amino-?1mq/i, amino1mq5],
+  [/5-?amino-?1mq.*50mg|5amino1mq.*50mg|5a1mq.*50mg/i, amino1mq50],
+  [/5-?amino-?1mq.*5mg|5amino1mq.*5mg|5a1mq.*5mg/i, amino1mq5],
+  [/5-?amino-?1mq|5a1mq/i, amino1mq5],
   [/\bb-?12\b|cyanocobalamin|methylcobalamin/i, b12],
   [/aod-?9604/i, aod9604],
   [/\baicar\b/i, aicar],
