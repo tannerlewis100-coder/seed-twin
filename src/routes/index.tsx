@@ -733,7 +733,6 @@ function Index() {
         <ScanTheVial />
         <QualityCollage />
         <CoaTeaser />
-        <Testimonials />
         <FinalCta />
       </main>
       <SiteFooter />
