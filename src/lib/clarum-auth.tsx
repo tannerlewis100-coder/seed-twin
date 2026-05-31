@@ -206,14 +206,25 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
+    // Skip /me entirely if the JWT is already expired — Woo returns 403 which
+    // the browser logs as a failed-resource error. Treat expired token as
+    // signed-out.
+    if (isJwtExpired(t)) {
+      setToken(null);
+      setTok(null);
+      setUser(null);
+      setLoading(false);
+      return;
+    }
     try {
       const me = await fetchMe(t);
       setTok(t);
       setUser(me);
     } catch (err) {
-      // 401 or other — clear token
+      // 401/403/expired — silently treat as signed-out. Real network errors
+      // (5xx, offline) propagate through finally.
       const msg = err instanceof Error ? err.message : "";
-      if (/401|unauthor/i.test(msg)) {
+      if (/401|403|unauthor|expired|invalid/i.test(msg)) {
         setToken(null);
         setTok(null);
         setUser(null);
