@@ -35,10 +35,12 @@ export const Route = createFileRoute("/shop/$slug")({
   }),
 });
 
+// Format a product slug for SEO metadata without auto-title-casing or
+// stripping hyphens (peptide names like BPC-157, GHK-Cu, GLP-3 are
+// hyphenated and all-caps). The component itself renders the exact name
+// from WooCommerce once loaded; this is only the prerender fallback.
 function humanize(slug: string) {
-  return slug
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
+  return slug.toUpperCase();
 }
 
 // Same blend-dose collapsing used in the modal.
