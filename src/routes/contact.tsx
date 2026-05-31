@@ -278,10 +278,15 @@ function Field({
   type?: string;
   error?: string;
 }) {
+  const id = `contact-${label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
   return (
     <div>
-      <label className="text-[10px] uppercase tracking-wider text-foreground/55">{label}</label>
+      <label htmlFor={id} className="text-[10px] uppercase tracking-wider text-foreground/55">
+        {label}
+      </label>
       <input
+        id={id}
+        name={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
