@@ -48,7 +48,7 @@ const descriptions: Record<string, string> = {
   "wolverine-blend":
     "Pure recovery dual stack. Each vial contains BPC-157 and TB-500 in matched doses (5mg/5mg or 10mg/10mg depending on size selected) — researched for connective tissue repair and inflammation modulation.",
   "ll-37":
-    "LL-37 is the only known human cathelicidin antimicrobial peptide — a naturally occurring 37-amino acid sequence with broad research applications in immunology and microbiology, studied for antimicrobial mechanisms, immune modulation, angiogenic activity, and wound healing signaling.",
+    "Human cathelicidin antimicrobial peptide. Researched for innate immune defense, wound healing, and biofilm disruption.",
   "ara-290":
     "ARA-290 is a peptide analog of Erythropoietin engineered to selectively activate the innate repair receptor without triggering erythropoietic effects. Research has explored its role in neuroprotection, anti-inflammatory signaling, and tissue repair mechanisms in animal and human studies.",
   "pnc-27":
@@ -120,13 +120,13 @@ const descriptions: Record<string, string> = {
   aicar:
     "AICAR is an AMPK activator extensively studied as an exercise mimetic compound. Animal research has explored effects on endurance capacity, mitochondrial biogenesis, fat oxidation, and glucose uptake.",
   cagrilintide:
-    "Cagrilintide is a long-acting amylin analog currently in active Phase III clinical trials, including Novo Nordisk's CagriSema program. Research focuses on appetite regulation, gastric emptying, and amylin-receptor metabolic signaling.",
+    "Long-acting amylin analog. Researched for satiety signaling and appetite modulation, often paired with GLP-1 receptor agonists in metabolic studies.",
   mazdutide:
-    "Mazdutide is a dual GLP-1 and glucagon receptor agonist in active clinical development for metabolic research, with studies exploring effects on body weight and glycemic parameters.",
+    "Dual GLP-1 / glucagon receptor agonist. Researched for metabolic regulation, energy expenditure, and weight modulation.",
   survodutide:
     "Survodutide is a dual GLP-1 and glucagon receptor agonist in active clinical research, studied in metabolic and weight-management contexts.",
   "slu-pp-332":
-    "SLU-PP-332 is an ERR pan-agonist that has attracted significant research attention as an exercise mimetic. Animal research has documented effects on endurance capacity, mitochondrial gene expression, and metabolic rate.",
+    "Selective ERR (estrogen-related receptor) agonist. Researched as an exercise mimetic for mitochondrial biogenesis and fat oxidation.",
   "glp-1-s":
     "GLP-1 S is a research-grade GLP-1 receptor agonist analog studied in metabolic and weight-management models. Research has explored its effects on glycemic control, gastric emptying, and appetite-regulation pathways.",
   "glp-2-tz":
@@ -135,19 +135,19 @@ const descriptions: Record<string, string> = {
     "GLP-3 RT is a research peptide in the GLP family currently being explored in metabolic and weight-management research models, studied for receptor activity and downstream metabolic signaling.",
   "cagri-glp1-blend":
     "A research blend pairing Cagrilintide (a long-acting amylin analog) with GLP-1 S. The combination has attracted research attention for synergistic effects on appetite regulation, gastric emptying, and metabolic signaling in animal models.",
-  nad: "Nicotinamide Adenine Dinucleotide (NAD+) is a coenzyme present in every living cell and one of the central molecules in modern longevity research, with studies exploring sirtuin activation, DNA repair signaling, mitochondrial function, and cellular energy metabolism.",
+  nad: "β-Nicotinamide adenine dinucleotide. Central redox cofactor researched for mitochondrial function, sirtuin activity, and cellular energy metabolism.",
   glutathione:
-    "Glutathione is the body's master endogenous antioxidant — a tripeptide of glycine, cysteine, and glutamate central to cellular redox balance, detoxification pathways, and immune regulation research.",
+    "Reduced L-Glutathione. Master antioxidant researched for oxidative stress response, hepatic detoxification, and cellular redox balance.",
   "pt-141":
     "PT-141, known pharmaceutically as Bremelanotide, is an FDA-approved melanocortin receptor agonist. Research has explored its activation of MC3R and MC4R receptors and central nervous system role in arousal-pathway research.",
   kisspeptin:
-    "Kisspeptin is a neuropeptide encoded by the KISS1 gene and recognized as the master upstream regulator of the hypothalamic-pituitary-gonadal axis, with research exploring GnRH pulse generation and reproductive function.",
+    "Endogenous neuropeptide and KISS1R agonist. Researched for HPG-axis modulation, LH/FSH pulsatility, and reproductive endocrinology.",
   "8x-lipo":
     "Extended lipotropic + B-complex stack. Each 10ml vial contains Choline 50mg/ml, Inositol 50mg/ml, L-Methionine 25mg/ml, Pyridoxine B6 25mg/ml, L-Carnitine 20mg/ml, L-Arginine 20mg/ml, Ca Pantothenate B5 5mg/ml, and Cyanocobalamin B12 1mg/ml.",
   "4x-mic":
     "Classic lipotropic injection stack. Each 10ml vial contains Choline 50mg/ml, L-Carnitine 50mg/ml, L-Methionine 15mg/ml, and Dexpanthenol (B5) 5mg/ml — researched for hepatic fat metabolism and energy substrate transport.",
   b12:
-    "Methylcobalamin B12 is an essential coenzyme studied for its critical role in methylation pathways, neurological function, DNA synthesis, and red blood cell formation signaling.",
+    "Methylcobalamin / cyanocobalamin. Reference cofactor researched for methylation cycles, neural support, and energy metabolism.",
   "recon-water":
     "Bacteriostatic / sterile water for reconstituting lyophilized research peptides. Lab supply only.",
 };
