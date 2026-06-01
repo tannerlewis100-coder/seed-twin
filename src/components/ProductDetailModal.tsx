@@ -10,6 +10,7 @@ import {
   fetchVariations,
   firstImage,
   fromMinor,
+  getVariationSize,
   stripHtml,
   type WooProduct,
 } from "@/lib/woo";
@@ -121,8 +122,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
     if (fromClarum) return sumBlendDose(fromClarum);
 
     // Fallback: Woo attribute value (skip "any" placeholder).
-    const attr = v.attributes?.[0];
-    const fromAttr = attr?.value ?? attr?.option;
+    const fromAttr = getVariationSize(v);
     if (fromAttr && fromAttr.toLowerCase() !== "any") return sumBlendDose(fromAttr);
 
     // Last-ditch: pull a dose pattern out of the variation/product name.
@@ -137,7 +137,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
   const vial = variantVialImage({
     name: product.name,
     slug: product.slug,
-    size: activeVar ? labelFor(activeVar) : undefined,
+    size: activeVar ? sizeById[activeVar.id] ?? getVariationSize(activeVar) ?? labelFor(activeVar) : undefined,
     fallbackSrc: wooImg,
   });
 

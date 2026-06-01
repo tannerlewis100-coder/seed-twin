@@ -12,6 +12,7 @@ import {
   fetchVariations,
   firstImage,
   fromMinor,
+  getVariationSize,
   stripHtml,
   type WooProduct,
 } from "@/lib/woo";
@@ -151,7 +152,7 @@ function ProductPage() {
   useEffect(() => {
     if (!product || variations.length === 0) return;
     for (const v of variations) {
-      const size = sizeById[v.id] ?? v.attributes?.[0]?.value ?? v.attributes?.[0]?.option;
+      const size = sizeById[v.id] ?? getVariationSize(v);
       const url = variantVialImage({
         name: product.name,
         slug: product.slug,
@@ -169,8 +170,7 @@ function ProductPage() {
   const labelFor = (v: WooProduct) => {
     const fromClarum = sizeById[v.id];
     if (fromClarum) return sumBlendDose(fromClarum);
-    const attr = v.attributes?.[0];
-    const fromAttr = attr?.value ?? attr?.option;
+    const fromAttr = getVariationSize(v);
     if (fromAttr && fromAttr.toLowerCase() !== "any") return sumBlendDose(fromAttr);
     const haystack = `${v.name} ${product?.name ?? ""}`;
     const doseMatch = haystack.match(/(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|g)\b/i);
@@ -242,9 +242,7 @@ function ProductPage() {
             setActiveVarId={setActiveVarId}
             labelFor={labelFor}
             currentVariantSize={
-              activeVar
-                ? sizeById[activeVar.id] ?? activeVar.attributes?.[0]?.value ?? activeVar.attributes?.[0]?.option
-                : undefined
+              activeVar ? sizeById[activeVar.id] ?? getVariationSize(activeVar) : undefined
             }
             onAdd={onAdd}
             cartLoading={cartLoading}
