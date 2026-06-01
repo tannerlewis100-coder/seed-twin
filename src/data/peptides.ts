@@ -46,7 +46,7 @@ const descriptions: Record<string, string> = {
   "tb-500":
     "TB-500 is the synthetic form of Thymosin Beta-4, a protein naturally present in virtually every cell. Research has focused on its critical role in actin regulation — the protein that governs cell structure, movement, and tissue organization — and on involvement in blood-vessel formation, cellular migration, inflammatory response modulation, and soft tissue repair signaling in animal models.",
   "wolverine-blend":
-    "Two of the most studied recovery peptides combined in a single vial. BPC-157 and TB-500 have each independently accumulated significant published research around tissue signaling and repair mechanisms. Researchers have studied their complementary pathways in tandem.",
+    "Pure recovery dual stack. Each vial contains BPC-157 and TB-500 in matched doses (5mg/5mg or 10mg/10mg depending on size selected) — researched for connective tissue repair and inflammation modulation.",
   "ll-37":
     "LL-37 is the only known human cathelicidin antimicrobial peptide — a naturally occurring 37-amino acid sequence with broad research applications in immunology and microbiology, studied for antimicrobial mechanisms, immune modulation, angiogenic activity, and wound healing signaling.",
   "ara-290":
@@ -60,7 +60,7 @@ const descriptions: Record<string, string> = {
   "cjc-1295-with-dac":
     "The Drug Affinity Complex formulation of CJC-1295 extends the half-life to approximately 6–8 days in animal studies through covalent albumin binding — the longest-acting GHRH analog available for research.",
   "2x-blend-cjc-ipamorelin":
-    "The most studied GHRH and GHRP combination in research — CJC-1295 Without DAC paired with Ipamorelin in equal doses, with combined protocols showing amplified GH pulse responses in animal models compared to either peptide alone.",
+    "A balanced growth hormone secretagogue stack. Each vial contains CJC-1295 (no DAC) 5mg and Ipamorelin 5mg — researched together for amplified GH pulse without DAC's extended half-life.",
   ipamorelin:
     "Ipamorelin is a selective growth hormone secretagogue and ghrelin receptor agonist widely regarded as one of the cleanest GH-releasing peptides studied, noted for stimulating GH release without significantly elevating cortisol, prolactin, or ACTH in animal models.",
   tesamorelin:
@@ -96,7 +96,7 @@ const descriptions: Record<string, string> = {
   "ghk-cu":
     "GHK-Cu is one of the most studied peptides in scientific history, with over 50 years of published research and more than 4,000 papers. A naturally occurring copper-binding peptide that declines with age, studied in wound healing signaling, collagen and elastin synthesis, and tissue remodeling.",
   "glow-blend":
-    "GLOW combines GHK-Cu with BPC-157 and TB-500 — three of the most studied peptides in skin and tissue research — into a single research blend.",
+    "Skin + recovery stack. Each vial contains GHK-Cu 50mg, BPC-157 10mg, and TB-500 10mg — researched for dermal repair, collagen induction, and systemic tissue recovery.",
   "snap-8":
     "Snap-8 is a synthetic octapeptide analog of Argireline studied for effects on the SNARE protein complex — the molecular machinery responsible for neurotransmitter release at the neuromuscular junction.",
   "melanotan-2":
@@ -141,9 +141,9 @@ const descriptions: Record<string, string> = {
   kisspeptin:
     "Kisspeptin is a neuropeptide encoded by the KISS1 gene and recognized as the master upstream regulator of the hypothalamic-pituitary-gonadal axis, with research exploring GnRH pulse generation and reproductive function.",
   "8x-lipo":
-    "An 8-component lipotropic blend (L-Carnitine, L-Arginine, Methionine, Inositol, Choline, B6, B5, B12) used as a reference compound in metabolic and nutritional research.",
+    "Extended lipotropic + B-complex stack. Each 10ml vial contains Choline 50mg/ml, Inositol 50mg/ml, L-Methionine 25mg/ml, Pyridoxine B6 25mg/ml, L-Carnitine 20mg/ml, L-Arginine 20mg/ml, Ca Pantothenate B5 5mg/ml, and Cyanocobalamin B12 1mg/ml.",
   "4x-mic":
-    "A 4-component MIC blend (Methionine, Choline Chloride, Carnitine, Dexpanthenol) used as a reference compound in metabolic research.",
+    "Classic lipotropic injection stack. Each 10ml vial contains Choline 50mg/ml, L-Carnitine 50mg/ml, L-Methionine 15mg/ml, and Dexpanthenol (B5) 5mg/ml — researched for hepatic fat metabolism and energy substrate transport.",
   b12:
     "Methylcobalamin B12 is an essential coenzyme studied for its critical role in methylation pathways, neurological function, DNA synthesis, and red blood cell formation signaling.",
   "recon-water":
