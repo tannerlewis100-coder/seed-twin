@@ -166,6 +166,7 @@ const RULES: Array<[RegExp, string]> = [
   [/blend\s*cjc\/ipamorelin|cjc.*ipa|ipamorelin.*cjc|2x-cjc-ipa/i, cjcIpaBlend],
   [/\bipamorelin\b/i, ipamorelin],
   [/tesamorelin.*20mg/i, tesamorelin20],
+  [/tesamorelin.*10mg/i, tesamorelin10],
   [/tesamorelin/i, tesamorelin],
   [/sermorelin/i, sermorelin],
   [/kisspeptin/i, kisspeptin],
