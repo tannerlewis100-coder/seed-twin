@@ -422,7 +422,7 @@ function ProductBody({
         </div>
 
         {(() => {
-          const { rows, coa } = buildPanel(slug);
+          const { rows, coa } = buildPanel(product.slug);
           return (
             <>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
