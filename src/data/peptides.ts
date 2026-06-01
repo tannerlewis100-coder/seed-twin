@@ -142,6 +142,8 @@ const descriptions: Record<string, string> = {
     "PT-141, known pharmaceutically as Bremelanotide, is an FDA-approved melanocortin receptor agonist. Research has explored its activation of MC3R and MC4R receptors and central nervous system role in arousal-pathway research.",
   kisspeptin:
     "Endogenous neuropeptide and KISS1R agonist. Researched for HPG-axis modulation, LH/FSH pulsatility, and reproductive endocrinology.",
+  kpv:
+    "C-terminal tripeptide of α-MSH. Researched for anti-inflammatory signaling via melanocortin pathways, particularly in gut and skin models.",
   "8x-lipo":
     "Extended lipotropic + B-complex stack. Each 10ml vial contains Choline 50mg/ml, Inositol 50mg/ml, L-Methionine 25mg/ml, Pyridoxine B6 25mg/ml, L-Carnitine 20mg/ml, L-Arginine 20mg/ml, Ca Pantothenate B5 5mg/ml, and Cyanocobalamin B12 1mg/ml.",
   "4x-mic":
