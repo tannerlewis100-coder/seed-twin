@@ -123,8 +123,8 @@ function productImageByFileName(fileName?: string | null): string | null {
 }
 
 const RULES: Array<[RegExp, string]> = [
-  [/reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water.*10ml/i, bacWater10],
-  [/reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water/i, bacWater],
+  [/recon-water-10ml|reconstitution\s*water.*10ml|bac\s*water.*10ml|bacteriostatic.*10ml|sterile\s*water.*10ml/i, bacWater10],
+  [/recon-water-3ml|reconstitution\s*water|bac\s*water|bacteriostatic|sterile\s*water|recon-water/i, bacWater],
   [/bpc-?157/i, bpc157],
   [/cagrilintide.*glp|cagri.*glp/i, cagriGlp],
   [/\bcagrilintide\b|\bcagri\b/i, cagrilintide10],
@@ -180,7 +180,7 @@ const RULES: Array<[RegExp, string]> = [
   [/thymalin/i, thymalin],
   [/dsip/i, dsip],
   [/snap-?8/i, snap8],
-  [/wolverine.*20mg|wolverine-?20/i, wolverine20],
+  [/wolverine.*20mg|wolverine-?20|wolverine-?10mg/i, wolverine20],
   [/wolverine.*5mg|wolverine-?5/i, wolverine5],
   [/wolverine/i, wolverine],
   [/glow/i, glowBlend],
