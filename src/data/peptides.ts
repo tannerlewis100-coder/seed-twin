@@ -97,6 +97,8 @@ const descriptions: Record<string, string> = {
     "GHK-Cu is one of the most studied peptides in scientific history, with over 50 years of published research and more than 4,000 papers. A naturally occurring copper-binding peptide that declines with age, studied in wound healing signaling, collagen and elastin synthesis, and tissue remodeling.",
   "glow-blend":
     "Skin + recovery stack. Each vial contains GHK-Cu 50mg, BPC-157 10mg, and TB-500 10mg — researched for dermal repair, collagen induction, and systemic tissue recovery.",
+  "klow-blend":
+    "Tissue repair + skin radiance stack. Each vial contains GHK-Cu 50mg, BPC-157 10mg, TB-500 10mg, and KPV 10mg — researched for accelerated repair, collagen synthesis, and anti-inflammatory pathways.",
   "snap-8":
     "Snap-8 is a synthetic octapeptide analog of Argireline studied for effects on the SNARE protein complex — the molecular machinery responsible for neurotransmitter release at the neuromuscular junction.",
   "melanotan-2":
