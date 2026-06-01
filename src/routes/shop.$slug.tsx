@@ -62,13 +62,30 @@ function sumBlendDose(raw: string): string {
   return `${nums.reduce((a, b) => a + b, 0)}${unit}`;
 }
 
-const TEST_PANEL: Array<{ label: string; value: string }> = [
+import { coaData, getCoa } from "@/data/coa";
+
+const FALLBACK_PANEL: Array<{ label: string; value: string }> = [
   { label: "Identity (λmax)", value: "Match to reference" },
   { label: "Percent Purity", value: "NLT 98%" },
   { label: "Heavy Metals", value: "<20 ppb" },
   { label: "Microbial (TAMC / TYMC)", value: "Within spec" },
   { label: "Quantitative Assay", value: "Beer-Lambert" },
 ];
+
+function buildPanel(slug: string): { rows: Array<{ label: string; value: string }>; coa: ReturnType<typeof getCoa> } {
+  const coa = getCoa(slug);
+  if (!coa) return { rows: FALLBACK_PANEL, coa: null };
+  return {
+    coa,
+    rows: [
+      { label: "Identity (λmax)", value: "Match to reference" },
+      { label: "Percent Purity", value: coa.purity },
+      { label: "Heavy Metals", value: coa.heavy_metals },
+      { label: "Microbial (TAMC / TYMC)", value: coa.microbial },
+      { label: "Quantitative Assay", value: coa.assay },
+    ],
+  };
+}
 
 function ProductPage() {
   const { slug } = Route.useParams();
@@ -404,28 +421,41 @@ function ProductBody({
           </Link>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {TEST_PANEL.map((row) => (
-            <div
-              key={row.label}
-              className="rounded-2xl border border-white/5 bg-black/30 px-5 py-4"
-            >
-              <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">
-                {row.label}
-              </p>
-              <p className="text-sm text-foreground flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[9px] text-emerald-400">
-                  ✓
-                </span>
-                {row.value}
-              </p>
-            </div>
-          ))}
-        </div>
+        {(() => {
+          const { rows, coa } = buildPanel(product.slug);
+          return (
+            <>
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {rows.map((row) => (
+                  <div
+                    key={row.label}
+                    className="rounded-2xl border border-white/5 bg-black/30 px-5 py-4"
+                  >
+                    <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">
+                      {row.label}
+                    </p>
+                    <p className="text-sm text-foreground flex items-center gap-2">
+                      <span className="w-4 h-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[9px] text-emerald-400">
+                        ✓
+                      </span>
+                      {row.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
-        <p className="mt-6 text-[11px] text-foreground/40">
-          Same UV/Vis panel runs on every batch. Scan the QR on your vial to pull the exact COA for the lot you received.
-        </p>
+              {coa ? (
+                <p className="mt-6 text-[11px] text-foreground/50">
+                  Batch {coa.batch} · Tested {coa.test_date} · {coaData.lab}
+                </p>
+              ) : (
+                <p className="mt-6 text-[11px] text-foreground/40">
+                  Same UV/Vis panel runs on every batch. Scan the QR on your vial to pull the exact COA for the lot you received.
+                </p>
+              )}
+            </>
+          );
+        })()}
       </section>
     </>
   );
