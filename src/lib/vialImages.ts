@@ -10,6 +10,8 @@ import pnc27 from "@/assets/products/pnc27.png";
 import cjcIpaBlend from "@/assets/products/cjc-ipa-blend.png";
 import cagriGlp from "@/assets/products/cagri-glp.png";
 import ghrp6 from "@/assets/products/ghrp6.png";
+import ghrp6_5mg from "@/assets/products/ghrp6-5mg.png";
+import ghrp6_10mg from "@/assets/products/ghrp6-10mg.png";
 import ta1 from "@/assets/products/ta1.png";
 import glowBlend from "@/assets/products/glow-blend.png";
 import wolverine from "@/assets/products/wolverine.png";
