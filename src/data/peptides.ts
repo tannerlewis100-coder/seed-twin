@@ -116,7 +116,7 @@ const descriptions: Record<string, string> = {
   "5-amino-1mq":
     "NNMT inhibitor researched for metabolic regulation. Studied for its role in NAD+ salvage, methyl-group cycling, and adipose-tissue energy expenditure.",
   "aod-9604":
-    "AOD-9604 is a modified fragment of human growth hormone — specifically the C-terminal region studied for its role in fat metabolism signaling. Research suggests it does not affect insulin-like growth factors in animal models.",
+    "C-terminal fragment of human growth hormone (residues 177–191). Researched for adipose tissue lipolysis without the metabolic effects of full-length hGH.",
   aicar:
     "AICAR is an AMPK activator extensively studied as an exercise mimetic compound. Animal research has explored effects on endurance capacity, mitochondrial biogenesis, fat oxidation, and glucose uptake.",
   cagrilintide:
