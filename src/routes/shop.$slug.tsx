@@ -406,45 +406,64 @@ function ProductBody({
 
       {/* Test panel */}
       <section className="mt-10 rounded-3xl border border-brand-gold/15 bg-card p-8">
-        <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.25em] text-brand-gold font-semibold mb-1">
-              Certificate of Analysis
-            </p>
-            <h2 className="font-display text-2xl">Independent third-party lab panel</h2>
-          </div>
-          <Link
-            to="/coa-library"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-gold-light transition-colors"
-          >
-            <FileText className="h-4 w-4" /> Download batch COA
-          </Link>
-        </div>
-
         {(() => {
           const { rows, coa } = buildPanel(product.slug);
+          const hasCoa = !!coa;
           return (
             <>
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+                <div>
+                  <p className="text-[10px] uppercase tracking-[0.25em] text-brand-gold font-semibold mb-1">
+                    Certificate of Analysis
+                  </p>
+                  <h2 className="font-display text-2xl">Independent third-party lab panel</h2>
+                </div>
+                {hasCoa && (
+                  <Link
+                    to="/coa-library"
+                    className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-gold-light transition-colors"
+                  >
+                    <FileText className="h-4 w-4" /> Download batch COA
+                  </Link>
+                )}
+              </div>
+
+              {!hasCoa && (
+                <p className="text-[11px] text-foreground/50 mb-4 bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3">
+                  COA pending — current batch is in lab queue. This product will display batch values once testing completes.
+                </p>
+              )}
+
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {rows.map((row) => (
                   <div
                     key={row.label}
-                    className="rounded-2xl border border-white/5 bg-black/30 px-5 py-4"
+                    className={`rounded-2xl border px-5 py-4 ${
+                      hasCoa
+                        ? "border-white/5 bg-black/30"
+                        : "border-white/5 bg-black/20 opacity-60"
+                    }`}
                   >
                     <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">
                       {row.label}
                     </p>
                     <p className="text-sm text-foreground flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[9px] text-emerald-400">
-                        ✓
-                      </span>
+                      {hasCoa ? (
+                        <span className="w-4 h-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[9px] text-emerald-400">
+                          ✓
+                        </span>
+                      ) : (
+                        <span className="w-4 h-4 rounded-full bg-foreground/10 border border-foreground/15 flex items-center justify-center">
+                          <span className="w-1.5 h-1.5 rounded-full bg-foreground/30" />
+                        </span>
+                      )}
                       {row.value}
                     </p>
                   </div>
                 ))}
               </div>
 
-              {coa ? (
+              {hasCoa ? (
                 <p className="mt-6 text-[11px] text-foreground/50">
                   Batch {coa.batch} · Tested {coa.test_date} · {coaData.lab}
                 </p>
