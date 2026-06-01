@@ -78,6 +78,9 @@ import bacWater10 from "@/assets/products/bac-water-10ml.png";
 import bpc157 from "@/assets/products/bpc157-20mg.png";
 import kpv10 from "@/assets/products/kpv-10mg.png";
 import naEpitalon5 from "@/assets/products/na-epitalon-5mg.png";
+import tb500_5mg from "@/assets/products/tb500-5mg.png";
+import tesamorelin10 from "@/assets/products/tesamorelin-10mg.png";
+import wolverine5 from "@/assets/products/wolverine-5mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
@@ -163,6 +166,7 @@ const RULES: Array<[RegExp, string]> = [
   [/blend\s*cjc\/ipamorelin|cjc.*ipa|ipamorelin.*cjc|2x-cjc-ipa/i, cjcIpaBlend],
   [/\bipamorelin\b/i, ipamorelin],
   [/tesamorelin.*20mg/i, tesamorelin20],
+  [/tesamorelin.*10mg/i, tesamorelin10],
   [/tesamorelin/i, tesamorelin],
   [/sermorelin/i, sermorelin],
   [/kisspeptin/i, kisspeptin],
@@ -177,6 +181,7 @@ const RULES: Array<[RegExp, string]> = [
   [/dsip/i, dsip],
   [/snap-?8/i, snap8],
   [/wolverine.*20mg|wolverine-?20/i, wolverine20],
+  [/wolverine.*5mg|wolverine-?5/i, wolverine5],
   [/wolverine/i, wolverine],
   [/glow/i, glowBlend],
   [/\bklow\b/i, klowBlend],
@@ -184,6 +189,7 @@ const RULES: Array<[RegExp, string]> = [
   [/ghk-?cu|\bghk\b/i, ghkcu],
   [/mots-?c.*40mg/i, motsc],
   [/mots-?c|\bmots\b/i, motsc],
+  [/tb-?500.*5mg/i, tb500_5mg],
   [/tb-?500.*10mg/i, tb500],
   [/tb-?500|thymosin\s*beta/i, tb500],
   [/selank/i, selank],
