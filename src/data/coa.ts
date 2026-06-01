@@ -68,6 +68,8 @@ const aliases: Record<string, string> = {
   "motsc": "mots-c",
   "nad": "nad-plus",
   "nad+": "nad-plus",
+  "nad-500mg": "nad-plus",
+  "nad-1000mg": "nad-plus",
   "vitamin-b12": "b12",
   "2x-cjc-ipa": "2x-blend-cjc-ipa",
   "4x-mic": "4x-blend-mic",
