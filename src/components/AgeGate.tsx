@@ -65,7 +65,7 @@ export function AgeGate() {
               onClick={confirm}
               className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
-              Yes, I'm 18 or older
+              Yes, I'm 21 or older
             </button>
             <button
               onClick={decline}
