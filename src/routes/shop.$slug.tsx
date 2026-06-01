@@ -287,12 +287,14 @@ function ProductBody({
 }) {
   const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
   const wooImg = firstImage(display) ?? firstImage(product);
+  console.log('LOOKUP:', { productSlug: product.slug, selectedSize: currentVariantSize });
   const vial = variantVialImage({
     name: product.name,
     slug: product.slug,
     size: currentVariantSize,
     fallbackSrc: wooImg,
   });
+  console.log('MATCHED:', vial);
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
   const description =
     stripHtml(product.description) || stripHtml(product.short_description) || "";
