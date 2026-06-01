@@ -247,7 +247,8 @@ const VARIANT_IMAGE_OVERRIDES: Record<string, string> = {
   "wolverine-blend|5mg/5mg": wolverine5,
   "wolverine-blend|10mg/10mg": wolverine20,
   "wolverine-blend|5mg": wolverine5,
-  "wolverine-blend|10mg": wolverine20,
+  "wolverine-blend|10mg": wolverine5,
+  "wolverine-blend|20mg": wolverine20,
   "reconstitution-water|10ml": bacWater10,
   "reconstitution-water|3ml": bacWater,
 };
