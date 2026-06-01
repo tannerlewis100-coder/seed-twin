@@ -120,7 +120,8 @@ function ShopMenu() {
             <MenuRow
               key={p.slug}
               row={{
-                to: "/shop",
+                to: "/shop/$slug",
+                toParams: { slug: p.slug },
                 title: `${p.name} ${p.size}`,
                 desc: p.tag ?? p.category,
                 icon: FlaskConical,
