@@ -46,7 +46,8 @@ type MenuKey = "shop" | "coa" | "about" | null;
 type LinkTo = "/shop" | "/coa-library" | "/about" | "/faq" | "/contact" | "/disclaimer";
 
 type Row = {
-  to: LinkTo;
+  to: string;
+  params?: Record<string, string>;
   title: string;
   desc?: string;
   badge?: string;
@@ -58,6 +59,7 @@ function MenuRow({ row }: { row: Row }) {
   return (
     <Link
       to={row.to}
+      params={row.params}
       className="group relative flex items-center gap-3 pl-3 pr-3 py-2.5 rounded-xl hover:bg-white/[0.04] transition-colors"
     >
       <span className="absolute left-0 top-2 bottom-2 w-[2px] rounded-full bg-brand-gold opacity-0 group-hover:opacity-100 transition-opacity" />
