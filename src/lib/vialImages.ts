@@ -104,6 +104,24 @@ const PRODUCT_IMAGE_BY_NORMALIZED = Object.fromEntries(
   }),
 );
 
+// Pick the first local file whose name starts with the given slug followed by
+// "-" or ".", so a slug-only lookup can still surface a sized variant. We
+// prefer local PNGs (which are transparent) over the remote WooCommerce
+// thumbnails (which have an opaque checker background baked in).
+function productImageBySlugPrefix(slug?: string | null): string | null {
+  if (!slug) return null;
+  const prefix = slug.toLowerCase();
+  for (const [file, url] of Object.entries(PRODUCT_IMAGE_BY_FILE)) {
+    const base = file.replace(/\.png$/, "");
+    if (base === prefix || base.startsWith(`${prefix}-`)) return url;
+  }
+  const normPrefix = prefix.replace(/[^a-z0-9]+/g, "");
+  for (const [key, url] of Object.entries(PRODUCT_IMAGE_BY_NORMALIZED)) {
+    if (key === normPrefix || key.startsWith(normPrefix)) return url;
+  }
+  return null;
+}
+
 function normalizeImageToken(value: string): string {
   return value
     .toLowerCase()
@@ -278,6 +296,18 @@ export function variantVialImage({
     slug && unitlessBlendSize ? productImageByFileName(`${slug}-${unitlessBlendSize}.png`) : null;
   const forced = forcedVialImage(name, slug);
   const exactLocal = slug ? productImageByFileName(`${slug}.png`) : null;
+  const slugPrefixLocal = productImageBySlugPrefix(slug);
+  const ruleLocal = vialImageFor(name, slug);
+  const hasRuleMatch = ruleLocal !== vialDefault;
 
-  return sizedLocal ?? sizedBlendLocal ?? forced ?? exactLocal ?? fallbackSrc ?? vialImageFor(name, slug);
+  return (
+    sizedLocal ??
+    sizedBlendLocal ??
+    forced ??
+    exactLocal ??
+    slugPrefixLocal ??
+    (hasRuleMatch ? ruleLocal : null) ??
+    fallbackSrc ??
+    ruleLocal
+  );
 }
