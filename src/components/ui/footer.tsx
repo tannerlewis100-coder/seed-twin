@@ -145,11 +145,11 @@ function SocialLink({
 export default function StickyFooter() {
   return (
     <div
-      className="relative h-[960px] md:h-[640px]"
+      className="relative h-[1280px] md:h-[640px]"
       style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
     >
-      <div className="relative h-[calc(100vh+960px)] md:h-[calc(100vh+640px)] -top-[100vh]">
-        <div className="sticky top-[calc(100vh-960px)] md:top-[calc(100vh-640px)] h-[960px] md:h-[640px]">
+      <div className="relative h-[calc(100vh+1280px)] md:h-[calc(100vh+640px)] -top-[100vh]">
+        <div className="sticky top-[calc(100vh-1280px)] md:top-[calc(100vh-640px)] h-[1280px] md:h-[640px]">
           <motion.footer
             initial="hidden"
             whileInView="visible"
