@@ -179,6 +179,7 @@ export type WooProduct = {
   type: string; // "simple" | "variable" | "variation" | ...
   parent: number;
   permalink: string;
+  variation?: string;
   sku: string;
   description: string;
   short_description: string;
@@ -308,6 +309,22 @@ export async function fetchVariations(parentId: number): Promise<WooProduct[]> {
   const res = await wooFetch(`/products?per_page=100&type=variation&parent=${parentId}`);
   if (!res.ok) return [];
   return res.json();
+}
+
+export function getVariationSize(product: Pick<WooProduct, "attributes" | "variation" | "slug">): string | undefined {
+  const attr = product.attributes?.[0];
+  const attrSize = attr?.value ?? attr?.option;
+  if (attrSize && attrSize.toLowerCase() !== "any") return attrSize.trim();
+
+  const variationSize = product.variation?.match(/:\s*(.+)$/)?.[1]?.trim();
+  if (variationSize && variationSize.toLowerCase() !== "any") return variationSize;
+
+  const slugSize = product.slug.match(
+    /((?:\d+(?:\.\d+)?(?:mg|ml|iu|mcg|ug|g))(?:-\d+(?:\.\d+)?(?:mg|ml|iu|mcg|ug|g))*)$/i,
+  )?.[1];
+  if (!slugSize) return undefined;
+
+  return slugSize.replace(/-/g, "/");
 }
 
 export type ClarumVariation = {
