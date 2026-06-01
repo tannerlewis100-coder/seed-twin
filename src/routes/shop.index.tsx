@@ -146,20 +146,34 @@ function ShopPage() {
               />
             </div>
             <div className="flex flex-wrap justify-center gap-2">
-              {filters.map((cat) => (
-                <button
-                  key={cat.slug}
-                  type="button"
-                  onClick={() => setActiveCat(cat.slug)}
-                  className={`text-[11px] font-semibold uppercase tracking-wider px-4 py-2 rounded-full border transition-all ${
-                    activeCat === cat.slug
-                      ? "bg-brand-gold/15 border-brand-gold/40 text-brand-gold"
-                      : "bg-white/[0.03] border-white/[0.06] text-foreground/45 hover:text-foreground/70 hover:border-white/15"
-                  }`}
-                >
-                  {cat.name}
-                </button>
-              ))}
+              {filters.map((cat) => {
+                const isActive = activeCat === cat.slug;
+                return (
+                  <button
+                    key={cat.slug}
+                    type="button"
+                    onClick={() => setActiveCat(cat.slug)}
+                    className={`inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider px-4 py-2 rounded-full border transition-all ${
+                      isActive
+                        ? "bg-brand-gold/15 border-brand-gold/40 text-brand-gold"
+                        : "bg-white/[0.03] border-white/[0.06] text-foreground/45 hover:text-foreground/70 hover:border-white/15"
+                    }`}
+                  >
+                    {cat.name}
+                    {isActive && cat.slug !== "All" && (
+                      <span
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setActiveCat("All");
+                        }}
+                        className="ml-0.5 inline-flex items-center justify-center cursor-pointer"
+                      >
+                        <X className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
