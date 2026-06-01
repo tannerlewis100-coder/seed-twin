@@ -10,6 +10,8 @@ import pnc27 from "@/assets/products/pnc27.png";
 import cjcIpaBlend from "@/assets/products/cjc-ipa-blend.png";
 import cagriGlp from "@/assets/products/cagri-glp.png";
 import ghrp6 from "@/assets/products/ghrp6.png";
+import ghrp6_5mg from "@/assets/products/ghrp6-5mg.png";
+import ghrp6_10mg from "@/assets/products/ghrp6-10mg.png";
 import ta1 from "@/assets/products/ta1.png";
 import glowBlend from "@/assets/products/glow-blend.png";
 import wolverine from "@/assets/products/wolverine.png";
@@ -237,6 +239,19 @@ export function forcedVialImage(name: string, slug?: string): string | null {
   return null;
 }
 
+// Explicit slug+size → image overrides for cases where the file naming
+// doesn't follow the `${slug}-${size}.png` convention.
+const VARIANT_IMAGE_OVERRIDES: Record<string, string> = {
+  "ghrp-6-acetate|5mg": ghrp6_5mg,
+  "ghrp-6-acetate|10mg": ghrp6_10mg,
+  "wolverine-blend|5mg/5mg": wolverine5,
+  "wolverine-blend|10mg/10mg": wolverine20,
+  "wolverine-blend|5mg": wolverine5,
+  "wolverine-blend|10mg": wolverine20,
+  "reconstitution-water|10ml": bacWater10,
+  "reconstitution-water|3ml": bacWater,
+};
+
 export function variantVialImage({
   name,
   slug,
@@ -248,6 +263,10 @@ export function variantVialImage({
   size?: string | null;
   fallbackSrc?: string;
 }): string {
+  if (slug && size) {
+    const override = VARIANT_IMAGE_OVERRIDES[`${slug}|${size.trim()}`];
+    if (override) return override;
+  }
   const normalizedSize = size ? normalizeImageToken(size) : null;
   const unitlessBlendSize = size
     ? normalizeImageToken(size.replace(/\b(mg|ml|iu|mcg|ug|g)\b/gi, ""))
