@@ -296,6 +296,18 @@ export function variantVialImage({
     slug && unitlessBlendSize ? productImageByFileName(`${slug}-${unitlessBlendSize}.png`) : null;
   const forced = forcedVialImage(name, slug);
   const exactLocal = slug ? productImageByFileName(`${slug}.png`) : null;
+  const slugPrefixLocal = productImageBySlugPrefix(slug);
+  const ruleLocal = vialImageFor(name, slug);
+  const hasRuleMatch = ruleLocal !== vialDefault;
 
-  return sizedLocal ?? sizedBlendLocal ?? forced ?? exactLocal ?? fallbackSrc ?? vialImageFor(name, slug);
+  return (
+    sizedLocal ??
+    sizedBlendLocal ??
+    forced ??
+    exactLocal ??
+    slugPrefixLocal ??
+    (hasRuleMatch ? ruleLocal : null) ??
+    fallbackSrc ??
+    ruleLocal
+  );
 }
