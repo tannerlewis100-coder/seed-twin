@@ -51,7 +51,7 @@ export function AgeGate() {
 
         <div className="space-y-5 p-6 md:p-8">
           <h2 className="font-display text-3xl leading-tight text-foreground md:text-4xl">
-            Are you 18 or older?
+            Are you 21 or older?
           </h2>
 
           <p className="text-sm leading-relaxed text-muted-foreground">
@@ -65,7 +65,7 @@ export function AgeGate() {
               onClick={confirm}
               className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
             >
-              Yes, I'm 18 or older
+              Yes, I'm 21 or older
             </button>
             <button
               onClick={decline}
