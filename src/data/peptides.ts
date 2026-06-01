@@ -42,9 +42,9 @@ function coa(purity: string, assay: string, sku: string, form: string, date = D)
 /** Long-form research descriptions keyed by base slug */
 const descriptions: Record<string, string> = {
   "bpc-157":
-    "BPC-157 is a 15-amino acid peptide derived from a protective protein naturally found in gastric juice. It is one of the most extensively studied compounds in recovery and tissue biology research, with hundreds of published animal and in vitro studies examining its role in cellular repair signaling, connective tissue integrity, angiogenesis, and growth hormone receptor interaction.",
+    "Pentadecapeptide derived from gastric juice protein BPC. Researched for connective-tissue repair, angiogenesis, and gut-barrier integrity.",
   "tb-500":
-    "TB-500 is the synthetic form of Thymosin Beta-4, a protein naturally present in virtually every cell. Research has focused on its critical role in actin regulation — the protein that governs cell structure, movement, and tissue organization — and on involvement in blood-vessel formation, cellular migration, inflammatory response modulation, and soft tissue repair signaling in animal models.",
+    "Synthetic Thymosin β4 fragment. Researched for actin sequestration, tissue repair, and inflammation modulation.",
   "wolverine-blend":
     "Pure recovery dual stack. Each vial contains BPC-157 and TB-500 in matched doses (5mg/5mg or 10mg/10mg depending on size selected) — researched for connective tissue repair and inflammation modulation.",
   "ll-37":
@@ -54,11 +54,11 @@ const descriptions: Record<string, string> = {
   "pnc-27":
     "PNC-27 is a peptide containing a p53-derived sequence linked to a membrane-residing peptide. It has been studied in cancer research models for its interaction with cellular membranes and selective cytotoxicity in tumor cell lines.",
   sermorelin:
-    "Sermorelin is a 29-amino acid analog representing the biologically active fragment of growth hormone releasing hormone. It is the oldest and most clinically studied GHRH analog, with a history of FDA approval and extensive published research on GH axis stimulation.",
+    "GHRH (1–29) analog. Researched for endogenous GH secretion at the hypothalamic-pituitary level.",
   "cjc-1295-without-dac":
-    "CJC-1295 Without DAC, also known as Modified GRF(1-29), is a synthetic GHRH analog optimized for research pulse studies. It stimulates GH secretion through pituitary GHRH receptors while preserving the natural pulsatile release pattern observed in animal models.",
+    "Mod GRF (1-29) — GHRH analog with no DAC. Researched for pulsatile GH release on a short (~30 min) half-life, often stacked with Ipamorelin.",
   "cjc-1295-with-dac":
-    "The Drug Affinity Complex formulation of CJC-1295 extends the half-life to approximately 6–8 days in animal studies through covalent albumin binding — the longest-acting GHRH analog available for research.",
+    "GHRH analog with Drug Affinity Complex extending half-life to ~8 days. Researched for sustained GH pulse amplification.",
   "2x-blend-cjc-ipamorelin":
     "A balanced growth hormone secretagogue stack. Each vial contains CJC-1295 (no DAC) 5mg and Ipamorelin 5mg — researched together for amplified GH pulse without DAC's extended half-life.",
   ipamorelin:
@@ -66,9 +66,9 @@ const descriptions: Record<string, string> = {
   tesamorelin:
     "Tesamorelin is an FDA-approved GHRH analog sold under the brand name Egrifta, with extensive Phase III trial data covering its effects on visceral fat, IGF-1 levels, and metabolic parameters.",
   "ghrp-6-acetate":
-    "GHRP-6 is one of the original and most studied growth hormone releasing peptides, with decades of research examining its dual action through GHRP and ghrelin receptors. Notable for strong appetite-stimulating activity via the ghrelin pathway.",
+    "Growth hormone releasing peptide. Researched for GH secretion via ghrelin receptor activation and appetite signaling.",
   "hexarelin-acetate":
-    "Hexarelin is among the most potent synthetic growth hormone secretagogues studied, with research suggesting greater GH-releasing activity than GHRP-6 on a molar basis. Studies have also explored CD36 receptor interaction and cardiac tissue effects.",
+    "Synthetic GHRP. Researched for potent GH release via ghrelin receptor and reported cardioprotective signaling.",
   hcg: "Human Chorionic Gonadotropin is a glycoprotein hormone that acts as a functional analog of Luteinizing Hormone, binding to LH receptors. Studied in Leydig cell stimulation, testosterone biosynthesis signaling, and HPG-axis research in animal models.",
   hmg: "Human Menopausal Gonadotropin is a preparation containing follicle-stimulating and luteinizing hormone activity, used as a reference compound in reproductive endocrinology research.",
   "igf-1-lr3":
@@ -76,25 +76,25 @@ const descriptions: Record<string, string> = {
   "igf-des":
     "IGF-DES is a truncated form of IGF-1 lacking the first three N-terminal amino acids. Research has explored its localized signaling activity and rapid clearance profile.",
   "gdf-8":
-    "Myostatin (GDF-8) is a member of the TGF-beta superfamily and acts as the body's primary brake on skeletal muscle growth. Research has explored it extensively as a regulatory target in muscle wasting disease models, metabolic research, and lean mass biology.",
+    "Polyclonal antibody targeting myostatin (GDF-8). Researched for skeletal muscle mass studies via myostatin pathway inhibition.",
   "ace-031":
-    "ACE-031 is a soluble activin receptor type IIB fusion protein studied as an inhibitor of myostatin signaling. Animal research has documented effects on lean mass and metabolic parameters.",
+    "Soluble activin receptor type IIB fusion protein. Researched as a myostatin/activin pathway antagonist for muscle mass and bone density studies.",
   "n-acetyl-epitalon-amidate":
     "The acetylated and amidated form of Epitalon, engineered for enhanced molecular stability in research settings. Carries the same extensively published research profile as Epitalon — telomerase activity, pineal function, aging-pathway research — with improved structural durability.",
   epitalon:
-    "Epitalon is a synthetic tetrapeptide developed from over 35 years of research by Professor Vladimir Khavinson. Considered one of the most significant compounds in telomere biology and longevity research, with studies exploring telomerase activation, pineal gland function, melatonin regulation, and cellular aging mechanisms.",
+    "Tetrapeptide (Ala-Glu-Asp-Gly) derived from the pineal gland. Researched for telomerase activation and circadian rhythm regulation.",
   "mots-c":
-    "MOTS-c is a peptide encoded within the mitochondrial genome itself — a discovery that fundamentally changed how researchers understand mitochondrial communication. Studies have explored metabolic regulation, insulin sensitivity pathways, and AMPK activation.",
+    "Mitochondrial-derived peptide (16 aa) encoded in mt-12S rRNA. Researched for AMPK activation, glucose metabolism, and exercise mimetic effects.",
   "ss-31":
-    "SS-31, also known as Elamipretide, is a mitochondria-targeted tetrapeptide that has advanced into Phase II/III human clinical trials. Studies focus on its interaction with cardiolipin in the inner mitochondrial membrane and oxidative stress modulation.",
+    "Mitochondria-targeted tetrapeptide. Researched for cardiolipin stabilization, ROS reduction, and mitochondrial bioenergetics.",
   foxo4:
-    "FOXO4 is a transcription factor peptide at the center of senolytic research — the scientific study of identifying and clearing senescent cells. A landmark Nature Medicine study explored FOXO4 interaction with the p53 survival pathway in animal models.",
+    "D-retro-inverso FOXO4 peptide. Researched as a senolytic — selectively triggering apoptosis in senescent cells via p53 disruption.",
   pinealon:
     "Pinealon is a tripeptide developed alongside Epitalon in Professor Khavinson's bioregulatory peptide research program. Studies have investigated its interactions with the central nervous system and neuroendocrine centers.",
   thymalin:
     "Thymalin is a polypeptide extract derived from the thymus gland, with decades of published research primarily from Russian and Eastern European institutions exploring immune modulation, thymic function, and aging-related immune decline.",
   "ghk-cu":
-    "GHK-Cu is one of the most studied peptides in scientific history, with over 50 years of published research and more than 4,000 papers. A naturally occurring copper-binding peptide that declines with age, studied in wound healing signaling, collagen and elastin synthesis, and tissue remodeling.",
+    "Copper tripeptide (Glycyl-L-Histidyl-L-Lysine-Cu). Researched for wound healing, collagen synthesis, antioxidant signaling, and gene-expression modulation.",
   "glow-blend":
     "Skin + recovery stack. Each vial contains GHK-Cu 50mg, BPC-157 10mg, and TB-500 10mg — researched for dermal repair, collagen induction, and systemic tissue recovery.",
   "klow-blend":
@@ -102,19 +102,19 @@ const descriptions: Record<string, string> = {
   "snap-8":
     "Snap-8 is a synthetic octapeptide analog of Argireline studied for effects on the SNARE protein complex — the molecular machinery responsible for neurotransmitter release at the neuromuscular junction.",
   "melanotan-2":
-    "Melanotan II is a synthetic analog of alpha-MSH that binds broadly across the melanocortin receptor family (MC1R through MC5R). Studied for pigmentation signaling, sexual arousal pathway activation, and appetite modulation in animal models.",
+    "Cyclic α-MSH analog. Researched for melanogenesis, libido signaling, and appetite suppression via melanocortin receptors.",
   semax:
-    "Semax is a synthetic heptapeptide analog of ACTH(4-7), developed by the Institute of Molecular Genetics of the Russian Academy of Sciences. Studied for interactions with BDNF pathways, dopaminergic and serotonergic systems, and neuroprotective mechanisms.",
+    "Synthetic ACTH (4–10) analog. Researched for cognitive enhancement, BDNF/NGF expression, and neuroprotection.",
   selank:
-    "Selank is a synthetic analog of the endogenous immunopeptide Tuftsin. Research has explored its interactions with GABAergic systems, IL-6 modulation, and anxiolytic pathways in animal models.",
+    "Synthetic heptapeptide based on tuftsin. Researched for anxiolytic effects, BDNF expression, and immunomodulation.",
   dsip:
-    "Delta Sleep-Inducing Peptide (DSIP) is a nonapeptide first isolated in 1974 from rabbit cerebral venous blood during slow-wave sleep, with nearly five decades of literature exploring sleep architecture regulation and stress response modulation.",
+    "Delta sleep-inducing peptide. Researched for slow-wave sleep modulation, HPA-axis regulation, and circadian rhythm response.",
   "thymosin-alpha-1":
-    "Thymosin Alpha-1 is a 28-amino acid peptide derived from prothymosin alpha and one of the most clinically validated immunomodulatory peptides in existence. Approved as a pharmaceutical drug in over 35 countries under the brand name Zadaxin.",
+    "28-amino-acid peptide derived from prothymosin alpha. Researched for T-cell maturation, immune modulation, and antiviral response.",
   vip10:
     "Vasoactive Intestinal Peptide (VIP) is a 28-amino acid neuropeptide found throughout the central and peripheral nervous systems. Studied for vasodilatory effects, immunomodulatory properties, and circadian rhythm regulation.",
   "5-amino-1mq":
-    "5-Amino-1MQ is a small molecule inhibitor of NNMT (Nicotinamide N-methyltransferase), an enzyme central to cellular energy metabolism and fat storage regulation. Researched for metabolic reprogramming and NAD+ pathway modulation.",
+    "NNMT inhibitor researched for metabolic regulation. Studied for its role in NAD+ salvage, methyl-group cycling, and adipose-tissue energy expenditure.",
   "aod-9604":
     "AOD-9604 is a modified fragment of human growth hormone — specifically the C-terminal region studied for its role in fat metabolism signaling. Research suggests it does not affect insulin-like growth factors in animal models.",
   aicar:
