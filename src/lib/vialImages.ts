@@ -78,6 +78,9 @@ import bacWater10 from "@/assets/products/bac-water-10ml.png";
 import bpc157 from "@/assets/products/bpc157-20mg.png";
 import kpv10 from "@/assets/products/kpv-10mg.png";
 import naEpitalon5 from "@/assets/products/na-epitalon-5mg.png";
+import tb500_5mg from "@/assets/products/tb500-5mg.png";
+import tesamorelin10 from "@/assets/products/tesamorelin-10mg.png";
+import wolverine5 from "@/assets/products/wolverine-5mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
