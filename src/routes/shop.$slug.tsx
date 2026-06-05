@@ -133,7 +133,10 @@ function ProductPage() {
         }
         const filtered =
           product.slug === "wolverine-blend"
-            ? vars.filter((v) => (map[v.id] ?? "").replace(/\s+/g, "") !== "20mg/20mg")
+            ? vars.filter((v) => {
+                const size = (map[v.id] ?? getVariationSize(v) ?? "").replace(/\s+/g, "").toLowerCase();
+                return size !== "20mg/20mg" && size !== "40mg";
+              })
             : vars;
         const sorted = [...filtered].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
         setVariations(sorted);
@@ -291,14 +294,12 @@ function ProductBody({
 }) {
   const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
   const wooImg = firstImage(display) ?? firstImage(product);
-  console.log('LOOKUP:', { productSlug: product.slug, selectedSize: currentVariantSize });
   const vial = variantVialImage({
     name: product.name,
     slug: product.slug,
     size: currentVariantSize,
     fallbackSrc: wooImg,
   });
-  console.log('MATCHED:', vial);
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
   const description =
     stripHtml(product.description) || stripHtml(product.short_description) || "";

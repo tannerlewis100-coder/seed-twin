@@ -51,7 +51,10 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
         }
         const filtered =
           product.slug === "wolverine-blend"
-            ? vars.filter((v) => (map[v.id] ?? "").replace(/\s+/g, "") !== "20mg/20mg")
+            ? vars.filter((v) => {
+                const size = (map[v.id] ?? getVariationSize(v) ?? "").replace(/\s+/g, "").toLowerCase();
+                return size !== "20mg/20mg" && size !== "40mg";
+              })
             : vars;
         const sorted = [...filtered].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
         setVariations(sorted);
