@@ -134,7 +134,10 @@ function ProductPage() {
         const filtered =
           product.slug === "wolverine-blend"
             ? vars.filter((v) => {
-                const size = (map[v.id] ?? getVariationSize(v) ?? "").replace(/\s+/g, "").toLowerCase();
+                const size = (map[v.id] ?? getVariationSize(v) ?? "")
+                  .replace(/\s+/g, "")
+                  .replace(/-/g, "/")
+                  .toLowerCase();
                 return size !== "20mg/20mg" && size !== "40mg";
               })
             : vars;
