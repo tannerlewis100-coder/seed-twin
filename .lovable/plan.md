@@ -1,36 +1,12 @@
-## Mobile issues found
+## Plan
 
-Walked through the homepage at 390×844. Three real problems, plus a couple of small polish items.
+1. Update the Wolverine variation filtering in both the product page and quick-view modal so the 40 mg option is removed even when the size comes from Woo fallback data instead of the custom size map.
+2. Keep the 20 mg variant wired to the uploaded Wolverine 20 mg product image, and verify the selected size passed into the vial-image resolver matches that override path.
+3. Remove the debug logging left in the product page while making the fix so the shop page stays clean.
+4. Validate the result in preview on `/shop/wolverine-blend`: only the 10 mg and 20 mg pills remain, and selecting 20 mg shows the uploaded 20 mg bottle image.
 
-### 1. Sticky header overlaps content (highest priority)
-The floating header (logo pill + menu pill) sits on top of the page, but section titles and CTAs scroll *under* it with no padding offset. Visible cases:
-- "BPC-157" product card title hidden behind logo
-- "View the COA Library" announcement button half-covered
-- "Shop Catalog" CTA in the bottom section completely hidden behind the logo
+## Technical details
 
-**Fix:** Give the sticky header a subtle background/blur on mobile so content underneath is at least readable, *and* nudge first-section top padding so headings don't collide on scroll-stop. Simplest version — add `backdrop-blur` + semi-opaque background to the header pill container on `<sm` so it stops being transparent on dark backgrounds.
-
-### 2. Promo popup has a huge blank black area on mobile
-On mobile the popup stacks vertically and shows a 16:9 black box at top where the `promo-vials.png` image should be — image isn't rendering / is empty. Takes up ~40% of the popup before the headline.
-
-**Fix:** Hide the image block entirely on mobile (`hidden md:block`) so the popup opens compact, or shrink to a small banner. Keep the desktop split-screen layout untouched.
-
-### 3. Hero pushes text below the fold
-On 390px the hero vials image takes the full viewport and "Research peptides, without the guesswork." only appears after a scroll. The headline is the whole point.
-
-**Fix:** Shrink the hero image height on mobile (e.g. `h-[55vh]` instead of full) and tighten top padding so the headline peeks above the fold.
-
-### Smaller polish (optional, group into same pass)
-- Stat row (70+ / 5 / 100% / ≥99%) — gold numbers are nice but the 2×2 grid has uneven vertical rhythm; tighten gap.
-- COA cards: right-aligned values (`99.8%`, `<20ppb`) sit tight against the edge — add a hair more right padding.
-
-### Out of scope
-- Testimonials (already fixed last turn)
-- Product modal — not re-checked here; can audit in a follow-up if you want.
-
-### Files I'd touch
-- `src/components/SiteHeader.tsx` — mobile background/blur
-- `src/routes/index.tsx` — hero height, section top padding, stat/COA spacing
-- `src/components/PromoPopup.tsx` — hide image on mobile
-
-Want me to ship all three, or just #1 and #2?
+- Reuse the existing `getVariationSize()` fallback when filtering Wolverine variants.
+- Treat `20mg/20mg` as the hidden option regardless of whether it comes from the custom variation payload or Woo attributes/slug parsing.
+- Preserve the existing override in `src/lib/vialImages.ts` for `wolverine-blend|10mg/10mg` and `wolverine-blend|20mg` so the 20 mg selection resolves to the uploaded image.
