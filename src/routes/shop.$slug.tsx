@@ -127,13 +127,17 @@ function ProductPage() {
     Promise.all([fetchVariations(product.id), fetchClarumProduct(product.id)])
       .then(([vars, clarum]) => {
         if (cancelled) return;
-        const sorted = [...vars].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
-        setVariations(sorted);
-        setActiveVarId(sorted[0]?.id ?? null);
         const map: Record<number, string> = {};
         for (const v of clarum?.variations ?? []) {
           if (v?.id != null && v.size) map[v.id] = v.size;
         }
+        const filtered =
+          product.slug === "wolverine-blend"
+            ? vars.filter((v) => (map[v.id] ?? "").replace(/\s+/g, "") !== "20mg/20mg")
+            : vars;
+        const sorted = [...filtered].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
+        setVariations(sorted);
+        setActiveVarId(sorted[0]?.id ?? null);
         setSizeById(map);
       })
       .catch((e) => console.error("Failed to load variations:", e))
