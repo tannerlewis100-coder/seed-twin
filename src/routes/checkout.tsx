@@ -60,6 +60,7 @@ function CheckoutPage() {
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [card, setCard] = useState({ name: "", number: "", expiry: "", cvv: "" });
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
