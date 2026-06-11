@@ -4,6 +4,7 @@ type RevealOnScrollProps = {
   children: ReactNode;
   as?: ElementType;
   className?: string;
+  id?: string;
   /** Initial delay in ms */
   delay?: number;
 };
@@ -16,6 +17,7 @@ export default function RevealOnScroll({
   children,
   as: Tag = "div",
   className,
+  id,
   delay = 0,
 }: RevealOnScrollProps) {
   const ref = useRef<HTMLElement | null>(null);
@@ -54,6 +56,7 @@ export default function RevealOnScroll({
   return (
     <Tag
       ref={ref as React.RefObject<HTMLElement>}
+      id={id}
       className={`reveal-block ${className ?? ""}`}
       data-revealed={!mounted || revealed ? "true" : "false"}
       style={{ transitionDelay: `${delay}ms` }}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, ChevronRight, ExternalLink, Search, Shield, X, ZoomIn } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
@@ -45,6 +45,27 @@ function CoaLibraryPage() {
     if (q) items = items.filter((p) => p.name.toLowerCase().includes(q));
     return items;
   }, [search, activeCat]);
+
+  // Auto-expand a card when the URL hash points at it
+  // (e.g., /coa-library#coa-bpc-157-5mg from a product page deep-link).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const expandFromHash = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash.startsWith("coa-")) return;
+      const slug = hash.slice("coa-".length);
+      if (!slug) return;
+      setExpandedSlug(slug);
+      // Scroll after layout/render
+      requestAnimationFrame(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    };
+    expandFromHash();
+    window.addEventListener("hashchange", expandFromHash);
+    return () => window.removeEventListener("hashchange", expandFromHash);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -115,8 +136,9 @@ function CoaLibraryPage() {
               return (
                 <RevealOnScroll
                   key={p.slug}
+                  id={`coa-${p.slug}`}
                   delay={Math.min(idx * 40, 400)}
-                  className={`group relative bg-background rounded-3xl border transition-colors overflow-hidden ${
+                  className={`group relative bg-background rounded-3xl border transition-colors overflow-hidden scroll-mt-24 ${
                     available
                       ? "border-white/5 hover:border-brand-gold/25"
                       : "border-white/5 opacity-60"

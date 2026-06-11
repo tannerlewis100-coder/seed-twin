@@ -39,7 +39,8 @@ export function AgeGate() {
       className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
       role="dialog"
       aria-modal="true"
-      aria-label="Age verification"
+      aria-labelledby="age-gate-title"
+      aria-describedby="age-gate-desc"
     >
       <div className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-card shadow-2xl">
         <div className="flex items-center gap-3 border-b border-border bg-muted/30 px-6 py-4">
@@ -50,14 +51,14 @@ export function AgeGate() {
         </div>
 
         <div className="space-y-5 p-6 md:p-8">
-          <h2 className="font-display text-3xl leading-tight text-foreground md:text-4xl">
+          <h2 id="age-gate-title" className="font-display text-3xl leading-tight text-foreground md:text-4xl">
             Are you 21 or older?
           </h2>
 
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p id="age-gate-desc" className="text-sm leading-relaxed text-muted-foreground">
             This site sells research peptides for in vitro laboratory use only.
-            Not for human consumption. By entering, you confirm you're at least 18
-            and agree to our terms.
+            Not for human consumption. By entering, you confirm you're at least
+            21 and agree to our terms.
           </p>
 
           <div className="flex flex-col gap-2">

@@ -59,7 +59,12 @@ function mapCart(cart: WooCart): { items: CartItem[]; subtotal: number; count: n
     price: fromMinor(it.prices.price, it.prices.currency_minor_unit),
     image: it.images?.[0]?.src,
   }));
-  const subtotal = fromMinor(cart.totals.total_price, cart.totals.currency_minor_unit);
+  // Subtotal is items only — NEVER include shipping (drawer shows shipping
+  // on its own row and only after a rate is known).
+  const minor = cart.totals.currency_minor_unit;
+  const itemsOnly = fromMinor(cart.totals.total_items, minor);
+  const fallback = items.reduce((s, i) => s + i.price * i.qty, 0);
+  const subtotal = itemsOnly || fallback;
   return { items, subtotal, count: cart.items_count };
 }
 

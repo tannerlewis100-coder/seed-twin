@@ -122,7 +122,9 @@ function CheckoutPage() {
   const needsShipping = raw?.needs_shipping ?? true;
 
   useEffect(() => {
-    if (!paymentMethod && gateways.length) setPaymentMethod(gateways[0]);
+    if (paymentMethod || !gateways.length) return;
+    // Prefer Credit & Debit Card when available; otherwise first gateway.
+    setPaymentMethod(gateways.includes("quiklie") ? "quiklie" : gateways[0]);
   }, [gateways, paymentMethod]);
 
   // Auto-fill from logged-in Clarum account
@@ -182,10 +184,20 @@ function CheckoutPage() {
   const currency = raw?.totals.currency_symbol ?? "$";
   const minor = raw?.totals.currency_minor_unit ?? 2;
   const itemsSubtotal = fromMinor(raw?.totals.total_items, minor) || subtotal;
-  
+
   const taxTotal = fromMinor(raw?.totals.total_tax, minor);
   const discountTotal = fromMinor(raw?.totals.total_discount, minor);
-  const total = fromMinor(raw?.totals.total_price, minor) || subtotal;
+  const selectedRate = rates.find((r) => r.rate_id === selectedRateId);
+  const shippingCost = selectedRate
+    ? fromMinor(selectedRate.price, selectedRate.currency_minor_unit)
+    : 0;
+  const shippingKnown = !!selectedRate;
+  // Compute total client-side so it stays in sync with the shipping row:
+  // before a rate is selected, total = subtotal (no hidden shipping).
+  const total = Math.max(
+    0,
+    itemsSubtotal - discountTotal + (shippingKnown ? shippingCost : 0) + taxTotal,
+  );
 
   const cartEmpty = !cartLoading && items.length === 0;
 
@@ -222,7 +234,12 @@ function CheckoutPage() {
         const pkg = cart.shipping_rates?.[0]?.shipping_rates ?? [];
         setRates(pkg);
         const preselected = pkg.find((r) => r.selected)?.rate_id;
-        const target = preselected || pkg[0]?.rate_id;
+        // Auto-select free shipping when the cart qualifies.
+        const freeRate = pkg.find(
+          (r) => fromMinor(r.price, r.currency_minor_unit) === 0 || /free/i.test(r.name),
+        );
+        const target =
+          (itemsSubtotal >= 150 && freeRate?.rate_id) || preselected || pkg[0]?.rate_id;
         if (target) {
           if (target !== selectedRateId) {
             await selectShippingRate({ package_id: 0, rate_id: target });
@@ -246,6 +263,9 @@ function CheckoutPage() {
     needsShipping,
     cartEmpty,
     addrReady,
+    // Re-fetch when cart contents change so rates / free-shipping never go stale.
+    itemsSubtotal,
+    items.length,
     shipAddr.first_name,
     shipAddr.last_name,
     shipAddr.address_1,
@@ -766,7 +786,7 @@ function CheckoutPage() {
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
                   ) : (
-                    <>Place order · {currency}{total.toFixed(2)}</>
+                    <>Place order{needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}</>
                   )}
                 </button>
               </div>

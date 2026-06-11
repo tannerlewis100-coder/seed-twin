@@ -117,6 +117,7 @@ export function PromoPopup() {
       role="dialog"
       aria-modal="true"
       aria-label="10 percent off first order"
+      aria-describedby="promo-popup-desc"
     >
       <div
         className="relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-3xl md:overflow-hidden"
@@ -154,7 +155,7 @@ export function PromoPopup() {
                   </h2>
                 </div>
 
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p id="promo-popup-desc" className="text-sm leading-relaxed text-muted-foreground">
                   Enter your email. Get the code and an alert when we drop new
                   batches.
                 </p>
