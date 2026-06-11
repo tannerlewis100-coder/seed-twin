@@ -192,7 +192,10 @@ function CheckoutPage() {
     shipAddr.state.trim().length > 0 &&
     shipAddr.postcode.trim().length > 0 &&
     shipAddr.city.trim().length > 0 &&
-    shipAddr.address_1.trim().length > 0;
+    shipAddr.address_1.trim().length > 0 &&
+    !POSTCODE_RULES[shipAddr.country?.toUpperCase()] ||
+    (POSTCODE_RULES[shipAddr.country?.toUpperCase()]?.re.test(shipAddr.postcode.trim()) ?? true);
+
 
   // Debounced: when address is complete, update customer to fetch rates
   useEffect(() => {
