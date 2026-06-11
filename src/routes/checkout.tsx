@@ -786,7 +786,7 @@ function CheckoutPage() {
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
                   ) : (
-                    <>Place order · {currency}{total.toFixed(2)}</>
+                    <>Place order{needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}</>
                   )}
                 </button>
               </div>
