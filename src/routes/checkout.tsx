@@ -60,6 +60,7 @@ function CheckoutPage() {
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [card, setCard] = useState({ name: "", number: "", expiry: "", cvv: "" });
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -328,6 +329,18 @@ function CheckoutPage() {
     }
     if (!paymentMethod) return "Select a payment method.";
     if (needsShipping && !selectedRateId) return "Select a shipping method.";
+    if (paymentMethod === "quiklie") {
+      const digits = card.number.replace(/\s+/g, "");
+      if (!card.name.trim()) return "Cardholder name is required.";
+      if (!/^\d{13,19}$/.test(digits)) return "Enter a valid card number.";
+      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expiry))
+        return "Expiry must be in MM/YY format.";
+      const [mm, yy] = card.expiry.split("/").map((s) => parseInt(s, 10));
+      const now = new Date();
+      const exp = new Date(2000 + yy, mm); // first day of month AFTER expiry
+      if (exp <= now) return "Card has expired.";
+      if (!/^\d{3,4}$/.test(card.cvv)) return "CVV must be 3 or 4 digits.";
+    }
     return null;
   }
 
@@ -358,7 +371,15 @@ function CheckoutPage() {
         billing_address: billingAddr,
         shipping_address: shippingAddr,
         payment_method: paymentMethod,
-        payment_data: [],
+        payment_data:
+          paymentMethod === "quiklie"
+            ? [
+                { key: "quiklie_card_holder_name", value: card.name.trim() },
+                { key: "quiklie_card_number", value: card.number.replace(/\s+/g, "") },
+                { key: "quiklie_expiry", value: card.expiry },
+                { key: "quiklie_cvv", value: card.cvv },
+              ]
+            : [],
         customer_note: note || undefined,
       });
       // eslint-disable-next-line no-console
@@ -604,24 +625,107 @@ function CheckoutPage() {
                               </div>
                               <div className="space-y-2">
                                 {grp.items.map((g) => (
-                                  <label
-                                    key={g}
-                                    className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
-                                      paymentMethod === g
-                                        ? "border-brand-gold/60 bg-brand-gold/5"
-                                        : "border-white/10 bg-white/[0.02] hover:border-white/20"
-                                    }`}
-                                  >
-                                    <input
-                                      type="radio"
-                                      name="payment_method"
-                                      value={g}
-                                      checked={paymentMethod === g}
-                                      onChange={() => setPaymentMethod(g)}
-                                      className="h-4 w-4 accent-brand-gold"
-                                    />
-                                    <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
-                                  </label>
+                                  <div key={g}>
+                                    <label
+                                      className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
+                                        paymentMethod === g
+                                          ? "border-brand-gold/60 bg-brand-gold/5"
+                                          : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                                      }`}
+                                    >
+                                      <input
+                                        type="radio"
+                                        name="payment_method"
+                                        value={g}
+                                        checked={paymentMethod === g}
+                                        onChange={() => setPaymentMethod(g)}
+                                        className="h-4 w-4 accent-brand-gold"
+                                      />
+                                      <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
+                                    </label>
+                                    {g === "quiklie" && paymentMethod === "quiklie" && (
+                                      <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+                                        <div>
+                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                            Cardholder name
+                                          </label>
+                                          <input
+                                            type="text"
+                                            value={card.name}
+                                            onChange={(e) =>
+                                              setCard((c) => ({ ...c, name: e.target.value }))
+                                            }
+                                            autoComplete="cc-name"
+                                            maxLength={100}
+                                            placeholder="Name on card"
+                                            className={inputCls}
+                                          />
+                                        </div>
+                                        <div>
+                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                            Card number
+                                          </label>
+                                          <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            value={card.number}
+                                            onChange={(e) => {
+                                              const digits = e.target.value
+                                                .replace(/\D/g, "")
+                                                .slice(0, 19);
+                                              const formatted = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+                                              setCard((c) => ({ ...c, number: formatted }));
+                                            }}
+                                            autoComplete="cc-number"
+                                            placeholder="1234 5678 9012 3456"
+                                            className={`${inputCls} tracking-wider`}
+                                          />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3">
+                                          <div>
+                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                              Expiry (MM/YY)
+                                            </label>
+                                            <input
+                                              type="text"
+                                              inputMode="numeric"
+                                              value={card.expiry}
+                                              onChange={(e) => {
+                                                const d = e.target.value.replace(/\D/g, "").slice(0, 4);
+                                                const v =
+                                                  d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+                                                setCard((c) => ({ ...c, expiry: v }));
+                                              }}
+                                              autoComplete="cc-exp"
+                                              placeholder="MM/YY"
+                                              maxLength={5}
+                                              className={inputCls}
+                                            />
+                                          </div>
+                                          <div>
+                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                              CVV
+                                            </label>
+                                            <input
+                                              type="text"
+                                              inputMode="numeric"
+                                              value={card.cvv}
+                                              onChange={(e) =>
+                                                setCard((c) => ({
+                                                  ...c,
+                                                  cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
+                                                }))
+                                              }
+                                              autoComplete="cc-csc"
+                                              placeholder="123"
+                                              maxLength={4}
+                                              className={inputCls}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
                                 ))}
                               </div>
                             </div>
