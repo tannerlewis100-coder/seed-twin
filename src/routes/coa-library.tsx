@@ -46,6 +46,27 @@ function CoaLibraryPage() {
     return items;
   }, [search, activeCat]);
 
+  // Auto-expand a card when the URL hash points at it
+  // (e.g., /coa-library#coa-bpc-157-5mg from a product page deep-link).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const expandFromHash = () => {
+      const hash = window.location.hash.replace(/^#/, "");
+      if (!hash.startsWith("coa-")) return;
+      const slug = hash.slice("coa-".length);
+      if (!slug) return;
+      setExpandedSlug(slug);
+      // Scroll after layout/render
+      requestAnimationFrame(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    };
+    expandFromHash();
+    window.addEventListener("hashchange", expandFromHash);
+    return () => window.removeEventListener("hashchange", expandFromHash);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <AnnouncementBar />
