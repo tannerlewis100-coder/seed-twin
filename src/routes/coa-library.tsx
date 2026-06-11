@@ -136,8 +136,9 @@ function CoaLibraryPage() {
               return (
                 <RevealOnScroll
                   key={p.slug}
+                  id={`coa-${p.slug}`}
                   delay={Math.min(idx * 40, 400)}
-                  className={`group relative bg-background rounded-3xl border transition-colors overflow-hidden ${
+                  className={`group relative bg-background rounded-3xl border transition-colors overflow-hidden scroll-mt-24 ${
                     available
                       ? "border-white/5 hover:border-brand-gold/25"
                       : "border-white/5 opacity-60"
