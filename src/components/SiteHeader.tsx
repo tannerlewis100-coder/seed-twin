@@ -108,6 +108,12 @@ function QuickLink({ to, children }: { to: LinkTo; children: React.ReactNode }) 
   );
 }
 
+function parentShopSlug(slug: string): string {
+  // Strip a trailing dose/size suffix like "-10mg", "-500mg", "-1000mg" so the
+  // link lands on the variable parent product page (with all size options).
+  return slug.replace(/-\d+(?:\.\d+)?(?:mg|mcg|µg|ml|iu|g)$/i, "");
+}
+
 function ShopMenu() {
   const featuredSlugs = ["glp-3-rt-10mg", "nad-500mg", "mots-c-10mg", "bpc-157-5mg"];
   const featured = featuredSlugs
@@ -123,8 +129,8 @@ function ShopMenu() {
               key={p.slug}
               row={{
                 to: "/shop/$slug",
-                params: { slug: p.slug },
-                title: `${p.name} ${p.size}`,
+                params: { slug: parentShopSlug(p.slug) },
+                title: p.name,
                 desc: p.tag ?? p.category,
                 icon: FlaskConical,
               }}

@@ -284,7 +284,7 @@ function FeaturedProducts() {
               <RevealOnScroll key={p.slug} delay={i * 80}>
                 <Link
                   to="/shop/$slug"
-                  params={{ slug: p.slug }}
+                  params={{ slug: p.slug.replace(/-\d+(?:\.\d+)?(?:mg|mcg|µg|ml|iu|g)$/i, "") }}
                   className="group/card relative flex flex-col items-center text-center overflow-hidden rounded-3xl h-[520px] w-full p-6 bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
                 >
                   {/* Top-left badge */}
