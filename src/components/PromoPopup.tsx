@@ -155,7 +155,7 @@ export function PromoPopup() {
                   </h2>
                 </div>
 
-                <p className="text-sm leading-relaxed text-muted-foreground">
+                <p id="promo-popup-desc" className="text-sm leading-relaxed text-muted-foreground">
                   Enter your email. Get the code and an alert when we drop new
                   batches.
                 </p>
