@@ -56,6 +56,7 @@ export default function RevealOnScroll({
   return (
     <Tag
       ref={ref as React.RefObject<HTMLElement>}
+      id={id}
       className={`reveal-block ${className ?? ""}`}
       data-revealed={!mounted || revealed ? "true" : "false"}
       style={{ transitionDelay: `${delay}ms` }}
