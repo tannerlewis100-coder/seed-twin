@@ -457,10 +457,38 @@ function ProductBody({
 
       {/* Test panel — only render when COA data exists */}
       {(() => {
-        const { rows, coa } = buildPanel(product.slug);
-        if (!coa) return null;
+        const { rows, meta, deepLinkSlug } = buildPanel(product.slug, currentVariantSize);
+        if (!meta) return null;
+        const coaLibraryHref = deepLinkSlug
+          ? `/coa-library#coa-${deepLinkSlug}`
+          : "/coa-library";
+        // JSON-LD Product schema for this product detail page
+        const ld = {
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: decodeEntities(product.name),
+          image: wooImg ? [wooImg] : undefined,
+          description:
+            stripHtml(product.description) || stripHtml(product.short_description) || undefined,
+          sku: display.sku || product.sku || undefined,
+          brand: { "@type": "Brand", name: "Clarum Peptides" },
+          offers: {
+            "@type": "Offer",
+            price: price.toFixed(2),
+            priceCurrency: display.prices.currency_code || "USD",
+            availability: inStock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+            url: `https://clarumpeptides.com/shop/${product.slug}`,
+          },
+        };
         return (
           <section className="mt-10 rounded-3xl border border-brand-gold/15 bg-card p-8">
+            <script
+              type="application/ld+json"
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
+            />
             <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.25em] text-brand-gold font-semibold mb-1">
@@ -468,12 +496,12 @@ function ProductBody({
                 </p>
                 <h2 className="font-display text-2xl">Independent third-party lab panel</h2>
               </div>
-              <Link
-                to="/coa-library"
+              <a
+                href={coaLibraryHref}
                 className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-gold-light transition-colors"
               >
                 <FileText className="h-4 w-4" /> Download batch COA
-              </Link>
+              </a>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -496,7 +524,7 @@ function ProductBody({
             </div>
 
             <p className="mt-6 text-[11px] text-foreground/50">
-              Batch {coa.batch} · Tested {coa.test_date} · {coaData.lab}
+              Batch {meta.batch} · Tested {meta.test_date} · {coaData.lab}
             </p>
           </section>
         );
