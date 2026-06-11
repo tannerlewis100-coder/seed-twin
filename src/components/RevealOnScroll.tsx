@@ -4,6 +4,7 @@ type RevealOnScrollProps = {
   children: ReactNode;
   as?: ElementType;
   className?: string;
+  id?: string;
   /** Initial delay in ms */
   delay?: number;
 };
@@ -16,6 +17,7 @@ export default function RevealOnScroll({
   children,
   as: Tag = "div",
   className,
+  id,
   delay = 0,
 }: RevealOnScrollProps) {
   const ref = useRef<HTMLElement | null>(null);
