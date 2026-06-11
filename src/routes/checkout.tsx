@@ -234,7 +234,12 @@ function CheckoutPage() {
         const pkg = cart.shipping_rates?.[0]?.shipping_rates ?? [];
         setRates(pkg);
         const preselected = pkg.find((r) => r.selected)?.rate_id;
-        const target = preselected || pkg[0]?.rate_id;
+        // Auto-select free shipping when the cart qualifies.
+        const freeRate = pkg.find(
+          (r) => fromMinor(r.price, r.currency_minor_unit) === 0 || /free/i.test(r.name),
+        );
+        const target =
+          (itemsSubtotal >= 150 && freeRate?.rate_id) || preselected || pkg[0]?.rate_id;
         if (target) {
           if (target !== selectedRateId) {
             await selectShippingRate({ package_id: 0, rate_id: target });
@@ -247,6 +252,29 @@ function CheckoutPage() {
           setSelectedRateId("");
         }
       } catch (e) {
+        setRatesError(e instanceof Error ? e.message : "Could not load shipping rates.");
+      } finally {
+        setRatesLoading(false);
+      }
+    }, 500);
+    return () => clearTimeout(handle);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    needsShipping,
+    cartEmpty,
+    addrReady,
+    // Re-fetch when cart contents change so rates / free-shipping never go stale.
+    itemsSubtotal,
+    items.length,
+    shipAddr.first_name,
+    shipAddr.last_name,
+    shipAddr.address_1,
+    shipAddr.address_2,
+    shipAddr.city,
+    shipAddr.state,
+    shipAddr.postcode,
+    shipAddr.country,
+  ]);
         setRatesError(e instanceof Error ? e.message : "Could not load shipping rates.");
       } finally {
         setRatesLoading(false);
