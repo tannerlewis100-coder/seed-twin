@@ -491,28 +491,71 @@ function CheckoutPage() {
                       {cartLoading ? "Loading payment options…" : "No payment methods available."}
                     </p>
                   ) : (
-                    <div className="space-y-2">
-                      {gateways.map((g) => (
-                        <label
-                          key={g}
-                          className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
-                            paymentMethod === g
-                              ? "border-brand-gold/60 bg-brand-gold/5"
-                              : "border-white/10 bg-white/[0.02] hover:border-white/20"
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            name="payment_method"
-                            value={g}
-                            checked={paymentMethod === g}
-                            onChange={() => setPaymentMethod(g)}
-                            className="h-4 w-4 accent-brand-gold"
-                          />
-                          <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
-                        </label>
-                      ))}
-                    </div>
+                    (() => {
+                      const categorize = (id: string): "cards_bank" | "crypto" | "other" => {
+                        if (
+                          id === "stripe" ||
+                          id === "stripe_cc" ||
+                          id === "quiklie" ||
+                          id === "clarum_bank_transfer" ||
+                          id === "bacs"
+                        )
+                          return "cards_bank";
+                        if (id === "depay_wc_payments" || id === "nowpayments") return "crypto";
+                        return "other";
+                      };
+                      const groups: { key: string; title: string; items: string[] }[] = [
+                        {
+                          key: "cards_bank",
+                          title: "Card & Bank",
+                          items: gateways.filter((g) => categorize(g) === "cards_bank"),
+                        },
+                        {
+                          key: "crypto",
+                          title: "Cryptocurrency",
+                          items: gateways.filter((g) => categorize(g) === "crypto"),
+                        },
+                        {
+                          key: "other",
+                          title: "Other",
+                          items: gateways.filter((g) => categorize(g) === "other"),
+                        },
+                      ].filter((grp) => grp.items.length > 0);
+
+                      return (
+                        <div className="space-y-5">
+                          {groups.map((grp) => (
+                            <div key={grp.key} className="space-y-2">
+                              <div className="text-xs uppercase tracking-wider text-foreground/50">
+                                {grp.title}
+                              </div>
+                              <div className="space-y-2">
+                                {grp.items.map((g) => (
+                                  <label
+                                    key={g}
+                                    className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
+                                      paymentMethod === g
+                                        ? "border-brand-gold/60 bg-brand-gold/5"
+                                        : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                                    }`}
+                                  >
+                                    <input
+                                      type="radio"
+                                      name="payment_method"
+                                      value={g}
+                                      checked={paymentMethod === g}
+                                      onChange={() => setPaymentMethod(g)}
+                                      className="h-4 w-4 accent-brand-gold"
+                                    />
+                                    <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
+                                  </label>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })()
                   )}
                 </Section>
 
