@@ -113,9 +113,12 @@ function CheckoutPage() {
   const withNow = baseGateways.includes("nowpayments")
     ? baseGateways
     : [...baseGateways, "nowpayments"];
-  const gateways = withNow.includes("clarum_bank_transfer")
+  const withBank = withNow.includes("clarum_bank_transfer")
     ? withNow
     : [...withNow, "clarum_bank_transfer"];
+  const gateways = withBank.includes("quiklie")
+    ? withBank
+    : [...withBank, "quiklie"];
   const needsShipping = raw?.needs_shipping ?? true;
 
   useEffect(() => {
