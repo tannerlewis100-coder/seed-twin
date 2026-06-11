@@ -122,7 +122,9 @@ function CheckoutPage() {
   const needsShipping = raw?.needs_shipping ?? true;
 
   useEffect(() => {
-    if (!paymentMethod && gateways.length) setPaymentMethod(gateways[0]);
+    if (paymentMethod || !gateways.length) return;
+    // Prefer Credit & Debit Card when available; otherwise first gateway.
+    setPaymentMethod(gateways.includes("quiklie") ? "quiklie" : gateways[0]);
   }, [gateways, paymentMethod]);
 
   // Auto-fill from logged-in Clarum account
