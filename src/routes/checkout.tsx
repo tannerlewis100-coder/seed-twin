@@ -69,6 +69,45 @@ function CheckoutPage() {
   const [ratesLoading, setRatesLoading] = useState(false);
   const [ratesError, setRatesError] = useState<string | null>(null);
 
+  const [couponInput, setCouponInput] = useState("");
+  const [couponBusy, setCouponBusy] = useState(false);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
+  const appliedCoupons = ((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons ?? [])
+    .map((c) => c?.code)
+    .filter((c): c is string => !!c);
+
+  async function handleApplyCoupon(e: React.FormEvent) {
+    e.preventDefault();
+    const code = couponInput.trim();
+    if (!code || couponBusy) return;
+    setCouponBusy(true);
+    setCouponError(null);
+    try {
+      await applyCoupon(code);
+      await refresh();
+      setCouponInput("");
+    } catch {
+      setCouponError("Invalid or expired code");
+    } finally {
+      setCouponBusy(false);
+    }
+  }
+
+  async function handleRemoveCoupon(code: string) {
+    if (couponBusy) return;
+    setCouponBusy(true);
+    setCouponError(null);
+    try {
+      await removeCoupon(code);
+      await refresh();
+    } catch {
+      /* ignore */
+    } finally {
+      setCouponBusy(false);
+    }
+  }
+
   const baseGateways = raw?.payment_methods ?? [];
   const withNow = baseGateways.includes("nowpayments")
     ? baseGateways
