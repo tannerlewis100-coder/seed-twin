@@ -184,10 +184,20 @@ function CheckoutPage() {
   const currency = raw?.totals.currency_symbol ?? "$";
   const minor = raw?.totals.currency_minor_unit ?? 2;
   const itemsSubtotal = fromMinor(raw?.totals.total_items, minor) || subtotal;
-  
+
   const taxTotal = fromMinor(raw?.totals.total_tax, minor);
   const discountTotal = fromMinor(raw?.totals.total_discount, minor);
-  const total = fromMinor(raw?.totals.total_price, minor) || subtotal;
+  const selectedRate = rates.find((r) => r.rate_id === selectedRateId);
+  const shippingCost = selectedRate
+    ? fromMinor(selectedRate.price, selectedRate.currency_minor_unit)
+    : 0;
+  const shippingKnown = !!selectedRate;
+  // Compute total client-side so it stays in sync with the shipping row:
+  // before a rate is selected, total = subtotal (no hidden shipping).
+  const total = Math.max(
+    0,
+    itemsSubtotal - discountTotal + (shippingKnown ? shippingCost : 0) + taxTotal,
+  );
 
   const cartEmpty = !cartLoading && items.length === 0;
 
