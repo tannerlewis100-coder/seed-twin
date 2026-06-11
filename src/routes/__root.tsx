@@ -51,8 +51,6 @@ export const Route = createRootRoute({
       { name: "description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
       { property: "og:description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
       { name: "twitter:description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X5gQK5nRTfeQihegZZToeIiKOcB2/social-images/social-1780199654346-ChatGPT_Image_May_30,_2026,_10_54_02_PM.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X5gQK5nRTfeQihegZZToeIiKOcB2/social-images/social-1780199654346-ChatGPT_Image_May_30,_2026,_10_54_02_PM.webp" },
     ],
 
     links: [
