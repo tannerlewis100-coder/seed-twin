@@ -9,6 +9,7 @@ import {
   clearCartToken,
   fromMinor,
   gatewayLabel,
+  removeCoupon,
   selectShippingRate,
   submitCheckout,
   updateCustomer,
