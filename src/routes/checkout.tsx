@@ -274,6 +274,32 @@ function CheckoutPage() {
       setShipping((b) => ({ ...b, [k]: e.target.value }));
   }
 
+  // Per-country postcode validation. WooCommerce rejects mismatched formats
+  // with a generic "invalid postcode" error — we catch it client-side first.
+  const POSTCODE_RULES: Record<string, { re: RegExp; example: string }> = {
+    US: { re: /^\d{5}(-\d{4})?$/, example: "12345 or 12345-6789" },
+    CA: { re: /^[A-Z]\d[A-Z] ?\d[A-Z]\d$/i, example: "A1A 1A1" },
+    GB: { re: /^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i, example: "SW1A 1AA" },
+    AU: { re: /^\d{4}$/, example: "2000" },
+    DE: { re: /^\d{5}$/, example: "10115" },
+    FR: { re: /^\d{5}$/, example: "75001" },
+    NL: { re: /^\d{4} ?[A-Z]{2}$/i, example: "1011 AB" },
+    IT: { re: /^\d{5}$/, example: "00100" },
+    ES: { re: /^\d{5}$/, example: "28001" },
+    JP: { re: /^\d{3}-?\d{4}$/, example: "100-0001" },
+    BR: { re: /^\d{5}-?\d{3}$/, example: "01310-100" },
+    MX: { re: /^\d{5}$/, example: "01000" },
+  };
+
+  function postcodeError(country: string, postcode: string): string | null {
+    const rule = POSTCODE_RULES[country?.toUpperCase()];
+    if (!rule) return null; // unknown country — let server decide
+    if (!rule.re.test(postcode.trim())) {
+      return `Postcode doesn't match the format for ${country.toUpperCase()} (e.g. ${rule.example}).`;
+    }
+    return null;
+  }
+
   function validate(): string | null {
     if (!email.trim() || !/^\S+@\S+\.\S+$/.test(email)) return "Enter a valid email.";
     const req: Array<keyof AddressForm> = [
@@ -288,16 +314,21 @@ function CheckoutPage() {
     for (const k of req) {
       if (!String(billing[k] ?? "").trim()) return `Billing ${k.replace("_", " ")} is required.`;
     }
+    const bPc = postcodeError(billing.country, billing.postcode);
+    if (bPc) return `Billing: ${bPc}`;
     if (!shipSame) {
       for (const k of req) {
         if (!String(shipping[k] ?? "").trim())
           return `Shipping ${k.replace("_", " ")} is required.`;
       }
+      const sPc = postcodeError(shipping.country, shipping.postcode);
+      if (sPc) return `Shipping: ${sPc}`;
     }
     if (!paymentMethod) return "Select a payment method.";
     if (needsShipping && !selectedRateId) return "Select a shipping method.";
     return null;
   }
+
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
