@@ -560,6 +560,7 @@ export function gatewayLabel(id: string): string {
     cod: "Cash on Delivery",
     cheque: "Check Payment",
     bacs: "Direct Bank Transfer",
+    quiklie: "Credit & Debit Card",
   };
   if (map[id]) return map[id];
   return id
