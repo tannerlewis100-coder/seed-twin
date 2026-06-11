@@ -218,6 +218,12 @@ function ShopPage() {
                       .replace(/\s*[—–-]\s.*$/, "")
                       .trim();
                     const sizeCount = p.variations?.length ?? 0;
+                    const doseMatch = `${p.name} ${p.slug}`.match(
+                      /(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|ug|g)\b/i,
+                    );
+                    const singleSize = doseMatch
+                      ? `${doseMatch[1]}${doseMatch[2].toLowerCase().replace("ug", "mcg")}`
+                      : null;
                     return (
                       <RevealOnScroll key={p.id} delay={Math.min(i * 40, 400)}>
                         <button
@@ -230,13 +236,19 @@ function ShopPage() {
                               {cat}
                             </span>
                           </div>
-                          {sizeCount > 1 && (
+                          {sizeCount > 1 ? (
                             <div className="absolute top-5 right-5 z-10">
                               <span className="text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-foreground/80 border border-white/10 px-2.5 py-1 rounded-full">
                                 {sizeCount} vial sizes
                               </span>
                             </div>
-                          )}
+                          ) : singleSize ? (
+                            <div className="absolute top-5 right-5 z-10">
+                              <span className="text-[10px] uppercase tracking-wider font-semibold bg-white/10 text-foreground/80 border border-white/10 px-2.5 py-1 rounded-full">
+                                {singleSize}
+                              </span>
+                            </div>
+                          ) : null}
 
                           <h3 className="relative z-10 mt-14 font-display text-xl md:text-2xl text-foreground leading-tight max-w-[85%] min-h-[4rem] flex items-center justify-center break-words hyphens-auto">
                             {displayName}
