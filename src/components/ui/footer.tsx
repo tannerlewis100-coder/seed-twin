@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Mail } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
