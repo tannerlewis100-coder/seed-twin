@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { allPeptides } from "@/data/peptides";
 
 const BASE_URL = "https://clarumpeptides.com";
 
@@ -13,7 +14,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
-        const entries: SitemapEntry[] = [
+        const staticEntries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/shop", changefreq: "weekly", priority: "0.9" },
           { path: "/coa-library", changefreq: "weekly", priority: "0.8" },
@@ -26,6 +27,21 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/terms", changefreq: "yearly", priority: "0.3" },
           { path: "/disclaimer", changefreq: "yearly", priority: "0.3" },
         ];
+
+        // Product detail pages — use the canonical (base) product slug per
+        // unique product, not per size variant, so each product gets one URL.
+        const productSlugs = new Set<string>();
+        for (const p of allPeptides) {
+          const base = p.slug.replace(/-\d+(?:\.\d+)?(?:mg|mcg|µg|ml|iu|g)$/i, "");
+          productSlugs.add(base);
+        }
+        const productEntries: SitemapEntry[] = Array.from(productSlugs).map((slug) => ({
+          path: `/shop/${slug}`,
+          changefreq: "weekly",
+          priority: "0.7",
+        }));
+
+        const entries = [...staticEntries, ...productEntries];
 
         const urls = entries.map((e) =>
           [
