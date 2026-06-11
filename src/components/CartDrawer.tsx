@@ -1,7 +1,9 @@
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart";
 import { useNavigate } from "@tanstack/react-router";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+
+const FREE_SHIPPING_THRESHOLD = 150;
 
 export function CartDrawer() {
   const { isOpen, closeCart, items, subtotal, updateQty, removeItem, loading } = useCart();
@@ -13,11 +15,17 @@ export function CartDrawer() {
     navigate({ to: "/checkout" });
   }
 
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const unlocked = subtotal >= FREE_SHIPPING_THRESHOLD;
+
   return (
     <Sheet open={isOpen} onOpenChange={(o) => !o && closeCart()}>
       <SheetContent className="bg-brand-forest-deep border-white/10 text-foreground flex flex-col w-full sm:max-w-md p-0">
         <SheetHeader className="px-6 pt-6 pb-4 border-b border-white/5">
           <SheetTitle className="font-display text-xl text-foreground">Your Cart</SheetTitle>
+          <SheetDescription className="sr-only">
+            Review the items in your cart, adjust quantities, and continue to checkout.
+          </SheetDescription>
         </SheetHeader>
 
         {items.length === 0 ? (
@@ -87,9 +95,24 @@ export function CartDrawer() {
 
         {items.length > 0 && (
           <div className="border-t border-white/5 px-6 py-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-foreground/60">Subtotal</span>
-              <span className="font-display text-2xl text-foreground">${subtotal.toFixed(2)}</span>
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-foreground/60">Subtotal</span>
+                <span className="font-display text-2xl text-foreground">${subtotal.toFixed(2)}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-foreground/50">Shipping</span>
+                <span className="text-foreground/50">Calculated at checkout</span>
+              </div>
+              <div
+                className={`text-[11px] pt-1 ${
+                  unlocked ? "text-emerald-400" : "text-brand-gold/80"
+                }`}
+              >
+                {unlocked
+                  ? "✓ Free shipping unlocked"
+                  : `You're $${remaining.toFixed(2)} away from free shipping`}
+              </div>
             </div>
             <button
               type="button"
