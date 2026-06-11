@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, ChevronRight, ExternalLink, Search, Shield, X, ZoomIn } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
