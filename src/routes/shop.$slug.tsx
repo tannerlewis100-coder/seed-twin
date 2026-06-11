@@ -64,6 +64,7 @@ function sumBlendDose(raw: string): string {
 }
 
 import { coaData, getCoa } from "@/data/coa";
+import { allPeptides, type Peptide } from "@/data/peptides";
 
 const FALLBACK_PANEL: Array<{ label: string; value: string }> = [
   { label: "Identity (λmax)", value: "Match to reference" },
@@ -73,11 +74,53 @@ const FALLBACK_PANEL: Array<{ label: string; value: string }> = [
   { label: "Quantitative Assay", value: "Beer-Lambert" },
 ];
 
-function buildPanel(slug: string): { rows: Array<{ label: string; value: string }>; coa: ReturnType<typeof getCoa> } {
-  const coa = getCoa(slug);
-  if (!coa) return { rows: FALLBACK_PANEL, coa: null };
+/** Find the peptide entry matching the product base slug + selected size. */
+function findPeptide(baseSlug: string, size?: string): Peptide | null {
+  if (!baseSlug) return null;
+  const sizeKey = (size ?? "").toLowerCase().replace(/\s+/g, "");
+  if (sizeKey) {
+    const exact = allPeptides.find((p) => p.slug === `${baseSlug}-${sizeKey}`);
+    if (exact) return exact;
+  }
+  // Single-size product
+  const direct = allPeptides.find((p) => p.slug === baseSlug);
+  if (direct) return direct;
+  // First match by base slug prefix
+  return (
+    allPeptides.find((p) =>
+      p.slug.startsWith(`${baseSlug}-`) || p.slug === baseSlug,
+    ) ?? null
+  );
+}
+
+function buildPanel(
+  productSlug: string,
+  variantSize?: string,
+): {
+  rows: Array<{ label: string; value: string }>;
+  meta: { batch: string; test_date: string; assay?: string } | null;
+  deepLinkSlug: string | null;
+} {
+  const peptide = findPeptide(productSlug, variantSize);
+  if (peptide) {
+    return {
+      meta: { batch: peptide.batch, test_date: peptide.coa.date, assay: peptide.coa.assay },
+      deepLinkSlug: peptide.slug,
+      rows: [
+        { label: "Identity (λmax)", value: "Match to reference" },
+        { label: "Percent Purity", value: peptide.purity },
+        { label: "Heavy Metals", value: peptide.coa.heavyMetals },
+        { label: "Microbial (TAMC / TYMC)", value: `${peptide.coa.tamc} / ${peptide.coa.tymc}` },
+        { label: "Quantitative Assay", value: peptide.coa.assay },
+      ],
+    };
+  }
+  // Fallback to the base COA dataset
+  const coa = getCoa(productSlug);
+  if (!coa) return { rows: FALLBACK_PANEL, meta: null, deepLinkSlug: null };
   return {
-    coa,
+    meta: { batch: coa.batch, test_date: coa.test_date, assay: coa.assay },
+    deepLinkSlug: productSlug,
     rows: [
       { label: "Identity (λmax)", value: "Match to reference" },
       { label: "Percent Purity", value: coa.purity },
