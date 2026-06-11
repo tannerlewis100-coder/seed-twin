@@ -654,8 +654,11 @@ export function decodeEntities(input: string | undefined): string {
       .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
       .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)));
   }
+  // Abbreviate "Growth Hormone" → "GH" wherever it appears in display strings.
+  out = out.replace(/growth hormone/gi, "GH");
   return out;
 }
+
 
 /** Strip HTML for short blurbs. */
 export function stripHtml(html: string | undefined): string {
