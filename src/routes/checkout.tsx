@@ -625,24 +625,107 @@ function CheckoutPage() {
                               </div>
                               <div className="space-y-2">
                                 {grp.items.map((g) => (
-                                  <label
-                                    key={g}
-                                    className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
-                                      paymentMethod === g
-                                        ? "border-brand-gold/60 bg-brand-gold/5"
-                                        : "border-white/10 bg-white/[0.02] hover:border-white/20"
-                                    }`}
-                                  >
-                                    <input
-                                      type="radio"
-                                      name="payment_method"
-                                      value={g}
-                                      checked={paymentMethod === g}
-                                      onChange={() => setPaymentMethod(g)}
-                                      className="h-4 w-4 accent-brand-gold"
-                                    />
-                                    <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
-                                  </label>
+                                  <div key={g}>
+                                    <label
+                                      className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition-colors ${
+                                        paymentMethod === g
+                                          ? "border-brand-gold/60 bg-brand-gold/5"
+                                          : "border-white/10 bg-white/[0.02] hover:border-white/20"
+                                      }`}
+                                    >
+                                      <input
+                                        type="radio"
+                                        name="payment_method"
+                                        value={g}
+                                        checked={paymentMethod === g}
+                                        onChange={() => setPaymentMethod(g)}
+                                        className="h-4 w-4 accent-brand-gold"
+                                      />
+                                      <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
+                                    </label>
+                                    {g === "quiklie" && paymentMethod === "quiklie" && (
+                                      <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+                                        <div>
+                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                            Cardholder name
+                                          </label>
+                                          <input
+                                            type="text"
+                                            value={card.name}
+                                            onChange={(e) =>
+                                              setCard((c) => ({ ...c, name: e.target.value }))
+                                            }
+                                            autoComplete="cc-name"
+                                            maxLength={100}
+                                            placeholder="Name on card"
+                                            className={inputCls}
+                                          />
+                                        </div>
+                                        <div>
+                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                            Card number
+                                          </label>
+                                          <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            value={card.number}
+                                            onChange={(e) => {
+                                              const digits = e.target.value
+                                                .replace(/\D/g, "")
+                                                .slice(0, 19);
+                                              const formatted = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+                                              setCard((c) => ({ ...c, number: formatted }));
+                                            }}
+                                            autoComplete="cc-number"
+                                            placeholder="1234 5678 9012 3456"
+                                            className={`${inputCls} tracking-wider`}
+                                          />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-3">
+                                          <div>
+                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                              Expiry (MM/YY)
+                                            </label>
+                                            <input
+                                              type="text"
+                                              inputMode="numeric"
+                                              value={card.expiry}
+                                              onChange={(e) => {
+                                                const d = e.target.value.replace(/\D/g, "").slice(0, 4);
+                                                const v =
+                                                  d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+                                                setCard((c) => ({ ...c, expiry: v }));
+                                              }}
+                                              autoComplete="cc-exp"
+                                              placeholder="MM/YY"
+                                              maxLength={5}
+                                              className={inputCls}
+                                            />
+                                          </div>
+                                          <div>
+                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
+                                              CVV
+                                            </label>
+                                            <input
+                                              type="text"
+                                              inputMode="numeric"
+                                              value={card.cvv}
+                                              onChange={(e) =>
+                                                setCard((c) => ({
+                                                  ...c,
+                                                  cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
+                                                }))
+                                              }
+                                              autoComplete="cc-csc"
+                                              placeholder="123"
+                                              maxLength={4}
+                                              className={inputCls}
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
                                 ))}
                               </div>
                             </div>
