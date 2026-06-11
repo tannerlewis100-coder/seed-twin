@@ -275,26 +275,6 @@ function CheckoutPage() {
     shipAddr.postcode,
     shipAddr.country,
   ]);
-        setRatesError(e instanceof Error ? e.message : "Could not load shipping rates.");
-      } finally {
-        setRatesLoading(false);
-      }
-    }, 500);
-    return () => clearTimeout(handle);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    needsShipping,
-    cartEmpty,
-    addrReady,
-    shipAddr.first_name,
-    shipAddr.last_name,
-    shipAddr.address_1,
-    shipAddr.address_2,
-    shipAddr.city,
-    shipAddr.state,
-    shipAddr.postcode,
-    shipAddr.country,
-  ]);
 
   async function onSelectRate(rateId: string) {
     setRatesLoading(true);
