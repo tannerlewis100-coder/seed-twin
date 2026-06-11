@@ -371,7 +371,15 @@ function CheckoutPage() {
         billing_address: billingAddr,
         shipping_address: shippingAddr,
         payment_method: paymentMethod,
-        payment_data: [],
+        payment_data:
+          paymentMethod === "quiklie"
+            ? [
+                { key: "quiklie_card_holder_name", value: card.name.trim() },
+                { key: "quiklie_card_number", value: card.number.replace(/\s+/g, "") },
+                { key: "quiklie_expiry", value: card.expiry },
+                { key: "quiklie_cvv", value: card.cvv },
+              ]
+            : [],
         customer_note: note || undefined,
       });
       // eslint-disable-next-line no-console
