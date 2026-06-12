@@ -73,15 +73,15 @@ const groups: Group[] = [
     items: [
       {
         q: "How do I read a Certificate of Analysis (COA)?",
-        a: "A COA includes the name of the compound, batch numbers, and the results of every test in the panel. Ours show qualitative identity (UV/Vis λmax match), percent purity (NLT 98%), quantitative label-claim assay (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold counts (TAMC and TYMC).",
+        a: "A COA includes the name of the compound, batch numbers, and the results of every test in the panel. Ours show qualitative identity (UV/Vis λmax match), percent purity (NLT 98%), quantitative label-claim assay (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold counts (TAMC and TYMC). All tested by an independent third-party lab.",
       },
       {
         q: "What does the microbial and mold testing cover?",
-        a: "Every batch is screened with TAMC (Total Aerobic Microbial Count, spec NMT 1,000 CFU) and TYMC (Total Yeast & Mold Count, spec NMT 100 CFU). Many vendors skip microbial testing entirely. We run it on every batch and publish the numbers.",
+        a: "Every batch is tested by an independent third-party lab and screened with TAMC (Total Aerobic Microbial Count, spec NMT 1,000 CFU) and TYMC (Total Yeast & Mold Count, spec NMT 100 CFU). Many vendors skip microbial testing entirely. The full results are published for every batch.",
       },
       {
         q: "What makes Clarum's testing different from other vendors?",
-        a: "This is where most vendors stop. Every Clarum batch runs the full panel — qualitative ID by UV/Vis λmax, percent purity by correlation coefficient (NLT 98%), a Beer-Lambert quantitative assay confirming the vial actually contains the labeled amount (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold (TAMC + TYMC). All results are uploaded to the publicly accessible COA library before shipment.",
+        a: "This is where most vendors stop. Every batch is tested by an independent third-party analytical lab — qualitative ID by UV/Vis λmax, percent purity by correlation coefficient (NLT 98%), a Beer-Lambert quantitative assay confirming the vial actually contains the labeled amount (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold (TAMC + TYMC). All results are uploaded to the publicly accessible COA library before shipment.",
       },
       {
         q: "Can I see the COA before I purchase?",

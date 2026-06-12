@@ -39,7 +39,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs. Free U.S. shipping over $150.",
+          "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab. Free U.S. shipping over $150.",
       },
       { name: "author", content: "Clarum Peptides" },
       { name: "google-site-verification", content: "ae0hIMBxZwn8c3qXOrzHE8_B_ISHPQJRjm_fi4bOItY" },
@@ -48,9 +48,9 @@ export const Route = createRootRoute({
       { name: "twitter:card", content: "summary_large_image" },
       { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
       { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
-      { name: "description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
-      { property: "og:description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
-      { name: "twitter:description", content: "Independently lab-tested research peptides with full COAs for every batch. Identity, purity, heavy metals — verified, never assumed. Nothing hidden." },
+      { name: "description", content: "Independently lab-tested research peptides with full, public batch reports. Identity, purity, heavy metals — verified by an independent third-party lab, never assumed. Nothing hidden." },
+      { property: "og:description", content: "Independently lab-tested research peptides with full, public batch reports. Identity, purity, heavy metals — verified by an independent third-party lab, never assumed. Nothing hidden." },
+      { name: "twitter:description", content: "Independently lab-tested research peptides with full, public batch reports. Identity, purity, heavy metals — verified by an independent third-party lab, never assumed. Nothing hidden." },
     ],
 
     links: [
