@@ -47,19 +47,19 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs. Free U.S. shipping over $150.",
+          "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab. Free U.S. shipping over $150.",
       },
       { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         property: "og:description",
-        content: "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs.",
+        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
       },
       { property: "og:url", content: "https://clarumpeptides.com/" },
       { property: "og:image", content: "https://clarumpeptides.com/og-image.png" },
       { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         name: "twitter:description",
-        content: "Independently tested research peptides with full COAs. Every batch verified by ISO-accredited labs.",
+        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
       },
       { name: "twitter:image", content: "https://clarumpeptides.com/og-image.png" },
     ],
@@ -123,7 +123,7 @@ function Hero() {
               transition={{ delay: allWords.length * 0.05 + 0.1, duration: 0.5 }}
               className="mt-6 text-[18px] leading-[1.6] text-[#A0A0A0] max-w-[480px]"
             >
-              Every batch tested across 5 assays. Every COA published the week it ships.
+              Every batch tested by an independent third-party lab across 5 assays. Every report published the week it ships.
             </motion.p>
 
             <motion.div
@@ -260,10 +260,11 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Every batch runs the full panel: identity, percent purity,
-              quantitative label-claim assay, heavy metals, and microbial &
-              yeast/mold. Pull the batch report before checkout — or
-              after. We don't mind.
+              Every batch is tested by an independent third-party lab across
+              the full panel: identity, percent purity, quantitative
+              label-claim assay, heavy metals, and microbial & yeast/mold.
+              Pull the batch report before checkout — or after. We don't
+              mind.
             </RevealOnScroll>
             <Button
               asChild
@@ -491,15 +492,17 @@ function HowTested() {
             How it's tested
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Five tests on every\nsingle batch."} />
+            <RevealText text={"Every batch,\nindependently verified."} />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            Every batch runs the full analytical panel before it ships. Below
-            is the full panel. Same five, every time.
+            We don't grade our own homework. Each batch is tested by an
+            independent third-party analytical lab — identity, percent purity,
+            heavy metals, microbial, and quantitative assay. The full report
+            is public, batch number and all. No login, no redacted results.
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">

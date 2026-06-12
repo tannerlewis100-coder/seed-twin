@@ -151,7 +151,7 @@ function ShopMenu() {
             <Sparkles className="h-3 w-3" /> Verified
           </div>
           <div className="text-[13px] text-foreground/80 mt-1 leading-snug">
-            Every batch fully tested.
+            Every batch independently tested.
           </div>
           <Link
             to="/coa-library"
@@ -186,7 +186,7 @@ function CoaMenu() {
         <ColumnLabel>Reference</ColumnLabel>
         <div className="flex flex-col">
           <QuickLink to="/coa-library">Verify by batch #</QuickLink>
-          <QuickLink to="/about">How we test</QuickLink>
+          <QuickLink to="/about">How it's tested</QuickLink>
         </div>
         <div className="mt-auto mx-2 mt-3 text-[11.5px] text-foreground/45 leading-snug">
           Full panel
@@ -201,8 +201,8 @@ function CoaMenu() {
 function AboutMenu() {
   const rows: Row[] = [
     { to: "/about", title: "Our Story", desc: "Why we built Clarum.", icon: BookOpen },
-    { to: "/about", title: "Our Test Panel", desc: "What we test on every batch.", icon: Microscope },
-    { to: "/about", title: "How We Test", desc: "Our full analytical standard.", icon: ShieldCheck },
+    { to: "/about", title: "The Test Panel", desc: "What's tested on every batch.", icon: Microscope },
+    { to: "/about", title: "How It's Tested", desc: "The full analytical standard.", icon: ShieldCheck },
     { to: "/contact", title: "Contact", desc: "Questions about a batch?", icon: Mail },
   ];
   return (

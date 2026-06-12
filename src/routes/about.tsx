@@ -137,9 +137,10 @@ function AboutPage() {
                     trust-me attitude felt insulting to anyone reading the report.
                   </p>
                   <p>
-                    An independent panel on every batch: identity (UV/Vis λmax), percent purity
-                    (NLT 98%), quantitative label-claim assay, heavy metals (NMT 150 ppb), and
-                    microbial & yeast/mold (TAMC + TYMC). Same panel, every time. We do it on every run.
+                    An independent third-party analytical lab runs the full panel on every batch:
+                    identity (UV/Vis λmax), percent purity (NLT 98%), quantitative label-claim
+                    assay, heavy metals (NMT 150 ppb), and microbial & yeast/mold (TAMC + TYMC).
+                    Same panel, every time.
                   </p>
                   <p>
                     Then we publish the full results. No login. No paywall. Every Certificate of
@@ -202,7 +203,7 @@ function AboutPage() {
               as="p"
               className="font-display italic text-3xl md:text-5xl text-foreground leading-[1.2]"
             >
-              We test every batch and publish every COA.
+              Every batch is independently tested, and every report is published.
             </RevealOnScroll>
             <div className="mt-6 text-[11px] uppercase tracking-[0.3em] text-brand-gold/70">
               — Clarum

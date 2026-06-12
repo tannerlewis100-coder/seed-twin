@@ -494,7 +494,7 @@ function ProductBody({
                 <p className="text-[10px] uppercase tracking-[0.25em] text-brand-gold font-semibold mb-1">
                   Certificate of Analysis
                 </p>
-                <h2 className="font-display text-2xl">Independent third-party lab panel</h2>
+                <h2 className="font-display text-2xl">Independent third-party batch report</h2>
               </div>
               <a
                 href={coaLibraryHref}
@@ -525,6 +525,9 @@ function ProductBody({
 
             <p className="mt-6 text-[11px] text-foreground/50">
               Batch {meta.batch} · Tested {meta.test_date} · {coaData.lab}
+            </p>
+            <p className="mt-2 text-[11px] text-foreground/40">
+              Tested by an independent third-party analytical lab. Report shown is for the current shipping batch.
             </p>
           </section>
         );
