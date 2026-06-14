@@ -158,7 +158,7 @@ export default function StickyFooter() {
               className="pointer-events-none absolute -bottom-40 -left-24 h-[480px] w-[480px] rounded-full bg-brand-forest/40 blur-3xl"
             />
 
-            <div className="relative mx-auto max-w-7xl px-6 pt-16 pb-8 h-full flex flex-col">
+            <div className="relative mx-auto max-w-7xl px-6 pt-28 md:pt-16 pb-8 h-full flex flex-col">
               {/* Top: brand + nav */}
               <div className="grid md:grid-cols-6 gap-10">
                 <motion.div variants={itemVariants} className="md:col-span-2 space-y-4">
