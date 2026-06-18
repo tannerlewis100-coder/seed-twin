@@ -23,14 +23,14 @@ export const coaData = {
     "cagrilintide": { purity: "99.9%", assay: "10.69 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "YPB.241", test_date: "2026-01-03" },
     "cjc-1295-with-dac": { purity: "99.1%", assay: "4.96 mg", heavy_metals: "<20 ppb", microbial: "0 CFU", batch: "YPB.220", test_date: "2026-01-14" },
     "cjc-1295-without-dac": { purity: "99.9%", assay: "10.16 mg", heavy_metals: "<20 ppb", microbial: "0 CFU", batch: "YPB.219", test_date: "2026-01-14" },
-    "dsip": { purity: "98.8%", assay: "5.39 mg", heavy_metals: "0 ppb", microbial: "<100 CFU", batch: "YPB.252", test_date: "2025-12-28" },
+    
     "epitalon": { purity: "99.3%", assay: "12.45 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "20251205L04ETZS50", test_date: "2026-03-21" },
     "foxo4-dri": { purity: "99.5%", assay: "10.30 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "20251220L05F4S10", test_date: "2026-02-27" },
     "gdf-8": { purity: "99.1%", assay: "1.05 mg", heavy_metals: "<20 ppb", microbial: "0 CFU", batch: "YPB.233", test_date: "2026-01-14" },
     "ghk-cu": { purity: "99.1%", assay: "51.63 mg", heavy_metals: "<150 ppb", microbial: "0 CFU", batch: "YPB.221", test_date: "2026-01-14" },
     "ghrp-6": { purity: "98.5%", assay: "5.86 mg", heavy_metals: "0 ppb", microbial: "<100 CFU", batch: "YPB.257", test_date: "2025-12-28" },
     "glow-blend": { purity: "Pass", assay: "GHK-Cu 50.62 / BPC-157 11.10 / TB-500 10.92 mg", heavy_metals: "<150 ppb", microbial: "0 CFU", batch: "YPB.218", test_date: "2026-01-14" },
-    "glutathione": { purity: "99.8%", assay: "1798.7 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "25112501", test_date: "2026-02-27" },
+    
     "hexarelin": { purity: "99.4%", assay: "5.29 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "20251226L04GHSS05", test_date: "2026-02-27" },
     "kisspeptin": { purity: "99.1%", assay: "10.19 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "YPB.266", test_date: "2026-01-03" },
     "klow-blend": { purity: "Pass", assay: "GHK-Cu 54.10 / BPC-157 9.87 / TB-500 10.03 / KPV 9.94 mg", heavy_metals: "<15 ppb", microbial: "<100 CFU", batch: "YPB.264", test_date: "2025-12-28" },
