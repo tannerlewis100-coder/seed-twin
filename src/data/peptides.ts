@@ -2,13 +2,14 @@ export type CoaData = {
   purity: string;
   assay: string;
   identity: "Confirmed";
-  heavyMetals: "<20ppb";
-  tamc: "0 CFU";
-  tymc: "0 CFU";
+  heavyMetals: string;
+  tamc: string;
+  tymc: string;
   sku: string;
   date: string;
   form: string;
 };
+
 
 export type Peptide = {
   slug: string;
