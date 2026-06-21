@@ -1,12 +1,11 @@
-## Plan
+## Plan: Replace COA verification screenshots
 
-1. Update the Wolverine variation filtering in both the product page and quick-view modal so the 40 mg option is removed even when the size comes from Woo fallback data instead of the custom size map.
-2. Keep the 20 mg variant wired to the uploaded Wolverine 20 mg product image, and verify the selected size passed into the vial-image resolver matches that override path.
-3. Remove the debug logging left in the product page while making the fix so the shop page stays clean.
-4. Validate the result in preview on `/shop/wolverine-blend`: only the 10 mg and 20 mg pills remain, and selecting 20 mg shows the uploaded 20 mg bottle image.
+Once you upload the new COA screenshots, I'll:
 
-## Technical details
+1. For each uploaded file, copy it into `public/coa/` using the **exact filename you upload**, overwriting any existing file with that same name.
+2. If an uploaded filename doesn't exactly match an existing file in `public/coa/` (e.g., spaces vs hyphens, missing parentheses, different case), I'll list the mismatches and ask before placing them, so we don't end up with orphan images the product cards can't find.
+3. No changes to `src/data/coa.ts`, `src/data/peptides.ts`, the COA library route, or any layout/styling — only image file replacement.
+4. Old files at other paths are kept untouched (per your choice).
+5. After copying, I'll confirm which products now point to the new images and flag any uploaded file that didn't match a product.
 
-- Reuse the existing `getVariationSize()` fallback when filtering Wolverine variants.
-- Treat `20mg/20mg` as the hidden option regardless of whether it comes from the custom variation payload or Woo attributes/slug parsing.
-- Preserve the existing override in `src/lib/vialImages.ts` for `wolverine-blend|10mg/10mg` and `wolverine-blend|20mg` so the 20 mg selection resolves to the uploaded image.
+Go ahead and upload the new screenshots whenever ready.
