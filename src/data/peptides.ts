@@ -262,6 +262,8 @@ export const allPeptides: Peptide[] = [
   { slug: "wolverine-5mg", name: "Wolverine Blend", size: "5mg/5mg", category: "Blends", price: 125, batch: "2406-WLV5", purity: "99.7%", description: descFor("wolverine-blend", ""), coa: coa("99.7%", "10.06mg", "YPB.216", "BPC-157 (5mg) / TB-500 (5mg)"), coaImage: "/coa/Wolverine-Blend-(5mg5mg).png", coaUrl: "https://drive.google.com/drive/folders/1hfyQ4hNDTcSy974vVKxzLtjXtBamqsHU" },
   { slug: "wolverine-10mg", name: "Wolverine Blend", size: "10mg/10mg", category: "Blends", price: 199, batch: "2406-WLV10", purity: "99.6%", description: descFor("wolverine-blend", ""), coa: coa("99.6%", "20.12mg", "YPB.217", "BPC-157 (10mg) / TB-500 (10mg)"), coaImage: "/coa/Wolverine-Blend-(10mg10mg).png", coaUrl: "https://drive.google.com/drive/folders/1mUATcAAmdMYQzR7tv16dvwnYDNLbAlo3" },
   { slug: "glow-blend", name: "GLOW Blend", size: "70mg", category: "Blends", price: 279, batch: "2406-GLOW", purity: "99.4%", description: descFor("glow-blend", ""), coa: coa("99.4%", "70.08mg", "YPB.218", "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg)"), coaImage: "/coa/GLOW.png", coaUrl: "https://drive.google.com/drive/folders/1bgn9BYPOLEmtsIdG2-MBUN4XvkCaROJF" },
+  { slug: "klow-blend", name: "KLOW Blend", size: "80mg", category: "Blends", price: 299, batch: "2406-KLOW", purity: "PASS", description: descFor("klow-blend", ""), coa: { purity: "PASS", assay: "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg) / KPV (10mg)", identity: "Confirmed", heavyMetals: "<15ppb", tamc: "<100 CFU", tymc: "<100 CFU", sku: "YPB.264", date: D, form: "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg) / KPV (10mg)" }, coaPending: true },
+
   
   { slug: "2x-cjc-ipa", name: "Blend CJC/Ipamorelin", size: "5mg/5mg", category: "Blends", price: 105, batch: "2406-CJIP", purity: "99.6%", description: descFor("2x-blend-cjc-ipamorelin", ""), coa: coa("99.6%", "10.08mg", "YPB.238", "CJC-1295 Without DAC (5mg) / Ipamorelin (5mg)"), coaImage: "/coa/2X-Blend-CJCIpamorelin.png", coaUrl: "https://drive.google.com/drive/folders/175q_zN_FmHt6b3XuSZGe7oG03g3eRrl9" },
   { slug: "8x-lipo", name: "Blend Lipotropic", size: "196mg", category: "Blends", price: 175, batch: "2406-8LIP", purity: "99.4%", description: descFor("8x-lipo", ""), coa: coa("99.4%", "196mg", "YPB.267", "L-Carnitine / L-Arginine / Methionine / Inositol / Choline / B6 / B5 / B12"), coaImage: "/coa/8X-Blend.png", coaUrl: "https://drive.google.com/drive/folders/1op2f32kZM70UWI10lgg4s7hiPPRx4-mB" },
@@ -329,10 +331,11 @@ export const COMING_SOON_SLUGS = new Set([
   "mots-c-40mg",
 ]);
 
-export function hasCoa(p: Pick<Peptide, "slug" | "coaImage" | "coaUrl">) {
+export function hasCoa(p: Pick<Peptide, "slug" | "coaImage" | "coaUrl" | "coaPending">) {
   if (COMING_SOON_SLUGS.has(p.slug)) return false;
-  return !!(p.coaImage || p.coaUrl);
+  return !!(p.coaImage || p.coaUrl || p.coaPending);
 }
+
 
 export type CoaRow = { label: string; value: string };
 
