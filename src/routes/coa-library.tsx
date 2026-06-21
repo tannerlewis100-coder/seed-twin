@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, ChevronRight, ExternalLink, Search, Shield, X, ZoomIn } from "lucide-react";
+import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { allPeptides, categories, hasCoa, sampleCoa } from "@/data/peptides";
 import { getCoa } from "@/data/coa";
+
 
 export const Route = createFileRoute("/coa-library")({
   component: CoaLibraryPage,
@@ -39,7 +41,7 @@ function CoaLibraryPage() {
   );
 
   const filtered = useMemo(() => {
-    let items = allPeptides.filter((p) => !!getCoa(p.slug) && hasCoa(p));
+    let items = allPeptides.filter((p) => hasCoa(p) && (p.coaPending || !!getCoa(p.slug)));
     if (activeCat !== "All") items = items.filter((p) => p.category === activeCat);
     const q = search.trim().toLowerCase();
     if (q) items = items.filter((p) => p.name.toLowerCase().includes(q));
@@ -175,15 +177,22 @@ function CoaLibraryPage() {
                       {available && (
                         <button
                           type="button"
-                          onClick={() => setExpandedSlug(isExpanded ? null : p.slug)}
+                          onClick={() => {
+                            if (p.coaPending) {
+                              toast("COA image pending — certificate will be published shortly.");
+                              return;
+                            }
+                            setExpandedSlug(isExpanded ? null : p.slug);
+                          }}
                           className="mt-6 inline-flex items-center gap-2 self-start rounded-full border border-brand-gold/40 text-brand-gold text-xs font-medium px-4 py-2 hover:bg-brand-gold/10 transition-colors"
                         >
                           View Certificate
                           <ChevronRight
-                            className={`h-3.5 w-3.5 transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                            className={`h-3.5 w-3.5 transition-transform ${isExpanded && !p.coaPending ? "rotate-90" : ""}`}
                           />
                         </button>
                       )}
+
                     </div>
                     {available ? (
                       <div className="grid sm:grid-cols-2 lg:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-white/5">

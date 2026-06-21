@@ -2,13 +2,14 @@ export type CoaData = {
   purity: string;
   assay: string;
   identity: "Confirmed";
-  heavyMetals: "<20ppb";
-  tamc: "0 CFU";
-  tymc: "0 CFU";
+  heavyMetals: string;
+  tamc: string;
+  tymc: string;
   sku: string;
   date: string;
   form: string;
 };
+
 
 export type Peptide = {
   slug: string;
@@ -25,7 +26,10 @@ export type Peptide = {
   coa: CoaData;
   coaImage?: string;
   coaUrl?: string;
+  /** COA card should render in "image pending" state — list it in the library but disable the certificate viewer. */
+  coaPending?: boolean;
 };
+
 
 const D = "Jan 14, 2026";
 const C: Pick<CoaData, "identity" | "heavyMetals" | "tamc" | "tymc"> = {
@@ -196,7 +200,7 @@ export const allPeptides: Peptide[] = [
   { slug: "mots-c-40mg", name: "MOTS-c", size: "40mg", category: "Longevity", price: 250, batch: "2406-MOT40", purity: "99.8%", description: descFor("mots-c", ""), coa: coa("99.8%", "39.68mg", "YPB.271", "40mg Lyophilized Powder"), coaUrl: "https://drive.google.com/drive/folders/17tMWs6D6C1_h8ZBndWqB8I5CWbvt8vYC" },
   { slug: "ss-31-10mg", name: "SS-31", size: "10mg", category: "Longevity", price: 139, batch: "2406-SS10", purity: "99.4%", description: descFor("ss-31", ""), coa: coa("99.4%", "10.11mg", "YPB.294", "10mg Lyophilized Powder"), coaImage: "/coa/SS-31-(10mg).png", coaUrl: "https://drive.google.com/drive/folders/1QYjXK43cip4YTsHj3J3gNifS9kg4GvfS" },
   { slug: "ss-31-50mg", name: "SS-31", size: "50mg", category: "Longevity", price: 279, batch: "2406-SS50", purity: "99.2%", description: descFor("ss-31", ""), coa: coa("99.2%", "50.44mg", "YPB.295", "50mg Lyophilized Powder"), coaImage: "/coa/SS-31-(50mg).png", coaUrl: "https://drive.google.com/drive/folders/1H7d3L5WZsNhcb1tLM9ppGvogoOBCi-7B" },
-  { slug: "foxo4", name: "FOXO4", size: "10mg", category: "Longevity", price: 349, batch: "2406-FOX4", purity: "99.2%", description: descFor("foxo4", ""), coa: coa("99.2%", "9.94mg", "YPB.255", "10mg Lyophilized Powder"), coaImage: "/coa/FOXO4.png", coaUrl: "https://drive.google.com/drive/folders/1c-MRQpSIJbowMnU2z2aROU5UccrZehwq" },
+  { slug: "foxo4", name: "FOXO4", size: "10mg", category: "Longevity", price: 349, batch: "2406-FOXO4", purity: "99.5%", description: descFor("foxo4", ""), coa: { purity: "99.5%", assay: "10.00mg", identity: "Confirmed", heavyMetals: "<10ppb", tamc: "0 CFU", tymc: "0 CFU", sku: "YPB.255", date: D, form: "10mg Lyophilized Powder" }, coaPending: true },
   { slug: "pinealon", name: "Pinealon", size: "20mg", category: "Longevity", price: 135, batch: "2406-PIN", purity: "99.2%", description: descFor("pinealon", ""), coa: coa("99.2%", "20.06mg", "YPB.273", "20mg Lyophilized Powder") },
   { slug: "thymalin", name: "Thymalin", size: "10mg", category: "Longevity", price: 149, batch: "2406-THYM", purity: "99.2%", description: descFor("thymalin", ""), coa: coa("99.2%", "10.08mg", "YPB.280", "10mg Lyophilized Powder") },
 
@@ -205,7 +209,7 @@ export const allPeptides: Peptide[] = [
   { slug: "ghk-cu-100mg", name: "GHK-Cu", size: "100mg", category: "Skin", price: 149, batch: "2406-GHK100", purity: "99.1%", description: descFor("ghk-cu", ""), coa: coa("99.1%", "100.5mg", "YPB.222", "100mg Lyophilized Powder"), coaImage: "/coa/GHK-Cu-(100mg).png", coaUrl: "https://drive.google.com/drive/folders/1rQ4mjGwRmR0aIATaMTrOvXC83MlSTLpf" },
   
   { slug: "snap-8", name: "Snap-8", size: "10mg", category: "Skin", price: 115, batch: "2406-SNAP", purity: "99.4%", description: descFor("snap-8", ""), coa: coa("99.4%", "10.11mg", "YPB.272", "10mg Lyophilized Powder") },
-  { slug: "melanotan-ii", name: "Melanotan 2", size: "10mg", category: "Skin", price: 115, batch: "2406-MEL2", purity: "99.3%", description: descFor("melanotan-2", ""), coa: coa("99.3%", "10.08mg", "YPB.270", "10mg Lyophilized Powder"), coaImage: "/coa/Melanotan-2.png", coaUrl: "https://drive.google.com/drive/folders/1APgBbJggit5MijjjXXcWP9OEh-JgAjBO" },
+  { slug: "melanotan-ii", name: "Melanotan 2", size: "10mg", category: "Skin", price: 115, batch: "2406-MT2", purity: "99.7%", description: descFor("melanotan-2", ""), coa: { purity: "99.7%", assay: "10.00mg", identity: "Confirmed", heavyMetals: "<20ppb", tamc: "0 CFU", tymc: "0 CFU", sku: "YPB.270", date: D, form: "10mg Lyophilized Powder" }, coaPending: true },
 
   // ── Cognitive ──
   { slug: "semax", name: "Semax", size: "10mg", category: "Cognitive", price: 79, batch: "2406-SEM", purity: "99.2%", description: descFor("semax", ""), coa: coa("99.2%", "10.06mg", "YPB.229", "10mg Lyophilized Powder"), coaImage: "/coa/Semax.png", coaUrl: "https://drive.google.com/drive/folders/1pjHSiPz0Q7-eFy4zA2gYVhNG_gHJLsV9" },
@@ -216,10 +220,12 @@ export const allPeptides: Peptide[] = [
   // ── Immune ──
   { slug: "ta-1", name: "Thymosin Alpha 1", size: "10mg", category: "Immune", price: 139, batch: "2406-TA1", purity: "99.7%", description: descFor("thymosin-alpha-1", ""), coa: coa("99.7%", "10.06mg", "YPB.231", "10mg Lyophilized Powder"), coaImage: "/coa/Thymosin-Alpha-1.png", coaUrl: "https://drive.google.com/drive/folders/1WnbGc1Z7vIaS9dQT4Mq2fIgy9xVQxML4" },
   { slug: "vip10", name: "VIP10", size: "10mg", category: "Immune", price: 199, batch: "2406-VIP", purity: "99.4%", description: descFor("vip10", ""), coa: coa("99.4%", "10.06mg", "YPB.281", "10mg Lyophilized Powder") },
+  { slug: "kpv-10mg", name: "KPV", size: "10mg", category: "Immune", price: 119, batch: "2406-KPV", purity: "99.5%", description: descFor("kpv", ""), coa: { purity: "99.5%", assay: "10.00mg", identity: "Confirmed", heavyMetals: "<20ppb", tamc: "0 CFU", tymc: "0 CFU", sku: "YPB.265", date: D, form: "10mg Lyophilized Powder" }, coaPending: true },
 
   // ── Weight Management ──
-  { slug: "5a1mq-5mg", name: "5-Amino-1MQ", size: "5mg", category: "Weight Management", price: 65, batch: "2406-5A5", purity: "99.4%", description: descFor("5-amino-1mq", ""), coa: coa("99.4%", "5.11mg", "YPB.248", "5mg Lyophilized Powder"), coaImage: "/coa/5-Amino-1MQ-(5mg).png", coaUrl: "https://drive.google.com/drive/folders/1K0ZHA4nYQLpW-4-WTNB4sIvry9L9KhE1" },
-  { slug: "5a1mq-50mg", name: "5-Amino-1MQ", size: "50mg", category: "Weight Management", price: 229, batch: "2406-5A50", purity: "99.2%", description: descFor("5-amino-1mq", ""), coa: coa("99.2%", "512.4mg", "YPB.223", "50mg Lyophilized Powder"), coaImage: "/coa/5-Amino-1MQ-(50mg).png", coaUrl: "https://drive.google.com/drive/folders/1l6v6-WRE9icMRRhbGm70Prq_je25KfmW" },
+  { slug: "5a1mq-5mg", name: "5-Amino-1MQ", size: "5mg", category: "Weight Management", price: 65, batch: "2406-AMN5", purity: "98.5%", description: descFor("5-amino-1mq", ""), coa: { purity: "98.5%", assay: "5.00mg", identity: "Confirmed", heavyMetals: "<10ppb", tamc: "0 CFU", tymc: "0 CFU", sku: "YPB.248", date: D, form: "5mg Lyophilized Powder" }, coaPending: true },
+  { slug: "5a1mq-50mg", name: "5-Amino-1MQ", size: "50mg", category: "Weight Management", price: 229, batch: "2406-AMN50", purity: "98.7%", description: descFor("5-amino-1mq", ""), coa: { purity: "98.7%", assay: "50.00mg", identity: "Confirmed", heavyMetals: "<10ppb", tamc: "0 CFU", tymc: "0 CFU", sku: "YPB.223", date: D, form: "50mg Lyophilized Powder" }, coaPending: true },
+
   { slug: "aod-9604", name: "AOD-9604", size: "5mg", category: "Weight Management", price: 125, batch: "2406-AOD", purity: "99.2%", description: descFor("aod-9604", ""), coa: coa("99.2%", "5.11mg", "YPB.248", "5mg Lyophilized Powder"), coaImage: "/coa/AOD-9604.png", coaUrl: "https://drive.google.com/drive/folders/1G09CULFkaZmZMT6Buu0xrfbQlAiE8AK7" },
   { slug: "aicar", name: "AICAR", size: "50mg", category: "Weight Management", price: 139, batch: "2406-AIC", purity: "99.5%", description: descFor("aicar", ""), coa: coa("99.5%", "1062.2mg", "YPB.224", "50mg Lyophilized Powder") },
   { slug: "cagrilintide", name: "Cagrilintide", size: "10mg", category: "Weight Management", price: 159, batch: "2406-CAG", purity: "99.9%", description: descFor("cagrilintide", ""), coa: coa("99.9%", "10.69mg", "YPB.241", "10mg Lyophilized Powder"), coaImage: "/coa/Cagrilintide.png", coaUrl: "https://drive.google.com/drive/folders/1CvFT2tV1S4Frvrky-x1LpKuPkPhorWBB" },
@@ -256,6 +262,8 @@ export const allPeptides: Peptide[] = [
   { slug: "wolverine-5mg", name: "Wolverine Blend", size: "5mg/5mg", category: "Blends", price: 125, batch: "2406-WLV5", purity: "99.7%", description: descFor("wolverine-blend", ""), coa: coa("99.7%", "10.06mg", "YPB.216", "BPC-157 (5mg) / TB-500 (5mg)"), coaImage: "/coa/Wolverine-Blend-(5mg5mg).png", coaUrl: "https://drive.google.com/drive/folders/1hfyQ4hNDTcSy974vVKxzLtjXtBamqsHU" },
   { slug: "wolverine-10mg", name: "Wolverine Blend", size: "10mg/10mg", category: "Blends", price: 199, batch: "2406-WLV10", purity: "99.6%", description: descFor("wolverine-blend", ""), coa: coa("99.6%", "20.12mg", "YPB.217", "BPC-157 (10mg) / TB-500 (10mg)"), coaImage: "/coa/Wolverine-Blend-(10mg10mg).png", coaUrl: "https://drive.google.com/drive/folders/1mUATcAAmdMYQzR7tv16dvwnYDNLbAlo3" },
   { slug: "glow-blend", name: "GLOW Blend", size: "70mg", category: "Blends", price: 279, batch: "2406-GLOW", purity: "99.4%", description: descFor("glow-blend", ""), coa: coa("99.4%", "70.08mg", "YPB.218", "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg)"), coaImage: "/coa/GLOW.png", coaUrl: "https://drive.google.com/drive/folders/1bgn9BYPOLEmtsIdG2-MBUN4XvkCaROJF" },
+  { slug: "klow-blend", name: "KLOW Blend", size: "80mg", category: "Blends", price: 299, batch: "2406-KLOW", purity: "PASS", description: descFor("klow-blend", ""), coa: { purity: "PASS", assay: "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg) / KPV (10mg)", identity: "Confirmed", heavyMetals: "<15ppb", tamc: "<100 CFU", tymc: "<100 CFU", sku: "YPB.264", date: D, form: "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg) / KPV (10mg)" }, coaPending: true },
+
   
   { slug: "2x-cjc-ipa", name: "Blend CJC/Ipamorelin", size: "5mg/5mg", category: "Blends", price: 105, batch: "2406-CJIP", purity: "99.6%", description: descFor("2x-blend-cjc-ipamorelin", ""), coa: coa("99.6%", "10.08mg", "YPB.238", "CJC-1295 Without DAC (5mg) / Ipamorelin (5mg)"), coaImage: "/coa/2X-Blend-CJCIpamorelin.png", coaUrl: "https://drive.google.com/drive/folders/175q_zN_FmHt6b3XuSZGe7oG03g3eRrl9" },
   { slug: "8x-lipo", name: "Blend Lipotropic", size: "196mg", category: "Blends", price: 175, batch: "2406-8LIP", purity: "99.4%", description: descFor("8x-lipo", ""), coa: coa("99.4%", "196mg", "YPB.267", "L-Carnitine / L-Arginine / Methionine / Inositol / Choline / B6 / B5 / B12"), coaImage: "/coa/8X-Blend.png", coaUrl: "https://drive.google.com/drive/folders/1op2f32kZM70UWI10lgg4s7hiPPRx4-mB" },
@@ -323,10 +331,11 @@ export const COMING_SOON_SLUGS = new Set([
   "mots-c-40mg",
 ]);
 
-export function hasCoa(p: Pick<Peptide, "slug" | "coaImage" | "coaUrl">) {
+export function hasCoa(p: Pick<Peptide, "slug" | "coaImage" | "coaUrl" | "coaPending">) {
   if (COMING_SOON_SLUGS.has(p.slug)) return false;
-  return !!(p.coaImage || p.coaUrl);
+  return !!(p.coaImage || p.coaUrl || p.coaPending);
 }
+
 
 export type CoaRow = { label: string; value: string };
 
