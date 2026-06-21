@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Check, ChevronRight, ExternalLink, Search, Shield, X, ZoomIn } from "lucide-react";
+import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { allPeptides, categories, hasCoa, sampleCoa } from "@/data/peptides";
 import { getCoa } from "@/data/coa";
+
 
 export const Route = createFileRoute("/coa-library")({
   component: CoaLibraryPage,
@@ -39,7 +41,7 @@ function CoaLibraryPage() {
   );
 
   const filtered = useMemo(() => {
-    let items = allPeptides.filter((p) => !!getCoa(p.slug) && hasCoa(p));
+    let items = allPeptides.filter((p) => hasCoa(p) && (p.coaPending || !!getCoa(p.slug)));
     if (activeCat !== "All") items = items.filter((p) => p.category === activeCat);
     const q = search.trim().toLowerCase();
     if (q) items = items.filter((p) => p.name.toLowerCase().includes(q));
