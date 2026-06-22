@@ -95,6 +95,13 @@ export function CartDrawer() {
 
         {items.length > 0 && (
           <div className="border-t border-white/5 px-6 py-5 space-y-4">
+            <div className="flex items-start gap-2.5 rounded-lg border border-brand-gold/30 bg-brand-gold/[0.07] px-3 py-2.5">
+              <span aria-hidden className="text-base leading-none mt-0.5">🎁</span>
+              <p className="text-[12px] leading-snug text-brand-gold/90">
+                <span className="font-semibold text-brand-gold">Free BAC Water (3ml)</span>
+                <span className="text-foreground/60"> — included with every order, added automatically at checkout.</span>
+              </p>
+            </div>
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground/60">Subtotal</span>
