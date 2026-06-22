@@ -449,6 +449,11 @@ function ProductBody({
             )}
           </div>
 
+          <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-brand-gold/90">
+            <span aria-hidden>🎁</span>
+            <span>Every order ships with a free 3ml BAC water.</span>
+          </p>
+
           <p className="mt-4 text-[11px] text-foreground/40">
             For in vitro laboratory research only. Not for human or veterinary use.
           </p>

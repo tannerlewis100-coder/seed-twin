@@ -28,8 +28,11 @@ import { useCart } from "@/lib/cart";
 export function AnnouncementBar() {
   return (
     <div className="bg-brand-gold text-brand-forest text-[12px] sm:text-[13px]">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-2 sm:py-2.5 text-center font-medium flex flex-col sm:flex-row items-center justify-center gap-x-1.5 gap-y-0.5 leading-snug">
-        <span>Every batch tested. Every COA published.</span>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-2 sm:py-2.5 text-center font-medium flex flex-col sm:flex-row items-center justify-center gap-x-3 gap-y-0.5 leading-snug">
+        <span className="inline-flex items-center gap-1.5">
+          <span aria-hidden>🎁</span> Free 3ml BAC water with every order.
+        </span>
+        <span aria-hidden className="hidden sm:inline opacity-50">•</span>
         <Link
           to="/coa-library"
           className="inline-flex items-center gap-1 underline-offset-4 hover:underline"
