@@ -869,7 +869,7 @@ function CheckoutPage() {
                           ))}
                         </div>
                       )}
-                      <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                      <div className="flex gap-2">
                         <input
                           type="text"
                           value={couponInput}
@@ -877,18 +877,26 @@ function CheckoutPage() {
                             setCouponInput(e.target.value);
                             if (couponError) setCouponError(null);
                           }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleApplyCoupon();
+                            }
+                          }}
                           placeholder="Promo code"
                           aria-label="Promo code"
                           className="flex-1 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-brand-gold/60"
                         />
                         <button
-                          type="submit"
+                          type="button"
+                          onClick={(e) => handleApplyCoupon(e)}
                           disabled={couponBusy || !couponInput.trim()}
                           className="rounded-lg border border-white/15 bg-white/[0.04] px-4 py-2 text-sm text-foreground hover:border-brand-gold/60 hover:text-brand-gold transition-colors disabled:opacity-50"
                         >
                           {couponBusy ? "…" : "Apply"}
                         </button>
-                      </form>
+                      </div>
+
                       {couponError && (
                         <p className="text-xs text-red-400">{couponError}</p>
                       )}
