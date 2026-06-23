@@ -78,9 +78,9 @@ function CheckoutPage() {
     .map((c) => c?.code)
     .filter((c): c is string => !!c);
 
-  async function handleApplyCoupon(e: React.FormEvent) {
-    e.preventDefault();
-    const code = couponInput.trim();
+  async function handleApplyCoupon(e?: React.FormEvent | React.MouseEvent) {
+    if (e) e.preventDefault();
+    const code = couponInput.trim().toUpperCase();
     if (!code || couponBusy) return;
     setCouponBusy(true);
     setCouponError(null);
@@ -89,11 +89,12 @@ function CheckoutPage() {
       await refresh();
       setCouponInput("");
     } catch {
-      setCouponError("Invalid or expired code");
+      setCouponError("That code isn't valid");
     } finally {
       setCouponBusy(false);
     }
   }
+
 
   async function handleRemoveCoupon(code: string) {
     if (couponBusy) return;
