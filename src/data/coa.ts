@@ -74,7 +74,6 @@ const aliases: Record<string, string> = {
   "2x-cjc-ipa": "2x-blend-cjc-ipa",
   "4x-mic": "4x-blend-mic",
   "8x-lipo": "8x-blend-lipo",
-  "wolverine": "bpc-157-tb-500-blend",
   "glow": "glow-blend",
   "klow": "klow-blend",
 };
