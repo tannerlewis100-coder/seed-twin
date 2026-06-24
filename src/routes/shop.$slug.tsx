@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Check, Loader2, ShoppingCart, ArrowLeft, FileText } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -17,7 +17,20 @@ import {
   type WooProduct,
 } from "@/lib/woo";
 
+const LEGACY_SLUG_REDIRECTS: Record<string, string> = {
+  wolverine: "bpc-157-tb-500-blend",
+  "wolverine-blend": "bpc-157-tb-500-blend",
+  "wolverine-5mg": "bpc-157-tb-500-blend",
+  "wolverine-10mg": "bpc-157-tb-500-blend",
+};
+
 export const Route = createFileRoute("/shop/$slug")({
+  beforeLoad: ({ params }) => {
+    const target = LEGACY_SLUG_REDIRECTS[params.slug.toLowerCase()];
+    if (target) {
+      throw redirect({ to: "/shop/$slug", params: { slug: target }, statusCode: 301 });
+    }
+  },
   component: ProductPage,
   head: ({ params }) => ({
     meta: [
@@ -175,7 +188,7 @@ function ProductPage() {
           if (v?.id != null && v.size) map[v.id] = v.size;
         }
         const filtered =
-          product.slug === "wolverine-blend"
+          product.slug === "bpc-157-tb-500-blend"
             ? vars.filter((v) => {
                 const size = (map[v.id] ?? getVariationSize(v) ?? "")
                   .replace(/\s+/g, "")

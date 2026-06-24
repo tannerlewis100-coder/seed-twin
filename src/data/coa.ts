@@ -47,7 +47,7 @@ export const coaData = {
     "ss-31": { purity: "99.3%", assay: "10.27 mg", heavy_metals: "<20 ppb", microbial: "0 CFU", batch: "YPB.245", test_date: "2026-01-14" },
     "tb-500": { purity: "99.8%", assay: "10.16 mg", heavy_metals: "<20 ppb", microbial: "0 CFU", batch: "20251216L02TB9S10", test_date: "2026-03-21" },
     "thymosin-alpha-1": { purity: "99.7%", assay: "10.06 mg", heavy_metals: "<20 ppb", microbial: "0 CFU", batch: "YPB.231", test_date: "2026-01-14" },
-    "wolverine-blend": { purity: "Pass", assay: "BPC-157 11.65 / TB-500 11.09 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "20260107L04BB0S20", test_date: "2026-02-27" },
+    "bpc-157-tb-500-blend": { purity: "Pass", assay: "BPC-157 11.65 / TB-500 11.09 mg", heavy_metals: "<10 ppb", microbial: "0 CFU", batch: "20260107L04BB0S20", test_date: "2026-02-27" },
   } as Record<string, CoaEntry>,
 };
 
@@ -74,7 +74,6 @@ const aliases: Record<string, string> = {
   "2x-cjc-ipa": "2x-blend-cjc-ipa",
   "4x-mic": "4x-blend-mic",
   "8x-lipo": "8x-blend-lipo",
-  "wolverine": "wolverine-blend",
   "glow": "glow-blend",
   "klow": "klow-blend",
 };

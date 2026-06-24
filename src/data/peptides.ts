@@ -49,7 +49,7 @@ const descriptions: Record<string, string> = {
     "Pentadecapeptide derived from gastric juice protein BPC. Researched for connective-tissue repair, angiogenesis, and gut-barrier integrity.",
   "tb-500":
     "Synthetic Thymosin β4 fragment. Researched for actin sequestration, tissue repair, and inflammation modulation.",
-  "wolverine-blend":
+  "bpc-157-tb-500-blend":
     "Pure recovery dual stack. Each vial contains BPC-157 and TB-500 in matched doses (5mg/5mg or 10mg/10mg depending on size selected) — researched for connective tissue repair and inflammation modulation.",
   "ll-37":
     "Human cathelicidin antimicrobial peptide. Researched for innate immune defense, wound healing, and biofilm disruption.",
@@ -259,8 +259,8 @@ export const allPeptides: Peptide[] = [
   { slug: "kisspeptin", name: "KissPeptin", size: "10mg", category: "Sexual Health", price: 129, batch: "2406-KISS", purity: "99.1%", description: descFor("kisspeptin", ""), coa: coa("99.1%", "10.19mg", "YPB.266", "10mg Lyophilized Powder"), coaImage: "/coa/KissPeptin.png", coaUrl: "https://drive.google.com/drive/folders/1jQRFzkUrD4jQfK7cZwD6Z2WbMQpo98b7" },
 
   // ── Blends ──
-  { slug: "wolverine-5mg", name: "BPC-157 / TB-500 Blend", size: "5mg/5mg", category: "Blends", price: 125, batch: "2406-WLV5", purity: "99.7%", description: descFor("wolverine-blend", ""), coa: coa("99.7%", "10.06mg", "YPB.216", "BPC-157 (5mg) / TB-500 (5mg)"), coaImage: "/coa/Wolverine-Blend-(5mg5mg).png", coaUrl: "https://drive.google.com/drive/folders/1hfyQ4hNDTcSy974vVKxzLtjXtBamqsHU" },
-  { slug: "wolverine-10mg", name: "BPC-157 / TB-500 Blend", size: "10mg/10mg", category: "Blends", price: 199, batch: "2406-WLV10", purity: "99.6%", description: descFor("wolverine-blend", ""), coa: coa("99.6%", "20.12mg", "YPB.217", "BPC-157 (10mg) / TB-500 (10mg)"), coaImage: "/coa/Wolverine-Blend-(10mg10mg).png", coaUrl: "https://drive.google.com/drive/folders/1mUATcAAmdMYQzR7tv16dvwnYDNLbAlo3" },
+  { slug: "bpc-157-tb-500-blend-5mg", name: "BPC-157 / TB-500 Blend", size: "5mg/5mg", category: "Blends", price: 125, batch: "2406-WLV5", purity: "99.7%", description: descFor("bpc-157-tb-500-blend", ""), coa: coa("99.7%", "10.06mg", "YPB.216", "BPC-157 (5mg) / TB-500 (5mg)"), coaImage: "/coa/BPC-157-TB-500-Blend-(5mg5mg).png", coaUrl: "https://drive.google.com/drive/folders/1hfyQ4hNDTcSy974vVKxzLtjXtBamqsHU" },
+  { slug: "bpc-157-tb-500-blend-10mg", name: "BPC-157 / TB-500 Blend", size: "10mg/10mg", category: "Blends", price: 199, batch: "2406-WLV10", purity: "99.6%", description: descFor("bpc-157-tb-500-blend", ""), coa: coa("99.6%", "20.12mg", "YPB.217", "BPC-157 (10mg) / TB-500 (10mg)"), coaImage: "/coa/BPC-157-TB-500-Blend-(10mg10mg).png", coaUrl: "https://drive.google.com/drive/folders/1mUATcAAmdMYQzR7tv16dvwnYDNLbAlo3" },
   { slug: "glow-blend", name: "GLOW Blend", size: "70mg", category: "Blends", price: 279, batch: "2406-GLOW", purity: "99.4%", description: descFor("glow-blend", ""), coa: coa("99.4%", "70.08mg", "YPB.218", "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg)"), coaImage: "/coa/GLOW.png", coaUrl: "https://drive.google.com/drive/folders/1bgn9BYPOLEmtsIdG2-MBUN4XvkCaROJF" },
   { slug: "klow-blend", name: "KLOW Blend", size: "80mg", category: "Blends", price: 299, batch: "2406-KLOW", purity: "PASS", description: descFor("klow-blend", ""), coa: { purity: "PASS", assay: "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg) / KPV (10mg)", identity: "Confirmed", heavyMetals: "<15ppb", tamc: "<100 CFU", tymc: "<100 CFU", sku: "YPB.264", date: D, form: "GHK-Cu (50mg) / BPC-157 (10mg) / TB-500 (10mg) / KPV (10mg)" }, coaPending: true },
 
