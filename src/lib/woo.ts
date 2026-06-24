@@ -656,6 +656,9 @@ export function decodeEntities(input: string | undefined): string {
   }
   // Abbreviate "Growth Hormone" → "GH" wherever it appears in display strings.
   out = out.replace(/growth hormone/gi, "GH");
+  // Rename "Wolverine Blend" / "Wolverine" → "BPC-157 / TB-500 Blend" in all display strings.
+  out = out.replace(/wolverine\s+blend/gi, "BPC-157 / TB-500 Blend");
+  out = out.replace(/\bwolverine\b/gi, "BPC-157 / TB-500 Blend");
   return out;
 }
 

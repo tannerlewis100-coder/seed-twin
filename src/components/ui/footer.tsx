@@ -197,17 +197,24 @@ export default function StickyFooter() {
               {/* Bottom row */}
               <motion.div
                 variants={itemVariants}
-                className="border-t border-white/5 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-foreground/45"
+                className="border-t border-white/5 pt-6 flex flex-col gap-4 text-xs text-foreground/45"
               >
-                <span>© {new Date().getFullYear()} Clarum. All rights reserved.</span>
-                <span className="max-w-md sm:text-right">
-                  For in vitro laboratory research use only. Not for human or veterinary
-                  use.
-                </span>
-                <div className="flex items-center gap-2">
-                  {socials.map((s) => (
-                    <SocialLink key={s.label} {...s} />
-                  ))}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                  <span className="font-medium text-foreground/65">
+                    TLSEVEN LLC · 17350 State Hwy 249, Ste 220 #32971, Houston, TX 77064
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {socials.map((s) => (
+                      <SocialLink key={s.label} {...s} />
+                    ))}
+                  </div>
+                </div>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <span>© {new Date().getFullYear()} Clarum. All rights reserved.</span>
+                  <span className="max-w-md sm:text-right">
+                    For in vitro laboratory research use only. Not for human or veterinary
+                    use.
+                  </span>
                 </div>
               </motion.div>
             </div>
