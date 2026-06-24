@@ -76,6 +76,12 @@ const sections: FooterSection[] = [
       { label: "Shipping Policy", to: "/shipping-policy" },
     ],
   },
+  {
+    title: "Support",
+    links: [
+      { label: "Report a Concern", to: "/report-a-concern" },
+    ],
+  },
 ];
 
 const socials = [
