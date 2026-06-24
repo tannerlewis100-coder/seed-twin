@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Check, Loader2, ShoppingCart, ArrowLeft, FileText } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
