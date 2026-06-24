@@ -199,18 +199,29 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
                   <div className="flex flex-wrap gap-2">
                     {variations.map((v) => {
                       const isActive = v.id === activeVarId;
+                      const variantOut = !(v.is_in_stock && v.is_purchasable);
                       return (
                         <button
                           key={v.id}
                           type="button"
                           onClick={() => setActiveVarId(v.id)}
-                          className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all ${
+                          aria-label={`${labelFor(v)}${variantOut ? " (out of stock)" : ""}`}
+                          className={`text-xs font-semibold px-4 py-2 rounded-full border transition-all inline-flex items-center gap-1.5 ${
                             isActive
-                              ? "bg-brand-gold/15 border-brand-gold/50 text-brand-gold"
-                              : "bg-white/[0.03] border-white/10 text-foreground/60 hover:text-foreground/90 hover:border-white/20"
+                              ? variantOut
+                                ? "bg-white/[0.04] border-white/15 text-foreground/45"
+                                : "bg-brand-gold/15 border-brand-gold/50 text-brand-gold"
+                              : variantOut
+                                ? "bg-white/[0.02] border-white/5 text-foreground/35 hover:text-foreground/50"
+                                : "bg-white/[0.03] border-white/10 text-foreground/60 hover:text-foreground/90 hover:border-white/20"
                           }`}
                         >
-                          {labelFor(v)}
+                          <span className={variantOut ? "line-through" : ""}>{labelFor(v)}</span>
+                          {variantOut && (
+                            <span className="text-[9px] uppercase tracking-wider font-bold text-foreground/40">
+                              Out
+                            </span>
+                          )}
                         </button>
                       );
                     })}
