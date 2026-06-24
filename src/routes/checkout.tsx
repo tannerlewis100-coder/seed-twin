@@ -834,6 +834,9 @@ function CheckoutPage() {
                     <>Place order{needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}</>
                   )}
                 </button>
+                <p className="text-center text-xs text-foreground/50">
+                  Your bank/card statement will show <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
+                </p>
               </div>
 
               {/* Right: order summary */}

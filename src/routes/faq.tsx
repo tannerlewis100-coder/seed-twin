@@ -103,6 +103,16 @@ const groups: Group[] = [
       },
     ],
   },
+  {
+    id: "billing",
+    label: "Billing & Charges",
+    items: [
+      {
+        q: "What will the charge look like on my statement?",
+        a: "Your purchase will appear as CLARUMPEPTIDES.COM on your bank or credit card statement. If you have questions about a charge, contact us at contact@tlseven.com before disputing.",
+      },
+    ],
+  },
 ];
 
 const totalCount = groups.reduce((n, g) => n + g.items.length, 0);
