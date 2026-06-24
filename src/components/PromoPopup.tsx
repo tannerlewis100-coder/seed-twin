@@ -177,6 +177,9 @@ export function PromoPopup() {
                   >
                     {submitting ? "Sending..." : "Reveal my code"}
                   </button>
+                  <p className="text-[11px] leading-relaxed text-muted-foreground/80">
+                    You can unsubscribe anytime. We never share your email.
+                  </p>
                 </form>
 
                 <button
