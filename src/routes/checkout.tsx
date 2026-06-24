@@ -878,15 +878,38 @@ function CheckoutPage() {
                       }
                       return <Row label="Shipping" value={value} />;
                     })()}
-                    {discountTotal > 0 && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-brand-gold/80">Discount</span>
-                        <span className="text-brand-gold">
-                          -{currency}
-                          {discountTotal.toFixed(2)}
-                        </span>
-                      </div>
-                    )}
+                    {(() => {
+                      const showCrypto = cryptoCouponApplied && isCryptoMethod(paymentMethod);
+                      // Approximate the crypto portion as 5% of the items subtotal so
+                      // we can show "Crypto discount (5%)" separately from any other
+                      // active coupons (e.g. welcome coupon).
+                      const cryptoPortion = showCrypto
+                        ? Math.min(discountTotal, +(itemsSubtotal * 0.05).toFixed(2))
+                        : 0;
+                      const otherDiscount = Math.max(0, discountTotal - cryptoPortion);
+                      return (
+                        <>
+                          {otherDiscount > 0 && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-brand-gold/80">Discount</span>
+                              <span className="text-brand-gold">
+                                -{currency}
+                                {otherDiscount.toFixed(2)}
+                              </span>
+                            </div>
+                          )}
+                          {showCrypto && cryptoPortion > 0 && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-emerald-400/90">Crypto discount (5%)</span>
+                              <span className="text-emerald-400">
+                                −{currency}
+                                {cryptoPortion.toFixed(2)}
+                              </span>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                     {taxTotal > 0 && (
                       <Row label="Tax" value={`${currency}${taxTotal.toFixed(2)}`} />
                     )}
