@@ -16,6 +16,7 @@ import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ShippingPolicyRouteImport } from './routes/shipping-policy'
+import { Route as ReportAConcernRouteImport } from './routes/report-a-concern'
 import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as LoginRouteImport } from './routes/login'
@@ -68,6 +69,11 @@ const ShopRoute = ShopRouteImport.update({
 const ShippingPolicyRoute = ShippingPolicyRouteImport.update({
   id: '/shipping-policy',
   path: '/shipping-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportAConcernRoute = ReportAConcernRouteImport.update({
+  id: '/report-a-concern',
+  path: '/report-a-concern',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RefundPolicyRoute = RefundPolicyRouteImport.update({
@@ -174,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
+  '/report-a-concern': typeof ReportAConcernRoute
   '/shipping-policy': typeof ShippingPolicyRoute
   '/shop': typeof ShopRouteWithChildren
   '/sign-in': typeof SignInRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
+  '/report-a-concern': typeof ReportAConcernRoute
   '/shipping-policy': typeof ShippingPolicyRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
+  '/report-a-concern': typeof ReportAConcernRoute
   '/shipping-policy': typeof ShippingPolicyRoute
   '/shop': typeof ShopRouteWithChildren
   '/sign-in': typeof SignInRoute
@@ -257,6 +266,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/refund-policy'
+    | '/report-a-concern'
     | '/shipping-policy'
     | '/shop'
     | '/sign-in'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/refund-policy'
+    | '/report-a-concern'
     | '/shipping-policy'
     | '/sign-in'
     | '/sign-up'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/privacy'
     | '/refund-policy'
+    | '/report-a-concern'
     | '/shipping-policy'
     | '/shop'
     | '/sign-in'
@@ -338,6 +350,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundPolicyRoute: typeof RefundPolicyRoute
+  ReportAConcernRoute: typeof ReportAConcernRoute
   ShippingPolicyRoute: typeof ShippingPolicyRoute
   ShopRoute: typeof ShopRouteWithChildren
   SignInRoute: typeof SignInRoute
@@ -400,6 +413,13 @@ declare module '@tanstack/react-router' {
       path: '/shipping-policy'
       fullPath: '/shipping-policy'
       preLoaderRoute: typeof ShippingPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/report-a-concern': {
+      id: '/report-a-concern'
+      path: '/report-a-concern'
+      fullPath: '/report-a-concern'
+      preLoaderRoute: typeof ReportAConcernRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/refund-policy': {
@@ -566,6 +586,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PrivacyRoute: PrivacyRoute,
   RefundPolicyRoute: RefundPolicyRoute,
+  ReportAConcernRoute: ReportAConcernRoute,
   ShippingPolicyRoute: ShippingPolicyRoute,
   ShopRoute: ShopRouteWithChildren,
   SignInRoute: SignInRoute,
@@ -581,12 +602,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
