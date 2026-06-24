@@ -50,7 +50,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
           if (v?.id != null && v.size) map[v.id] = v.size;
         }
         const filtered =
-          product.slug === "wolverine-blend"
+          product.slug === "bpc-157-tb-500-blend"
             ? vars.filter((v) => {
                 const size = (map[v.id] ?? getVariationSize(v) ?? "")
                   .replace(/\s+/g, "")

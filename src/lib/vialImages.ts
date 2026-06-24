@@ -14,7 +14,7 @@ import ghrp6_5mg from "@/assets/products/ghrp6-5mg.png";
 import ghrp6_10mg from "@/assets/products/ghrp6-10mg.png";
 import ta1 from "@/assets/products/ta1.png";
 import glowBlend from "@/assets/products/glow-blend.png";
-import wolverine from "@/assets/products/wolverine.png";
+import wolverine from "@/assets/products/bpc157-tb500.png";
 import ghkcu from "@/assets/products/ghkcu.png";
 import ghkcu100 from "@/assets/products/ghkcu-100mg.png";
 import motsc from "@/assets/products/motsc.png";
@@ -49,7 +49,7 @@ import glp3rt40 from "@/assets/products/glp3-rt-40mg.png";
 import glp3rt50 from "@/assets/products/glp3-rt-50mg.png";
 import glp3rt60 from "@/assets/products/glp3-rt-60mg.png";
 import melanotan2 from "@/assets/products/melanotan2-10mg.png";
-import wolverine20 from "@/assets/products/wolverine-20mg.png";
+import wolverine20 from "@/assets/products/bpc157-tb500-20mg.png";
 import slupp332 from "@/assets/products/slu-pp-332-5mg.png";
 import igf1lr3Small from "@/assets/products/igf1lr3-0-1mg.png";
 import gdf8 from "@/assets/products/gdf8-1mg.png";
@@ -82,7 +82,7 @@ import kpv10 from "@/assets/products/kpv-10mg.png";
 import naEpitalon5 from "@/assets/products/na-epitalon-5mg.png";
 import tb500_5mg from "@/assets/products/tb500-5mg.png";
 import tesamorelin10 from "@/assets/products/tesamorelin-10mg.png";
-import wolverine5 from "@/assets/products/wolverine-5mg.png";
+import wolverine5 from "@/assets/products/bpc157-tb500-5mg.png";
 
 export const DEFAULT_VIAL = vialDefault;
 
