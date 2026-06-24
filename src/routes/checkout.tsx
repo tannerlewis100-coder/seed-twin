@@ -74,9 +74,20 @@ function CheckoutPage() {
   const [couponBusy, setCouponBusy] = useState(false);
   const [couponError, setCouponError] = useState<string | null>(null);
 
-  const appliedCoupons = ((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons ?? [])
+  const CRYPTO_COUPON = "CRYPTO5";
+  const isCryptoMethod = (m: string) => m === "depay_wc_payments" || m === "nowpayments";
+
+  const allAppliedCoupons = ((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons ?? [])
     .map((c) => c?.code)
     .filter((c): c is string => !!c);
+  // Hide CRYPTO5 from any user-visible chips/lists.
+  const appliedCoupons = allAppliedCoupons.filter(
+    (c) => c.toUpperCase() !== CRYPTO_COUPON,
+  );
+  const cryptoCouponApplied = allAppliedCoupons.some(
+    (c) => c.toUpperCase() === CRYPTO_COUPON,
+  );
+
 
   async function handleApplyCoupon(e?: React.FormEvent | React.MouseEvent) {
     if (e) e.preventDefault();
