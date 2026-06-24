@@ -17,7 +17,20 @@ import {
   type WooProduct,
 } from "@/lib/woo";
 
+const LEGACY_SLUG_REDIRECTS: Record<string, string> = {
+  wolverine: "bpc-157-tb-500-blend",
+  "wolverine-blend": "bpc-157-tb-500-blend",
+  "wolverine-5mg": "bpc-157-tb-500-blend",
+  "wolverine-10mg": "bpc-157-tb-500-blend",
+};
+
 export const Route = createFileRoute("/shop/$slug")({
+  beforeLoad: ({ params }) => {
+    const target = LEGACY_SLUG_REDIRECTS[params.slug.toLowerCase()];
+    if (target) {
+      throw redirect({ to: "/shop/$slug", params: { slug: target }, statusCode: 301 });
+    }
+  },
   component: ProductPage,
   head: ({ params }) => ({
     meta: [
