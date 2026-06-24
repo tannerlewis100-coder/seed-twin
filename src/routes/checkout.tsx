@@ -706,8 +706,8 @@ function CheckoutPage() {
                                       />
                                       <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
                                       {isCryptoMethod(g) && (
-                                        <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-brand-gold/40 bg-brand-gold/10 px-2.5 py-0.5 text-[11px] font-semibold text-brand-gold">
-                                          <span aria-hidden>💰</span> Save 5% — pay with crypto
+                                        <span className="ml-auto inline-flex items-center whitespace-nowrap rounded-full border border-brand-gold/40 bg-brand-gold/10 px-2.5 py-0.5 text-[11px] font-semibold text-brand-gold">
+                                          Save 5%
                                         </span>
                                       )}
                                     </label>
