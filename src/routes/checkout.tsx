@@ -192,6 +192,34 @@ function CheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clarumUser, cartLoading, items.length]);
 
+  // Silently apply/remove CRYPTO5 based on payment method.
+  useEffect(() => {
+    if (!paymentMethod || cartLoading || items.length === 0) return;
+    const wantsCrypto = isCryptoMethod(paymentMethod);
+    if (wantsCrypto && !cryptoCouponApplied) {
+      (async () => {
+        try {
+          await applyCoupon(CRYPTO_COUPON);
+          await refresh();
+        } catch {
+          /* silent — coupon may be disabled server-side */
+        }
+      })();
+    } else if (!wantsCrypto && cryptoCouponApplied) {
+      (async () => {
+        try {
+          await removeCoupon(CRYPTO_COUPON);
+          await refresh();
+        } catch {
+          /* silent */
+        }
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentMethod, cryptoCouponApplied, cartLoading, items.length]);
+
+
+
 
   const currency = raw?.totals.currency_symbol ?? "$";
   const minor = raw?.totals.currency_minor_unit ?? 2;
