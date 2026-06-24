@@ -74,9 +74,20 @@ function CheckoutPage() {
   const [couponBusy, setCouponBusy] = useState(false);
   const [couponError, setCouponError] = useState<string | null>(null);
 
-  const appliedCoupons = ((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons ?? [])
+  const CRYPTO_COUPON = "CRYPTO5";
+  const isCryptoMethod = (m: string) => m === "depay_wc_payments" || m === "nowpayments";
+
+  const allAppliedCoupons = ((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons ?? [])
     .map((c) => c?.code)
     .filter((c): c is string => !!c);
+  // Hide CRYPTO5 from any user-visible chips/lists.
+  const appliedCoupons = allAppliedCoupons.filter(
+    (c) => c.toUpperCase() !== CRYPTO_COUPON,
+  );
+  const cryptoCouponApplied = allAppliedCoupons.some(
+    (c) => c.toUpperCase() === CRYPTO_COUPON,
+  );
+
 
   async function handleApplyCoupon(e?: React.FormEvent | React.MouseEvent) {
     if (e) e.preventDefault();
@@ -180,6 +191,34 @@ function CheckoutPage() {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clarumUser, cartLoading, items.length]);
+
+  // Silently apply/remove CRYPTO5 based on payment method.
+  useEffect(() => {
+    if (!paymentMethod || cartLoading || items.length === 0) return;
+    const wantsCrypto = isCryptoMethod(paymentMethod);
+    if (wantsCrypto && !cryptoCouponApplied) {
+      (async () => {
+        try {
+          await applyCoupon(CRYPTO_COUPON);
+          await refresh();
+        } catch {
+          /* silent — coupon may be disabled server-side */
+        }
+      })();
+    } else if (!wantsCrypto && cryptoCouponApplied) {
+      (async () => {
+        try {
+          await removeCoupon(CRYPTO_COUPON);
+          await refresh();
+        } catch {
+          /* silent */
+        }
+      })();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paymentMethod, cryptoCouponApplied, cartLoading, items.length]);
+
+
 
 
   const currency = raw?.totals.currency_symbol ?? "$";
@@ -666,6 +705,11 @@ function CheckoutPage() {
                                         className="h-4 w-4 accent-brand-gold"
                                       />
                                       <span className="text-sm text-foreground">{gatewayLabel(g)}</span>
+                                      {isCryptoMethod(g) && (
+                                        <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-brand-gold/40 bg-brand-gold/10 px-2.5 py-0.5 text-[11px] font-semibold text-brand-gold">
+                                          <span aria-hidden>💰</span> Save 5% — pay with crypto
+                                        </span>
+                                      )}
                                     </label>
                                     {g === "quiklie" && paymentMethod === "quiklie" && (
                                       <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
@@ -834,15 +878,38 @@ function CheckoutPage() {
                       }
                       return <Row label="Shipping" value={value} />;
                     })()}
-                    {discountTotal > 0 && (
-                      <div className="flex items-center justify-between">
-                        <span className="text-brand-gold/80">Discount</span>
-                        <span className="text-brand-gold">
-                          -{currency}
-                          {discountTotal.toFixed(2)}
-                        </span>
-                      </div>
-                    )}
+                    {(() => {
+                      const showCrypto = cryptoCouponApplied && isCryptoMethod(paymentMethod);
+                      // Approximate the crypto portion as 5% of the items subtotal so
+                      // we can show "Crypto discount (5%)" separately from any other
+                      // active coupons (e.g. welcome coupon).
+                      const cryptoPortion = showCrypto
+                        ? Math.min(discountTotal, +(itemsSubtotal * 0.05).toFixed(2))
+                        : 0;
+                      const otherDiscount = Math.max(0, discountTotal - cryptoPortion);
+                      return (
+                        <>
+                          {otherDiscount > 0 && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-brand-gold/80">Discount</span>
+                              <span className="text-brand-gold">
+                                -{currency}
+                                {otherDiscount.toFixed(2)}
+                              </span>
+                            </div>
+                          )}
+                          {showCrypto && cryptoPortion > 0 && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-emerald-400/90">Crypto discount (5%)</span>
+                              <span className="text-emerald-400">
+                                −{currency}
+                                {cryptoPortion.toFixed(2)}
+                              </span>
+                            </div>
+                          )}
+                        </>
+                      );
+                    })()}
                     {taxTotal > 0 && (
                       <Row label="Tax" value={`${currency}${taxTotal.toFixed(2)}`} />
                     )}
