@@ -109,7 +109,7 @@ const groups: Group[] = [
     items: [
       {
         q: "What will the charge look like on my statement?",
-        a: "Your purchase will appear as CLARUMPEPTIDES.COM on your bank or credit card statement. If you have questions about a charge, contact us at clarumpeptides@gmail.com before disputing.",
+        a: "Your purchase will appear as CLARUMPEPTIDES.COM on your bank or credit card statement. If you have questions about a charge, contact us at clarumpeps@gmail.com before disputing.",
       },
     ],
   },
