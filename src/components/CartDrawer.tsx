@@ -1,13 +1,54 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart";
 import { useNavigate } from "@tanstack/react-router";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, X } from "lucide-react";
+import { useState } from "react";
+import { applyCoupon, removeCoupon } from "@/lib/woo";
 
 const FREE_SHIPPING_THRESHOLD = 150;
+const CRYPTO_COUPON = "CRYPTO5";
 
 export function CartDrawer() {
-  const { isOpen, closeCart, items, subtotal, updateQty, removeItem, loading } = useCart();
+  const { isOpen, closeCart, items, subtotal, updateQty, removeItem, loading, raw, refresh } = useCart();
   const navigate = useNavigate();
+  const [couponInput, setCouponInput] = useState("");
+  const [couponBusy, setCouponBusy] = useState(false);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
+  const appliedCoupons = (((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons) ?? [])
+    .map((c) => c?.code)
+    .filter((c): c is string => !!c)
+    .filter((c) => c.toUpperCase() !== CRYPTO_COUPON);
+
+  async function handleApplyCoupon() {
+    const code = couponInput.trim().toUpperCase();
+    if (!code || couponBusy) return;
+    setCouponBusy(true);
+    setCouponError(null);
+    try {
+      await applyCoupon(code);
+      await refresh();
+      setCouponInput("");
+    } catch {
+      setCouponError("That code isn't valid");
+    } finally {
+      setCouponBusy(false);
+    }
+  }
+
+  async function handleRemoveCoupon(code: string) {
+    if (couponBusy) return;
+    setCouponBusy(true);
+    setCouponError(null);
+    try {
+      await removeCoupon(code);
+      await refresh();
+    } catch {
+      /* ignore */
+    } finally {
+      setCouponBusy(false);
+    }
+  }
 
   function onCheckout() {
     if (!items.length) return;
