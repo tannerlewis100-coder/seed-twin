@@ -573,6 +573,7 @@ export function gatewayLabel(id: string): string {
     cheque: "Check Payment",
     bacs: "Direct Bank Transfer",
     quiklie: "Credit & Debit Card",
+    stripe_attestly_virtual: "Credit / Debit Card",
   };
   if (map[id]) return map[id];
   return id
