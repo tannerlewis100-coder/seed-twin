@@ -952,9 +952,8 @@ function CheckoutPage() {
                     </p>
                   </>
                 )}
-
-                </p>
               </div>
+
 
               {/* Right: order summary */}
               <aside className="lg:sticky lg:top-8 self-start">
