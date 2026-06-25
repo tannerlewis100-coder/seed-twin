@@ -717,7 +717,7 @@ function CheckoutPage() {
                           id === STRIPE_VIRTUAL ||
                           id === "stripe" ||
                           id === "stripe_cc" ||
-                          id === "quiklie" ||
+                          id === "clarum_bank_transfer" ||
                           id === "clarum_bank_transfer" ||
                           id === "bacs"
                         )
