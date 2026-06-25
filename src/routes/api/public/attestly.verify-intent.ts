@@ -57,19 +57,31 @@ export const Route = createFileRoute("/api/public/attestly/verify-intent")({
           const data = (await upstream.json().catch(() => ({}))) as { paid?: boolean; status?: string; error?: string };
           if (!data.paid) return json({ paid: false, error: data.error ?? "Payment was not completed." });
 
-          const confirm = await fetch(`${WP_BASE}/payment-confirm`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({
-              order_id: Number(body.orderId),
-              order_key: body.orderKey,
-              transaction: {
-                provider: "attestly",
-                payment_intent: body.paymentIntentId,
-                status: data.status ?? "paid",
+          // Mark order paid + processing via WC REST v3 (server-side, signed
+          // with consumer key/secret). This is the canonical way to finalize
+          // an order created server-side with the WC v3 API.
+          const auth = wcAuthHeader();
+          if (!auth) {
+            return json({ paid: false, error: "WooCommerce REST credentials not configured" }, 500);
+          }
+          const confirm = await fetch(
+            `${WC_BASE}/orders/${encodeURIComponent(String(body.orderId))}`,
+            {
+              method: "PUT",
+              headers: {
+                Authorization: auth,
+                "Content-Type": "application/json",
+                Accept: "application/json",
               },
-            }),
-          });
+              body: JSON.stringify({
+                status: "processing",
+                set_paid: true,
+                transaction_id: body.paymentIntentId,
+                payment_method: "attestly_payments",
+                payment_method_title: "Credit / Debit Card · Apple Pay · Google Pay",
+              }),
+            },
+          );
           const confirmData = (await confirm.json().catch(() => ({}))) as { message?: string };
           if (!confirm.ok) {
             return json({ paid: false, error: confirmData.message ?? "Could not mark order paid." }, confirm.status || 502);
