@@ -482,46 +482,59 @@ function CheckoutPage() {
     try {
       const billingAddr: WooAddress = { ...billing, email };
       const shippingAddr: WooAddress = shipSame ? { ...billing, email } : { ...shipping };
-      // Sync customer session with billing email before submitting checkout.
-      // Woo Store API validates billing_address.email from session state.
+      // Sync customer session so Woo has correct address for tax / shipping
+      // before we create or submit the order.
       try {
         await updateCustomer({
           billing_address: billingAddr,
           shipping_address: shippingAddr,
         });
       } catch {
-        /* non-fatal — submitCheckout will surface the real error if any */
-      }
-      // ALWAYS create the WooCommerce order first (as pending). Only after the
-      // order exists do we touch any payment-related APIs.
-      const res = await submitCheckout({
-        billing_address: billingAddr,
-        shipping_address: shippingAddr,
-        payment_method: paymentMethod,
-        payment_data: [],
-        customer_note: note || undefined,
-      });
-      // eslint-disable-next-line no-console
-      console.log("CHECKOUT RESPONSE:", res);
-      const result = res.payment_result;
-      const status = result?.payment_status;
-      const failed = status === "failure" || status === "error";
-      if (failed) {
-        setError(result?.message || "Payment could not be processed.");
-        return;
-      }
-      if (!res.order_id) {
-        setError(result?.message || "Payment could not be processed.");
-        return;
+        /* non-fatal */
       }
 
-      // Stripe (Attestly) flow — keep cart, create PaymentIntent, reveal Elements.
+      // ─── ATTESTLY (card) FLOW ───────────────────────────────────────────
+      // Per spec: create a pending order via WC v3 REST (server-side) — do
+      // NOT call the Store API /checkout endpoint here. Then create a Stripe
+      // PaymentIntent and mount Elements; payment confirmation happens on
+      // the next click via Stripe Elements, not via Woo Store API.
       if (paymentMethod === ATTESTLY) {
         try {
+          const lineItems = items
+            .map((it) => ({ id: Number(it.id), quantity: Number(it.qty) }))
+            .filter((it) => it.id && it.quantity);
+          const shipLine = selectedRate
+            ? { method_title: selectedRate.name, total: String(shippingCost.toFixed(2)) }
+            : null;
+          const orderRes = await fetch("/api/public/woo-create-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email,
+              billing: billingAddr,
+              shipping: shippingAddr,
+              payment_method: ATTESTLY,
+              payment_method_title: "Credit / Debit Card · Apple Pay · Google Pay",
+              customer_note: note || undefined,
+              items: lineItems,
+              coupons: allAppliedCoupons,
+              shipping_line: shipLine,
+            }),
+          });
+          const orderData = (await orderRes.json()) as {
+            id?: number;
+            order_key?: string;
+            error?: string;
+          };
+          if (!orderRes.ok || !orderData.id || !orderData.order_key) {
+            setError(orderData.error ?? "Could not create order.");
+            return;
+          }
+
           const intentRes = await fetch("/api/public/attestly/create-intent", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orderId: res.order_id, orderKey: res.order_key }),
+            body: JSON.stringify({ orderId: orderData.id, orderKey: orderData.order_key }),
           });
           const intent = (await intentRes.json()) as {
             clientSecret?: string;
@@ -534,13 +547,12 @@ function CheckoutPage() {
           }
           const piId = intent.clientSecret.split("_secret_")[0];
           setStripeSession({
-            orderId: res.order_id,
-            orderKey: res.order_key,
+            orderId: orderData.id,
+            orderKey: orderData.order_key,
             clientSecret: intent.clientSecret,
             paymentIntentId: piId,
             amountCents: intent.amountCents ?? 0,
           });
-          // Scroll the panel into view shortly after render.
           setTimeout(() => {
             document.getElementById("stripe-payment-panel")?.scrollIntoView({
               behavior: "smooth",
@@ -554,7 +566,25 @@ function CheckoutPage() {
         }
       }
 
-      // Existing non-Stripe flow → continue to /order-pay
+      // ─── NON-CARD FLOW (bank transfer / crypto) ────────────────────────
+      const res = await submitCheckout({
+        billing_address: billingAddr,
+        shipping_address: shippingAddr,
+        payment_method: paymentMethod,
+        payment_data: [],
+        customer_note: note || undefined,
+      });
+      const result = res.payment_result;
+      const status = result?.payment_status;
+      const failed = status === "failure" || status === "error";
+      if (failed) {
+        setError(result?.message || "Payment could not be processed.");
+        return;
+      }
+      if (!res.order_id) {
+        setError(result?.message || "Payment could not be processed.");
+        return;
+      }
       clearCartToken();
       try {
         await refresh();
