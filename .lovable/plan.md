@@ -1,11 +1,19 @@
-## Plan: Replace COA verification screenshots
+## Why you don't see it
 
-Once you upload the new COA screenshots, I'll:
+The gate is already wired into `__root.tsx` and renders for every route. It's hidden for you because your browser has `clarum_age_verified = "1"` in `localStorage` from a previous visit, so the component returns `null` immediately.
 
-1. For each uploaded file, copy it into `public/coa/` using the **exact filename you upload**, overwriting any existing file with that same name.
-2. If an uploaded filename doesn't exactly match an existing file in `public/coa/` (e.g., spaces vs hyphens, missing parentheses, different case), I'll list the mismatches and ask before placing them, so we don't end up with orphan images the product cards can't find.
-3. No changes to `src/data/coa.ts`, `src/data/peptides.ts`, the COA library route, or any layout/styling — only image file replacement.
-4. Old files at other paths are kept untouched (per your choice).
-5. After copying, I'll confirm which products now point to the new images and flag any uploaded file that didn't match a product.
+Two ways to force it to show again — pick one:
 
-Go ahead and upload the new screenshots whenever ready.
+### Option A (recommended): Bump the storage key
+
+Change `STORAGE_KEY` in `src/components/AgeGate.tsx` from `clarum_age_verified` to `clarum_age_verified_v2`. Because we just added the new researcher confirmation, every existing visitor (including you) is treated as not-yet-verified and sees the updated modal on next load. Future visits remain remembered like before.
+
+### Option B: Per-session only
+
+Switch from `localStorage` to `sessionStorage` so the gate reappears every time the browser tab is reopened. More aggressive — frequent shoppers will see it often.
+
+## My recommendation
+
+Go with **Option A**. It guarantees the new researcher checkbox is shown to everyone exactly once, then stays out of the way. No other files change.
+
+Confirm which option you want and I'll ship it.
