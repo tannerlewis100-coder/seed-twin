@@ -16,7 +16,11 @@ import {
   type WooAddress,
 } from "@/lib/woo";
 import { useClarumAuth } from "@/lib/clarum-auth";
-import { StripeAttestlyPanel, useAttestlyConfig } from "@/components/StripeAttestlyPanel";
+import {
+  StripeAttestlyPanel,
+  useAttestlyConfig,
+  type StripePaymentHandler,
+} from "@/components/StripeAttestlyPanel";
 
 const ATTESTLY = "attestly_payments";
 const ALLOWED_GATEWAYS = [
@@ -75,7 +79,7 @@ function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { config: attestlyConfig } = useAttestlyConfig();
+  const { config: attestlyConfig, loading: attestlyConfigLoading } = useAttestlyConfig();
   const stripeReady = !!(
     attestlyConfig?.paymentsEnabled &&
     attestlyConfig.publishableKey &&
@@ -88,6 +92,7 @@ function CheckoutPage() {
     paymentIntentId: string;
     amountCents: number;
   } | null>(null);
+  const [stripeConfirmPayment, setStripeConfirmPayment] = useState<StripePaymentHandler | null>(null);
 
   const [rates, setRates] = useState<ShippingRate[]>([]);
   const [selectedRateId, setSelectedRateId] = useState<string>("");
@@ -161,6 +166,11 @@ function CheckoutPage() {
     const preferred = gateways.includes(ATTESTLY) ? ATTESTLY : gateways[0];
     setPaymentMethod(preferred);
   }, [gateways, paymentMethod]);
+
+  useEffect(() => {
+    setStripeSession(null);
+    setStripeConfirmPayment(null);
+  }, [paymentMethod]);
 
 
 
@@ -425,13 +435,35 @@ function CheckoutPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    // Defensive: hide stripe panel until we recreate the order.
-    if (paymentMethod !== ATTESTLY) setStripeSession(null);
     const v = validate();
     if (v) {
       setError(v);
       return;
     }
+
+    if (paymentMethod === ATTESTLY && stripeSession) {
+      if (!stripeConfirmPayment) {
+        setError("Secure card form is still loading.");
+        return;
+      }
+      setSubmitting(true);
+      try {
+        await stripeConfirmPayment();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Payment failed.");
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    if (paymentMethod === ATTESTLY && (attestlyConfigLoading || !stripeReady)) {
+      setError("Secure card payment is still loading. Please try again in a moment.");
+      return;
+    }
+
+    setStripeSession(null);
+    setStripeConfirmPayment(null);
     setSubmitting(true);
     try {
       const billingAddr: WooAddress = { ...billing, email };
@@ -758,8 +790,8 @@ function CheckoutPage() {
                                           stripeAccountId={attestlyConfig!.stripeAccountId!}
                                           clientSecret={stripeSession.clientSecret}
                                           paymentIntentId={stripeSession.paymentIntentId}
-                                          amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
                                           returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
+                                          onReady={setStripeConfirmPayment}
                                           onPaid={async () => {
                                             clearCartToken();
                                             try { await refresh(); } catch { /* ignore */ }
@@ -802,7 +834,7 @@ function CheckoutPage() {
                   disabled={
                     submitting ||
                     cartLoading ||
-                    (paymentMethod === ATTESTLY && !!stripeSession)
+                    (paymentMethod === ATTESTLY && !!stripeSession && !stripeConfirmPayment)
                   }
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                 >
@@ -810,11 +842,15 @@ function CheckoutPage() {
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
-                  ) : paymentMethod === ATTESTLY && stripeSession ? (
-                    <>Enter your card above to complete payment</>
+                  ) : paymentMethod === ATTESTLY && stripeSession && !stripeConfirmPayment ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Loading secure card form…
+                    </>
                   ) : (
                     <>
-                      {paymentMethod === ATTESTLY ? "Continue to card payment" : "Place order"}
+                      {paymentMethod === ATTESTLY && !stripeSession
+                        ? "Continue to secure card form"
+                        : "Place order"}
                       {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
                     </>
                   )}
