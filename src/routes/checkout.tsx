@@ -146,16 +146,32 @@ function CheckoutPage() {
   const withBank = withNow.includes("clarum_bank_transfer")
     ? withNow
     : [...withNow, "clarum_bank_transfer"];
-  const gateways = withBank.includes("quiklie")
-    ? withBank
-    : [...withBank, "quiklie"];
+  const withQuik = withBank.includes("quiklie") ? withBank : [...withBank, "quiklie"];
+  // Surface the Attestly/Stripe card option only when the hub is configured.
+  const gateways = useMemo(() => {
+    if (!stripeReady) return withQuik.filter((g) => g !== STRIPE_VIRTUAL);
+    return withQuik.includes(STRIPE_VIRTUAL) ? withQuik : [STRIPE_VIRTUAL, ...withQuik];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [withQuik.join("|"), stripeReady]);
   const needsShipping = raw?.needs_shipping ?? true;
+
+  // Resolve the real Woo gateway slug we send when the virtual Stripe option is selected.
+  const stripeWooSlug = useMemo(() => {
+    const candidates = ["stripe", "stripe_cc", "woocommerce_payments", "attestly"];
+    return candidates.find((g) => baseGateways.includes(g)) ?? baseGateways[0] ?? "stripe";
+  }, [baseGateways]);
 
   useEffect(() => {
     if (paymentMethod || !gateways.length) return;
-    // Prefer Credit & Debit Card when available; otherwise first gateway.
-    setPaymentMethod(gateways.includes("quiklie") ? "quiklie" : gateways[0]);
+    // Prefer card payment: Stripe (Attestly) > Quiklie > first available gateway.
+    const preferred = gateways.includes(STRIPE_VIRTUAL)
+      ? STRIPE_VIRTUAL
+      : gateways.includes("quiklie")
+        ? "quiklie"
+        : gateways[0];
+    setPaymentMethod(preferred);
   }, [gateways, paymentMethod]);
+
 
   // Auto-fill from logged-in Clarum account
   useEffect(() => {
