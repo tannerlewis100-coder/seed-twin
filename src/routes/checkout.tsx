@@ -426,7 +426,7 @@ function CheckoutPage() {
     e.preventDefault();
     setError(null);
     // Defensive: hide stripe panel until we recreate the order.
-    if (paymentMethod !== STRIPE_VIRTUAL) setStripeSession(null);
+    if (paymentMethod !== ATTESTLY) setStripeSession(null);
     const v = validate();
     if (v) {
       setError(v);
@@ -446,14 +446,13 @@ function CheckoutPage() {
       } catch {
         /* non-fatal — submitCheckout will surface the real error if any */
       }
-      const wooGateway =
-        paymentMethod === STRIPE_VIRTUAL ? stripeWooSlug : paymentMethod;
+      // ALWAYS create the WooCommerce order first (as pending). Only after the
+      // order exists do we touch any payment-related APIs.
       const res = await submitCheckout({
         billing_address: billingAddr,
         shipping_address: shippingAddr,
-        payment_method: wooGateway,
+        payment_method: paymentMethod,
         payment_data: [],
-
         customer_note: note || undefined,
       });
       // eslint-disable-next-line no-console
@@ -471,7 +470,7 @@ function CheckoutPage() {
       }
 
       // Stripe (Attestly) flow — keep cart, create PaymentIntent, reveal Elements.
-      if (paymentMethod === STRIPE_VIRTUAL) {
+      if (paymentMethod === ATTESTLY) {
         try {
           const intentRes = await fetch("/api/public/attestly/create-intent", {
             method: "POST",
