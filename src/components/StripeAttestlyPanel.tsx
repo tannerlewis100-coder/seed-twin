@@ -53,6 +53,8 @@ type Props = {
   publishableKey: string;
   stripeAccountId: string;
   clientSecret: string;
+  orderId: number;
+  orderKey: string;
   returnUrl: string;
   paymentIntentId: string;
   onReady: (confirmPayment: StripePaymentHandler | null) => void;
@@ -90,7 +92,7 @@ export function StripeAttestlyPanel(props: Props) {
   );
 }
 
-function PaymentForm({ clientSecret, returnUrl, paymentIntentId, onReady, onPaid, onError }: Props) {
+function PaymentForm({ clientSecret, orderId, orderKey, returnUrl, paymentIntentId, onReady, onPaid, onError }: Props) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -99,7 +101,7 @@ function PaymentForm({ clientSecret, returnUrl, paymentIntentId, onReady, onPaid
       const res = await fetch("/api/public/attestly/verify-intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paymentIntentId: piId }),
+        body: JSON.stringify({ paymentIntentId: piId, orderId, orderKey }),
       });
       const data = (await res.json()) as { paid?: boolean; error?: string };
       if (data.paid) {
@@ -110,7 +112,7 @@ function PaymentForm({ clientSecret, returnUrl, paymentIntentId, onReady, onPaid
     } catch (e) {
       onError(e instanceof Error ? e.message : "Could not verify payment.");
     }
-  }, [onError, onPaid]);
+  }, [onError, onPaid, orderId, orderKey]);
 
   const confirmPayment = useCallback(async () => {
     if (!stripe || !elements) {
