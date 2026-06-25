@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock, ShoppingBag } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
@@ -93,6 +93,10 @@ function CheckoutPage() {
     amountCents: number;
   } | null>(null);
   const [stripeConfirmPayment, setStripeConfirmPayment] = useState<StripePaymentHandler | null>(null);
+  const handleStripeReady = useCallback((handler: StripePaymentHandler | null) => {
+    setStripeConfirmPayment(handler ? () => handler : null);
+  }, []);
+  const handleStripeError = useCallback((msg: string) => setError(msg), []);
 
   const [rates, setRates] = useState<ShippingRate[]>([]);
   const [selectedRateId, setSelectedRateId] = useState<string>("");
@@ -791,15 +795,13 @@ function CheckoutPage() {
                                           clientSecret={stripeSession.clientSecret}
                                           paymentIntentId={stripeSession.paymentIntentId}
                                           returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
-                                          onReady={(handler) => {
-                                            setStripeConfirmPayment(handler ? () => handler : null);
-                                          }}
+                                          onReady={handleStripeReady}
                                           onPaid={async () => {
                                             clearCartToken();
                                             try { await refresh(); } catch { /* ignore */ }
                                             window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
                                           }}
-                                          onError={(msg) => setError(msg)}
+                                          onError={handleStripeError}
                                         />
                                       </div>
                                     )}
