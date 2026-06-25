@@ -685,6 +685,7 @@ function CheckoutPage() {
                     (() => {
                       const categorize = (id: string): "cards_bank" | "crypto" | "other" => {
                         if (
+                          id === STRIPE_VIRTUAL ||
                           id === "stripe" ||
                           id === "stripe_cc" ||
                           id === "quiklie" ||
