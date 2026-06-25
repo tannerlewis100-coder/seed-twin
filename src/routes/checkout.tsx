@@ -702,19 +702,10 @@ function CheckoutPage() {
                     </p>
                   ) : (
                     (() => {
-                      const categorize = (id: string): "cards_bank" | "crypto" | "other" => {
-                        if (
-                          id === STRIPE_VIRTUAL ||
-                          id === "stripe" ||
-                          id === "stripe_cc" ||
-                          id === "clarum_bank_transfer" ||
-
-                          id === "bacs"
-                        )
-                          return "cards_bank";
-                        if (id === "depay_wc_payments" || id === "nowpayments") return "crypto";
-                        return "other";
-                      };
+                      const categorize = (id: string): "cards_bank" | "crypto" =>
+                        id === "depay_wc_payments" || id === "nowpayments"
+                          ? "crypto"
+                          : "cards_bank";
                       const groups: { key: string; title: string; items: string[] }[] = [
                         {
                           key: "cards_bank",
@@ -725,11 +716,6 @@ function CheckoutPage() {
                           key: "crypto",
                           title: "Cryptocurrency",
                           items: gateways.filter((g) => categorize(g) === "crypto"),
-                        },
-                        {
-                          key: "other",
-                          title: "Other",
-                          items: gateways.filter((g) => categorize(g) === "other"),
                         },
                       ].filter((grp) => grp.items.length > 0);
 
@@ -765,33 +751,24 @@ function CheckoutPage() {
                                         </span>
                                       )}
                                     </label>
-                                    {g === STRIPE_VIRTUAL && paymentMethod === STRIPE_VIRTUAL && (
+                                    {g === ATTESTLY && paymentMethod === ATTESTLY && stripeSession && stripeReady && (
                                       <div id="stripe-payment-panel" className="mt-3">
-                                        {stripeSession ? (
-                                          <StripeAttestlyPanel
-                                            publishableKey={attestlyConfig!.publishableKey!}
-                                            stripeAccountId={attestlyConfig!.stripeAccountId!}
-                                            clientSecret={stripeSession.clientSecret}
-                                            paymentIntentId={stripeSession.paymentIntentId}
-                                            amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
-                                            returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
-                                            onPaid={async () => {
-                                              clearCartToken();
-                                              try { await refresh(); } catch { /* ignore */ }
-                                              window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
-                                            }}
-                                            onError={(msg) => setError(msg)}
-                                          />
-                                        ) : (
-                                          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-xs text-foreground/60">
-                                            {stripeReady
-                                              ? 'Complete your billing details, then click "Continue to card payment" to enter your card.'
-                                              : "Card payment temporarily unavailable. Please choose another option."}
-                                          </div>
-                                        )}
+                                        <StripeAttestlyPanel
+                                          publishableKey={attestlyConfig!.publishableKey!}
+                                          stripeAccountId={attestlyConfig!.stripeAccountId!}
+                                          clientSecret={stripeSession.clientSecret}
+                                          paymentIntentId={stripeSession.paymentIntentId}
+                                          amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
+                                          returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
+                                          onPaid={async () => {
+                                            clearCartToken();
+                                            try { await refresh(); } catch { /* ignore */ }
+                                            window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
+                                          }}
+                                          onError={(msg) => setError(msg)}
+                                        />
                                       </div>
                                     )}
-
                                   </div>
                                 ))}
                               </div>
