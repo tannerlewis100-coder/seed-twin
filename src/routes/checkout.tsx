@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock, ShoppingBag } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
@@ -16,6 +16,10 @@ import {
   type WooAddress,
 } from "@/lib/woo";
 import { useClarumAuth } from "@/lib/clarum-auth";
+import { StripeAttestlyPanel, useAttestlyConfig } from "@/components/StripeAttestlyPanel";
+
+const STRIPE_VIRTUAL = "stripe_attestly_virtual";
+
 
 export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
