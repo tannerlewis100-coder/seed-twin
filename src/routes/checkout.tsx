@@ -69,6 +69,20 @@ function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { config: attestlyConfig } = useAttestlyConfig();
+  const stripeReady = !!(
+    attestlyConfig?.paymentsEnabled &&
+    attestlyConfig.publishableKey &&
+    attestlyConfig.stripeAccountId
+  );
+  const [stripeSession, setStripeSession] = useState<{
+    orderId: number;
+    orderKey: string;
+    clientSecret: string;
+    paymentIntentId: string;
+    amountCents: number;
+  } | null>(null);
+
   const [rates, setRates] = useState<ShippingRate[]>([]);
   const [selectedRateId, setSelectedRateId] = useState<string>("");
   const [ratesLoading, setRatesLoading] = useState(false);
