@@ -1,13 +1,54 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useCart } from "@/lib/cart";
 import { useNavigate } from "@tanstack/react-router";
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingBag, X } from "lucide-react";
+import { useState } from "react";
+import { applyCoupon, removeCoupon } from "@/lib/woo";
 
 const FREE_SHIPPING_THRESHOLD = 150;
+const CRYPTO_COUPON = "CRYPTO5";
 
 export function CartDrawer() {
-  const { isOpen, closeCart, items, subtotal, updateQty, removeItem, loading } = useCart();
+  const { isOpen, closeCart, items, subtotal, updateQty, removeItem, loading, raw, refresh } = useCart();
   const navigate = useNavigate();
+  const [couponInput, setCouponInput] = useState("");
+  const [couponBusy, setCouponBusy] = useState(false);
+  const [couponError, setCouponError] = useState<string | null>(null);
+
+  const appliedCoupons = (((raw as unknown as { coupons?: Array<{ code?: string }> })?.coupons) ?? [])
+    .map((c) => c?.code)
+    .filter((c): c is string => !!c)
+    .filter((c) => c.toUpperCase() !== CRYPTO_COUPON);
+
+  async function handleApplyCoupon() {
+    const code = couponInput.trim().toUpperCase();
+    if (!code || couponBusy) return;
+    setCouponBusy(true);
+    setCouponError(null);
+    try {
+      await applyCoupon(code);
+      await refresh();
+      setCouponInput("");
+    } catch {
+      setCouponError("That code isn't valid");
+    } finally {
+      setCouponBusy(false);
+    }
+  }
+
+  async function handleRemoveCoupon(code: string) {
+    if (couponBusy) return;
+    setCouponBusy(true);
+    setCouponError(null);
+    try {
+      await removeCoupon(code);
+      await refresh();
+    } catch {
+      /* ignore */
+    } finally {
+      setCouponBusy(false);
+    }
+  }
 
   function onCheckout() {
     if (!items.length) return;
@@ -102,6 +143,58 @@ export function CartDrawer() {
                 <span className="text-foreground/60"> — included with every order, added automatically at checkout.</span>
               </p>
             </div>
+            <div className="space-y-2">
+              {appliedCoupons.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {appliedCoupons.map((code) => (
+                    <span
+                      key={code}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-brand-gold/40 bg-brand-gold/10 px-2.5 py-1 text-[11px] text-brand-gold"
+                    >
+                      {code}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCoupon(code)}
+                        disabled={couponBusy}
+                        aria-label={`Remove coupon ${code}`}
+                        className="hover:text-foreground disabled:opacity-50"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={couponInput}
+                  onChange={(e) => {
+                    setCouponInput(e.target.value);
+                    if (couponError) setCouponError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleApplyCoupon();
+                    }
+                  }}
+                  placeholder="Promo code"
+                  aria-label="Promo code"
+                  className="flex-1 rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-sm text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-brand-gold/60"
+                />
+                <button
+                  type="button"
+                  onClick={handleApplyCoupon}
+                  disabled={couponBusy || !couponInput.trim()}
+                  className="rounded-lg border border-white/15 bg-white/[0.04] px-3 py-2 text-sm text-foreground hover:border-brand-gold/60 hover:text-brand-gold transition-colors disabled:opacity-50"
+                >
+                  {couponBusy ? "…" : "Apply"}
+                </button>
+              </div>
+              {couponError && <p className="text-xs text-red-400">{couponError}</p>}
+            </div>
+
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground/60">Subtotal</span>
