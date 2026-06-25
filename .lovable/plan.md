@@ -1,19 +1,14 @@
-## Why you don't see it
+## Match the age gate's layout to the sign-up popup
 
-The gate is already wired into `__root.tsx` and renders for every route. It's hidden for you because your browser has `clarum_age_verified = "1"` in `localStorage` from a previous visit, so the component returns `null` immediately.
+Both modals are now visually similar, but they're not the same size or footprint. The sign-up promo is wider (`md:max-w-3xl`) and its image panel has more presence. The age gate currently sits at `md:max-w-2xl` with a smaller image side, so it lands in a slightly different "spot" on the page.
 
-Two ways to force it to show again — pick one:
+### Change in `src/components/AgeGate.tsx`
 
-### Option A (recommended): Bump the storage key
+- Match outer container width to `md:max-w-3xl` (same as `PromoPopup`).
+- Match the image panel min-height to `md:min-h-[480px]` (same as `PromoPopup`).
+- Use the same gap/padding rhythm on the content panel: `gap-3.5 p-5 md:gap-5 md:p-10`.
+- Keep the gold "Lab access" eyebrow, `font-display` headline, the two required checkboxes, the disabled Enter button, and the "No, take me back" text link — only the geometry changes.
 
-Change `STORAGE_KEY` in `src/components/AgeGate.tsx` from `clarum_age_verified` to `clarum_age_verified_v2`. Because we just added the new researcher confirmation, every existing visitor (including you) is treated as not-yet-verified and sees the updated modal on next load. Future visits remain remembered like before.
+Result: when the age gate clears and the sign-up promo later appears, both modals occupy the exact same rectangle on screen — same width, same height, same image-to-content split. Identical footprint, just different content.
 
-### Option B: Per-session only
-
-Switch from `localStorage` to `sessionStorage` so the gate reappears every time the browser tab is reopened. More aggressive — frequent shoppers will see it often.
-
-## My recommendation
-
-Go with **Option A**. It guarantees the new researcher checkbox is shown to everyone exactly once, then stays out of the way. No other files change.
-
-Confirm which option you want and I'll ship it.
+No copy changes, no behavior changes, no sequencing changes.
