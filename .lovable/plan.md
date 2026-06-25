@@ -1,14 +1,11 @@
-## Match the age gate's layout to the sign-up popup
+## Plan: Replace COA verification screenshots
 
-Both modals are now visually similar, but they're not the same size or footprint. The sign-up promo is wider (`md:max-w-3xl`) and its image panel has more presence. The age gate currently sits at `md:max-w-2xl` with a smaller image side, so it lands in a slightly different "spot" on the page.
+Once you upload the new COA screenshots, I'll:
 
-### Change in `src/components/AgeGate.tsx`
+1. For each uploaded file, copy it into `public/coa/` using the **exact filename you upload**, overwriting any existing file with that same name.
+2. If an uploaded filename doesn't exactly match an existing file in `public/coa/` (e.g., spaces vs hyphens, missing parentheses, different case), I'll list the mismatches and ask before placing them, so we don't end up with orphan images the product cards can't find.
+3. No changes to `src/data/coa.ts`, `src/data/peptides.ts`, the COA library route, or any layout/styling — only image file replacement.
+4. Old files at other paths are kept untouched (per your choice).
+5. After copying, I'll confirm which products now point to the new images and flag any uploaded file that didn't match a product.
 
-- Match outer container width to `md:max-w-3xl` (same as `PromoPopup`).
-- Match the image panel min-height to `md:min-h-[480px]` (same as `PromoPopup`).
-- Use the same gap/padding rhythm on the content panel: `gap-3.5 p-5 md:gap-5 md:p-10`.
-- Keep the gold "Lab access" eyebrow, `font-display` headline, the two required checkboxes, the disabled Enter button, and the "No, take me back" text link — only the geometry changes.
-
-Result: when the age gate clears and the sign-up promo later appears, both modals occupy the exact same rectangle on screen — same width, same height, same image-to-content split. Identical footprint, just different content.
-
-No copy changes, no behavior changes, no sequencing changes.
+Go ahead and upload the new screenshots whenever ready.
