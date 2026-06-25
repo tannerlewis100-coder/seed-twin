@@ -42,28 +42,7 @@ export const Route = createFileRoute("/api/public/attestly/verify-intent")({
             body: JSON.stringify({ paymentIntentId: body.paymentIntentId }),
           });
           const data = (await upstream.json().catch(() => ({}))) as { paid?: boolean; status?: string; error?: string };
-          if (!upstream.ok || !data.paid) {
-            return json({ paid: false, error: data.error ?? "Payment was not completed." }, upstream.ok ? 200 : upstream.status);
-          }
-
-          const markPaid = await fetch(`${hub}/api/connect/mark-order-paid`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${apiKey}`,
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
-            body: JSON.stringify({
-              orderId: body.orderId,
-              orderKey: body.orderKey,
-              paymentIntentId: body.paymentIntentId,
-            }),
-          });
-          const markData = (await markPaid.json().catch(() => ({}))) as { error?: string };
-          if (!markPaid.ok) {
-            return json({ paid: false, error: markData.error ?? "Could not mark order paid." }, markPaid.status || 502);
-          }
-          return json({ paid: true });
+          return json({ paid: !!data.paid, error: data.error });
         } catch (e) {
           return json({ paid: false, error: e instanceof Error ? e.message : "verify failed" }, 500);
         }
