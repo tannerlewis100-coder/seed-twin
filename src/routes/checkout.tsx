@@ -803,6 +803,8 @@ function CheckoutPage() {
                                           publishableKey={attestlyConfig!.publishableKey!}
                                           stripeAccountId={attestlyConfig!.stripeAccountId!}
                                           clientSecret={stripeSession.clientSecret}
+                                          orderId={stripeSession.orderId}
+                                          orderKey={stripeSession.orderKey}
                                           paymentIntentId={stripeSession.paymentIntentId}
                                           returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
                                           onReady={handleStripeReady}
