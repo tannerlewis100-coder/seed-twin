@@ -775,88 +775,33 @@ function CheckoutPage() {
                                         </span>
                                       )}
                                     </label>
-                                    {g === "quiklie" && paymentMethod === "quiklie" && (
-                                      <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
-                                        <div>
-                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                            Cardholder name
-                                          </label>
-                                          <input
-                                            type="text"
-                                            value={card.name}
-                                            onChange={(e) =>
-                                              setCard((c) => ({ ...c, name: e.target.value }))
-                                            }
-                                            autoComplete="cc-name"
-                                            maxLength={100}
-                                            placeholder="Name on card"
-                                            className={inputCls}
-                                          />
-                                        </div>
-                                        <div>
-                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                            Card number
-                                          </label>
-                                          <input
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={card.number}
-                                            onChange={(e) => {
-                                              const digits = e.target.value
-                                                .replace(/\D/g, "")
-                                                .slice(0, 19);
-                                              const formatted = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
-                                              setCard((c) => ({ ...c, number: formatted }));
+                                    {g === STRIPE_VIRTUAL && paymentMethod === STRIPE_VIRTUAL && (
+                                      <div id="stripe-payment-panel" className="mt-3">
+                                        {stripeSession ? (
+                                          <StripeAttestlyPanel
+                                            publishableKey={attestlyConfig!.publishableKey!}
+                                            stripeAccountId={attestlyConfig!.stripeAccountId!}
+                                            clientSecret={stripeSession.clientSecret}
+                                            paymentIntentId={stripeSession.paymentIntentId}
+                                            amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
+                                            returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
+                                            onPaid={async () => {
+                                              clearCartToken();
+                                              try { await refresh(); } catch { /* ignore */ }
+                                              window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
                                             }}
-                                            autoComplete="cc-number"
-                                            placeholder="1234 5678 9012 3456"
-                                            className={`${inputCls} tracking-wider`}
+                                            onError={(msg) => setError(msg)}
                                           />
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-3">
-                                          <div>
-                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                              Expiry (MM/YY)
-                                            </label>
-                                            <input
-                                              type="text"
-                                              inputMode="numeric"
-                                              value={card.expiry}
-                                              onChange={(e) => {
-                                                const d = e.target.value.replace(/\D/g, "").slice(0, 4);
-                                                const v =
-                                                  d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
-                                                setCard((c) => ({ ...c, expiry: v }));
-                                              }}
-                                              autoComplete="cc-exp"
-                                              placeholder="MM/YY"
-                                              maxLength={5}
-                                              className={inputCls}
-                                            />
+                                        ) : (
+                                          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-xs text-foreground/60">
+                                            {stripeReady
+                                              ? 'Complete your billing details, then click "Continue to card payment" to enter your card.'
+                                              : "Card payment temporarily unavailable. Please choose another option."}
                                           </div>
-                                          <div>
-                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                              CVV
-                                            </label>
-                                            <input
-                                              type="text"
-                                              inputMode="numeric"
-                                              value={card.cvv}
-                                              onChange={(e) =>
-                                                setCard((c) => ({
-                                                  ...c,
-                                                  cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
-                                                }))
-                                              }
-                                              autoComplete="cc-csc"
-                                              placeholder="123"
-                                              maxLength={4}
-                                              className={inputCls}
-                                            />
-                                          </div>
-                                        </div>
+                                        )}
                                       </div>
                                     )}
+
                                   </div>
                                 ))}
                               </div>
