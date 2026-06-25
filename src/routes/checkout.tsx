@@ -64,7 +64,7 @@ function CheckoutPage() {
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-  const [card, setCard] = useState({ name: "", number: "", expiry: "", cvv: "" });
+  
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -146,13 +146,16 @@ function CheckoutPage() {
   const withBank = withNow.includes("clarum_bank_transfer")
     ? withNow
     : [...withNow, "clarum_bank_transfer"];
-  const withQuik = withBank.includes("quiklie") ? withBank : [...withBank, "quiklie"];
+  // Quiklie is retired — Attestly/Stripe is the card processor.
+  const withoutQuiklie = withBank.filter((g) => g !== "quiklie");
   // Surface the Attestly/Stripe card option only when the hub is configured.
   const gateways = useMemo(() => {
-    if (!stripeReady) return withQuik.filter((g) => g !== STRIPE_VIRTUAL);
-    return withQuik.includes(STRIPE_VIRTUAL) ? withQuik : [STRIPE_VIRTUAL, ...withQuik];
+    if (!stripeReady) return withoutQuiklie.filter((g) => g !== STRIPE_VIRTUAL);
+    return withoutQuiklie.includes(STRIPE_VIRTUAL)
+      ? withoutQuiklie
+      : [STRIPE_VIRTUAL, ...withoutQuiklie];
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [withQuik.join("|"), stripeReady]);
+  }, [withoutQuiklie.join("|"), stripeReady]);
   const needsShipping = raw?.needs_shipping ?? true;
 
   // Resolve the real Woo gateway slug we send when the virtual Stripe option is selected.
@@ -163,14 +166,11 @@ function CheckoutPage() {
 
   useEffect(() => {
     if (paymentMethod || !gateways.length) return;
-    // Prefer card payment: Stripe (Attestly) > Quiklie > first available gateway.
-    const preferred = gateways.includes(STRIPE_VIRTUAL)
-      ? STRIPE_VIRTUAL
-      : gateways.includes("quiklie")
-        ? "quiklie"
-        : gateways[0];
+    // Prefer the Attestly card option, otherwise first available gateway.
+    const preferred = gateways.includes(STRIPE_VIRTUAL) ? STRIPE_VIRTUAL : gateways[0];
     setPaymentMethod(preferred);
   }, [gateways, paymentMethod]);
+
 
 
   // Auto-fill from logged-in Clarum account
@@ -426,20 +426,9 @@ function CheckoutPage() {
     }
     if (!paymentMethod) return "Select a payment method.";
     if (needsShipping && !selectedRateId) return "Select a shipping method.";
-    if (paymentMethod === "quiklie") {
-      const digits = card.number.replace(/\s+/g, "");
-      if (!card.name.trim()) return "Cardholder name is required.";
-      if (!/^\d{13,19}$/.test(digits)) return "Enter a valid card number.";
-      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expiry))
-        return "Expiry must be in MM/YY format.";
-      const [mm, yy] = card.expiry.split("/").map((s) => parseInt(s, 10));
-      const now = new Date();
-      const exp = new Date(2000 + yy, mm); // first day of month AFTER expiry
-      if (exp <= now) return "Card has expired.";
-      if (!/^\d{3,4}$/.test(card.cvv)) return "CVV must be 3 or 4 digits.";
-    }
     return null;
   }
+
 
 
   async function onSubmit(e: React.FormEvent) {
@@ -472,15 +461,8 @@ function CheckoutPage() {
         billing_address: billingAddr,
         shipping_address: shippingAddr,
         payment_method: wooGateway,
-        payment_data:
-          paymentMethod === "quiklie"
-            ? [
-                { key: "quiklie_card_holder_name", value: card.name.trim() },
-                { key: "quiklie_card_number", value: card.number.replace(/\s+/g, "") },
-                { key: "quiklie_expiry", value: card.expiry },
-                { key: "quiklie_cvv", value: card.cvv },
-              ]
-            : [],
+        payment_data: [],
+
         customer_note: note || undefined,
       });
       // eslint-disable-next-line no-console
@@ -735,8 +717,8 @@ function CheckoutPage() {
                           id === STRIPE_VIRTUAL ||
                           id === "stripe" ||
                           id === "stripe_cc" ||
-                          id === "quiklie" ||
                           id === "clarum_bank_transfer" ||
+
                           id === "bacs"
                         )
                           return "cards_bank";
@@ -793,88 +775,33 @@ function CheckoutPage() {
                                         </span>
                                       )}
                                     </label>
-                                    {g === "quiklie" && paymentMethod === "quiklie" && (
-                                      <div className="mt-3 rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
-                                        <div>
-                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                            Cardholder name
-                                          </label>
-                                          <input
-                                            type="text"
-                                            value={card.name}
-                                            onChange={(e) =>
-                                              setCard((c) => ({ ...c, name: e.target.value }))
-                                            }
-                                            autoComplete="cc-name"
-                                            maxLength={100}
-                                            placeholder="Name on card"
-                                            className={inputCls}
-                                          />
-                                        </div>
-                                        <div>
-                                          <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                            Card number
-                                          </label>
-                                          <input
-                                            type="text"
-                                            inputMode="numeric"
-                                            value={card.number}
-                                            onChange={(e) => {
-                                              const digits = e.target.value
-                                                .replace(/\D/g, "")
-                                                .slice(0, 19);
-                                              const formatted = digits.replace(/(\d{4})(?=\d)/g, "$1 ");
-                                              setCard((c) => ({ ...c, number: formatted }));
+                                    {g === STRIPE_VIRTUAL && paymentMethod === STRIPE_VIRTUAL && (
+                                      <div id="stripe-payment-panel" className="mt-3">
+                                        {stripeSession ? (
+                                          <StripeAttestlyPanel
+                                            publishableKey={attestlyConfig!.publishableKey!}
+                                            stripeAccountId={attestlyConfig!.stripeAccountId!}
+                                            clientSecret={stripeSession.clientSecret}
+                                            paymentIntentId={stripeSession.paymentIntentId}
+                                            amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
+                                            returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
+                                            onPaid={async () => {
+                                              clearCartToken();
+                                              try { await refresh(); } catch { /* ignore */ }
+                                              window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
                                             }}
-                                            autoComplete="cc-number"
-                                            placeholder="1234 5678 9012 3456"
-                                            className={`${inputCls} tracking-wider`}
+                                            onError={(msg) => setError(msg)}
                                           />
-                                        </div>
-                                        <div className="grid grid-cols-2 gap-3">
-                                          <div>
-                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                              Expiry (MM/YY)
-                                            </label>
-                                            <input
-                                              type="text"
-                                              inputMode="numeric"
-                                              value={card.expiry}
-                                              onChange={(e) => {
-                                                const d = e.target.value.replace(/\D/g, "").slice(0, 4);
-                                                const v =
-                                                  d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
-                                                setCard((c) => ({ ...c, expiry: v }));
-                                              }}
-                                              autoComplete="cc-exp"
-                                              placeholder="MM/YY"
-                                              maxLength={5}
-                                              className={inputCls}
-                                            />
+                                        ) : (
+                                          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-xs text-foreground/60">
+                                            {stripeReady
+                                              ? 'Complete your billing details, then click "Continue to card payment" to enter your card.'
+                                              : "Card payment temporarily unavailable. Please choose another option."}
                                           </div>
-                                          <div>
-                                            <label className="block text-xs uppercase tracking-wider text-foreground/50 mb-1">
-                                              CVV
-                                            </label>
-                                            <input
-                                              type="text"
-                                              inputMode="numeric"
-                                              value={card.cvv}
-                                              onChange={(e) =>
-                                                setCard((c) => ({
-                                                  ...c,
-                                                  cvv: e.target.value.replace(/\D/g, "").slice(0, 4),
-                                                }))
-                                              }
-                                              autoComplete="cc-csc"
-                                              placeholder="123"
-                                              maxLength={4}
-                                              className={inputCls}
-                                            />
-                                          </div>
-                                        </div>
+                                        )}
                                       </div>
                                     )}
+
                                   </div>
                                 ))}
                               </div>
@@ -903,55 +830,33 @@ function CheckoutPage() {
                   </div>
                 )}
 
-                {stripeSession && paymentMethod === STRIPE_VIRTUAL ? (
-                  <div id="stripe-payment-panel" className="space-y-3">
-                    <StripeAttestlyPanel
-                      publishableKey={attestlyConfig!.publishableKey!}
-                      stripeAccountId={attestlyConfig!.stripeAccountId!}
-                      clientSecret={stripeSession.clientSecret}
-                      paymentIntentId={stripeSession.paymentIntentId}
-                      amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
-                      returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
-                      onPaid={async () => {
-                        clearCartToken();
-                        try { await refresh(); } catch { /* ignore */ }
-                        window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
-                      }}
-                      onError={(msg) => setError(msg)}
-                    />
-                    <p className="text-center text-xs text-foreground/50">
-                      Your bank/card statement will show{" "}
-                      <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
-                    </p>
-                  </div>
-                ) : !stripeReady && paymentMethod === STRIPE_VIRTUAL ? (
-                  <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-foreground/60">
-                    Card payment temporarily unavailable. Please choose another option.
-                  </div>
-                ) : (
-                  <>
-                    <button
-                      type="submit"
-                      disabled={submitting || cartLoading}
-                      className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
-                    >
-                      {submitting ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
-                        </>
-                      ) : (
-                        <>
-                          {paymentMethod === STRIPE_VIRTUAL ? "Continue to card payment" : "Place order"}
-                          {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
-                        </>
-                      )}
-                    </button>
-                    <p className="text-center text-xs text-foreground/50">
-                      Your bank/card statement will show{" "}
-                      <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
-                    </p>
-                  </>
-                )}
+                <button
+                  type="submit"
+                  disabled={
+                    submitting ||
+                    cartLoading ||
+                    (paymentMethod === STRIPE_VIRTUAL && !!stripeSession)
+                  }
+                  className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                >
+                  {submitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
+                    </>
+                  ) : paymentMethod === STRIPE_VIRTUAL && stripeSession ? (
+                    <>Enter your card above to complete payment</>
+                  ) : (
+                    <>
+                      {paymentMethod === STRIPE_VIRTUAL ? "Continue to card payment" : "Place order"}
+                      {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
+                    </>
+                  )}
+                </button>
+                <p className="text-center text-xs text-foreground/50">
+                  Your bank/card statement will show{" "}
+                  <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
+                </p>
+
               </div>
 
 
