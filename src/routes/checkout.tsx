@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock, ShoppingBag } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
@@ -16,6 +16,10 @@ import {
   type WooAddress,
 } from "@/lib/woo";
 import { useClarumAuth } from "@/lib/clarum-auth";
+import { StripeAttestlyPanel, useAttestlyConfig } from "@/components/StripeAttestlyPanel";
+
+const STRIPE_VIRTUAL = "stripe_attestly_virtual";
+
 
 export const Route = createFileRoute("/checkout")({
   component: CheckoutPage,
@@ -64,6 +68,20 @@ function CheckoutPage() {
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const { config: attestlyConfig } = useAttestlyConfig();
+  const stripeReady = !!(
+    attestlyConfig?.paymentsEnabled &&
+    attestlyConfig.publishableKey &&
+    attestlyConfig.stripeAccountId
+  );
+  const [stripeSession, setStripeSession] = useState<{
+    orderId: number;
+    orderKey: string;
+    clientSecret: string;
+    paymentIntentId: string;
+    amountCents: number;
+  } | null>(null);
 
   const [rates, setRates] = useState<ShippingRate[]>([]);
   const [selectedRateId, setSelectedRateId] = useState<string>("");
@@ -128,16 +146,32 @@ function CheckoutPage() {
   const withBank = withNow.includes("clarum_bank_transfer")
     ? withNow
     : [...withNow, "clarum_bank_transfer"];
-  const gateways = withBank.includes("quiklie")
-    ? withBank
-    : [...withBank, "quiklie"];
+  const withQuik = withBank.includes("quiklie") ? withBank : [...withBank, "quiklie"];
+  // Surface the Attestly/Stripe card option only when the hub is configured.
+  const gateways = useMemo(() => {
+    if (!stripeReady) return withQuik.filter((g) => g !== STRIPE_VIRTUAL);
+    return withQuik.includes(STRIPE_VIRTUAL) ? withQuik : [STRIPE_VIRTUAL, ...withQuik];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [withQuik.join("|"), stripeReady]);
   const needsShipping = raw?.needs_shipping ?? true;
+
+  // Resolve the real Woo gateway slug we send when the virtual Stripe option is selected.
+  const stripeWooSlug = useMemo(() => {
+    const candidates = ["stripe", "stripe_cc", "woocommerce_payments", "attestly"];
+    return candidates.find((g) => baseGateways.includes(g)) ?? baseGateways[0] ?? "stripe";
+  }, [baseGateways]);
 
   useEffect(() => {
     if (paymentMethod || !gateways.length) return;
-    // Prefer Credit & Debit Card when available; otherwise first gateway.
-    setPaymentMethod(gateways.includes("quiklie") ? "quiklie" : gateways[0]);
+    // Prefer card payment: Stripe (Attestly) > Quiklie > first available gateway.
+    const preferred = gateways.includes(STRIPE_VIRTUAL)
+      ? STRIPE_VIRTUAL
+      : gateways.includes("quiklie")
+        ? "quiklie"
+        : gateways[0];
+    setPaymentMethod(preferred);
   }, [gateways, paymentMethod]);
+
 
   // Auto-fill from logged-in Clarum account
   useEffect(() => {
@@ -411,6 +445,8 @@ function CheckoutPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    // Defensive: hide stripe panel until we recreate the order.
+    if (paymentMethod !== STRIPE_VIRTUAL) setStripeSession(null);
     const v = validate();
     if (v) {
       setError(v);
@@ -430,10 +466,12 @@ function CheckoutPage() {
       } catch {
         /* non-fatal — submitCheckout will surface the real error if any */
       }
+      const wooGateway =
+        paymentMethod === STRIPE_VIRTUAL ? stripeWooSlug : paymentMethod;
       const res = await submitCheckout({
         billing_address: billingAddr,
         shipping_address: shippingAddr,
-        payment_method: paymentMethod,
+        payment_method: wooGateway,
         payment_data:
           paymentMethod === "quiklie"
             ? [
@@ -454,23 +492,66 @@ function CheckoutPage() {
         setError(result?.message || "Payment could not be processed.");
         return;
       }
-      if (res.order_id) {
-        clearCartToken();
-        try {
-          await refresh();
-        } catch {
-          /* ignore */
-        }
-        window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}`;
+      if (!res.order_id) {
+        setError(result?.message || "Payment could not be processed.");
         return;
       }
-      setError(result?.message || "Payment could not be processed.");
+
+      // Stripe (Attestly) flow — keep cart, create PaymentIntent, reveal Elements.
+      if (paymentMethod === STRIPE_VIRTUAL) {
+        try {
+          const intentRes = await fetch("/api/public/attestly/create-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: res.order_id, orderKey: res.order_key }),
+          });
+          const intent = (await intentRes.json()) as {
+            clientSecret?: string;
+            amountCents?: number;
+            error?: string;
+          };
+          if (!intentRes.ok || !intent.clientSecret) {
+            setError(intent.error ?? "Could not initialize card payment.");
+            return;
+          }
+          const piId = intent.clientSecret.split("_secret_")[0];
+          setStripeSession({
+            orderId: res.order_id,
+            orderKey: res.order_key,
+            clientSecret: intent.clientSecret,
+            paymentIntentId: piId,
+            amountCents: intent.amountCents ?? 0,
+          });
+          // Scroll the panel into view shortly after render.
+          setTimeout(() => {
+            document.getElementById("stripe-payment-panel")?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }, 80);
+          return;
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Could not initialize card payment.");
+          return;
+        }
+      }
+
+      // Existing non-Stripe flow → continue to /order-pay
+      clearCartToken();
+      try {
+        await refresh();
+      } catch {
+        /* ignore */
+      }
+      window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}`;
+      return;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Checkout failed.");
     } finally {
       setSubmitting(false);
     }
   }
+
 
   return (
     <div className="min-h-screen bg-brand-forest-deep text-foreground flex flex-col">
@@ -651,6 +732,7 @@ function CheckoutPage() {
                     (() => {
                       const categorize = (id: string): "cards_bank" | "crypto" | "other" => {
                         if (
+                          id === STRIPE_VIRTUAL ||
                           id === "stripe" ||
                           id === "stripe_cc" ||
                           id === "quiklie" ||
@@ -821,23 +903,57 @@ function CheckoutPage() {
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={submitting || cartLoading}
-                  className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
-                >
-                  {submitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
-                    </>
-                  ) : (
-                    <>Place order{needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}</>
-                  )}
-                </button>
-                <p className="text-center text-xs text-foreground/50">
-                  Your bank/card statement will show <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
-                </p>
+                {stripeSession && paymentMethod === STRIPE_VIRTUAL ? (
+                  <div id="stripe-payment-panel" className="space-y-3">
+                    <StripeAttestlyPanel
+                      publishableKey={attestlyConfig!.publishableKey!}
+                      stripeAccountId={attestlyConfig!.stripeAccountId!}
+                      clientSecret={stripeSession.clientSecret}
+                      paymentIntentId={stripeSession.paymentIntentId}
+                      amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
+                      returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
+                      onPaid={async () => {
+                        clearCartToken();
+                        try { await refresh(); } catch { /* ignore */ }
+                        window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
+                      }}
+                      onError={(msg) => setError(msg)}
+                    />
+                    <p className="text-center text-xs text-foreground/50">
+                      Your bank/card statement will show{" "}
+                      <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
+                    </p>
+                  </div>
+                ) : !stripeReady && paymentMethod === STRIPE_VIRTUAL ? (
+                  <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-foreground/60">
+                    Card payment temporarily unavailable. Please choose another option.
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      type="submit"
+                      disabled={submitting || cartLoading}
+                      className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                    >
+                      {submitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
+                        </>
+                      ) : (
+                        <>
+                          {paymentMethod === STRIPE_VIRTUAL ? "Continue to card payment" : "Place order"}
+                          {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
+                        </>
+                      )}
+                    </button>
+                    <p className="text-center text-xs text-foreground/50">
+                      Your bank/card statement will show{" "}
+                      <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
+                    </p>
+                  </>
+                )}
               </div>
+
 
               {/* Right: order summary */}
               <aside className="lg:sticky lg:top-8 self-start">

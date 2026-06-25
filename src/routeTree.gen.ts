@@ -35,6 +35,9 @@ import { Route as OrderPayOrderIdRouteImport } from './routes/order-pay.$orderId
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 import { Route as AccountOrdersRouteImport } from './routes/account.orders'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
+import { Route as ApiPublicAttestlyVerifyIntentRouteImport } from './routes/api/public/attestly.verify-intent'
+import { Route as ApiPublicAttestlyCreateIntentRouteImport } from './routes/api/public/attestly.create-intent'
+import { Route as ApiPublicAttestlyConfigRouteImport } from './routes/api/public/attestly.config'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -167,6 +170,23 @@ const ApiPublicWooStoreRoute = ApiPublicWooStoreRouteImport.update({
   path: '/api/public/woo-store',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicAttestlyVerifyIntentRoute =
+  ApiPublicAttestlyVerifyIntentRouteImport.update({
+    id: '/api/public/attestly/verify-intent',
+    path: '/api/public/attestly/verify-intent',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAttestlyCreateIntentRoute =
+  ApiPublicAttestlyCreateIntentRouteImport.update({
+    id: '/api/public/attestly/create-intent',
+    path: '/api/public/attestly/create-intent',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAttestlyConfigRoute = ApiPublicAttestlyConfigRouteImport.update({
+  id: '/api/public/attestly/config',
+  path: '/api/public/attestly/config',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -195,6 +215,9 @@ export interface FileRoutesByFullPath {
   '/shop/$slug': typeof ShopSlugRoute
   '/shop/': typeof ShopIndexRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
+  '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
+  '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
+  '/api/public/attestly/verify-intent': typeof ApiPublicAttestlyVerifyIntentRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -222,6 +245,9 @@ export interface FileRoutesByTo {
   '/shop/$slug': typeof ShopSlugRoute
   '/shop': typeof ShopIndexRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
+  '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
+  '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
+  '/api/public/attestly/verify-intent': typeof ApiPublicAttestlyVerifyIntentRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -251,6 +277,9 @@ export interface FileRoutesById {
   '/shop/$slug': typeof ShopSlugRoute
   '/shop/': typeof ShopIndexRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
+  '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
+  '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
+  '/api/public/attestly/verify-intent': typeof ApiPublicAttestlyVerifyIntentRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -281,6 +310,9 @@ export interface FileRouteTypes {
     | '/shop/$slug'
     | '/shop/'
     | '/api/public/woo-store'
+    | '/api/public/attestly/config'
+    | '/api/public/attestly/create-intent'
+    | '/api/public/attestly/verify-intent'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -308,6 +340,9 @@ export interface FileRouteTypes {
     | '/shop/$slug'
     | '/shop'
     | '/api/public/woo-store'
+    | '/api/public/attestly/config'
+    | '/api/public/attestly/create-intent'
+    | '/api/public/attestly/verify-intent'
   id:
     | '__root__'
     | '/'
@@ -336,6 +371,9 @@ export interface FileRouteTypes {
     | '/shop/$slug'
     | '/shop/'
     | '/api/public/woo-store'
+    | '/api/public/attestly/config'
+    | '/api/public/attestly/create-intent'
+    | '/api/public/attestly/verify-intent'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -362,6 +400,9 @@ export interface RootRouteChildren {
   OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
   OrderReceivedOrderIdRoute: typeof OrderReceivedOrderIdRoute
   ApiPublicWooStoreRoute: typeof ApiPublicWooStoreRoute
+  ApiPublicAttestlyConfigRoute: typeof ApiPublicAttestlyConfigRoute
+  ApiPublicAttestlyCreateIntentRoute: typeof ApiPublicAttestlyCreateIntentRoute
+  ApiPublicAttestlyVerifyIntentRoute: typeof ApiPublicAttestlyVerifyIntentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -548,6 +589,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWooStoreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/attestly/verify-intent': {
+      id: '/api/public/attestly/verify-intent'
+      path: '/api/public/attestly/verify-intent'
+      fullPath: '/api/public/attestly/verify-intent'
+      preLoaderRoute: typeof ApiPublicAttestlyVerifyIntentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/attestly/create-intent': {
+      id: '/api/public/attestly/create-intent'
+      path: '/api/public/attestly/create-intent'
+      fullPath: '/api/public/attestly/create-intent'
+      preLoaderRoute: typeof ApiPublicAttestlyCreateIntentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/attestly/config': {
+      id: '/api/public/attestly/config'
+      path: '/api/public/attestly/config'
+      fullPath: '/api/public/attestly/config'
+      preLoaderRoute: typeof ApiPublicAttestlyConfigRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -598,6 +660,9 @@ const rootRouteChildren: RootRouteChildren = {
   OrderPayOrderIdRoute: OrderPayOrderIdRoute,
   OrderReceivedOrderIdRoute: OrderReceivedOrderIdRoute,
   ApiPublicWooStoreRoute: ApiPublicWooStoreRoute,
+  ApiPublicAttestlyConfigRoute: ApiPublicAttestlyConfigRoute,
+  ApiPublicAttestlyCreateIntentRoute: ApiPublicAttestlyCreateIntentRoute,
+  ApiPublicAttestlyVerifyIntentRoute: ApiPublicAttestlyVerifyIntentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

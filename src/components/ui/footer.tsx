@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { Instagram, Mail } from "lucide-react";
+import { Instagram, Mail, Phone } from "lucide-react";
 
 import clarumLogo from "@/assets/clarum-logo.png";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
@@ -86,7 +86,8 @@ const sections: FooterSection[] = [
 
 const socials = [
   { href: "https://instagram.com/clarumpeptides", label: "Instagram", Icon: Instagram },
-  { href: "mailto:support@clarumpeptides.com", label: "Email", Icon: Mail },
+  { href: "mailto:clarumpeps@gmail.com", label: "Email", Icon: Mail },
+  { href: "tel:+16829001381", label: "Phone", Icon: Phone },
 ];
 
 function NavSection({ title, links }: FooterSection) {
@@ -205,10 +206,17 @@ export default function StickyFooter() {
                 variants={itemVariants}
                 className="border-t border-white/5 pt-6 flex flex-col gap-4 text-xs text-foreground/45"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                  <span className="font-medium text-foreground/65">
-                    TLSEVEN LLC · 17350 State Hwy 249, Ste 220 #32971, Houston, TX 77064
-                  </span>
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="font-medium text-foreground/65">
+                      TLSEVEN LLC · 17350 State Hwy 249, Ste 220 #32971, Houston, TX 77064
+                    </div>
+                    <div className="text-foreground/55">
+                      <a className="hover:text-brand-gold" href="tel:+16829001381">(682) 900-1381</a>
+                      <span className="mx-2">·</span>
+                      <a className="hover:text-brand-gold" href="mailto:clarumpeps@gmail.com">clarumpeps@gmail.com</a>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-2">
                     {socials.map((s) => (
                       <SocialLink key={s.label} {...s} />
