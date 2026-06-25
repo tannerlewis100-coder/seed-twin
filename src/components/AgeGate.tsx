@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlaskConical } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import promoVials from "@/assets/promo-vials.png";
 
 const STORAGE_KEY = "clarum_age_verified_v2";
 
