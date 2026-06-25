@@ -18,7 +18,13 @@ import {
 import { useClarumAuth } from "@/lib/clarum-auth";
 import { StripeAttestlyPanel, useAttestlyConfig } from "@/components/StripeAttestlyPanel";
 
-const STRIPE_VIRTUAL = "stripe_attestly_virtual";
+const ATTESTLY = "attestly_payments";
+const ALLOWED_GATEWAYS = [
+  "attestly_payments",
+  "clarum_bank_transfer",
+  "depay_wc_payments",
+  "nowpayments",
+] as const;
 
 
 export const Route = createFileRoute("/checkout")({
