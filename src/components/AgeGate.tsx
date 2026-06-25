@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlaskConical } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import promoVials from "@/assets/promo-vials.png";
 
 const STORAGE_KEY = "clarum_age_verified_v2";
 
@@ -49,25 +47,9 @@ export function AgeGate() {
       aria-labelledby="age-gate-title"
       aria-describedby="age-gate-desc"
     >
-      <div className="relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-3xl md:overflow-hidden">
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Visual panel */}
-          <div className="relative w-full overflow-hidden bg-black aspect-[4/3] md:aspect-auto md:min-h-[480px]">
-            <img
-              src={promoVials}
-              alt="Clarum research peptide vials"
-              className="h-full w-full object-cover opacity-60 mix-blend-luminosity"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent md:bg-gradient-to-r" />
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/40 bg-background/80 backdrop-blur-sm">
-                <FlaskConical className="h-5 w-5 text-primary" />
-              </div>
-              <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                Clarum Lab System
-              </span>
-            </div>
-          </div>
+      <div className="relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-md">
+        <div>
+
 
           {/* Content panel */}
           <div className="flex flex-col justify-between gap-3.5 p-5 md:gap-5 md:p-10">
