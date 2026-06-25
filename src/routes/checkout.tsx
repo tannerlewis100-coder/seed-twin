@@ -903,21 +903,56 @@ function CheckoutPage() {
                   </div>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={submitting || cartLoading}
-                  className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
-                >
-                  {submitting ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
-                    </>
-                  ) : (
-                    <>Place order{needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}</>
-                  )}
-                </button>
-                <p className="text-center text-xs text-foreground/50">
-                  Your bank/card statement will show <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
+                {stripeSession && paymentMethod === STRIPE_VIRTUAL ? (
+                  <div id="stripe-payment-panel" className="space-y-3">
+                    <StripeAttestlyPanel
+                      publishableKey={attestlyConfig!.publishableKey!}
+                      stripeAccountId={attestlyConfig!.stripeAccountId!}
+                      clientSecret={stripeSession.clientSecret}
+                      paymentIntentId={stripeSession.paymentIntentId}
+                      amountLabel={`${currency}${(stripeSession.amountCents / 100).toFixed(2)}`}
+                      returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
+                      onPaid={async () => {
+                        clearCartToken();
+                        try { await refresh(); } catch { /* ignore */ }
+                        window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
+                      }}
+                      onError={(msg) => setError(msg)}
+                    />
+                    <p className="text-center text-xs text-foreground/50">
+                      Your bank/card statement will show{" "}
+                      <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
+                    </p>
+                  </div>
+                ) : !stripeReady && paymentMethod === STRIPE_VIRTUAL ? (
+                  <div className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3 text-sm text-foreground/60">
+                    Card payment temporarily unavailable. Please choose another option.
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      type="submit"
+                      disabled={submitting || cartLoading}
+                      className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+                    >
+                      {submitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
+                        </>
+                      ) : (
+                        <>
+                          {paymentMethod === STRIPE_VIRTUAL ? "Continue to card payment" : "Place order"}
+                          {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
+                        </>
+                      )}
+                    </button>
+                    <p className="text-center text-xs text-foreground/50">
+                      Your bank/card statement will show{" "}
+                      <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
+                    </p>
+                  </>
+                )}
+
                 </p>
               </div>
 
