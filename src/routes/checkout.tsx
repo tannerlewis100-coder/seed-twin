@@ -97,6 +97,16 @@ function CheckoutPage() {
     setStripeConfirmPayment(handler ? () => handler : null);
   }, []);
   const handleStripeError = useCallback((msg: string) => setError(msg), []);
+  const handleStripePaid = useCallback(async () => {
+    if (!stripeSession) return;
+    clearCartToken();
+    try {
+      await refresh();
+    } catch {
+      /* ignore */
+    }
+    window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
+  }, [refresh, stripeSession]);
 
   const [rates, setRates] = useState<ShippingRate[]>([]);
   const [selectedRateId, setSelectedRateId] = useState<string>("");
@@ -796,11 +806,7 @@ function CheckoutPage() {
                                           paymentIntentId={stripeSession.paymentIntentId}
                                           returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
                                           onReady={handleStripeReady}
-                                          onPaid={async () => {
-                                            clearCartToken();
-                                            try { await refresh(); } catch { /* ignore */ }
-                                            window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
-                                          }}
+                                          onPaid={handleStripePaid}
                                           onError={handleStripeError}
                                         />
                                       </div>
