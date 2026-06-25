@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ShieldAlert } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const STORAGE_KEY = "clarum_age_verified";
+const STORAGE_KEY = "clarum_age_verified_v2";
 
 export function AgeGate() {
   const [verified, setVerified] = useState<boolean | null>(null);
