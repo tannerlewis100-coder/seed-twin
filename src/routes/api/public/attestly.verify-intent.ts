@@ -41,7 +41,11 @@ export const Route = createFileRoute("/api/public/attestly/verify-intent")({
               "Content-Type": "application/json",
               Accept: "application/json",
             },
-            body: JSON.stringify({ paymentIntentId: body.paymentIntentId }),
+            body: JSON.stringify({
+              paymentIntentId: body.paymentIntentId,
+              orderId: body.orderId,
+              orderKey: body.orderKey,
+            }),
           });
           const data = (await upstream.json().catch(() => ({}))) as { paid?: boolean; status?: string; error?: string };
           if (!data.paid) return json({ paid: false, error: data.error ?? "Payment was not completed." });
