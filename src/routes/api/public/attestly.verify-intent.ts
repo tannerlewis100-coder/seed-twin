@@ -6,7 +6,14 @@ const CORS = {
   "Access-Control-Allow-Headers": "Content-Type, Accept",
 };
 
-const WP_BASE = "https://admin.clarumpeptides.com/wp-json/clarum/v1";
+const WC_BASE = "https://admin.clarumpeptides.com/wp-json/wc/v3";
+
+function wcAuthHeader() {
+  const k = process.env.WC_CONSUMER_KEY;
+  const s = process.env.WC_CONSUMER_SECRET;
+  if (!k || !s) return null;
+  return "Basic " + Buffer.from(`${k}:${s}`).toString("base64");
+}
 
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {

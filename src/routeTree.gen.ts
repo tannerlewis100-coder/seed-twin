@@ -35,6 +35,7 @@ import { Route as OrderPayOrderIdRouteImport } from './routes/order-pay.$orderId
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
 import { Route as AccountOrdersRouteImport } from './routes/account.orders'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
+import { Route as ApiPublicWooCreateOrderRouteImport } from './routes/api/public/woo-create-order'
 import { Route as ApiPublicAttestlyVerifyIntentRouteImport } from './routes/api/public/attestly.verify-intent'
 import { Route as ApiPublicAttestlyCreateIntentRouteImport } from './routes/api/public/attestly.create-intent'
 import { Route as ApiPublicAttestlyConfigRouteImport } from './routes/api/public/attestly.config'
@@ -170,6 +171,11 @@ const ApiPublicWooStoreRoute = ApiPublicWooStoreRouteImport.update({
   path: '/api/public/woo-store',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWooCreateOrderRoute = ApiPublicWooCreateOrderRouteImport.update({
+  id: '/api/public/woo-create-order',
+  path: '/api/public/woo-create-order',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicAttestlyVerifyIntentRoute =
   ApiPublicAttestlyVerifyIntentRouteImport.update({
     id: '/api/public/attestly/verify-intent',
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/shop/': typeof ShopIndexRoute
+  '/api/public/woo-create-order': typeof ApiPublicWooCreateOrderRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
   '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
@@ -244,6 +251,7 @@ export interface FileRoutesByTo {
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/shop': typeof ShopIndexRoute
+  '/api/public/woo-create-order': typeof ApiPublicWooCreateOrderRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
   '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
@@ -276,6 +284,7 @@ export interface FileRoutesById {
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/shop/': typeof ShopIndexRoute
+  '/api/public/woo-create-order': typeof ApiPublicWooCreateOrderRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
   '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/order-received/$orderId'
     | '/shop/$slug'
     | '/shop/'
+    | '/api/public/woo-create-order'
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
     | '/api/public/attestly/create-intent'
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
     | '/order-received/$orderId'
     | '/shop/$slug'
     | '/shop'
+    | '/api/public/woo-create-order'
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
     | '/api/public/attestly/create-intent'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/order-received/$orderId'
     | '/shop/$slug'
     | '/shop/'
+    | '/api/public/woo-create-order'
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
     | '/api/public/attestly/create-intent'
@@ -399,6 +411,7 @@ export interface RootRouteChildren {
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
   OrderReceivedOrderIdRoute: typeof OrderReceivedOrderIdRoute
+  ApiPublicWooCreateOrderRoute: typeof ApiPublicWooCreateOrderRoute
   ApiPublicWooStoreRoute: typeof ApiPublicWooStoreRoute
   ApiPublicAttestlyConfigRoute: typeof ApiPublicAttestlyConfigRoute
   ApiPublicAttestlyCreateIntentRoute: typeof ApiPublicAttestlyCreateIntentRoute
@@ -589,6 +602,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWooStoreRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/woo-create-order': {
+      id: '/api/public/woo-create-order'
+      path: '/api/public/woo-create-order'
+      fullPath: '/api/public/woo-create-order'
+      preLoaderRoute: typeof ApiPublicWooCreateOrderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/attestly/verify-intent': {
       id: '/api/public/attestly/verify-intent'
       path: '/api/public/attestly/verify-intent'
@@ -659,6 +679,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   OrderPayOrderIdRoute: OrderPayOrderIdRoute,
   OrderReceivedOrderIdRoute: OrderReceivedOrderIdRoute,
+  ApiPublicWooCreateOrderRoute: ApiPublicWooCreateOrderRoute,
   ApiPublicWooStoreRoute: ApiPublicWooStoreRoute,
   ApiPublicAttestlyConfigRoute: ApiPublicAttestlyConfigRoute,
   ApiPublicAttestlyCreateIntentRoute: ApiPublicAttestlyCreateIntentRoute,
