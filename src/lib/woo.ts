@@ -572,8 +572,8 @@ export function gatewayLabel(id: string): string {
     cod: "Cash on Delivery",
     cheque: "Check Payment",
     bacs: "Direct Bank Transfer",
-    quiklie: "Credit & Debit Card",
-    stripe_attestly_virtual: "Credit / Debit Card",
+    quiklie: "Credit / Debit Card · Apple Pay · Google Pay",
+    stripe_attestly_virtual: "Credit / Debit Card · Apple Pay · Google Pay",
   };
   if (map[id]) return map[id];
   return id
