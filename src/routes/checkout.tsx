@@ -445,6 +445,8 @@ function CheckoutPage() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+    // Defensive: hide stripe panel until we recreate the order.
+    if (paymentMethod !== STRIPE_VIRTUAL) setStripeSession(null);
     const v = validate();
     if (v) {
       setError(v);
@@ -464,10 +466,12 @@ function CheckoutPage() {
       } catch {
         /* non-fatal — submitCheckout will surface the real error if any */
       }
+      const wooGateway =
+        paymentMethod === STRIPE_VIRTUAL ? stripeWooSlug : paymentMethod;
       const res = await submitCheckout({
         billing_address: billingAddr,
         shipping_address: shippingAddr,
-        payment_method: paymentMethod,
+        payment_method: wooGateway,
         payment_data:
           paymentMethod === "quiklie"
             ? [
@@ -488,23 +492,66 @@ function CheckoutPage() {
         setError(result?.message || "Payment could not be processed.");
         return;
       }
-      if (res.order_id) {
-        clearCartToken();
-        try {
-          await refresh();
-        } catch {
-          /* ignore */
-        }
-        window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}`;
+      if (!res.order_id) {
+        setError(result?.message || "Payment could not be processed.");
         return;
       }
-      setError(result?.message || "Payment could not be processed.");
+
+      // Stripe (Attestly) flow — keep cart, create PaymentIntent, reveal Elements.
+      if (paymentMethod === STRIPE_VIRTUAL) {
+        try {
+          const intentRes = await fetch("/api/public/attestly/create-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ orderId: res.order_id, orderKey: res.order_key }),
+          });
+          const intent = (await intentRes.json()) as {
+            clientSecret?: string;
+            amountCents?: number;
+            error?: string;
+          };
+          if (!intentRes.ok || !intent.clientSecret) {
+            setError(intent.error ?? "Could not initialize card payment.");
+            return;
+          }
+          const piId = intent.clientSecret.split("_secret_")[0];
+          setStripeSession({
+            orderId: res.order_id,
+            orderKey: res.order_key,
+            clientSecret: intent.clientSecret,
+            paymentIntentId: piId,
+            amountCents: intent.amountCents ?? 0,
+          });
+          // Scroll the panel into view shortly after render.
+          setTimeout(() => {
+            document.getElementById("stripe-payment-panel")?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }, 80);
+          return;
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "Could not initialize card payment.");
+          return;
+        }
+      }
+
+      // Existing non-Stripe flow → continue to /order-pay
+      clearCartToken();
+      try {
+        await refresh();
+      } catch {
+        /* ignore */
+      }
+      window.location.href = `/order-pay/${res.order_id}?key=${encodeURIComponent(res.order_key)}`;
+      return;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Checkout failed.");
     } finally {
       setSubmitting(false);
     }
   }
+
 
   return (
     <div className="min-h-screen bg-brand-forest-deep text-foreground flex flex-col">
