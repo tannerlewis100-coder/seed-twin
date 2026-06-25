@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import { Link } from "@tanstack/react-router";
-import { Instagram, Mail, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 import clarumLogo from "@/assets/clarum-logo.png";
 import { GooeyText } from "@/components/ui/gooey-text-morphing";
@@ -85,7 +85,6 @@ const sections: FooterSection[] = [
 ];
 
 const socials = [
-  { href: "https://instagram.com/clarumpeptides", label: "Instagram", Icon: Instagram },
   { href: "mailto:clarumpeps@gmail.com", label: "Email", Icon: Mail },
   { href: "tel:+16829001381", label: "Phone", Icon: Phone },
 ];
