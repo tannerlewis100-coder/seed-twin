@@ -426,20 +426,9 @@ function CheckoutPage() {
     }
     if (!paymentMethod) return "Select a payment method.";
     if (needsShipping && !selectedRateId) return "Select a shipping method.";
-    if (paymentMethod === "quiklie") {
-      const digits = card.number.replace(/\s+/g, "");
-      if (!card.name.trim()) return "Cardholder name is required.";
-      if (!/^\d{13,19}$/.test(digits)) return "Enter a valid card number.";
-      if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(card.expiry))
-        return "Expiry must be in MM/YY format.";
-      const [mm, yy] = card.expiry.split("/").map((s) => parseInt(s, 10));
-      const now = new Date();
-      const exp = new Date(2000 + yy, mm); // first day of month AFTER expiry
-      if (exp <= now) return "Card has expired.";
-      if (!/^\d{3,4}$/.test(card.cvv)) return "CVV must be 3 or 4 digits.";
-    }
     return null;
   }
+
 
 
   async function onSubmit(e: React.FormEvent) {
