@@ -28,15 +28,18 @@ export const Route = createFileRoute("/api/public/attestly/config")({
             },
           });
           const data = (await upstream.json().catch(() => ({}))) as {
-            publishableKey?: string;
-            stripeAccountId?: string;
-            paymentsEnabled?: boolean;
+            payments?: {
+              publishableKey?: string;
+              stripeAccountId?: string;
+              paymentsEnabled?: boolean;
+            };
           };
+          const payments = data.payments ?? {};
           return new Response(
             JSON.stringify({
-              publishableKey: data.publishableKey ?? null,
-              stripeAccountId: data.stripeAccountId ?? null,
-              paymentsEnabled: !!data.paymentsEnabled && !!data.publishableKey && !!data.stripeAccountId,
+              publishableKey: payments.publishableKey ?? null,
+              stripeAccountId: payments.stripeAccountId ?? null,
+              paymentsEnabled: !!payments.paymentsEnabled && !!payments.publishableKey && !!payments.stripeAccountId,
             }),
             { status: 200, headers: { "Content-Type": "application/json", ...CORS } },
           );
