@@ -501,7 +501,7 @@ function CheckoutPage() {
       if (paymentMethod === ATTESTLY) {
         try {
           const lineItems = items
-            .map((it) => ({ id: Number(it.id), quantity: Number(it.qty) }))
+            .map((it) => ({ id: Number(it.productId), quantity: Number(it.qty) }))
             .filter((it) => it.id && it.quantity);
           const shipLine = selectedRate
             ? { method_title: selectedRate.name, total: String(shippingCost.toFixed(2)) }
