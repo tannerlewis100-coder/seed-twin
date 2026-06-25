@@ -146,34 +146,19 @@ function CheckoutPage() {
   }
 
   const baseGateways = raw?.payment_methods ?? [];
-  const withNow = baseGateways.includes("nowpayments")
-    ? baseGateways
-    : [...baseGateways, "nowpayments"];
-  const withBank = withNow.includes("clarum_bank_transfer")
-    ? withNow
-    : [...withNow, "clarum_bank_transfer"];
-  // Quiklie is retired — Attestly/Stripe is the card processor.
-  const withoutQuiklie = withBank.filter((g) => g !== "quiklie");
-  // Surface the Attestly/Stripe card option only when the hub is configured.
-  const gateways = useMemo(() => {
-    if (!stripeReady) return withoutQuiklie.filter((g) => g !== STRIPE_VIRTUAL);
-    return withoutQuiklie.includes(STRIPE_VIRTUAL)
-      ? withoutQuiklie
-      : [STRIPE_VIRTUAL, ...withoutQuiklie];
+  // Render strictly from the cart's payment_methods, filtered to the four supported gateways.
+  const gateways = useMemo(
+    () => ALLOWED_GATEWAYS.filter((g) => baseGateways.includes(g)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [withoutQuiklie.join("|"), stripeReady]);
+    [baseGateways.join("|")],
+  );
   const needsShipping = raw?.needs_shipping ?? true;
 
-  // Resolve the real Woo gateway slug we send when the virtual Stripe option is selected.
-  const stripeWooSlug = useMemo(() => {
-    const candidates = ["stripe", "stripe_cc", "woocommerce_payments", "attestly"];
-    return candidates.find((g) => baseGateways.includes(g)) ?? baseGateways[0] ?? "stripe";
-  }, [baseGateways]);
-
   useEffect(() => {
-    if (paymentMethod || !gateways.length) return;
-    // Prefer the Attestly card option, otherwise first available gateway.
-    const preferred = gateways.includes(STRIPE_VIRTUAL) ? STRIPE_VIRTUAL : gateways[0];
+    if (paymentMethod && gateways.includes(paymentMethod as (typeof ALLOWED_GATEWAYS)[number])) return;
+    if (!gateways.length) return;
+    // Prefer Attestly card option when available, otherwise first gateway.
+    const preferred = gateways.includes(ATTESTLY) ? ATTESTLY : gateways[0];
     setPaymentMethod(preferred);
   }, [gateways, paymentMethod]);
 
