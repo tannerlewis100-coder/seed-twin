@@ -802,7 +802,7 @@ function CheckoutPage() {
                   disabled={
                     submitting ||
                     cartLoading ||
-                    (paymentMethod === STRIPE_VIRTUAL && !!stripeSession)
+                    (paymentMethod === ATTESTLY && !!stripeSession)
                   }
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                 >
@@ -810,11 +810,11 @@ function CheckoutPage() {
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
-                  ) : paymentMethod === STRIPE_VIRTUAL && stripeSession ? (
+                  ) : paymentMethod === ATTESTLY && stripeSession ? (
                     <>Enter your card above to complete payment</>
                   ) : (
                     <>
-                      {paymentMethod === STRIPE_VIRTUAL ? "Continue to card payment" : "Place order"}
+                      {paymentMethod === ATTESTLY ? "Continue to card payment" : "Place order"}
                       {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
                     </>
                   )}
