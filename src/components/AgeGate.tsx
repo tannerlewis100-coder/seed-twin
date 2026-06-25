@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { ShieldAlert } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const STORAGE_KEY = "clarum_age_verified";
 
 export function AgeGate() {
   const [verified, setVerified] = useState<boolean | null>(null);
+  const [ageOk, setAgeOk] = useState(false);
+  const [researcherOk, setResearcherOk] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -23,7 +26,10 @@ export function AgeGate() {
     };
   }, [verified]);
 
+  const canEnter = ageOk && researcherOk;
+
   const confirm = () => {
+    if (!canEnter) return;
     localStorage.setItem(STORAGE_KEY, "1");
     setVerified(true);
   };
@@ -52,21 +58,49 @@ export function AgeGate() {
 
         <div className="space-y-5 p-6 md:p-8">
           <h2 id="age-gate-title" className="font-display text-3xl leading-tight text-foreground md:text-4xl">
-            Are you 21 or older?
+            Before you enter
           </h2>
 
           <p id="age-gate-desc" className="text-sm leading-relaxed text-muted-foreground">
             This site sells research peptides for in vitro laboratory use only.
-            Not for human consumption. By entering, you confirm you're at least
-            21 and agree to our terms.
+            Not for human consumption. Please confirm both statements below to
+            continue.
           </p>
+
+          <div className="space-y-4 rounded-md border border-border bg-muted/20 p-4">
+            <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-foreground">
+              <Checkbox
+                checked={ageOk}
+                onCheckedChange={(v) => setAgeOk(v === true)}
+                className="mt-0.5"
+                aria-label="Age confirmation"
+              />
+              <span>
+                I am 21 or older and agree to the terms of use.
+              </span>
+            </label>
+
+            <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-foreground">
+              <Checkbox
+                checked={researcherOk}
+                onCheckedChange={(v) => setResearcherOk(v === true)}
+                className="mt-0.5"
+                aria-label="Researcher confirmation"
+              />
+              <span>
+                I confirm I am a qualified researcher purchasing for in vitro /
+                laboratory research only — not for human or veterinary use.
+              </span>
+            </label>
+          </div>
 
           <div className="flex flex-col gap-2">
             <button
               onClick={confirm}
-              className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+              disabled={!canEnter}
+              className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-primary"
             >
-              Yes, I'm 21 or older
+              Enter
             </button>
             <button
               onClick={decline}
