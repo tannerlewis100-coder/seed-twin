@@ -718,7 +718,7 @@ function CheckoutPage() {
                           id === "stripe" ||
                           id === "stripe_cc" ||
                           id === "clarum_bank_transfer" ||
-                          id === "clarum_bank_transfer" ||
+
                           id === "bacs"
                         )
                           return "cards_bank";
