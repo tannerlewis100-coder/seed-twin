@@ -85,7 +85,6 @@ const sections: FooterSection[] = [
 ];
 
 const socials = [
-  { href: "https://instagram.com/clarumpeptides", label: "Instagram", Icon: Instagram },
   { href: "mailto:clarumpeps@gmail.com", label: "Email", Icon: Mail },
   { href: "tel:+16829001381", label: "Phone", Icon: Phone },
 ];
