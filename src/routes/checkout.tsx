@@ -791,7 +791,9 @@ function CheckoutPage() {
                                           clientSecret={stripeSession.clientSecret}
                                           paymentIntentId={stripeSession.paymentIntentId}
                                           returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
-                                          onReady={setStripeConfirmPayment}
+                                          onReady={(handler) => {
+                                            setStripeConfirmPayment(handler ? () => handler : null);
+                                          }}
                                           onPaid={async () => {
                                             clearCartToken();
                                             try { await refresh(); } catch { /* ignore */ }
