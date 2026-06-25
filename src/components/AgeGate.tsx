@@ -49,7 +49,7 @@ export function AgeGate() {
       aria-labelledby="age-gate-title"
       aria-describedby="age-gate-desc"
     >
-      <div className="relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-2xl md:overflow-hidden">
+      <div className="relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-3xl md:overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Visual panel */}
           <div className="relative w-full overflow-hidden bg-black aspect-[4/3] md:aspect-auto md:min-h-[480px]">
@@ -70,7 +70,8 @@ export function AgeGate() {
           </div>
 
           {/* Content panel */}
-          <div className="flex flex-col justify-between gap-6 p-6 md:p-8">
+          <div className="flex flex-col justify-between gap-3.5 p-5 md:gap-5 md:p-10">
+
             <div>
               <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">
                 Lab access
