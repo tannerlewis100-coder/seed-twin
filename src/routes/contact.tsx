@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, Clock, MapPin, Send, Loader2, CheckCircle2 } from "lucide-react";
+import { Mail, Clock, MapPin, Phone, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -37,10 +37,13 @@ export const Route = createFileRoute("/contact")({
           email: "clarumpeps@gmail.com",
           address: {
             "@type": "PostalAddress",
-            addressLocality: "Keller",
+            streetAddress: "17350 State Hwy 249, Ste 220 #32971",
+            addressLocality: "Houston",
             addressRegion: "TX",
+            postalCode: "77064",
             addressCountry: "US",
           },
+          telephone: "+1-682-900-1381",
           openingHoursSpecification: [
             {
               "@type": "OpeningHoursSpecification",
@@ -57,7 +60,12 @@ export const Route = createFileRoute("/contact")({
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "clarumpeps@gmail.com" },
-  { icon: MapPin, label: "Location", value: "Keller, Texas" },
+  { icon: Phone, label: "Phone", value: "(682) 900-1381" },
+  {
+    icon: MapPin,
+    label: "Mailing address",
+    value: "TLSEVEN LLC · 17350 State Hwy 249, Ste 220 #32971, Houston, TX 77064",
+  },
   { icon: Clock, label: "Hours", value: "Mon to Fri · 9 to 5 EST" },
 ];
 
