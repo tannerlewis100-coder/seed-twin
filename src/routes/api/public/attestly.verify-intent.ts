@@ -6,6 +6,8 @@ const CORS = {
   "Access-Control-Allow-Headers": "Content-Type, Accept",
 };
 
+const WP_BASE = "https://admin.clarumpeptides.com/wp-json/clarum/v1";
+
 function json(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -42,7 +44,26 @@ export const Route = createFileRoute("/api/public/attestly/verify-intent")({
             body: JSON.stringify({ paymentIntentId: body.paymentIntentId }),
           });
           const data = (await upstream.json().catch(() => ({}))) as { paid?: boolean; status?: string; error?: string };
-          return json({ paid: !!data.paid, error: data.error });
+          if (!data.paid) return json({ paid: false, error: data.error ?? "Payment was not completed." });
+
+          const confirm = await fetch(`${WP_BASE}/payment-confirm`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+            body: JSON.stringify({
+              order_id: Number(body.orderId),
+              order_key: body.orderKey,
+              transaction: {
+                provider: "attestly",
+                payment_intent: body.paymentIntentId,
+                status: data.status ?? "paid",
+              },
+            }),
+          });
+          const confirmData = (await confirm.json().catch(() => ({}))) as { message?: string };
+          if (!confirm.ok) {
+            return json({ paid: false, error: confirmData.message ?? "Could not mark order paid." }, confirm.status || 502);
+          }
+          return json({ paid: true });
         } catch (e) {
           return json({ paid: false, error: e instanceof Error ? e.message : "verify failed" }, 500);
         }
