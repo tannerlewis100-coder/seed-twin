@@ -20,6 +20,13 @@ export function CartDrawer() {
     .filter((c): c is string => !!c)
     .filter((c) => c.toUpperCase() !== CRYPTO_COUPON);
 
+  const minor = raw?.totals.currency_minor_unit ?? 2;
+  const div = Math.pow(10, minor);
+  const discount = raw?.totals.total_discount ? Number(raw.totals.total_discount) / div : 0;
+  const total = raw?.totals.total_price ? Number(raw.totals.total_price) / div : subtotal;
+  const discountedSubtotal = Math.max(0, subtotal - discount);
+  const discountLabel = appliedCoupons.join(", ");
+
   async function handleApplyCoupon() {
     const code = couponInput.trim().toUpperCase();
     if (!code || couponBusy) return;
@@ -56,8 +63,8 @@ export function CartDrawer() {
     navigate({ to: "/checkout" });
   }
 
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  const unlocked = subtotal >= FREE_SHIPPING_THRESHOLD;
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - discountedSubtotal);
+  const unlocked = discountedSubtotal >= FREE_SHIPPING_THRESHOLD;
 
   return (
     <Sheet open={isOpen} onOpenChange={(o) => !o && closeCart()}>
@@ -198,21 +205,33 @@ export function CartDrawer() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground/60">Subtotal</span>
-                <span className="font-display text-2xl text-foreground">${subtotal.toFixed(2)}</span>
+                <span className="text-sm text-foreground">${subtotal.toFixed(2)}</span>
               </div>
+              {discount > 0 && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-brand-gold/90">
+                    Discount{discountLabel ? ` (${discountLabel})` : ""}
+                  </span>
+                  <span className="text-brand-gold">−${discount.toFixed(2)}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between text-xs">
                 <span className="text-foreground/50">Shipping</span>
                 <span className="text-foreground/50">Calculated at checkout</span>
               </div>
-              <div
-                className={`text-[11px] pt-1 ${
-                  unlocked ? "text-emerald-400" : "text-brand-gold/80"
-                }`}
-              >
-                {unlocked
-                  ? "✓ Free shipping unlocked"
-                  : `You're $${remaining.toFixed(2)} away from free shipping`}
+              <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                <span className="text-sm text-foreground/60">Total</span>
+                <span className="font-display text-2xl text-foreground">${total.toFixed(2)}</span>
               </div>
+            </div>
+            <div
+              className={`text-[11px] ${
+                unlocked ? "text-emerald-400" : "text-brand-gold/80"
+              }`}
+            >
+              {unlocked
+                ? "✓ Free shipping unlocked"
+                : `You're $${remaining.toFixed(2)} away from free shipping`}
             </div>
             <button
               type="button"
