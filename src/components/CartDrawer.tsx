@@ -233,16 +233,6 @@ export function CartDrawer() {
                 ? "✓ Free shipping unlocked"
                 : `You're $${remaining.toFixed(2)} away from free shipping`}
             </div>
-              <div
-                className={`text-[11px] pt-1 ${
-                  unlocked ? "text-emerald-400" : "text-brand-gold/80"
-                }`}
-              >
-                {unlocked
-                  ? "✓ Free shipping unlocked"
-                  : `You're $${remaining.toFixed(2)} away from free shipping`}
-              </div>
-            </div>
             <button
               type="button"
               onClick={onCheckout}
