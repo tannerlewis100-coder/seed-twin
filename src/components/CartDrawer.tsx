@@ -205,12 +205,34 @@ export function CartDrawer() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-foreground/60">Subtotal</span>
-                <span className="font-display text-2xl text-foreground">${subtotal.toFixed(2)}</span>
+                <span className="text-sm text-foreground">${subtotal.toFixed(2)}</span>
               </div>
+              {discount > 0 && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-brand-gold/90">
+                    Discount{discountLabel ? ` (${discountLabel})` : ""}
+                  </span>
+                  <span className="text-brand-gold">−${discount.toFixed(2)}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between text-xs">
                 <span className="text-foreground/50">Shipping</span>
                 <span className="text-foreground/50">Calculated at checkout</span>
               </div>
+              <div className="flex items-center justify-between pt-2 border-t border-white/5">
+                <span className="text-sm text-foreground/60">Total</span>
+                <span className="font-display text-2xl text-foreground">${total.toFixed(2)}</span>
+              </div>
+            </div>
+            <div
+              className={`text-[11px] ${
+                unlocked ? "text-emerald-400" : "text-brand-gold/80"
+              }`}
+            >
+              {unlocked
+                ? "✓ Free shipping unlocked"
+                : `You're $${remaining.toFixed(2)} away from free shipping`}
+            </div>
               <div
                 className={`text-[11px] pt-1 ${
                   unlocked ? "text-emerald-400" : "text-brand-gold/80"
