@@ -63,8 +63,8 @@ export function CartDrawer() {
     navigate({ to: "/checkout" });
   }
 
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-  const unlocked = subtotal >= FREE_SHIPPING_THRESHOLD;
+  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - discountedSubtotal);
+  const unlocked = discountedSubtotal >= FREE_SHIPPING_THRESHOLD;
 
   return (
     <Sheet open={isOpen} onOpenChange={(o) => !o && closeCart()}>
