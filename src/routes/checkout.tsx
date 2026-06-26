@@ -514,7 +514,7 @@ function CheckoutPage() {
               billing: billingAddr,
               shipping: shippingAddr,
               payment_method: ATTESTLY,
-              payment_method_title: "Credit / Debit Card · Apple Pay · Google Pay",
+              payment_method_title: "Credit / Debit Card",
               customer_note: note || undefined,
               items: lineItems,
               coupons: allAppliedCoupons,

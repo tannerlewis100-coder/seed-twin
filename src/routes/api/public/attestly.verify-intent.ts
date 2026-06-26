@@ -78,7 +78,7 @@ export const Route = createFileRoute("/api/public/attestly/verify-intent")({
                 set_paid: true,
                 transaction_id: body.paymentIntentId,
                 payment_method: "attestly_payments",
-                payment_method_title: "Credit / Debit Card · Apple Pay · Google Pay",
+                payment_method_title: "Credit / Debit Card",
               }),
             },
           );
