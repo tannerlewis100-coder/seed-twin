@@ -20,6 +20,13 @@ export function CartDrawer() {
     .filter((c): c is string => !!c)
     .filter((c) => c.toUpperCase() !== CRYPTO_COUPON);
 
+  const minor = raw?.totals.currency_minor_unit ?? 2;
+  const div = Math.pow(10, minor);
+  const discount = raw?.totals.total_discount ? Number(raw.totals.total_discount) / div : 0;
+  const total = raw?.totals.total_price ? Number(raw.totals.total_price) / div : subtotal;
+  const discountedSubtotal = Math.max(0, subtotal - discount);
+  const discountLabel = appliedCoupons.join(", ");
+
   async function handleApplyCoupon() {
     const code = couponInput.trim().toUpperCase();
     if (!code || couponBusy) return;
