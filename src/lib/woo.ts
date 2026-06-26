@@ -563,7 +563,7 @@ export async function fetchOrder(orderId: number | string, key: string): Promise
 /** Friendly label for known gateway IDs; otherwise humanize the slug. */
 export function gatewayLabel(id: string): string {
   const map: Record<string, string> = {
-    attestly_payments: "Credit / Debit Card · Apple Pay · Google Pay",
+    attestly_payments: "Credit / Debit Card",
     depay_wc_payments: "Pay with Crypto (DePay)",
     nowpayments: "Pay with Any Coin (NOWPayments — BTC, ETH, USDT, USDC, SOL, +200 more)",
     clarum_bank_transfer: "Bank Transfer (ACH/Wire) — lowest fees, 1–3 business day settlement",
