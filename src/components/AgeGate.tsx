@@ -5,6 +5,7 @@ const STORAGE_KEY = "clarum_age_verified";
 
 export function AgeGate() {
   const [verified, setVerified] = useState<boolean | null>(null);
+  const [researcher, setResearcher] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
