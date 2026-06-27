@@ -1189,3 +1189,122 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function GuestSignInScreen({ onVerified }: { onVerified: (email: string) => void }) {
+  const [email, setEmail] = useState("");
+  const [stage, setStage] = useState<"email" | "code">("email");
+  const [sending, setSending] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (stage === "email") emailRef.current?.focus();
+  }, [stage]);
+
+  async function submitEmail(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
+      setErr("Enter a valid email.");
+      return;
+    }
+    setSending(true);
+    setErr(null);
+    const res = await sendOtp(trimmed);
+    setSending(false);
+    if (!res.ok) {
+      setErr(res.error ?? "Couldn't send code. Try again.");
+      return;
+    }
+    setStage("code");
+  }
+
+  return (
+    <div className="max-w-md mx-auto">
+      <div className="flex items-center justify-between mb-6 text-xs">
+        {stage === "code" ? (
+          <button
+            type="button"
+            onClick={() => setStage("email")}
+            className="inline-flex items-center gap-1.5 text-foreground/60 hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" /> Back
+          </button>
+        ) : (
+          <Link to="/shop" className="inline-flex items-center gap-1.5 text-foreground/60 hover:text-foreground">
+            <ArrowLeft className="h-3.5 w-3.5" /> Back
+          </Link>
+        )}
+        <span className="inline-flex items-center gap-1.5 text-foreground/60">
+          <ShieldCheck className="h-3.5 w-3.5 text-brand-gold" /> Secure Checkout
+        </span>
+      </div>
+
+      <div className="rounded-2xl border border-brand-gold/25 bg-gradient-to-b from-brand-gold/5 to-transparent p-8 sm:p-10">
+        <div className="text-center mb-6">
+          <p className="font-display text-2xl tracking-[0.2em] text-brand-gold">CLARUM</p>
+        </div>
+
+        {stage === "email" ? (
+          <form onSubmit={submitEmail} className="space-y-5">
+            <div className="text-center">
+              <h2 className="font-display text-2xl text-foreground">Sign in or sign up</h2>
+              <p className="text-sm text-foreground/60 mt-1.5">
+                We'll email you a one-time code — no password needed.
+              </p>
+            </div>
+
+            <label className="block">
+              <span className="block text-xs text-foreground/60 mb-1.5">Email</span>
+              <input
+                ref={emailRef}
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (err) setErr(null);
+                }}
+                placeholder="your@email.com"
+                className={inputCls}
+                required
+              />
+            </label>
+
+            {err && <p className="text-sm text-red-300">{err}</p>}
+
+            <button
+              type="submit"
+              disabled={sending}
+              className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-3.5 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            >
+              {sending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Sending code…
+                </>
+              ) : (
+                <>
+                  Sign in or sign up <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+
+            <p className="text-center text-[11px] text-foreground/50 leading-relaxed">
+              By continuing you agree to our{" "}
+              <Link to="/terms" className="text-brand-gold hover:underline">Terms</Link> and{" "}
+              <Link to="/privacy" className="text-brand-gold hover:underline">Privacy Policy</Link>.
+            </p>
+          </form>
+        ) : (
+          <EmailVerifyGate
+            email={email.trim()}
+            onVerified={() => onVerified(email)}
+            onChangeEmail={() => setStage("email")}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
