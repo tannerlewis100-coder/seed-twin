@@ -69,10 +69,14 @@ type ShippingRate = {
 
 function CheckoutPage() {
   const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
-  const { user: clarumUser } = useClarumAuth();
+  const { user: clarumUser, setSession } = useClarumAuth();
   
 
   const [email, setEmail] = useState("");
+  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return sessionStorage.getItem(OTP_VERIFIED_KEY); } catch { return null; }
+  });
   const [billing, setBilling] = useState<AddressForm>(EMPTY_ADDRESS);
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
