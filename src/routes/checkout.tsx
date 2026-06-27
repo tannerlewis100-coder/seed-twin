@@ -614,24 +614,18 @@ function CheckoutPage() {
     }
   }
 
-  async function handleVerified() {
-    setVerifiedEmail(email.trim().toLowerCase());
-    setOtpStage("verified");
+  function handleGuestVerified(verified: string) {
+    const lower = verified.trim().toLowerCase();
+    try {
+      localStorage.setItem(VERIFIED_EMAIL_KEY, lower);
+    } catch {
+      /* ignore */
+    }
+    setGuestVerifiedEmail(lower);
+    setEmail(lower);
     setError(null);
-    // Smoothly continue into the order/payment flow.
-    await proceedCheckout();
   }
 
-  function handleChangeEmail() {
-    setOtpStage("idle");
-    setVerifiedEmail(null);
-    setError(null);
-    setTimeout(() => {
-      const el = document.querySelector<HTMLInputElement>('input[type="email"]');
-      el?.focus();
-      el?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 40);
-  }
 
 
 
