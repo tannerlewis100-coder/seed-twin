@@ -473,26 +473,6 @@ function CheckoutPage() {
       return;
     }
 
-    // Guest email verification gate — must verify before order/payment.
-    if (needsVerify) {
-      if (otpStage === "verifying") return; // already showing the gate
-      setOtpSending(true);
-      const res = await sendOtp(email.trim());
-      setOtpSending(false);
-      if (!res.ok) {
-        setError(res.error ?? "Couldn't send verification code.");
-        return;
-      }
-      setOtpStage("verifying");
-      setTimeout(() => {
-        document.getElementById("email-verify-gate")?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 60);
-      return;
-    }
-
     await proceedCheckout();
   }
 
