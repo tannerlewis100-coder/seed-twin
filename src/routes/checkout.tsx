@@ -915,11 +915,30 @@ function CheckoutPage() {
                   </div>
                 )}
 
+                {isGuest && otpStage === "verifying" && (
+                  <div id="email-verify-gate">
+                    <EmailVerifyGate
+                      email={email.trim()}
+                      onVerified={handleVerified}
+                      onChangeEmail={handleChangeEmail}
+                    />
+                  </div>
+                )}
+
+                {isGuest && otpStage === "verified" && !needsVerify && (
+                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 px-4 py-2.5 text-sm text-emerald-300 flex items-center gap-2">
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Email verified
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={
                     submitting ||
                     cartLoading ||
+                    otpSending ||
+                    (isGuest && otpStage === "verifying") ||
                     (paymentMethod === ATTESTLY && !!stripeSession && !stripeConfirmPayment)
                   }
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
@@ -928,19 +947,28 @@ function CheckoutPage() {
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
+                  ) : otpSending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Sending verification code…
+                    </>
+                  ) : isGuest && otpStage === "verifying" ? (
+                    <>Enter the code above to continue</>
                   ) : paymentMethod === ATTESTLY && stripeSession && !stripeConfirmPayment ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Loading secure card form…
                     </>
                   ) : (
                     <>
-                      {paymentMethod === ATTESTLY && !stripeSession
-                        ? "Continue to secure card form"
-                        : "Place order"}
+                      {needsVerify
+                        ? "Continue — verify email"
+                        : paymentMethod === ATTESTLY && !stripeSession
+                          ? "Continue to secure card form"
+                          : "Place order"}
                       {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
                     </>
                   )}
                 </button>
+
                 <p className="text-center text-xs text-foreground/50">
                   Your bank/card statement will show{" "}
                   <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
