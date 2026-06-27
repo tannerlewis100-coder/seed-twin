@@ -206,6 +206,14 @@ function CheckoutPage() {
     }));
   }, [clarumUser]);
 
+  // Lock email to the verified one when guest passed the OTP gate.
+  useEffect(() => {
+    if (verifiedEmail) setEmail(verifiedEmail);
+  }, [verifiedEmail]);
+
+  const emailLocked = !!verifiedEmail || !!clarumUser;
+  const gateRequired = !clarumUser && !verifiedEmail;
+
   // Auto-apply unused welcome coupon once per cart session.
   // Woo's coupon engine validates against billing_address.email in the cart
   // session, so we must push the user's email to the cart BEFORE applying.
