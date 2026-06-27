@@ -62,10 +62,24 @@ export function AgeGate() {
             21 and agree to our terms.
           </p>
 
+          <label className="flex items-start gap-3 rounded-md border border-border bg-muted/20 p-3 text-xs leading-relaxed text-muted-foreground cursor-pointer">
+            <input
+              type="checkbox"
+              checked={researcher}
+              onChange={(e) => setResearcher(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+            />
+            <span>
+              I confirm I am a qualified researcher purchasing for in vitro /
+              laboratory research only — not for human or veterinary use.
+            </span>
+          </label>
+
           <div className="flex flex-col gap-2">
             <button
               onClick={confirm}
-              className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90"
+              disabled={!researcher}
+              className="w-full rounded-md bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               Yes, I'm 21 or older
             </button>
