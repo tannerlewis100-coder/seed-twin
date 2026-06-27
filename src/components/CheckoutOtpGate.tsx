@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import clarumLogo from "@/assets/clarum-logo.png";
 
 type Props = {
   onVerified: (email: string, payload: Record<string, unknown>) => void;
@@ -9,13 +10,12 @@ type Props = {
 
 const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export function CheckoutOtpGate({ onVerified, summary, defaultEmail }: Props) {
+export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState(defaultEmail ?? "");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
-  const [remaining, setRemaining] = useState<number | null>(null);
   const [shake, setShake] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const boxRefs = useRef<Array<HTMLInputElement | null>>([]);
@@ -87,7 +87,6 @@ export function CheckoutOtpGate({ onVerified, summary, defaultEmail }: Props) {
         return;
       }
       const rem = typeof data.remaining === "number" ? data.remaining : null;
-      setRemaining(rem);
       setErr(
         rem !== null
           ? `Incorrect code — ${rem} ${rem === 1 ? "try" : "tries"} left.`
@@ -116,7 +115,6 @@ export function CheckoutOtpGate({ onVerified, summary, defaultEmail }: Props) {
     }
     setDigits((d) => {
       const next = [...d];
-      // If pasted multiple digits, fan them out.
       for (let i = 0; i < cleaned.length && idx + i < 6; i++) {
         next[idx + i] = cleaned[i];
       }
@@ -154,235 +152,180 @@ export function CheckoutOtpGate({ onVerified, summary, defaultEmail }: Props) {
       setCooldown(30);
       setDigits(["", "", "", "", "", ""]);
       setErr(null);
-      setRemaining(null);
       setTimeout(() => boxRefs.current[0]?.focus(), 40);
     }
   }
 
   return (
-    <div className="grid lg:grid-cols-[1fr_360px] gap-8 items-start">
-      <div className="flex justify-center">
-        <div
-          className={`relative w-full max-w-[440px] rounded-[20px] p-[1px] bg-gradient-to-br from-[#C79A3A] via-[#E2BC63]/60 to-[#C79A3A]/40 shadow-[0_0_60px_-15px_rgba(199,154,58,0.45)] transition-transform ${
-            shake ? "animate-[shake_0.45s_ease-in-out]" : ""
-          }`}
-        >
-          <div className="relative rounded-[19px] bg-[#0F1A2E] overflow-hidden">
-            {/* molecule watermark */}
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Verify your email to continue to checkout"
+    >
+      <div
+        className={`relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-3xl md:overflow-hidden ${
+          shake ? "animate-[shake_0.45s_ease-in-out]" : ""
+        }`}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2">
+          {/* Brand panel */}
+          <div className="relative w-full overflow-hidden bg-black aspect-[4/3] md:aspect-auto md:min-h-[480px] flex items-center justify-center p-8">
             <div
               aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.05]"
+              className="pointer-events-none absolute inset-0 opacity-[0.08]"
               style={{
                 backgroundImage:
                   "radial-gradient(circle at 20% 30%, #C79A3A 1px, transparent 1.5px), radial-gradient(circle at 70% 60%, #C79A3A 1px, transparent 1.5px), radial-gradient(circle at 50% 85%, #C79A3A 1px, transparent 1.5px)",
                 backgroundSize: "180px 180px",
               }}
             />
-            <div className="relative p-8 sm:p-10">
-              <div className="text-center mb-6">
-                <p
-                  className="text-[10px] tracking-[0.4em] font-semibold"
-                  style={{ color: "#C79A3A" }}
-                >
-                  CLARUM
-                </p>
-              </div>
+            <img
+              src={clarumLogo}
+              alt="Clarum Peptides"
+              className="relative z-10 max-h-40 w-auto object-contain"
+            />
+            <div className="absolute left-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-foreground shadow-lg">
+              Secure checkout
+            </div>
+          </div>
 
-              {step === "email" ? (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <h2
-                    className="text-center text-2xl mb-2"
-                    style={{ fontFamily: "Georgia, serif", color: "#F5EBD3" }}
-                  >
-                    Sign in or sign up
-                  </h2>
-                  <p
-                    className="text-center text-sm mb-6"
-                    style={{ color: "rgba(199,154,58,0.7)" }}
-                  >
-                    We'll email you a one-time code — no password needed.
+          {/* Form panel */}
+          <div className="flex flex-col justify-center gap-4 p-5 md:gap-5 md:p-10">
+            {step === "email" ? (
+              <>
+                <div className="space-y-2">
+                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                    Verify it's you
                   </p>
-                  <form onSubmit={handleEmailSubmit} className="space-y-4">
-                    <input
-                      type="email"
-                      autoFocus
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (err) setErr(null);
-                      }}
-                      placeholder="your@email.com"
-                      className="w-full rounded-xl px-4 py-3.5 text-sm outline-none transition-all"
-                      style={{
-                        backgroundColor: "#0A1322",
-                        border: "1px solid rgba(199,154,58,0.25)",
-                        color: "#F5EBD3",
-                      }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = "#C79A3A";
-                        e.currentTarget.style.boxShadow = "0 0 0 3px rgba(199,154,58,0.18)";
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = "rgba(199,154,58,0.25)";
-                        e.currentTarget.style.boxShadow = "none";
-                      }}
-                    />
-                    {err && <p className="text-xs text-red-400">{err}</p>}
-                    <button
-                      type="submit"
-                      disabled={busy}
-                      className="w-full rounded-full py-3.5 font-bold text-sm flex items-center justify-center gap-2 transition-transform hover:-translate-y-0.5 disabled:opacity-60 disabled:translate-y-0"
-                      style={{
-                        background: "linear-gradient(135deg,#C79A3A 0%,#E2BC63 100%)",
-                        color: "#0F1A2E",
-                        boxShadow: "0 8px 24px -8px rgba(199,154,58,0.5)",
-                      }}
-                    >
-                      {busy ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <>
-                          Sign in or sign up <ArrowRight className="h-4 w-4" />
-                        </>
-                      )}
-                    </button>
-                    <p className="text-center text-[11px]" style={{ color: "rgba(245,235,211,0.5)" }}>
-                      By continuing you agree to our{" "}
-                      <a href="/terms" style={{ color: "#C79A3A" }} className="hover:underline">
-                        Terms
-                      </a>{" "}
-                      and{" "}
-                      <a href="/privacy" style={{ color: "#C79A3A" }} className="hover:underline">
-                        Privacy Policy
-                      </a>
-                      .
-                    </p>
-                  </form>
+                  <h2 className="font-display text-2xl leading-tight text-foreground md:text-4xl">
+                    Sign in or sign up.
+                  </h2>
                 </div>
-              ) : (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div className="flex justify-center mb-5">
-                    <div
-                      className="h-14 w-14 rounded-full flex items-center justify-center"
-                      style={{
-                        background:
-                          "radial-gradient(circle, rgba(226,188,99,0.25), rgba(199,154,58,0.08))",
-                        border: "1px solid rgba(199,154,58,0.5)",
-                      }}
-                    >
-                      <Mail className="h-6 w-6" style={{ color: "#E2BC63" }} />
-                    </div>
-                  </div>
-                  <h2
-                    className="text-center text-2xl mb-2"
-                    style={{ fontFamily: "Georgia, serif", color: "#F5EBD3" }}
-                  >
-                    Verify your email
-                  </h2>
-                  <p
-                    className="text-center text-sm mb-6"
-                    style={{ color: "rgba(245,235,211,0.65)" }}
-                  >
-                    We sent a 6-digit code to{" "}
-                    <span style={{ color: "#E2BC63" }} className="font-medium">
-                      {email}
-                    </span>
-                  </p>
 
-                  <div className="flex justify-center gap-2 mb-4" onPaste={(e) => {
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  We'll email you a one-time code. No password needed.
+                </p>
+
+                <form onSubmit={handleEmailSubmit} className="space-y-3">
+                  <input
+                    type="email"
+                    autoFocus
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (err) setErr(null);
+                    }}
+                    placeholder="your@email.com"
+                    className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    disabled={busy}
+                  />
+                  {err && <p className="text-xs text-red-400">{err}</p>}
+                  <button
+                    type="submit"
+                    disabled={busy}
+                    className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+                  >
+                    {busy ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>
+                        Send my code <ArrowRight className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                  <p className="text-[11px] leading-relaxed text-muted-foreground/80">
+                    By continuing you agree to our{" "}
+                    <a href="/terms" className="text-primary hover:underline">
+                      Terms
+                    </a>{" "}
+                    and{" "}
+                    <a href="/privacy" className="text-primary hover:underline">
+                      Privacy Policy
+                    </a>
+                    .
+                  </p>
+                </form>
+              </>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                    <Mail className="h-4 w-4" /> Check your email
+                  </div>
+                  <h2 className="font-display text-2xl leading-tight text-foreground md:text-4xl">
+                    Verify your email.
+                  </h2>
+                </div>
+
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  We sent a 6-digit code to{" "}
+                  <span className="font-medium text-primary">{email}</span>
+                </p>
+
+                <div
+                  className="flex justify-center gap-2"
+                  onPaste={(e) => {
                     const txt = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
                     if (txt.length) {
                       e.preventDefault();
                       setDigit(0, txt);
                     }
-                  }}>
-                    {digits.map((d, i) => (
-                      <input
-                        key={i}
-                        ref={(el) => {
-                          boxRefs.current[i] = el;
-                        }}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        value={d}
-                        onChange={(e) => setDigit(i, e.target.value)}
-                        onKeyDown={(e) => onKeyDown(i, e)}
-                        disabled={busy}
-                        className="text-center rounded-xl outline-none transition-all"
-                        style={{
-                          width: "44px",
-                          height: "56px",
-                          fontFamily: "Georgia, serif",
-                          fontSize: "22px",
-                          backgroundColor: "#0A1322",
-                          border: `1px solid ${err ? "rgba(239,68,68,0.6)" : "rgba(199,154,58,0.3)"}`,
-                          color: "#F5EBD3",
-                        }}
-                        onFocus={(e) => {
-                          if (!err) {
-                            e.currentTarget.style.borderColor = "#E2BC63";
-                            e.currentTarget.style.boxShadow = "0 0 0 3px rgba(226,188,99,0.25)";
-                          }
-                        }}
-                        onBlur={(e) => {
-                          if (!err) {
-                            e.currentTarget.style.borderColor = "rgba(199,154,58,0.3)";
-                            e.currentTarget.style.boxShadow = "none";
-                          }
-                        }}
-                      />
-                    ))}
-                  </div>
-
-                  {err && (
-                    <p className="text-center text-xs text-red-400 mb-3">{err}</p>
-                  )}
-
-                  <div className="flex items-center justify-center gap-4 text-xs mb-6">
-                    <button
-                      type="button"
-                      onClick={handleResend}
-                      disabled={cooldown > 0 || busy}
-                      style={{ color: cooldown > 0 ? "rgba(245,235,211,0.4)" : "#C79A3A" }}
-                      className="hover:underline disabled:no-underline"
-                    >
-                      {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
-                    </button>
-                    <span style={{ color: "rgba(245,235,211,0.3)" }}>·</span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setStep("email");
-                        setErr(null);
-                        setRemaining(null);
+                  }}
+                >
+                  {digits.map((d, i) => (
+                    <input
+                      key={i}
+                      ref={(el) => {
+                        boxRefs.current[i] = el;
                       }}
-                      style={{ color: "#C79A3A" }}
-                      className="hover:underline"
-                    >
-                      Change email
-                    </button>
-                  </div>
-
-                  <div
-                    className="flex items-center justify-center gap-1.5 text-[11px]"
-                    style={{ color: "rgba(199,154,58,0.7)" }}
-                  >
-                    <Lock className="h-3 w-3" />
-                    Secure, encrypted verification
-                  </div>
-                  {/* remaining is shown inline in err string */}
-                  <input type="hidden" value={remaining ?? ""} readOnly />
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={d}
+                      onChange={(e) => setDigit(i, e.target.value)}
+                      onKeyDown={(e) => onKeyDown(i, e)}
+                      disabled={busy}
+                      className={`h-14 w-11 rounded-md border bg-background text-center font-display text-xl text-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary ${
+                        err ? "border-red-500/60" : "border-border"
+                      }`}
+                    />
+                  ))}
                 </div>
-              )}
-            </div>
+
+                {err && <p className="text-center text-xs text-red-400">{err}</p>}
+
+                <div className="flex items-center justify-center gap-4 text-xs">
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={cooldown > 0 || busy}
+                    className="text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
+                  >
+                    {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
+                  </button>
+                  <span className="text-muted-foreground/40">·</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setStep("email");
+                      setErr(null);
+                    }}
+                    className="text-primary hover:underline"
+                  >
+                    Change email
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+                  <Lock className="h-3 w-3" />
+                  Secure, encrypted verification
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
-
-      {summary && (
-        <aside className="hidden lg:block lg:sticky lg:top-8 self-start">{summary}</aside>
-      )}
 
       <style>{`
         @keyframes shake {
