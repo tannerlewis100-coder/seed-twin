@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Loader2, Lock, ShoppingBag } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Lock, ShieldCheck, ShoppingBag } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { useCart } from "@/lib/cart";
@@ -65,12 +65,23 @@ type ShippingRate = {
   selected: boolean;
 };
 
+const VERIFIED_EMAIL_KEY = "clarum_verified_email";
+
+function readVerifiedEmail(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(VERIFIED_EMAIL_KEY);
+  } catch {
+    return null;
+  }
+}
+
 function CheckoutPage() {
   const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
   const { user: clarumUser } = useClarumAuth();
   
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => readVerifiedEmail() ?? "");
   const [billing, setBilling] = useState<AddressForm>(EMPTY_ADDRESS);
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
@@ -80,12 +91,11 @@ function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Guest email verification (Attestly OTP). Logged-in users skip entirely.
-  const [otpSending, setOtpSending] = useState(false);
-  const [otpStage, setOtpStage] = useState<"idle" | "verifying" | "verified">("idle");
-  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
+  // Step 1 — passwordless front-door for guests. Logged-in users skip it.
+  const [guestVerifiedEmail, setGuestVerifiedEmail] = useState<string | null>(() => readVerifiedEmail());
   const isGuest = !clarumUser;
-  const needsVerify = isGuest && (otpStage !== "verified" || verifiedEmail !== email.trim().toLowerCase());
+  const verifiedEmail = clarumUser?.email ?? guestVerifiedEmail;
+  const needsFrontDoor = isGuest && !guestVerifiedEmail;
 
   const { config: attestlyConfig, loading: attestlyConfigLoading } = useAttestlyConfig();
   const stripeReady = !!(
@@ -463,26 +473,6 @@ function CheckoutPage() {
       return;
     }
 
-    // Guest email verification gate — must verify before order/payment.
-    if (needsVerify) {
-      if (otpStage === "verifying") return; // already showing the gate
-      setOtpSending(true);
-      const res = await sendOtp(email.trim());
-      setOtpSending(false);
-      if (!res.ok) {
-        setError(res.error ?? "Couldn't send verification code.");
-        return;
-      }
-      setOtpStage("verifying");
-      setTimeout(() => {
-        document.getElementById("email-verify-gate")?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 60);
-      return;
-    }
-
     await proceedCheckout();
   }
 
@@ -624,24 +614,18 @@ function CheckoutPage() {
     }
   }
 
-  async function handleVerified() {
-    setVerifiedEmail(email.trim().toLowerCase());
-    setOtpStage("verified");
+  function handleGuestVerified(verified: string) {
+    const lower = verified.trim().toLowerCase();
+    try {
+      localStorage.setItem(VERIFIED_EMAIL_KEY, lower);
+    } catch {
+      /* ignore */
+    }
+    setGuestVerifiedEmail(lower);
+    setEmail(lower);
     setError(null);
-    // Smoothly continue into the order/payment flow.
-    await proceedCheckout();
   }
 
-  function handleChangeEmail() {
-    setOtpStage("idle");
-    setVerifiedEmail(null);
-    setError(null);
-    setTimeout(() => {
-      const el = document.querySelector<HTMLInputElement>('input[type="email"]');
-      el?.focus();
-      el?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 40);
-  }
 
 
 
@@ -671,6 +655,8 @@ function CheckoutPage() {
                 Browse catalog
               </Link>
             </div>
+          ) : needsFrontDoor ? (
+            <GuestSignInScreen onVerified={handleGuestVerified} />
           ) : (
             <form onSubmit={onSubmit} className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
               {/* Left: form */}
@@ -681,12 +667,14 @@ function CheckoutPage() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className={inputCls}
+                      className={`${inputCls} ${verifiedEmail ? "opacity-70 cursor-not-allowed" : ""}`}
                       required
                       autoComplete="email"
+                      readOnly={!!verifiedEmail}
                     />
                   </Field>
                 </Section>
+
 
                 <Section title="Billing address">
                   <div className="grid sm:grid-cols-2 gap-4">
@@ -915,20 +903,10 @@ function CheckoutPage() {
                   </div>
                 )}
 
-                {isGuest && otpStage === "verifying" && (
-                  <div id="email-verify-gate">
-                    <EmailVerifyGate
-                      email={email.trim()}
-                      onVerified={handleVerified}
-                      onChangeEmail={handleChangeEmail}
-                    />
-                  </div>
-                )}
-
-                {isGuest && otpStage === "verified" && !needsVerify && (
+                {isGuest && verifiedEmail && (
                   <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 px-4 py-2.5 text-sm text-emerald-300 flex items-center gap-2">
                     <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Email verified
+                    Email verified · {verifiedEmail}
                   </div>
                 )}
 
@@ -937,8 +915,6 @@ function CheckoutPage() {
                   disabled={
                     submitting ||
                     cartLoading ||
-                    otpSending ||
-                    (isGuest && otpStage === "verifying") ||
                     (paymentMethod === ATTESTLY && !!stripeSession && !stripeConfirmPayment)
                   }
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
@@ -947,27 +923,20 @@ function CheckoutPage() {
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
-                  ) : otpSending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Sending verification code…
-                    </>
-                  ) : isGuest && otpStage === "verifying" ? (
-                    <>Enter the code above to continue</>
                   ) : paymentMethod === ATTESTLY && stripeSession && !stripeConfirmPayment ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Loading secure card form…
                     </>
                   ) : (
                     <>
-                      {needsVerify
-                        ? "Continue — verify email"
-                        : paymentMethod === ATTESTLY && !stripeSession
-                          ? "Continue to secure card form"
-                          : "Place order"}
+                      {paymentMethod === ATTESTLY && !stripeSession
+                        ? "Continue to secure card form"
+                        : "Place order"}
                       {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
                     </>
                   )}
                 </button>
+
 
                 <p className="text-center text-xs text-foreground/50">
                   Your bank/card statement will show{" "}
@@ -1220,3 +1189,122 @@ function Row({ label, value }: { label: string; value: string }) {
     </div>
   );
 }
+
+function GuestSignInScreen({ onVerified }: { onVerified: (email: string) => void }) {
+  const [email, setEmail] = useState("");
+  const [stage, setStage] = useState<"email" | "code">("email");
+  const [sending, setSending] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const emailRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    if (stage === "email") emailRef.current?.focus();
+  }, [stage]);
+
+  async function submitEmail(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!/^\S+@\S+\.\S+$/.test(trimmed)) {
+      setErr("Enter a valid email.");
+      return;
+    }
+    setSending(true);
+    setErr(null);
+    const res = await sendOtp(trimmed);
+    setSending(false);
+    if (!res.ok) {
+      setErr(res.error ?? "Couldn't send code. Try again.");
+      return;
+    }
+    setStage("code");
+  }
+
+  return (
+    <div className="max-w-md mx-auto">
+      <div className="flex items-center justify-between mb-6 text-xs">
+        {stage === "code" ? (
+          <button
+            type="button"
+            onClick={() => setStage("email")}
+            className="inline-flex items-center gap-1.5 text-foreground/60 hover:text-foreground"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" /> Back
+          </button>
+        ) : (
+          <Link to="/shop" className="inline-flex items-center gap-1.5 text-foreground/60 hover:text-foreground">
+            <ArrowLeft className="h-3.5 w-3.5" /> Back
+          </Link>
+        )}
+        <span className="inline-flex items-center gap-1.5 text-foreground/60">
+          <ShieldCheck className="h-3.5 w-3.5 text-brand-gold" /> Secure Checkout
+        </span>
+      </div>
+
+      <div className="rounded-2xl border border-brand-gold/25 bg-gradient-to-b from-brand-gold/5 to-transparent p-8 sm:p-10">
+        <div className="text-center mb-6">
+          <p className="font-display text-2xl tracking-[0.2em] text-brand-gold">CLARUM</p>
+        </div>
+
+        {stage === "email" ? (
+          <form onSubmit={submitEmail} className="space-y-5">
+            <div className="text-center">
+              <h2 className="font-display text-2xl text-foreground">Sign in or sign up</h2>
+              <p className="text-sm text-foreground/60 mt-1.5">
+                We'll email you a one-time code — no password needed.
+              </p>
+            </div>
+
+            <label className="block">
+              <span className="block text-xs text-foreground/60 mb-1.5">Email</span>
+              <input
+                ref={emailRef}
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (err) setErr(null);
+                }}
+                placeholder="your@email.com"
+                className={inputCls}
+                required
+              />
+            </label>
+
+            {err && <p className="text-sm text-red-300">{err}</p>}
+
+            <button
+              type="submit"
+              disabled={sending}
+              className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-3.5 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            >
+              {sending ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" /> Sending code…
+                </>
+              ) : (
+                <>
+                  Sign in or sign up <ArrowRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+
+            <p className="text-center text-[11px] text-foreground/50 leading-relaxed">
+              By continuing you agree to our{" "}
+              <Link to="/terms" className="text-brand-gold hover:underline">Terms</Link> and{" "}
+              <Link to="/privacy" className="text-brand-gold hover:underline">Privacy Policy</Link>.
+            </p>
+          </form>
+        ) : (
+          <EmailVerifyGate
+            email={email.trim()}
+            onVerified={() => onVerified(email)}
+            onChangeEmail={() => setStage("email")}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
