@@ -80,6 +80,13 @@ function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Guest email verification (Attestly OTP). Logged-in users skip entirely.
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpStage, setOtpStage] = useState<"idle" | "verifying" | "verified">("idle");
+  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
+  const isGuest = !clarumUser;
+  const needsVerify = isGuest && (otpStage !== "verified" || verifiedEmail !== email.trim().toLowerCase());
+
   const { config: attestlyConfig, loading: attestlyConfigLoading } = useAttestlyConfig();
   const stripeReady = !!(
     attestlyConfig?.paymentsEnabled &&
