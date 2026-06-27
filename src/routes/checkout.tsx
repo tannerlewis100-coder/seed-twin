@@ -16,11 +16,14 @@ import {
   type WooAddress,
 } from "@/lib/woo";
 import { useClarumAuth } from "@/lib/clarum-auth";
+import { CheckoutOtpGate } from "@/components/CheckoutOtpGate";
 import {
   StripeAttestlyPanel,
   useAttestlyConfig,
   type StripePaymentHandler,
 } from "@/components/StripeAttestlyPanel";
+
+const OTP_VERIFIED_KEY = "clarum_checkout_verified_email";
 
 const ATTESTLY = "attestly_payments";
 const ALLOWED_GATEWAYS = [
@@ -66,10 +69,14 @@ type ShippingRate = {
 
 function CheckoutPage() {
   const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
-  const { user: clarumUser } = useClarumAuth();
+  const { user: clarumUser, setSession } = useClarumAuth();
   
 
   const [email, setEmail] = useState("");
+  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return sessionStorage.getItem(OTP_VERIFIED_KEY); } catch { return null; }
+  });
   const [billing, setBilling] = useState<AddressForm>(EMPTY_ADDRESS);
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
@@ -198,6 +205,14 @@ function CheckoutPage() {
       last_name: prev.last_name || clarumUser.last_name || "",
     }));
   }, [clarumUser]);
+
+  // Lock email to the verified one when guest passed the OTP gate.
+  useEffect(() => {
+    if (verifiedEmail) setEmail(verifiedEmail);
+  }, [verifiedEmail]);
+
+  const emailLocked = !!verifiedEmail || !!clarumUser;
+  const gateRequired = !clarumUser && !verifiedEmail;
 
   // Auto-apply unused welcome coupon once per cart session.
   // Woo's coupon engine validates against billing_address.email in the cart
@@ -627,6 +642,48 @@ function CheckoutPage() {
                 Browse catalog
               </Link>
             </div>
+          ) : gateRequired ? (
+            <CheckoutOtpGate
+              defaultEmail={email}
+              onVerified={(verified, payload) => {
+                setVerifiedEmail(verified);
+                setEmail(verified);
+                try { sessionStorage.setItem(OTP_VERIFIED_KEY, verified); } catch { /* ignore */ }
+                const token = typeof payload.token === "string" ? payload.token : null;
+                if (token) {
+                  setSession(token).catch(() => { /* ignore */ });
+                }
+              }}
+              summary={
+                <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                  <h2 className="font-display text-lg text-foreground mb-4">Order summary</h2>
+                  <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
+                    {items.map((item) => (
+                      <div key={item.key} className="flex gap-3">
+                        {item.image && (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="h-12 w-12 object-contain rounded-lg bg-white/[0.03] border border-white/5 shrink-0"
+                          />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm text-foreground truncate">{item.name}</p>
+                          <p className="text-[11px] text-foreground/50">Qty {item.qty}</p>
+                        </div>
+                        <p className="text-sm text-foreground whitespace-nowrap">
+                          {currency}{(item.price * item.qty).toFixed(2)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between text-sm">
+                    <span className="text-foreground/60">Subtotal</span>
+                    <span className="text-foreground">{currency}{itemsSubtotal.toFixed(2)}</span>
+                  </div>
+                </div>
+              }
+            />
           ) : (
             <form onSubmit={onSubmit} className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
               {/* Left: form */}
@@ -639,8 +696,26 @@ function CheckoutPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       className={inputCls}
                       required
+                      readOnly={emailLocked}
                       autoComplete="email"
                     />
+                    {emailLocked && (
+                      <p className="mt-1.5 text-[11px] text-brand-gold/70">
+                        Verified ✓{" "}
+                        {verifiedEmail && !clarumUser && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setVerifiedEmail(null);
+                              try { sessionStorage.removeItem(OTP_VERIFIED_KEY); } catch { /* ignore */ }
+                            }}
+                            className="underline hover:text-brand-gold"
+                          >
+                            Change
+                          </button>
+                        )}
+                      </p>
+                    )}
                   </Field>
                 </Section>
 

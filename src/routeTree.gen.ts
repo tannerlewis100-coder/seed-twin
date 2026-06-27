@@ -36,6 +36,8 @@ import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-con
 import { Route as AccountOrdersRouteImport } from './routes/account.orders'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
 import { Route as ApiPublicWooCreateOrderRouteImport } from './routes/api/public/woo-create-order'
+import { Route as ApiPublicOtpVerifyRouteImport } from './routes/api/public/otp-verify'
+import { Route as ApiPublicOtpStartRouteImport } from './routes/api/public/otp-start'
 import { Route as ApiPublicAttestlyVerifyIntentRouteImport } from './routes/api/public/attestly.verify-intent'
 import { Route as ApiPublicAttestlyCreateIntentRouteImport } from './routes/api/public/attestly.create-intent'
 import { Route as ApiPublicAttestlyConfigRouteImport } from './routes/api/public/attestly.config'
@@ -176,6 +178,16 @@ const ApiPublicWooCreateOrderRoute = ApiPublicWooCreateOrderRouteImport.update({
   path: '/api/public/woo-create-order',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicOtpVerifyRoute = ApiPublicOtpVerifyRouteImport.update({
+  id: '/api/public/otp-verify',
+  path: '/api/public/otp-verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicOtpStartRoute = ApiPublicOtpStartRouteImport.update({
+  id: '/api/public/otp-start',
+  path: '/api/public/otp-start',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicAttestlyVerifyIntentRoute =
   ApiPublicAttestlyVerifyIntentRouteImport.update({
     id: '/api/public/attestly/verify-intent',
@@ -220,6 +232,8 @@ export interface FileRoutesByFullPath {
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/shop/': typeof ShopIndexRoute
+  '/api/public/otp-start': typeof ApiPublicOtpStartRoute
+  '/api/public/otp-verify': typeof ApiPublicOtpVerifyRoute
   '/api/public/woo-create-order': typeof ApiPublicWooCreateOrderRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
@@ -251,6 +265,8 @@ export interface FileRoutesByTo {
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/shop': typeof ShopIndexRoute
+  '/api/public/otp-start': typeof ApiPublicOtpStartRoute
+  '/api/public/otp-verify': typeof ApiPublicOtpVerifyRoute
   '/api/public/woo-create-order': typeof ApiPublicWooCreateOrderRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
@@ -284,6 +300,8 @@ export interface FileRoutesById {
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
   '/shop/$slug': typeof ShopSlugRoute
   '/shop/': typeof ShopIndexRoute
+  '/api/public/otp-start': typeof ApiPublicOtpStartRoute
+  '/api/public/otp-verify': typeof ApiPublicOtpVerifyRoute
   '/api/public/woo-create-order': typeof ApiPublicWooCreateOrderRoute
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
@@ -318,6 +336,8 @@ export interface FileRouteTypes {
     | '/order-received/$orderId'
     | '/shop/$slug'
     | '/shop/'
+    | '/api/public/otp-start'
+    | '/api/public/otp-verify'
     | '/api/public/woo-create-order'
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
@@ -349,6 +369,8 @@ export interface FileRouteTypes {
     | '/order-received/$orderId'
     | '/shop/$slug'
     | '/shop'
+    | '/api/public/otp-start'
+    | '/api/public/otp-verify'
     | '/api/public/woo-create-order'
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
@@ -381,6 +403,8 @@ export interface FileRouteTypes {
     | '/order-received/$orderId'
     | '/shop/$slug'
     | '/shop/'
+    | '/api/public/otp-start'
+    | '/api/public/otp-verify'
     | '/api/public/woo-create-order'
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
@@ -411,6 +435,8 @@ export interface RootRouteChildren {
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
   OrderReceivedOrderIdRoute: typeof OrderReceivedOrderIdRoute
+  ApiPublicOtpStartRoute: typeof ApiPublicOtpStartRoute
+  ApiPublicOtpVerifyRoute: typeof ApiPublicOtpVerifyRoute
   ApiPublicWooCreateOrderRoute: typeof ApiPublicWooCreateOrderRoute
   ApiPublicWooStoreRoute: typeof ApiPublicWooStoreRoute
   ApiPublicAttestlyConfigRoute: typeof ApiPublicAttestlyConfigRoute
@@ -609,6 +635,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicWooCreateOrderRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/otp-verify': {
+      id: '/api/public/otp-verify'
+      path: '/api/public/otp-verify'
+      fullPath: '/api/public/otp-verify'
+      preLoaderRoute: typeof ApiPublicOtpVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/otp-start': {
+      id: '/api/public/otp-start'
+      path: '/api/public/otp-start'
+      fullPath: '/api/public/otp-start'
+      preLoaderRoute: typeof ApiPublicOtpStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/attestly/verify-intent': {
       id: '/api/public/attestly/verify-intent'
       path: '/api/public/attestly/verify-intent'
@@ -679,6 +719,8 @@ const rootRouteChildren: RootRouteChildren = {
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   OrderPayOrderIdRoute: OrderPayOrderIdRoute,
   OrderReceivedOrderIdRoute: OrderReceivedOrderIdRoute,
+  ApiPublicOtpStartRoute: ApiPublicOtpStartRoute,
+  ApiPublicOtpVerifyRoute: ApiPublicOtpVerifyRoute,
   ApiPublicWooCreateOrderRoute: ApiPublicWooCreateOrderRoute,
   ApiPublicWooStoreRoute: ApiPublicWooStoreRoute,
   ApiPublicAttestlyConfigRoute: ApiPublicAttestlyConfigRoute,
