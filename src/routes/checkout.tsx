@@ -65,12 +65,23 @@ type ShippingRate = {
   selected: boolean;
 };
 
+const VERIFIED_EMAIL_KEY = "clarum_verified_email";
+
+function readVerifiedEmail(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    return localStorage.getItem(VERIFIED_EMAIL_KEY);
+  } catch {
+    return null;
+  }
+}
+
 function CheckoutPage() {
   const { items, subtotal, raw, loading: cartLoading, refresh } = useCart();
   const { user: clarumUser } = useClarumAuth();
   
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => readVerifiedEmail() ?? "");
   const [billing, setBilling] = useState<AddressForm>(EMPTY_ADDRESS);
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
@@ -80,12 +91,11 @@ function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Guest email verification (Attestly OTP). Logged-in users skip entirely.
-  const [otpSending, setOtpSending] = useState(false);
-  const [otpStage, setOtpStage] = useState<"idle" | "verifying" | "verified">("idle");
-  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
+  // Step 1 — passwordless front-door for guests. Logged-in users skip it.
+  const [guestVerifiedEmail, setGuestVerifiedEmail] = useState<string | null>(() => readVerifiedEmail());
   const isGuest = !clarumUser;
-  const needsVerify = isGuest && (otpStage !== "verified" || verifiedEmail !== email.trim().toLowerCase());
+  const verifiedEmail = clarumUser?.email ?? guestVerifiedEmail;
+  const needsFrontDoor = isGuest && !guestVerifiedEmail;
 
   const { config: attestlyConfig, loading: attestlyConfigLoading } = useAttestlyConfig();
   const stripeReady = !!(
