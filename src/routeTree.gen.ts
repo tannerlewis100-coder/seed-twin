@@ -37,6 +37,8 @@ import { Route as AccountOrdersRouteImport } from './routes/account.orders'
 import { Route as ApiPublicWooStoreRouteImport } from './routes/api/public/woo-store'
 import { Route as ApiPublicWooCreateOrderRouteImport } from './routes/api/public/woo-create-order'
 import { Route as ApiPublicAttestlyVerifyIntentRouteImport } from './routes/api/public/attestly.verify-intent'
+import { Route as ApiPublicAttestlyOtpVerifyRouteImport } from './routes/api/public/attestly.otp-verify'
+import { Route as ApiPublicAttestlyOtpStartRouteImport } from './routes/api/public/attestly.otp-start'
 import { Route as ApiPublicAttestlyCreateIntentRouteImport } from './routes/api/public/attestly.create-intent'
 import { Route as ApiPublicAttestlyConfigRouteImport } from './routes/api/public/attestly.config'
 
@@ -182,6 +184,18 @@ const ApiPublicAttestlyVerifyIntentRoute =
     path: '/api/public/attestly/verify-intent',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicAttestlyOtpVerifyRoute =
+  ApiPublicAttestlyOtpVerifyRouteImport.update({
+    id: '/api/public/attestly/otp-verify',
+    path: '/api/public/attestly/otp-verify',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicAttestlyOtpStartRoute =
+  ApiPublicAttestlyOtpStartRouteImport.update({
+    id: '/api/public/attestly/otp-start',
+    path: '/api/public/attestly/otp-start',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicAttestlyCreateIntentRoute =
   ApiPublicAttestlyCreateIntentRouteImport.update({
     id: '/api/public/attestly/create-intent',
@@ -224,6 +238,8 @@ export interface FileRoutesByFullPath {
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
   '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
+  '/api/public/attestly/otp-start': typeof ApiPublicAttestlyOtpStartRoute
+  '/api/public/attestly/otp-verify': typeof ApiPublicAttestlyOtpVerifyRoute
   '/api/public/attestly/verify-intent': typeof ApiPublicAttestlyVerifyIntentRoute
 }
 export interface FileRoutesByTo {
@@ -255,6 +271,8 @@ export interface FileRoutesByTo {
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
   '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
+  '/api/public/attestly/otp-start': typeof ApiPublicAttestlyOtpStartRoute
+  '/api/public/attestly/otp-verify': typeof ApiPublicAttestlyOtpVerifyRoute
   '/api/public/attestly/verify-intent': typeof ApiPublicAttestlyVerifyIntentRoute
 }
 export interface FileRoutesById {
@@ -288,6 +306,8 @@ export interface FileRoutesById {
   '/api/public/woo-store': typeof ApiPublicWooStoreRoute
   '/api/public/attestly/config': typeof ApiPublicAttestlyConfigRoute
   '/api/public/attestly/create-intent': typeof ApiPublicAttestlyCreateIntentRoute
+  '/api/public/attestly/otp-start': typeof ApiPublicAttestlyOtpStartRoute
+  '/api/public/attestly/otp-verify': typeof ApiPublicAttestlyOtpVerifyRoute
   '/api/public/attestly/verify-intent': typeof ApiPublicAttestlyVerifyIntentRoute
 }
 export interface FileRouteTypes {
@@ -322,6 +342,8 @@ export interface FileRouteTypes {
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
     | '/api/public/attestly/create-intent'
+    | '/api/public/attestly/otp-start'
+    | '/api/public/attestly/otp-verify'
     | '/api/public/attestly/verify-intent'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -353,6 +375,8 @@ export interface FileRouteTypes {
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
     | '/api/public/attestly/create-intent'
+    | '/api/public/attestly/otp-start'
+    | '/api/public/attestly/otp-verify'
     | '/api/public/attestly/verify-intent'
   id:
     | '__root__'
@@ -385,6 +409,8 @@ export interface FileRouteTypes {
     | '/api/public/woo-store'
     | '/api/public/attestly/config'
     | '/api/public/attestly/create-intent'
+    | '/api/public/attestly/otp-start'
+    | '/api/public/attestly/otp-verify'
     | '/api/public/attestly/verify-intent'
   fileRoutesById: FileRoutesById
 }
@@ -415,6 +441,8 @@ export interface RootRouteChildren {
   ApiPublicWooStoreRoute: typeof ApiPublicWooStoreRoute
   ApiPublicAttestlyConfigRoute: typeof ApiPublicAttestlyConfigRoute
   ApiPublicAttestlyCreateIntentRoute: typeof ApiPublicAttestlyCreateIntentRoute
+  ApiPublicAttestlyOtpStartRoute: typeof ApiPublicAttestlyOtpStartRoute
+  ApiPublicAttestlyOtpVerifyRoute: typeof ApiPublicAttestlyOtpVerifyRoute
   ApiPublicAttestlyVerifyIntentRoute: typeof ApiPublicAttestlyVerifyIntentRoute
 }
 
@@ -616,6 +644,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicAttestlyVerifyIntentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/attestly/otp-verify': {
+      id: '/api/public/attestly/otp-verify'
+      path: '/api/public/attestly/otp-verify'
+      fullPath: '/api/public/attestly/otp-verify'
+      preLoaderRoute: typeof ApiPublicAttestlyOtpVerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/attestly/otp-start': {
+      id: '/api/public/attestly/otp-start'
+      path: '/api/public/attestly/otp-start'
+      fullPath: '/api/public/attestly/otp-start'
+      preLoaderRoute: typeof ApiPublicAttestlyOtpStartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/attestly/create-intent': {
       id: '/api/public/attestly/create-intent'
       path: '/api/public/attestly/create-intent'
@@ -683,6 +725,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicWooStoreRoute: ApiPublicWooStoreRoute,
   ApiPublicAttestlyConfigRoute: ApiPublicAttestlyConfigRoute,
   ApiPublicAttestlyCreateIntentRoute: ApiPublicAttestlyCreateIntentRoute,
+  ApiPublicAttestlyOtpStartRoute: ApiPublicAttestlyOtpStartRoute,
+  ApiPublicAttestlyOtpVerifyRoute: ApiPublicAttestlyOtpVerifyRoute,
   ApiPublicAttestlyVerifyIntentRoute: ApiPublicAttestlyVerifyIntentRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,17 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2, MailCheck } from "lucide-react";
 
-const ATTESTLY_SITE_TOKEN = "cmqscvrvs000i4opoyweu6kze";
-const OTP_BASE = "https://app.useattestly.com/api/connect/otp";
-
 export async function sendOtp(email: string): Promise<{ ok: boolean; error?: string }> {
   try {
-    const res = await fetch(`${OTP_BASE}/start`, {
+    const res = await fetch(`/api/public/attestly/otp-start`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Attestly-Site-Token": ATTESTLY_SITE_TOKEN,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
     const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
@@ -27,12 +21,9 @@ async function verifyOtp(
   code: string,
 ): Promise<{ ok: boolean; verified: boolean; token?: string; remaining?: number; error?: string }> {
   try {
-    const res = await fetch(`${OTP_BASE}/verify`, {
+    const res = await fetch(`/api/public/attestly/otp-verify`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Attestly-Site-Token": ATTESTLY_SITE_TOKEN,
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, code }),
     });
     const data = (await res.json().catch(() => ({}))) as {
