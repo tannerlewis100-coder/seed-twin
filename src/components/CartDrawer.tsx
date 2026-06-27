@@ -60,6 +60,11 @@ export function CartDrawer() {
 
   function onCheckout() {
     if (!items.length) return;
+    try {
+      sessionStorage.removeItem("clarum_checkout_verified_email");
+    } catch {
+      /* ignore */
+    }
     closeCart();
     navigate({ to: "/checkout" });
   }
