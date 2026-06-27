@@ -463,6 +463,30 @@ function CheckoutPage() {
       return;
     }
 
+    // Guest email verification gate — must verify before order/payment.
+    if (needsVerify) {
+      if (otpStage === "verifying") return; // already showing the gate
+      setOtpSending(true);
+      const res = await sendOtp(email.trim());
+      setOtpSending(false);
+      if (!res.ok) {
+        setError(res.error ?? "Couldn't send verification code.");
+        return;
+      }
+      setOtpStage("verifying");
+      setTimeout(() => {
+        document.getElementById("email-verify-gate")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 60);
+      return;
+    }
+
+    await proceedCheckout();
+  }
+
+  async function proceedCheckout() {
     if (paymentMethod === ATTESTLY && stripeSession) {
       if (!stripeConfirmPayment) {
         setError("Secure card form is still loading.");
@@ -490,8 +514,6 @@ function CheckoutPage() {
     try {
       const billingAddr: WooAddress = { ...billing, email };
       const shippingAddr: WooAddress = shipSame ? { ...billing, email } : { ...shipping };
-      // Sync customer session so Woo has correct address for tax / shipping
-      // before we create or submit the order.
       try {
         await updateCustomer({
           billing_address: billingAddr,
@@ -501,11 +523,6 @@ function CheckoutPage() {
         /* non-fatal */
       }
 
-      // ─── ATTESTLY (card) FLOW ───────────────────────────────────────────
-      // Per spec: create a pending order via WC v3 REST (server-side) — do
-      // NOT call the Store API /checkout endpoint here. Then create a Stripe
-      // PaymentIntent and mount Elements; payment confirmation happens on
-      // the next click via Stripe Elements, not via Woo Store API.
       if (paymentMethod === ATTESTLY) {
         try {
           const lineItems = items
@@ -574,7 +591,6 @@ function CheckoutPage() {
         }
       }
 
-      // ─── NON-CARD FLOW (bank transfer / crypto) ────────────────────────
       const res = await submitCheckout({
         billing_address: billingAddr,
         shipping_address: shippingAddr,
@@ -607,6 +623,26 @@ function CheckoutPage() {
       setSubmitting(false);
     }
   }
+
+  async function handleVerified() {
+    setVerifiedEmail(email.trim().toLowerCase());
+    setOtpStage("verified");
+    setError(null);
+    // Smoothly continue into the order/payment flow.
+    await proceedCheckout();
+  }
+
+  function handleChangeEmail() {
+    setOtpStage("idle");
+    setVerifiedEmail(null);
+    setError(null);
+    setTimeout(() => {
+      const el = document.querySelector<HTMLInputElement>('input[type="email"]');
+      el?.focus();
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 40);
+  }
+
 
 
   return (
