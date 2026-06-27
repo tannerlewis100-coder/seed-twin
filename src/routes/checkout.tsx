@@ -21,6 +21,7 @@ import {
   useAttestlyConfig,
   type StripePaymentHandler,
 } from "@/components/StripeAttestlyPanel";
+import { EmailVerifyGate, sendOtp } from "@/components/EmailVerifyGate";
 
 const ATTESTLY = "attestly_payments";
 const ALLOWED_GATEWAYS = [
