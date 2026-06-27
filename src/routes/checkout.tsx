@@ -655,6 +655,8 @@ function CheckoutPage() {
                 Browse catalog
               </Link>
             </div>
+          ) : needsFrontDoor ? (
+            <GuestSignInScreen onVerified={handleGuestVerified} />
           ) : (
             <form onSubmit={onSubmit} className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
               {/* Left: form */}
@@ -665,12 +667,14 @@ function CheckoutPage() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className={inputCls}
+                      className={`${inputCls} ${verifiedEmail ? "opacity-70 cursor-not-allowed" : ""}`}
                       required
                       autoComplete="email"
+                      readOnly={!!verifiedEmail}
                     />
                   </Field>
                 </Section>
+
 
                 <Section title="Billing address">
                   <div className="grid sm:grid-cols-2 gap-4">
