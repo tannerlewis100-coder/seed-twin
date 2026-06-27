@@ -21,6 +21,7 @@ import {
   useAttestlyConfig,
   type StripePaymentHandler,
 } from "@/components/StripeAttestlyPanel";
+import { EmailVerifyGate, sendOtp } from "@/components/EmailVerifyGate";
 
 const ATTESTLY = "attestly_payments";
 const ALLOWED_GATEWAYS = [
@@ -78,6 +79,13 @@ function CheckoutPage() {
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Guest email verification (Attestly OTP). Logged-in users skip entirely.
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpStage, setOtpStage] = useState<"idle" | "verifying" | "verified">("idle");
+  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
+  const isGuest = !clarumUser;
+  const needsVerify = isGuest && (otpStage !== "verified" || verifiedEmail !== email.trim().toLowerCase());
 
   const { config: attestlyConfig, loading: attestlyConfigLoading } = useAttestlyConfig();
   const stripeReady = !!(
@@ -455,6 +463,30 @@ function CheckoutPage() {
       return;
     }
 
+    // Guest email verification gate — must verify before order/payment.
+    if (needsVerify) {
+      if (otpStage === "verifying") return; // already showing the gate
+      setOtpSending(true);
+      const res = await sendOtp(email.trim());
+      setOtpSending(false);
+      if (!res.ok) {
+        setError(res.error ?? "Couldn't send verification code.");
+        return;
+      }
+      setOtpStage("verifying");
+      setTimeout(() => {
+        document.getElementById("email-verify-gate")?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 60);
+      return;
+    }
+
+    await proceedCheckout();
+  }
+
+  async function proceedCheckout() {
     if (paymentMethod === ATTESTLY && stripeSession) {
       if (!stripeConfirmPayment) {
         setError("Secure card form is still loading.");
@@ -482,8 +514,6 @@ function CheckoutPage() {
     try {
       const billingAddr: WooAddress = { ...billing, email };
       const shippingAddr: WooAddress = shipSame ? { ...billing, email } : { ...shipping };
-      // Sync customer session so Woo has correct address for tax / shipping
-      // before we create or submit the order.
       try {
         await updateCustomer({
           billing_address: billingAddr,
@@ -493,11 +523,6 @@ function CheckoutPage() {
         /* non-fatal */
       }
 
-      // ─── ATTESTLY (card) FLOW ───────────────────────────────────────────
-      // Per spec: create a pending order via WC v3 REST (server-side) — do
-      // NOT call the Store API /checkout endpoint here. Then create a Stripe
-      // PaymentIntent and mount Elements; payment confirmation happens on
-      // the next click via Stripe Elements, not via Woo Store API.
       if (paymentMethod === ATTESTLY) {
         try {
           const lineItems = items
@@ -566,7 +591,6 @@ function CheckoutPage() {
         }
       }
 
-      // ─── NON-CARD FLOW (bank transfer / crypto) ────────────────────────
       const res = await submitCheckout({
         billing_address: billingAddr,
         shipping_address: shippingAddr,
@@ -599,6 +623,26 @@ function CheckoutPage() {
       setSubmitting(false);
     }
   }
+
+  async function handleVerified() {
+    setVerifiedEmail(email.trim().toLowerCase());
+    setOtpStage("verified");
+    setError(null);
+    // Smoothly continue into the order/payment flow.
+    await proceedCheckout();
+  }
+
+  function handleChangeEmail() {
+    setOtpStage("idle");
+    setVerifiedEmail(null);
+    setError(null);
+    setTimeout(() => {
+      const el = document.querySelector<HTMLInputElement>('input[type="email"]');
+      el?.focus();
+      el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 40);
+  }
+
 
 
   return (
@@ -871,11 +915,30 @@ function CheckoutPage() {
                   </div>
                 )}
 
+                {isGuest && otpStage === "verifying" && (
+                  <div id="email-verify-gate">
+                    <EmailVerifyGate
+                      email={email.trim()}
+                      onVerified={handleVerified}
+                      onChangeEmail={handleChangeEmail}
+                    />
+                  </div>
+                )}
+
+                {isGuest && otpStage === "verified" && !needsVerify && (
+                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 px-4 py-2.5 text-sm text-emerald-300 flex items-center gap-2">
+                    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Email verified
+                  </div>
+                )}
+
                 <button
                   type="submit"
                   disabled={
                     submitting ||
                     cartLoading ||
+                    otpSending ||
+                    (isGuest && otpStage === "verifying") ||
                     (paymentMethod === ATTESTLY && !!stripeSession && !stripeConfirmPayment)
                   }
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
@@ -884,19 +947,28 @@ function CheckoutPage() {
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
+                  ) : otpSending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Sending verification code…
+                    </>
+                  ) : isGuest && otpStage === "verifying" ? (
+                    <>Enter the code above to continue</>
                   ) : paymentMethod === ATTESTLY && stripeSession && !stripeConfirmPayment ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Loading secure card form…
                     </>
                   ) : (
                     <>
-                      {paymentMethod === ATTESTLY && !stripeSession
-                        ? "Continue to secure card form"
-                        : "Place order"}
+                      {needsVerify
+                        ? "Continue — verify email"
+                        : paymentMethod === ATTESTLY && !stripeSession
+                          ? "Continue to secure card form"
+                          : "Place order"}
                       {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
                     </>
                   )}
                 </button>
+
                 <p className="text-center text-xs text-foreground/50">
                   Your bank/card statement will show{" "}
                   <span className="text-foreground/70 font-medium">CLARUMPEPTIDES.COM</span>
