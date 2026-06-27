@@ -16,11 +16,14 @@ import {
   type WooAddress,
 } from "@/lib/woo";
 import { useClarumAuth } from "@/lib/clarum-auth";
+import { CheckoutOtpGate } from "@/components/CheckoutOtpGate";
 import {
   StripeAttestlyPanel,
   useAttestlyConfig,
   type StripePaymentHandler,
 } from "@/components/StripeAttestlyPanel";
+
+const OTP_VERIFIED_KEY = "clarum_checkout_verified_email";
 
 const ATTESTLY = "attestly_payments";
 const ALLOWED_GATEWAYS = [
