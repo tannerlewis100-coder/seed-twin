@@ -219,7 +219,7 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
     setRemaining(null);
   }
 
-  const sentToLabel = identifier?.display ?? "";
+  const sentToLabel = identifier && identifier.channel != null ? identifier.display : "";
 
   return (
     <div
