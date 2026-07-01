@@ -700,48 +700,75 @@ function CheckoutPage() {
               </Link>
             </div>
           ) : gateRequired ? (
-            <CheckoutOtpGate
-              defaultEmail={email}
-              onVerified={(verified, payload) => {
-                setVerifiedEmail(verified);
-                setEmail(verified);
-                try { sessionStorage.setItem(OTP_VERIFIED_KEY, verified); } catch { /* ignore */ }
-                const token = typeof payload.token === "string" ? payload.token : null;
-                if (token) {
-                  setSession(token).catch(() => { /* ignore */ });
-                }
-              }}
-              summary={
-                <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
-                  <h2 className="font-display text-lg text-foreground mb-4">Order summary</h2>
-                  <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
-                    {items.map((item) => (
-                      <div key={item.key} className="flex gap-3">
-                        {item.image && (
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="h-12 w-12 object-contain rounded-lg bg-white/[0.03] border border-white/5 shrink-0"
-                          />
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm text-foreground truncate">{item.name}</p>
-                          <p className="text-[11px] text-foreground/50">Qty {item.qty}</p>
-                        </div>
-                        <p className="text-sm text-foreground whitespace-nowrap">
-                          {currency}{(item.price * item.qty).toFixed(2)}
-                        </p>
+            <div className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12 items-start">
+              <div className="flex justify-center lg:justify-start">
+                <ClarumOtpDialog
+                  mode="inline"
+                  initialEmail={email}
+                  autoSend={false}
+                  eyebrow="Secure checkout"
+                  title="Sign in or sign up"
+                  subtitle="We'll text or email you a one-time code. No password needed — you'll be signed in for next time."
+                  sendLabel="Send my code"
+                  onVerified={async (result: ClarumOtpResult) => {
+                    const payload =
+                      result.channel === "email"
+                        ? { email: result.identifier, token: result.token }
+                        : { phone: result.identifier, token: result.token };
+                    try {
+                      const res = await otpLoginApi(payload);
+                      await setSession(res.token, res.user ?? null);
+                    } catch {
+                      /* JWT handoff failed — proceed as guest with verified email. */
+                    }
+                    const emailForCheckout =
+                      result.channel === "email" ? result.identifier : email;
+                    if (emailForCheckout) {
+                      setVerifiedEmail(emailForCheckout);
+                      setEmail(emailForCheckout);
+                      try {
+                        sessionStorage.setItem(OTP_VERIFIED_KEY, emailForCheckout);
+                      } catch {
+                        /* ignore */
+                      }
+                      // Reuse the verify token for the Attestly payment step.
+                      setAttestlyVerified({
+                        email: emailForCheckout,
+                        token: result.token,
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+                <h2 className="font-display text-lg text-foreground mb-4">Order summary</h2>
+                <div className="space-y-3 max-h-[340px] overflow-y-auto pr-1">
+                  {items.map((item) => (
+                    <div key={item.key} className="flex gap-3">
+                      {item.image && (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="h-12 w-12 object-contain rounded-lg bg-white/[0.03] border border-white/5 shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-foreground truncate">{item.name}</p>
+                        <p className="text-[11px] text-foreground/50">Qty {item.qty}</p>
                       </div>
-                    ))}
-                  </div>
-                  <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between text-sm">
-                    <span className="text-foreground/60">Subtotal</span>
-                    <span className="text-foreground">{currency}{itemsSubtotal.toFixed(2)}</span>
-                  </div>
+                      <p className="text-sm text-foreground whitespace-nowrap">
+                        {currency}{(item.price * item.qty).toFixed(2)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              }
-            />
-          ) : (
+                <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between text-sm">
+                  <span className="text-foreground/60">Subtotal</span>
+                  <span className="text-foreground">{currency}{itemsSubtotal.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+
             <form onSubmit={onSubmit} className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
               {/* Left: form */}
               <div className="space-y-10">
