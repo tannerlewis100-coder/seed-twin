@@ -141,6 +141,26 @@ export async function loginApi(input: {
   });
 }
 
+// Passwordless: exchange a verified OTP token for a WP JWT session.
+export type OtpLoginResponse = {
+  token: string;
+  is_new?: boolean;
+  user?: ClarumUser;
+  welcome_coupon?: { code: string } | string | null;
+};
+
+export async function otpLoginApi(input: {
+  email?: string;
+  phone?: string;
+  token: string;
+}): Promise<OtpLoginResponse> {
+  const utm = getUtm();
+  return jsonFetch<OtpLoginResponse>(`${API_BASE}/clarum/v1/otp-login`, {
+    method: "POST",
+    body: JSON.stringify({ ...input, ...utm }),
+  });
+}
+
 export async function fetchMe(token: string): Promise<ClarumUser> {
   const raw = await jsonFetch<ClarumUser & {
     welcome_coupon?: ClarumUser["welcome_coupon"] | string;
