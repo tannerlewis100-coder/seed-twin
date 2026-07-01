@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
 import clarumLogo from "@/assets/clarum-logo.png";
+import { parseIdentifier, otpPayload, type ParsedIdentifier } from "@/lib/otpIdentifier";
 
 type Props = {
   onVerified: (email: string, payload: Record<string, unknown>) => void;
   summary?: React.ReactNode;
   defaultEmail?: string;
 };
-
-const emailRx = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
   const [step, setStep] = useState<"email" | "code">("email");
