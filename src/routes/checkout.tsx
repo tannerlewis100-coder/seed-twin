@@ -15,8 +15,8 @@ import {
   updateCustomer,
   type WooAddress,
 } from "@/lib/woo";
-import { useClarumAuth } from "@/lib/clarum-auth";
-import { CheckoutOtpGate } from "@/components/CheckoutOtpGate";
+import { otpLoginApi, useClarumAuth } from "@/lib/clarum-auth";
+import { ClarumOtpDialog, type ClarumOtpResult } from "@/components/ClarumOtpDialog";
 import { AttestlyVerifyDialog } from "@/components/AttestlyVerifyDialog";
 import {
   StripeAttestlyPanel,
