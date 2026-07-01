@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock, ShoppingBag } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
@@ -17,6 +17,7 @@ import {
 } from "@/lib/woo";
 import { useClarumAuth } from "@/lib/clarum-auth";
 import { CheckoutOtpGate } from "@/components/CheckoutOtpGate";
+import { AttestlyVerifyDialog } from "@/components/AttestlyVerifyDialog";
 import {
   StripeAttestlyPanel,
   useAttestlyConfig,
@@ -104,6 +105,19 @@ function CheckoutPage() {
     setStripeConfirmPayment(handler ? () => handler : null);
   }, []);
   const handleStripeError = useCallback((msg: string) => setError(msg), []);
+
+  // Attestly payment-verification OTP (required by the processor before charging).
+  const [attestlyVerified, setAttestlyVerified] = useState<{
+    email: string;
+    token: string;
+  } | null>(null);
+  const [attestlyDialog, setAttestlyDialog] = useState<{
+    email: string;
+    codeAlreadySent: boolean;
+  } | null>(null);
+  // A pending "continue after verified" action so we can resume the pay flow
+  // after the dialog closes with a good token.
+  const pendingAfterVerifyRef = useRef<null | ((token: string) => void)>(null);
   const handleStripePaid = useCallback(async () => {
     if (!stripeSession) return;
     clearCartToken();
@@ -192,6 +206,16 @@ function CheckoutPage() {
     setStripeSession(null);
     setStripeConfirmPayment(null);
   }, [paymentMethod]);
+
+  // If the billing email diverges from the verified one, reset verification
+  // and any staged Stripe session so the customer must re-verify.
+  useEffect(() => {
+    if (attestlyVerified && attestlyVerified.email.toLowerCase() !== email.trim().toLowerCase()) {
+      setAttestlyVerified(null);
+      setStripeSession(null);
+      setStripeConfirmPayment(null);
+    }
+  }, [email, attestlyVerified]);
 
 
 
@@ -509,77 +533,113 @@ function CheckoutPage() {
       }
 
       // ─── ATTESTLY (card) FLOW ───────────────────────────────────────────
-      // Per spec: create a pending order via WC v3 REST (server-side) — do
-      // NOT call the Store API /checkout endpoint here. Then create a Stripe
-      // PaymentIntent and mount Elements; payment confirmation happens on
-      // the next click via Stripe Elements, not via Woo Store API.
+      // Attestly requires the customer to verify their email with a 6-digit
+      // code before we create the PaymentIntent. If we don't yet have a valid
+      // token for this exact email, open the verification dialog and resume
+      // once verified.
       if (paymentMethod === ATTESTLY) {
-        try {
-          const lineItems = items
-            .map((it) => ({ id: Number(it.productId), quantity: Number(it.qty) }))
-            .filter((it) => it.id && it.quantity);
-          const shipLine = selectedRate
-            ? { method_title: selectedRate.name, total: String(shippingCost.toFixed(2)) }
+        const normalizedEmail = email.trim().toLowerCase();
+        const tokenIfValid =
+          attestlyVerified && attestlyVerified.email.toLowerCase() === normalizedEmail
+            ? attestlyVerified.token
             : null;
-          const orderRes = await fetch("/api/public/woo-create-order", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              email,
-              billing: billingAddr,
-              shipping: shippingAddr,
-              payment_method: ATTESTLY,
-              payment_method_title: "Credit / Debit Card",
-              customer_note: note || undefined,
-              items: lineItems,
-              coupons: allAppliedCoupons,
-              shipping_line: shipLine,
-            }),
-          });
-          const orderData = (await orderRes.json()) as {
-            id?: number;
-            order_key?: string;
-            error?: string;
-          };
-          if (!orderRes.ok || !orderData.id || !orderData.order_key) {
-            setError(orderData.error ?? "Could not create order.");
-            return;
-          }
 
-          const intentRes = await fetch("/api/public/attestly/create-intent", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ orderId: orderData.id, orderKey: orderData.order_key }),
-          });
-          const intent = (await intentRes.json()) as {
-            clientSecret?: string;
-            amountCents?: number;
-            error?: string;
-          };
-          if (!intentRes.ok || !intent.clientSecret) {
-            setError(intent.error ?? "Could not initialize card payment.");
-            return;
-          }
-          const piId = intent.clientSecret.split("_secret_")[0];
-          setStripeSession({
-            orderId: orderData.id,
-            orderKey: orderData.order_key,
-            clientSecret: intent.clientSecret,
-            paymentIntentId: piId,
-            amountCents: intent.amountCents ?? 0,
-          });
-          setTimeout(() => {
-            document.getElementById("stripe-payment-panel")?.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
+        const runAttestly = async (otpToken: string) => {
+          try {
+            const lineItems = items
+              .map((it) => ({ id: Number(it.productId), quantity: Number(it.qty) }))
+              .filter((it) => it.id && it.quantity);
+            const shipLine = selectedRate
+              ? { method_title: selectedRate.name, total: String(shippingCost.toFixed(2)) }
+              : null;
+            const orderRes = await fetch("/api/public/woo-create-order", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email,
+                billing: billingAddr,
+                shipping: shippingAddr,
+                payment_method: ATTESTLY,
+                payment_method_title: "Credit / Debit Card",
+                customer_note: note || undefined,
+                items: lineItems,
+                coupons: allAppliedCoupons,
+                shipping_line: shipLine,
+              }),
             });
-          }, 80);
-          return;
-        } catch (err) {
-          setError(err instanceof Error ? err.message : "Could not initialize card payment.");
+            const orderData = (await orderRes.json()) as {
+              id?: number;
+              order_key?: string;
+              error?: string;
+            };
+            if (!orderRes.ok || !orderData.id || !orderData.order_key) {
+              setError(orderData.error ?? "Could not create order.");
+              return;
+            }
+
+            const intentRes = await fetch("/api/public/attestly/create-intent", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                orderId: orderData.id,
+                orderKey: orderData.order_key,
+                otpToken,
+              }),
+            });
+            const intent = (await intentRes.json()) as {
+              clientSecret?: string;
+              amountCents?: number;
+              error?: string;
+            };
+            if (!intentRes.ok || !intent.clientSecret) {
+              setError(intent.error ?? "Could not initialize card payment.");
+              return;
+            }
+            const piId = intent.clientSecret.split("_secret_")[0];
+            setStripeSession({
+              orderId: orderData.id,
+              orderKey: orderData.order_key,
+              clientSecret: intent.clientSecret,
+              paymentIntentId: piId,
+              amountCents: intent.amountCents ?? 0,
+            });
+            setTimeout(() => {
+              document.getElementById("stripe-payment-panel")?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }, 80);
+          } catch (err) {
+            setError(err instanceof Error ? err.message : "Could not initialize card payment.");
+          }
+        };
+
+        if (tokenIfValid) {
+          await runAttestly(tokenIfValid);
           return;
         }
+
+        // Not verified yet — fire otp/start, then open the brand dialog.
+        try {
+          await fetch("https://app.useattestly.com/api/connect/otp/start", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-Attestly-Site-Token": "cmqscvrvs000i4opoyweu6kze",
+            },
+            body: JSON.stringify({ email }),
+          });
+        } catch {
+          // Non-fatal — the dialog will surface its own errors and can resend.
+        }
+        pendingAfterVerifyRef.current = (token) => {
+          setSubmitting(true);
+          void runAttestly(token).finally(() => setSubmitting(false));
+        };
+        setAttestlyDialog({ email, codeAlreadySent: true });
+        return;
       }
+
 
       // ─── NON-CARD FLOW (bank transfer / crypto) ────────────────────────
       const res = await submitCheckout({
@@ -1131,6 +1191,25 @@ function CheckoutPage() {
       </main>
 
       <SiteFooter />
+
+      {attestlyDialog && (
+        <AttestlyVerifyDialog
+          email={attestlyDialog.email}
+          codeAlreadySent={attestlyDialog.codeAlreadySent}
+          onVerified={({ email: verifiedE, token }) => {
+            setAttestlyVerified({ email: verifiedE, token });
+            setAttestlyDialog(null);
+            const cb = pendingAfterVerifyRef.current;
+            pendingAfterVerifyRef.current = null;
+            if (cb) cb(token);
+          }}
+          onClose={() => {
+            setAttestlyDialog(null);
+            pendingAfterVerifyRef.current = null;
+            setSubmitting(false);
+          }}
+        />
+      )}
     </div>
   );
 }

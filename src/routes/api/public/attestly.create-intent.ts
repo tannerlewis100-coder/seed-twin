@@ -27,13 +27,14 @@ export const Route = createFileRoute("/api/public/attestly/create-intent")({
         if (!apiKey || !hub) return json({ error: "Attestly not configured" }, 500);
         if (!ck || !cs) return json({ error: "WooCommerce credentials not configured" }, 500);
 
-        let body: { orderId?: number | string } = {};
+        let body: { orderId?: number | string; otpToken?: string } = {};
         try {
           body = await request.json();
         } catch {
           return json({ error: "Invalid JSON body" }, 400);
         }
         const orderId = body.orderId;
+        const otpToken = typeof body.otpToken === "string" ? body.otpToken : undefined;
         if (!orderId) return json({ error: "orderId required" }, 400);
 
         // Read-only GET of the existing order via WC v3 REST.
@@ -80,6 +81,7 @@ export const Route = createFileRoute("/api/public/attestly/create-intent")({
               currency,
               idempotencyKey: String(orderId),
               metadata: { wcOrderId: String(orderId) },
+              ...(otpToken ? { otpToken } : {}),
             }),
           });
           const data = (await upstream.json().catch(() => ({}))) as {
