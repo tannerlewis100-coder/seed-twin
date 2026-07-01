@@ -619,14 +619,11 @@ function CheckoutPage() {
           return;
         }
 
-        // Not verified yet — fire otp/start, then open the brand dialog.
+        // Not verified yet — fire otp/send, then open the brand dialog.
         try {
-          await fetch("https://app.useattestly.com/api/connect/otp/start", {
+          await fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/otp/send", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "X-Attestly-Site-Token": "cmqscvrvs000i4opoyweu6kze",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email }),
           });
         } catch {
