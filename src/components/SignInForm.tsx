@@ -24,7 +24,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
           : { phone: result.identifier, token: result.token };
       const res = await otpLoginApi(payload);
       await setSession(res.token, res.user ?? null);
-      const code = couponCode(res.welcome_coupon);
+      const code = couponCode(res.welcome_coupon ?? undefined);
       if (res.is_new && code) {
         toast.success("Welcome to Clarum", {
           description: `Your 10% code: ${code}`,
