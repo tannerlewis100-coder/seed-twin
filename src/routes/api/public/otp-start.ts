@@ -14,17 +14,32 @@ export const Route = createFileRoute("/api/public/otp-start")({
       OPTIONS: async () => new Response(null, { status: 204, headers: corsHeaders }),
       POST: async ({ request }) => {
         try {
-          const { email } = (await request.json()) as { email?: string };
-          if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+          const body = (await request.json()) as { email?: string; phone?: string };
+          const email = body.email?.trim();
+          const phone = body.phone?.trim();
+          if (!email && !phone) {
+            return new Response(JSON.stringify({ ok: false, error: "Missing email or phone" }), {
+              status: 400,
+              headers: { "Content-Type": "application/json", ...corsHeaders },
+            });
+          }
+          if (email && !/^\S+@\S+\.\S+$/.test(email)) {
             return new Response(JSON.stringify({ ok: false, error: "Invalid email" }), {
               status: 400,
               headers: { "Content-Type": "application/json", ...corsHeaders },
             });
           }
+          if (phone && !/^\d{10,11}$/.test(phone)) {
+            return new Response(JSON.stringify({ ok: false, error: "Invalid phone" }), {
+              status: 400,
+              headers: { "Content-Type": "application/json", ...corsHeaders },
+            });
+          }
+          const payload: Record<string, string> = email ? { email } : { phone: phone! };
           const upstream = await fetch(WP, {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify(payload),
           });
           const text = await upstream.text();
           let data: unknown = {};

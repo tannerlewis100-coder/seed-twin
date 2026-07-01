@@ -1,20 +1,36 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader2, Check, X } from "lucide-react";
+import { Loader2, Check, X, ArrowRight } from "lucide-react";
+import {
+  parseIdentifier,
+  otpPayload,
+  type ParsedIdentifier,
+} from "@/lib/otpIdentifier";
 
 const OTP_BASE = "https://admin.clarumpeptides.com/wp-json/clarum/v1/otp";
 
 type Props = {
+  /** Billing email (or any prefill). Used as default value in the identifier field. */
   email: string;
-  /** If true, the parent has already fired otp/send; we skip the initial send. */
+  /** If true, the parent already fired otp/send with this email; we skip the initial send. */
   codeAlreadySent?: boolean;
   onVerified: (result: { email: string; token: string }) => void;
   onClose: () => void;
 };
 
 export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClose }: Props) {
+  // If billing email is present and codeAlreadySent, skip identifier step.
+  const initialParsed = codeAlreadySent && email ? parseIdentifier(email) : null;
+  const [step, setStep] = useState<"identifier" | "code">(
+    initialParsed && initialParsed.channel ? "code" : "identifier",
+  );
+  const [rawInput, setRawInput] = useState(email ?? "");
+  const [identifier, setIdentifier] = useState<ParsedIdentifier | null>(
+    initialParsed && initialParsed.channel ? initialParsed : null,
+  );
+
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
   const [busy, setBusy] = useState(false);
-  const [sending, setSending] = useState(!codeAlreadySent);
+  const [sending, setSending] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [expired, setExpired] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
@@ -22,6 +38,7 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
   const [cooldown, setCooldown] = useState(codeAlreadySent ? 30 : 0);
   const [success, setSuccess] = useState(false);
   const boxRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const idInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -30,18 +47,16 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
   }, [cooldown]);
 
   useEffect(() => {
-    if (codeAlreadySent) return;
-    void sendCode();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (!sending && !busy && !success) {
+    if (step === "code" && !sending && !busy && !success) {
       setTimeout(() => boxRefs.current[0]?.focus(), 40);
     }
-  }, [sending, busy, success]);
+    if (step === "identifier") {
+      setTimeout(() => idInputRef.current?.focus(), 40);
+    }
+  }, [step, sending, busy, success]);
 
-  async function sendCode() {
+  async function sendCode(id: ParsedIdentifier) {
+    if (id.channel == null) return false;
     setSending(true);
     setErr(null);
     setExpired(false);
@@ -49,7 +64,7 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
       const res = await fetch(`${OTP_BASE}/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(otpPayload(id)),
       });
       if (res.status === 429) {
         setErr("Please wait a moment before resending.");
@@ -57,7 +72,16 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
         return false;
       }
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
-      if (!res.ok || !data.ok) {
+      const errCode = (data.error || "").toLowerCase();
+      if (id.channel === "phone" && (errCode === "sms_unavailable" || errCode === "sms_failed")) {
+        // Fall back to email mode
+        setErr("Texting is unavailable right now — please use your email instead.");
+        setStep("identifier");
+        setRawInput("");
+        setIdentifier(null);
+        return false;
+      }
+      if (!res.ok || data.ok === false) {
         setErr(data.error || "Could not send code. Try again.");
         return false;
       }
@@ -71,7 +95,23 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
     }
   }
 
+  async function handleIdentifierSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    const parsed = parseIdentifier(rawInput);
+    if (parsed.channel == null) {
+      setErr(parsed.error);
+      return;
+    }
+    setIdentifier(parsed);
+    const ok = await sendCode(parsed);
+    if (ok) {
+      setDigits(["", "", "", "", "", ""]);
+      setStep("code");
+    }
+  }
+
   async function verify(code: string) {
+    if (!identifier || identifier.channel == null) return;
     setBusy(true);
     setErr(null);
     setExpired(false);
@@ -79,7 +119,7 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
       const res = await fetch(`${OTP_BASE}/verify`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
+        body: JSON.stringify(otpPayload(identifier, code)),
       });
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
@@ -90,7 +130,10 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
       };
       if (data.verified === true && data.token) {
         setSuccess(true);
-        setTimeout(() => onVerified({ email, token: data.token! }), 650);
+        // Parent expects an "email" string — send the identifier display for phone.
+        const emailFieldValue =
+          identifier.channel === "email" ? identifier.email : identifier.display;
+        setTimeout(() => onVerified({ email: emailFieldValue, token: data.token! }), 650);
         return;
       }
       if ((data.error || "").toLowerCase().includes("expired")) {
@@ -162,18 +205,28 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
   }
 
   async function handleResend() {
-    if (cooldown > 0 || sending || busy) return;
+    if (cooldown > 0 || sending || busy || !identifier) return;
     setDigits(["", "", "", "", "", ""]);
     setRemaining(null);
-    await sendCode();
+    await sendCode(identifier);
   }
+
+  function useDifferent() {
+    setStep("identifier");
+    setDigits(["", "", "", "", "", ""]);
+    setErr(null);
+    setExpired(false);
+    setRemaining(null);
+  }
+
+  const sentToLabel = identifier && identifier.channel != null ? identifier.display : "";
 
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label="Verify your email"
+      aria-label="Verify to continue"
       onKeyDown={(e) => {
         if (e.key === "Escape") onClose();
       }}
@@ -191,7 +244,7 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
         <button
           type="button"
           onClick={onClose}
-          aria-label="Use a different email"
+          aria-label="Close"
           className="absolute right-3 top-3 text-white/50 hover:text-white/90 transition-colors"
         >
           <X className="h-4 w-4" />
@@ -208,119 +261,163 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
             Sign in or sign up
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-white/70">
-            We'll email you a one-time code. No password needed.
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-white/60">
-            We've sent a 6-digit code to{" "}
-            <span className="text-white font-medium">{email}</span>.
+            We'll text or email you a one-time code. No password needed.
           </p>
 
-          {success ? (
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 py-8">
-              <div
-                className="flex h-14 w-14 items-center justify-center rounded-full animate-[attestly-pop_0.4s_ease-out]"
-                style={{ backgroundColor: "rgba(196,160,90,0.15)", border: "1px solid #C4A05A" }}
+          {step === "identifier" ? (
+            <form onSubmit={handleIdentifierSubmit} className="mt-6 space-y-3">
+              <input
+                ref={idInputRef}
+                type="text"
+                autoComplete="email"
+                value={rawInput}
+                onChange={(e) => {
+                  setRawInput(e.target.value);
+                  if (err) setErr(null);
+                }}
+                placeholder="Email or phone #"
+                className="w-full rounded-lg bg-black/30 px-4 py-3 text-white text-sm outline-none transition-all"
+                style={{ border: "1px solid rgba(255,255,255,0.12)" }}
+                onFocus={(e) => {
+                  e.currentTarget.style.borderColor = "#C4A05A";
+                  e.currentTarget.style.boxShadow = "0 0 0 2px rgba(196,160,90,0.35)";
+                }}
+                onBlur={(e) => {
+                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
+                  e.currentTarget.style.boxShadow = "none";
+                }}
+                disabled={sending}
+              />
+              {err && <p className="text-xs text-red-400">{err}</p>}
+              <button
+                type="submit"
+                disabled={sending}
+                className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition disabled:opacity-60"
+                style={{ backgroundColor: "#C4A05A", color: "#0F1A2E" }}
               >
-                <Check className="h-7 w-7" style={{ color: "#C4A05A" }} />
-              </div>
-              <p className="text-sm text-white/80">Verified · continuing to payment…</p>
-            </div>
+                {sending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    Send my code <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
           ) : (
             <>
-              <div
-                className="mt-7 flex justify-center gap-2 sm:gap-2.5"
-                onPaste={(e) => {
-                  const txt = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                  if (txt.length) {
-                    e.preventDefault();
-                    setDigit(0, txt);
-                  }
-                }}
-              >
-                {digits.map((d, i) => {
-                  const hasErr = !!err;
-                  return (
-                    <input
-                      key={i}
-                      ref={(el) => {
-                        boxRefs.current[i] = el;
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                      maxLength={1}
-                      value={d}
-                      onChange={(e) => setDigit(i, e.target.value)}
-                      onKeyDown={(e) => onKeyDown(i, e)}
-                      disabled={busy || sending}
-                      aria-label={`Digit ${i + 1}`}
-                      className="h-12 w-10 sm:h-14 sm:w-12 rounded-lg bg-black/30 text-center font-display text-2xl text-white outline-none transition-all"
+              <p className="mt-2 text-sm leading-relaxed text-white/60">
+                We sent a 6-digit code to{" "}
+                <span className="text-white font-medium">{sentToLabel}</span>.
+              </p>
+              {success ? (
+                <div className="mt-8 flex flex-col items-center justify-center gap-3 py-8">
+                  <div
+                    className="flex h-14 w-14 items-center justify-center rounded-full animate-[attestly-pop_0.4s_ease-out]"
+                    style={{ backgroundColor: "rgba(196,160,90,0.15)", border: "1px solid #C4A05A" }}
+                  >
+                    <Check className="h-7 w-7" style={{ color: "#C4A05A" }} />
+                  </div>
+                  <p className="text-sm text-white/80">Verified · continuing to payment…</p>
+                </div>
+              ) : (
+                <>
+                  <div
+                    className="mt-7 flex justify-center gap-2 sm:gap-2.5"
+                    onPaste={(e) => {
+                      const txt = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+                      if (txt.length) {
+                        e.preventDefault();
+                        setDigit(0, txt);
+                      }
+                    }}
+                  >
+                    {digits.map((d, i) => {
+                      const hasErr = !!err;
+                      return (
+                        <input
+                          key={i}
+                          ref={(el) => {
+                            boxRefs.current[i] = el;
+                          }}
+                          type="text"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          maxLength={1}
+                          value={d}
+                          onChange={(e) => setDigit(i, e.target.value)}
+                          onKeyDown={(e) => onKeyDown(i, e)}
+                          disabled={busy || sending}
+                          aria-label={`Digit ${i + 1}`}
+                          className="h-12 w-10 sm:h-14 sm:w-12 rounded-lg bg-black/30 text-center font-display text-2xl text-white outline-none transition-all"
+                          style={{
+                            border: `1px solid ${hasErr ? "rgba(248,113,113,0.7)" : "rgba(255,255,255,0.1)"}`,
+                          }}
+                          onFocus={(e) => {
+                            e.currentTarget.style.borderColor = "#C4A05A";
+                            e.currentTarget.style.boxShadow = "0 0 0 2px rgba(196,160,90,0.35)";
+                          }}
+                          onBlur={(e) => {
+                            e.currentTarget.style.borderColor = hasErr
+                              ? "rgba(248,113,113,0.7)"
+                              : "rgba(255,255,255,0.1)";
+                            e.currentTarget.style.boxShadow = "none";
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-4 min-h-[20px] text-center text-xs">
+                    {sending ? (
+                      <span className="inline-flex items-center gap-2 text-white/60">
+                        <Loader2 className="h-3 w-3 animate-spin" /> Sending code…
+                      </span>
+                    ) : busy ? (
+                      <span className="inline-flex items-center gap-2 text-white/60">
+                        <Loader2 className="h-3 w-3 animate-spin" /> Verifying…
+                      </span>
+                    ) : err ? (
+                      <span className="text-red-400">{err}</span>
+                    ) : (
+                      <span className="text-white/40">
+                        Code expires in ~10 minutes.{" "}
+                        {remaining !== null ? `${remaining} attempts left.` : ""}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-6 flex flex-col items-center gap-3 text-xs">
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      disabled={(cooldown > 0 && !expired) || sending || busy}
+                      className="font-medium transition-colors disabled:cursor-not-allowed"
                       style={{
-                        border: `1px solid ${hasErr ? "rgba(248,113,113,0.7)" : "rgba(255,255,255,0.1)"}`,
+                        color:
+                          (cooldown > 0 && !expired) || sending || busy
+                            ? "rgba(255,255,255,0.35)"
+                            : "#C4A05A",
                       }}
-                      onFocus={(e) => {
-                        e.currentTarget.style.borderColor = "#C4A05A";
-                        e.currentTarget.style.boxShadow = "0 0 0 2px rgba(196,160,90,0.35)";
-                      }}
-                      onBlur={(e) => {
-                        e.currentTarget.style.borderColor = hasErr
-                          ? "rgba(248,113,113,0.7)"
-                          : "rgba(255,255,255,0.1)";
-                        e.currentTarget.style.boxShadow = "none";
-                      }}
-                    />
-                  );
-                })}
-              </div>
-
-              <div className="mt-4 min-h-[20px] text-center text-xs">
-                {sending ? (
-                  <span className="inline-flex items-center gap-2 text-white/60">
-                    <Loader2 className="h-3 w-3 animate-spin" /> Sending code…
-                  </span>
-                ) : busy ? (
-                  <span className="inline-flex items-center gap-2 text-white/60">
-                    <Loader2 className="h-3 w-3 animate-spin" /> Verifying…
-                  </span>
-                ) : err ? (
-                  <span className="text-red-400">{err}</span>
-                ) : (
-                  <span className="text-white/40">
-                    Code expires in ~10 minutes.{" "}
-                    {remaining !== null ? `${remaining} attempts left.` : ""}
-                  </span>
-                )}
-              </div>
-
-              <div className="mt-6 flex flex-col items-center gap-3 text-xs">
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={(cooldown > 0 && !expired) || sending || busy}
-                  className="font-medium transition-colors disabled:cursor-not-allowed"
-                  style={{
-                    color:
-                      (cooldown > 0 && !expired) || sending || busy
-                        ? "rgba(255,255,255,0.35)"
-                        : "#C4A05A",
-                  }}
-                >
-                  {sending
-                    ? "Sending…"
-                    : expired
-                      ? "Send a new code"
-                      : cooldown > 0
-                        ? `Resend in ${cooldown}s`
-                        : "Didn't get it? Resend code"}
-                </button>
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="text-white/45 hover:text-white/70 transition-colors"
-                >
-                  Use a different email
-                </button>
-              </div>
+                    >
+                      {sending
+                        ? "Sending…"
+                        : expired
+                          ? "Send a new code"
+                          : cooldown > 0
+                            ? `Resend in ${cooldown}s`
+                            : "Didn't get it? Resend code"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={useDifferent}
+                      className="text-white/45 hover:text-white/70 transition-colors"
+                    >
+                      Use a different email or phone
+                    </button>
+                  </div>
+                </>
+              )}
             </>
           )}
         </div>

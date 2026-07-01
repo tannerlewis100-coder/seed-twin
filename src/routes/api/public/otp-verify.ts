@@ -14,17 +14,27 @@ export const Route = createFileRoute("/api/public/otp-verify")({
       OPTIONS: async () => new Response(null, { status: 204, headers: corsHeaders }),
       POST: async ({ request }) => {
         try {
-          const { email, code } = (await request.json()) as { email?: string; code?: string };
-          if (!email || !code) {
+          const body = (await request.json()) as {
+            email?: string;
+            phone?: string;
+            code?: string;
+          };
+          const email = body.email?.trim();
+          const phone = body.phone?.trim();
+          const code = body.code?.trim();
+          if ((!email && !phone) || !code) {
             return new Response(
-              JSON.stringify({ ok: false, verified: false, error: "Missing email or code" }),
+              JSON.stringify({ ok: false, verified: false, error: "Missing identifier or code" }),
               { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } },
             );
           }
+          const payload: Record<string, string> = email
+            ? { email, code }
+            : { phone: phone!, code };
           const upstream = await fetch(WP, {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({ email, code }),
+            body: JSON.stringify(payload),
           });
           const text = await upstream.text();
           let data: Record<string, unknown> = {};
