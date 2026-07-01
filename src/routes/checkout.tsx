@@ -105,6 +105,19 @@ function CheckoutPage() {
     setStripeConfirmPayment(handler ? () => handler : null);
   }, []);
   const handleStripeError = useCallback((msg: string) => setError(msg), []);
+
+  // Attestly payment-verification OTP (required by the processor before charging).
+  const [attestlyVerified, setAttestlyVerified] = useState<{
+    email: string;
+    token: string;
+  } | null>(null);
+  const [attestlyDialog, setAttestlyDialog] = useState<{
+    email: string;
+    codeAlreadySent: boolean;
+  } | null>(null);
+  // A pending "continue after verified" action so we can resume the pay flow
+  // after the dialog closes with a good token.
+  const pendingAfterVerifyRef = useRef<null | ((token: string) => void)>(null);
   const handleStripePaid = useCallback(async () => {
     if (!stripeSession) return;
     clearCartToken();
