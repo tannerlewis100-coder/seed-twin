@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, X } from "lucide-react";
+import { useRouter } from "@tanstack/react-router";
 import clarumLogo from "@/assets/clarum-logo.png";
 import { parseIdentifier, otpPayload, type ParsedIdentifier } from "@/lib/otpIdentifier";
+
 
 type Props = {
   onVerified: (email: string, payload: Record<string, unknown>) => void;
@@ -10,7 +12,9 @@ type Props = {
 };
 
 export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
+  const router = useRouter();
   const [step, setStep] = useState<"identifier" | "code">("identifier");
+
   const [rawInput, setRawInput] = useState(defaultEmail ?? "");
   const [identifier, setIdentifier] = useState<ParsedIdentifier | null>(null);
   const [busy, setBusy] = useState(false);
@@ -181,12 +185,31 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
       role="dialog"
       aria-modal="true"
       aria-label="Verify to continue to checkout"
+      onKeyDown={(e) => {
+        if (e.key === "Escape") router.history.back();
+      }}
     >
       <div
         className={`relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-card shadow-2xl ${
           shake ? "animate-[shake_0.45s_ease-in-out]" : ""
         }`}
       >
+        <button
+          type="button"
+          onClick={() => {
+            try {
+              if (window.history.length > 1) router.history.back();
+              else router.navigate({ to: "/shop" });
+            } catch {
+              router.navigate({ to: "/shop" });
+            }
+          }}
+          aria-label="Close"
+          className="absolute right-3 top-3 z-10 rounded-full p-1.5 text-muted-foreground hover:bg-white/5 hover:text-foreground transition-colors"
+        >
+          <X className="h-4 w-4" />
+        </button>
+
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-[0.05]"
