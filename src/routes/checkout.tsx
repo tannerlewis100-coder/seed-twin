@@ -479,7 +479,8 @@ function CheckoutPage() {
       if (sPc) return `Shipping: ${sPc}`;
     }
     if (!paymentMethod) return "Select a payment method.";
-    if (needsShipping && !selectedRateId) return "Select a shipping method.";
+    if (needsShipping && !rates.some((r) => r.rate_id === selectedRateId))
+      return "Select a shipping method.";
     return null;
   }
 
