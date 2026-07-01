@@ -81,6 +81,7 @@ export const Route = createFileRoute("/api/public/attestly/create-intent")({
               currency,
               idempotencyKey: String(orderId),
               metadata: { wcOrderId: String(orderId) },
+              ...(otpToken ? { otpToken } : {}),
             }),
           });
           const data = (await upstream.json().catch(() => ({}))) as {
