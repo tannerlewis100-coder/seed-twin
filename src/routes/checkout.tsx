@@ -768,8 +768,9 @@ function CheckoutPage() {
                 </div>
               </div>
             </div>
-
+          ) : (
             <form onSubmit={onSubmit} className="grid lg:grid-cols-[1fr_400px] gap-8 lg:gap-12">
+
               {/* Left: form */}
               <div className="space-y-10">
                 <Section title="Contact">
