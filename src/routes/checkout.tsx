@@ -207,6 +207,16 @@ function CheckoutPage() {
     setStripeConfirmPayment(null);
   }, [paymentMethod]);
 
+  // If the billing email diverges from the verified one, reset verification
+  // and any staged Stripe session so the customer must re-verify.
+  useEffect(() => {
+    if (attestlyVerified && attestlyVerified.email.toLowerCase() !== email.trim().toLowerCase()) {
+      setAttestlyVerified(null);
+      setStripeSession(null);
+      setStripeConfirmPayment(null);
+    }
+  }, [email, attestlyVerified]);
+
 
 
   // Auto-fill from logged-in Clarum account
