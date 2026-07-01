@@ -39,7 +39,7 @@ export const Route = createFileRoute("/api/public/otp-start")({
           const upstream = await fetch(WP, {
             method: "POST",
             headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify(payload),
           });
           const text = await upstream.text();
           let data: unknown = {};
