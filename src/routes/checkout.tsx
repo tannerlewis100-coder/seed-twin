@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Loader2, Lock, ShoppingBag } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
