@@ -1191,6 +1191,25 @@ function CheckoutPage() {
       </main>
 
       <SiteFooter />
+
+      {attestlyDialog && (
+        <AttestlyVerifyDialog
+          email={attestlyDialog.email}
+          codeAlreadySent={attestlyDialog.codeAlreadySent}
+          onVerified={({ email: verifiedE, token }) => {
+            setAttestlyVerified({ email: verifiedE, token });
+            setAttestlyDialog(null);
+            const cb = pendingAfterVerifyRef.current;
+            pendingAfterVerifyRef.current = null;
+            if (cb) cb(token);
+          }}
+          onClose={() => {
+            setAttestlyDialog(null);
+            pendingAfterVerifyRef.current = null;
+            setSubmitting(false);
+          }}
+        />
+      )}
     </div>
   );
 }
