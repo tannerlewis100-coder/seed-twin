@@ -17,6 +17,7 @@ import {
 } from "@/lib/woo";
 import { useClarumAuth } from "@/lib/clarum-auth";
 import { CheckoutOtpGate } from "@/components/CheckoutOtpGate";
+import { AttestlyVerifyDialog } from "@/components/AttestlyVerifyDialog";
 import {
   StripeAttestlyPanel,
   useAttestlyConfig,
