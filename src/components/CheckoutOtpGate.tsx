@@ -164,166 +164,164 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
       aria-label="Verify your email to continue to checkout"
     >
       <div
-        className={`relative max-h-[90vh] w-full max-w-sm overflow-y-auto rounded-xl border border-border bg-card shadow-2xl md:max-w-3xl md:overflow-hidden ${
+        className={`relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-card shadow-2xl ${
           shake ? "animate-[shake_0.45s_ease-in-out]" : ""
         }`}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2">
-          {/* Brand panel */}
-          <div className="relative w-full overflow-hidden bg-black aspect-[4/3] md:aspect-auto md:min-h-[480px] flex items-center justify-center p-8">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.08]"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle at 20% 30%, #C79A3A 1px, transparent 1.5px), radial-gradient(circle at 70% 60%, #C79A3A 1px, transparent 1.5px), radial-gradient(circle at 50% 85%, #C79A3A 1px, transparent 1.5px)",
-                backgroundSize: "180px 180px",
-              }}
-            />
+        {/* Subtle gold dot pattern watermark */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 20% 30%, #C79A3A 1px, transparent 1.5px), radial-gradient(circle at 70% 60%, #C79A3A 1px, transparent 1.5px), radial-gradient(circle at 50% 85%, #C79A3A 1px, transparent 1.5px)",
+            backgroundSize: "180px 180px",
+          }}
+        />
+
+        <div className="relative flex flex-col gap-5 p-6 sm:p-8">
+          {/* Logo header */}
+          <div className="flex flex-col items-center gap-3 border-b border-border/60 pb-5">
             <img
               src={clarumLogo}
               alt="Clarum Peptides"
-              className="relative z-10 max-h-40 w-auto object-contain"
+              className="h-14 w-auto object-contain"
             />
-            <div className="absolute left-4 top-4 rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-foreground shadow-lg">
+            <span className="rounded-full bg-primary px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary-foreground">
               Secure checkout
-            </div>
+            </span>
           </div>
 
-          {/* Form panel */}
-          <div className="flex flex-col justify-center gap-4 p-5 md:gap-5 md:p-10">
-            {step === "email" ? (
-              <>
-                <div className="space-y-2">
-                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                    Verify it's you
-                  </p>
-                  <h2 className="font-display text-2xl leading-tight text-foreground md:text-4xl">
-                    Sign in or sign up.
-                  </h2>
-                </div>
-
+          {step === "email" ? (
+            <>
+              <div className="space-y-2 text-center">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                  Verify it's you
+                </p>
+                <h2 className="font-display text-2xl leading-tight text-foreground md:text-3xl">
+                  Sign in or sign up.
+                </h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   We'll email you a one-time code. No password needed.
                 </p>
+              </div>
 
-                <form onSubmit={handleEmailSubmit} className="space-y-3">
-                  <input
-                    type="email"
-                    autoFocus
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (err) setErr(null);
-                    }}
-                    placeholder="your@email.com"
-                    className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    disabled={busy}
-                  />
-                  {err && <p className="text-xs text-red-400">{err}</p>}
-                  <button
-                    type="submit"
-                    disabled={busy}
-                    className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
-                  >
-                    {busy ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <>
-                        Send my code <ArrowRight className="h-4 w-4" />
-                      </>
-                    )}
-                  </button>
-                  <p className="text-[11px] leading-relaxed text-muted-foreground/80">
-                    By continuing you agree to our{" "}
-                    <a href="/terms" className="text-primary hover:underline">
-                      Terms
-                    </a>{" "}
-                    and{" "}
-                    <a href="/privacy" className="text-primary hover:underline">
-                      Privacy Policy
-                    </a>
-                    .
-                  </p>
-                </form>
-              </>
-            ) : (
-              <>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
-                    <Mail className="h-4 w-4" /> Check your email
-                  </div>
-                  <h2 className="font-display text-2xl leading-tight text-foreground md:text-4xl">
-                    Verify your email.
-                  </h2>
+              <form onSubmit={handleEmailSubmit} className="space-y-3">
+                <input
+                  type="email"
+                  autoFocus
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (err) setErr(null);
+                  }}
+                  placeholder="your@email.com"
+                  className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  disabled={busy}
+                />
+                {err && <p className="text-xs text-red-400">{err}</p>}
+                <button
+                  type="submit"
+                  disabled={busy}
+                  className="flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
+                >
+                  {busy ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <>
+                      Send my code <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+                <p className="text-center text-[11px] leading-relaxed text-muted-foreground/80">
+                  By continuing you agree to our{" "}
+                  <a href="/terms" className="text-primary hover:underline">
+                    Terms
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy" className="text-primary hover:underline">
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
+              </form>
+            </>
+          ) : (
+            <>
+              <div className="space-y-2 text-center">
+                <div className="flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
+                  <Mail className="h-4 w-4" /> Check your email
                 </div>
-
+                <h2 className="font-display text-2xl leading-tight text-foreground md:text-3xl">
+                  Verify your email.
+                </h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   We sent a 6-digit code to{" "}
                   <span className="font-medium text-primary">{email}</span>
                 </p>
+              </div>
 
-                <div
-                  className="flex justify-center gap-2"
-                  onPaste={(e) => {
-                    const txt = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-                    if (txt.length) {
-                      e.preventDefault();
-                      setDigit(0, txt);
-                    }
-                  }}
-                >
-                  {digits.map((d, i) => (
-                    <input
-                      key={i}
-                      ref={(el) => {
-                        boxRefs.current[i] = el;
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={d}
-                      onChange={(e) => setDigit(i, e.target.value)}
-                      onKeyDown={(e) => onKeyDown(i, e)}
-                      disabled={busy}
-                      className={`h-14 w-11 rounded-md border bg-background text-center font-display text-xl text-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary ${
-                        err ? "border-red-500/60" : "border-border"
-                      }`}
-                    />
-                  ))}
-                </div>
-
-                {err && <p className="text-center text-xs text-red-400">{err}</p>}
-
-                <div className="flex items-center justify-center gap-4 text-xs">
-                  <button
-                    type="button"
-                    onClick={handleResend}
-                    disabled={cooldown > 0 || busy}
-                    className="text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
-                  >
-                    {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
-                  </button>
-                  <span className="text-muted-foreground/40">·</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStep("email");
-                      setErr(null);
+              <div
+                className="flex justify-center gap-2"
+                onPaste={(e) => {
+                  const txt = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+                  if (txt.length) {
+                    e.preventDefault();
+                    setDigit(0, txt);
+                  }
+                }}
+              >
+                {digits.map((d, i) => (
+                  <input
+                    key={i}
+                    ref={(el) => {
+                      boxRefs.current[i] = el;
                     }}
-                    className="text-primary hover:underline"
-                  >
-                    Change email
-                  </button>
-                </div>
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={1}
+                    value={d}
+                    onChange={(e) => setDigit(i, e.target.value)}
+                    onKeyDown={(e) => onKeyDown(i, e)}
+                    disabled={busy}
+                    className={`h-14 w-11 rounded-md border bg-background text-center font-display text-xl text-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary ${
+                      err ? "border-red-500/60" : "border-border"
+                    }`}
+                  />
+                ))}
+              </div>
 
-                <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
-                  <Lock className="h-3 w-3" />
-                  Secure, encrypted verification
-                </div>
-              </>
-            )}
-          </div>
+              {err && <p className="text-center text-xs text-red-400">{err}</p>}
+
+              <div className="flex items-center justify-center gap-4 text-xs">
+                <button
+                  type="button"
+                  onClick={handleResend}
+                  disabled={cooldown > 0 || busy}
+                  className="text-primary hover:underline disabled:text-muted-foreground disabled:no-underline"
+                >
+                  {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend code"}
+                </button>
+                <span className="text-muted-foreground/40">·</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep("email");
+                    setErr(null);
+                  }}
+                  className="text-primary hover:underline"
+                >
+                  Change email
+                </button>
+              </div>
+
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+                <Lock className="h-3 w-3" />
+                Secure, encrypted verification
+              </div>
+            </>
+          )}
         </div>
       </div>
 
