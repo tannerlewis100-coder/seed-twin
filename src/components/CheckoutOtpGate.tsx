@@ -10,8 +10,9 @@ type Props = {
 };
 
 export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
-  const [step, setStep] = useState<"email" | "code">("email");
-  const [email, setEmail] = useState(defaultEmail ?? "");
+  const [step, setStep] = useState<"identifier" | "code">("identifier");
+  const [rawInput, setRawInput] = useState(defaultEmail ?? "");
+  const [identifier, setIdentifier] = useState<ParsedIdentifier | null>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
@@ -25,16 +26,30 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
     return () => clearTimeout(t);
   }, [cooldown]);
 
-  async function sendCode(targetEmail: string) {
+  async function sendCode(id: ParsedIdentifier): Promise<boolean> {
+    if (id.channel == null) return false;
     setBusy(true);
     setErr(null);
     try {
       const res = await fetch("/api/public/otp-start", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: targetEmail }),
+        body: JSON.stringify(otpPayload(id)),
       });
+      if (res.status === 429) {
+        setErr("Please wait a moment before resending.");
+        setCooldown((c) => (c > 0 ? c : 30));
+        return false;
+      }
       const data = (await res.json()) as { ok?: boolean; error?: string; message?: string };
+      const errCode = (data.error || "").toLowerCase();
+      if (id.channel === "phone" && (errCode === "sms_unavailable" || errCode === "sms_failed")) {
+        setErr("Texting is unavailable right now — please use your email instead.");
+        setStep("identifier");
+        setRawInput("");
+        setIdentifier(null);
+        return false;
+      }
       if (!res.ok || !data.ok) {
         setErr(data.error || data.message || "Could not send code. Try again.");
         return false;
@@ -48,16 +63,16 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
     }
   }
 
-  async function handleEmailSubmit(e: React.FormEvent) {
+  async function handleIdentifierSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const trimmed = email.trim();
-    if (!emailRx.test(trimmed)) {
-      setErr("Enter a valid email.");
+    const parsed = parseIdentifier(rawInput);
+    if (parsed.channel == null) {
+      setErr(parsed.error);
       return;
     }
-    const ok = await sendCode(trimmed);
+    setIdentifier(parsed);
+    const ok = await sendCode(parsed);
     if (ok) {
-      setEmail(trimmed);
       setDigits(["", "", "", "", "", ""]);
       setStep("code");
       setCooldown(30);
@@ -66,13 +81,14 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
   }
 
   async function verify(code: string) {
+    if (!identifier || identifier.channel == null) return;
     setBusy(true);
     setErr(null);
     try {
       const res = await fetch("/api/public/otp-verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, code }),
+        body: JSON.stringify(otpPayload(identifier, code)),
       });
       const data = (await res.json()) as Record<string, unknown> & {
         ok?: boolean;
@@ -82,7 +98,9 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
         message?: string;
       };
       if (data.verified === true || data.ok === true) {
-        onVerified(email, data);
+        const emailFieldValue =
+          identifier.channel === "email" ? identifier.email : identifier.display;
+        onVerified(emailFieldValue, data);
         return;
       }
       const rem = typeof data.remaining === "number" ? data.remaining : null;
@@ -145,8 +163,8 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
   }
 
   async function handleResend() {
-    if (cooldown > 0 || busy) return;
-    const ok = await sendCode(email);
+    if (cooldown > 0 || busy || !identifier) return;
+    const ok = await sendCode(identifier);
     if (ok) {
       setCooldown(30);
       setDigits(["", "", "", "", "", ""]);
@@ -155,19 +173,20 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
     }
   }
 
+  const sentToLabel = identifier && identifier.channel != null ? identifier.display : "";
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label="Verify your email to continue to checkout"
+      aria-label="Verify to continue to checkout"
     >
       <div
         className={`relative max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-card shadow-2xl ${
           shake ? "animate-[shake_0.45s_ease-in-out]" : ""
         }`}
       >
-        {/* Subtle gold dot pattern watermark */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-[0.05]"
@@ -179,7 +198,6 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
         />
 
         <div className="relative flex flex-col gap-5 p-6 sm:p-8">
-          {/* Logo header */}
           <div className="flex flex-col items-center gap-3 border-b border-border/60 pb-5">
             <img
               src={clarumLogo}
@@ -191,7 +209,7 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
             </span>
           </div>
 
-          {step === "email" ? (
+          {step === "identifier" ? (
             <>
               <div className="space-y-2 text-center">
                 <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
@@ -201,20 +219,21 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
                   Sign in or sign up.
                 </h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  We'll email you a one-time code. No password needed.
+                  We'll text or email you a one-time code. No password needed.
                 </p>
               </div>
 
-              <form onSubmit={handleEmailSubmit} className="space-y-3">
+              <form onSubmit={handleIdentifierSubmit} className="space-y-3">
                 <input
-                  type="email"
+                  type="text"
                   autoFocus
-                  value={email}
+                  autoComplete="email"
+                  value={rawInput}
                   onChange={(e) => {
-                    setEmail(e.target.value);
+                    setRawInput(e.target.value);
                     if (err) setErr(null);
                   }}
-                  placeholder="your@email.com"
+                  placeholder="Email or phone #"
                   className="w-full rounded-md border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   disabled={busy}
                 />
@@ -249,14 +268,15 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
             <>
               <div className="space-y-2 text-center">
                 <div className="flex items-center justify-center gap-2 text-xs font-medium uppercase tracking-[0.2em] text-primary">
-                  <Mail className="h-4 w-4" /> Check your email
+                  <Mail className="h-4 w-4" />
+                  {identifier?.channel === "phone" ? "Check your phone" : "Check your email"}
                 </div>
                 <h2 className="font-display text-2xl leading-tight text-foreground md:text-3xl">
-                  Verify your email.
+                  Enter your code.
                 </h2>
                 <p className="text-sm leading-relaxed text-muted-foreground">
                   We sent a 6-digit code to{" "}
-                  <span className="font-medium text-primary">{email}</span>
+                  <span className="font-medium text-primary">{sentToLabel}</span>
                 </p>
               </div>
 
@@ -306,12 +326,12 @@ export function CheckoutOtpGate({ onVerified, defaultEmail }: Props) {
                 <button
                   type="button"
                   onClick={() => {
-                    setStep("email");
+                    setStep("identifier");
                     setErr(null);
                   }}
                   className="text-primary hover:underline"
                 >
-                  Change email
+                  Use a different email or phone
                 </button>
               </div>
 
