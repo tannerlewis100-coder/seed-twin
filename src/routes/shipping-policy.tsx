@@ -57,7 +57,7 @@ function ShippingPolicyPage() {
       <LegalH2>5. Shipping Costs</LegalH2>
       <p>
         Shipping is a flat $12.00 for standard delivery anywhere in the continental US. Orders
-        over $150 ship free.
+        over $150 ship free. Shipping fees are non-refundable.
       </p>
 
       <LegalH2>6. Tracking</LegalH2>
