@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader2, Check, X } from "lucide-react";
 
-const ATTESTLY_BASE = "https://app.useattestly.com/api/connect/otp";
-const SITE_TOKEN = "cmqscvrvs000i4opoyweu6kze";
+const OTP_BASE = "https://admin.clarumpeptides.com/wp-json/clarum/v1/otp";
 
 type Props = {
   email: string;
-  /** If true, the parent has already fired otp/start; we skip the initial send. */
+  /** If true, the parent has already fired otp/send; we skip the initial send. */
   codeAlreadySent?: boolean;
   onVerified: (result: { email: string; token: string }) => void;
   onClose: () => void;
@@ -17,6 +16,7 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
   const [busy, setBusy] = useState(false);
   const [sending, setSending] = useState(!codeAlreadySent);
   const [err, setErr] = useState<string | null>(null);
+  const [expired, setExpired] = useState(false);
   const [remaining, setRemaining] = useState<number | null>(null);
   const [shake, setShake] = useState(false);
   const [cooldown, setCooldown] = useState(codeAlreadySent ? 30 : 0);
@@ -29,7 +29,6 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
     return () => clearTimeout(t);
   }, [cooldown]);
 
-  // If parent hasn't sent yet, send on mount.
   useEffect(() => {
     if (codeAlreadySent) return;
     void sendCode();
@@ -37,23 +36,26 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
   }, []);
 
   useEffect(() => {
-    if (!sending && !busy) {
+    if (!sending && !busy && !success) {
       setTimeout(() => boxRefs.current[0]?.focus(), 40);
     }
-  }, [sending, busy]);
+  }, [sending, busy, success]);
 
   async function sendCode() {
     setSending(true);
     setErr(null);
+    setExpired(false);
     try {
-      const res = await fetch(`${ATTESTLY_BASE}/start`, {
+      const res = await fetch(`${OTP_BASE}/send`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Attestly-Site-Token": SITE_TOKEN,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
+      if (res.status === 429) {
+        setErr("Please wait a moment before resending.");
+        setCooldown((c) => (c > 0 ? c : 30));
+        return false;
+      }
       const data = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
       if (!res.ok || !data.ok) {
         setErr(data.error || "Could not send code. Try again.");
@@ -72,28 +74,31 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
   async function verify(code: string) {
     setBusy(true);
     setErr(null);
+    setExpired(false);
     try {
-      const res = await fetch(`${ATTESTLY_BASE}/verify`, {
+      const res = await fetch(`${OTP_BASE}/verify`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Attestly-Site-Token": SITE_TOKEN,
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, code }),
       });
       const data = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         verified?: boolean;
         token?: string;
-        email?: string;
         error?: string;
         remaining?: number;
       };
-      if (data.verified && data.token) {
+      if (data.verified === true && data.token) {
         setSuccess(true);
-        setTimeout(() => {
-          onVerified({ email: data.email ?? email, token: data.token! });
-        }, 650);
+        setTimeout(() => onVerified({ email, token: data.token! }), 650);
+        return;
+      }
+      if ((data.error || "").toLowerCase().includes("expired")) {
+        setExpired(true);
+        setErr("Code expired. Send a new one?");
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+        setDigits(["", "", "", "", "", ""]);
         return;
       }
       const rem = typeof data.remaining === "number" ? data.remaining : null;
@@ -174,10 +179,14 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
       }}
     >
       <div
-        className={`relative w-full max-w-md overflow-hidden rounded-2xl border shadow-2xl ${
+        className={`relative w-full overflow-hidden rounded-2xl border shadow-2xl ${
           shake ? "animate-[attestly-shake_0.45s_ease-in-out]" : ""
         }`}
-        style={{ backgroundColor: "#0F1A2E", borderColor: "rgba(196,160,90,0.25)" }}
+        style={{
+          maxWidth: "440px",
+          backgroundColor: "#0F1A2E",
+          borderColor: "rgba(196,160,90,0.25)",
+        }}
       >
         <button
           type="button"
@@ -195,15 +204,15 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
           >
             Payment verification
           </p>
-          <h2
-            className="font-display text-3xl sm:text-4xl leading-tight text-white"
-          >
-            Verify your email
+          <h2 className="font-display text-3xl sm:text-4xl leading-tight text-white">
+            Sign in or sign up
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-white/70">
+            We'll email you a one-time code. No password needed.
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-white/60">
             We've sent a 6-digit code to{" "}
-            <span className="text-white font-medium">{email}</span>. Enter it below to complete
-            your order.
+            <span className="text-white font-medium">{email}</span>.
           </p>
 
           {success ? (
@@ -248,7 +257,6 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
                       className="h-12 w-10 sm:h-14 sm:w-12 rounded-lg bg-black/30 text-center font-display text-2xl text-white outline-none transition-all"
                       style={{
                         border: `1px solid ${hasErr ? "rgba(248,113,113,0.7)" : "rgba(255,255,255,0.1)"}`,
-                        boxShadow: "none",
                       }}
                       onFocus={(e) => {
                         e.currentTarget.style.borderColor = "#C4A05A";
@@ -278,7 +286,8 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
                   <span className="text-red-400">{err}</span>
                 ) : (
                   <span className="text-white/40">
-                    Code expires in ~10 minutes. {remaining !== null ? `${remaining} attempts left.` : ""}
+                    Code expires in ~10 minutes.{" "}
+                    {remaining !== null ? `${remaining} attempts left.` : ""}
                   </span>
                 )}
               </div>
@@ -287,17 +296,22 @@ export function AttestlyVerifyDialog({ email, codeAlreadySent, onVerified, onClo
                 <button
                   type="button"
                   onClick={handleResend}
-                  disabled={cooldown > 0 || sending || busy}
+                  disabled={(cooldown > 0 && !expired) || sending || busy}
                   className="font-medium transition-colors disabled:cursor-not-allowed"
                   style={{
-                    color: cooldown > 0 || sending || busy ? "rgba(255,255,255,0.35)" : "#C4A05A",
+                    color:
+                      (cooldown > 0 && !expired) || sending || busy
+                        ? "rgba(255,255,255,0.35)"
+                        : "#C4A05A",
                   }}
                 >
-                  {cooldown > 0
-                    ? `Resend in ${cooldown}s`
-                    : sending
-                      ? "Sending…"
-                      : "Didn't get it? Resend code"}
+                  {sending
+                    ? "Sending…"
+                    : expired
+                      ? "Send a new code"
+                      : cooldown > 0
+                        ? `Resend in ${cooldown}s`
+                        : "Didn't get it? Resend code"}
                 </button>
                 <button
                   type="button"
