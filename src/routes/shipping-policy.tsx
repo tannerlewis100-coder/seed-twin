@@ -56,8 +56,8 @@ function ShippingPolicyPage() {
 
       <LegalH2>5. Shipping Costs</LegalH2>
       <p>
-        Shipping rates are calculated at checkout based on order weight and destination.
-        Shipping fees are non-refundable.
+        Shipping is a flat $12.00 for standard delivery anywhere in the continental US. Orders
+        over $150 ship free.
       </p>
 
       <LegalH2>6. Tracking</LegalH2>
