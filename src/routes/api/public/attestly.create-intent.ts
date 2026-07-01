@@ -92,7 +92,31 @@ export const Route = createFileRoute("/api/public/attestly/create-intent")({
               upstream.status || 502,
             );
           }
-          return json({ clientSecret: data.clientSecret, amountCents });
+          const piId = data.clientSecret.split("_secret")[0];
+          if (piId) {
+            try {
+              const basic = Buffer.from(`${ck}:${cs}`).toString("base64");
+              await fetch(
+                `${WC_BASE}/orders/${encodeURIComponent(String(orderId))}`,
+                {
+                  method: "PUT",
+                  headers: {
+                    Authorization: `Basic ${basic}`,
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                  },
+                  body: JSON.stringify({
+                    meta_data: [
+                      { key: "_attestly_pay_intent_id", value: piId },
+                    ],
+                  }),
+                },
+              );
+            } catch {
+              // non-fatal: intent id metadata write failed
+            }
+          }
+          return json({ clientSecret: data.clientSecret, amountCents, paymentIntentId: piId });
         } catch (e) {
           return json({ error: e instanceof Error ? e.message : "create-intent failed" }, 500);
         }
