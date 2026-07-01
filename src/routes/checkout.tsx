@@ -619,6 +619,14 @@ function CheckoutPage() {
           return;
         }
 
+        // Signed-in users have already verified via the sign-in OTP flow.
+        // Skip the payment modal and proceed without a fresh verify token.
+        if (clarumUser) {
+          await runAttestly("");
+          return;
+        }
+
+
         // Not verified yet — fire otp/send, then open the brand dialog.
         try {
           await fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/otp/send", {
