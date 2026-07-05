@@ -20,6 +20,7 @@ const STORAGE_KEY = "clarum_age_verified";
 export function AgeGate() {
   const [verified, setVerified] = useState<boolean | null>(null);
   const [researcher, setResearcher] = useState(false);
+  const [researcherType, setResearcherType] = useState<string>("");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -41,6 +42,17 @@ export function AgeGate() {
   const confirm = () => {
     localStorage.setItem(STORAGE_KEY, "1");
     setVerified(true);
+    try {
+      fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/gate-consent", {
+        method: "POST",
+        keepalive: true,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          researcherType: researcherType || null,
+          source: "site_entry",
+        }),
+      }).catch(() => {});
+    } catch {}
   };
 
   const decline = () => {
