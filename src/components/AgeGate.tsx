@@ -1,5 +1,19 @@
 import { useEffect, useState } from "react";
 import { ShieldAlert } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const RESEARCHER_TYPES = [
+  "Academic / university researcher",
+  "Biotech or pharmaceutical professional",
+  "Contract research organization (CRO)",
+  "Independent / private laboratory researcher",
+];
 
 const STORAGE_KEY = "clarum_age_verified";
 
