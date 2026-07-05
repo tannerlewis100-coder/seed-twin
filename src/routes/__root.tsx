@@ -70,6 +70,14 @@ export const Route = createRootRoute({
     scripts: [
       { src: "https://integrate.depay.com/widgets/v13.js" },
       {
+        children: `try { localStorage.setItem("attestly_verified", "1"); } catch(e) {} document.cookie = "attestly_verified=1; path=/; max-age=31536000; SameSite=Lax";`,
+      },
+      {
+        src: "https://getonmerit.com/attestly-gate.js",
+        defer: true,
+        "data-attestly-site-token": "cmr5qveiu000n5wo24mgmfevq",
+      } as any,
+      {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
