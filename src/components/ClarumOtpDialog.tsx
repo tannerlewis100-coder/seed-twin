@@ -294,21 +294,16 @@ export function ClarumOtpDialog({
 
   const card = (
     <div
-      className={`relative w-full overflow-hidden rounded-2xl border shadow-2xl ${
+      className={`relative w-full max-w-[440px] overflow-hidden rounded-2xl border border-primary/20 bg-card shadow-2xl ${
         shake ? "animate-[clarum-otp-shake_0.45s_ease-in-out]" : ""
       }`}
-      style={{
-        maxWidth: "440px",
-        backgroundColor: "#0F1A2E",
-        borderColor: "rgba(196,160,90,0.25)",
-      }}
     >
       {isModal && onClose && (
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-3 top-3 text-white/50 hover:text-white/90 transition-colors"
+          className="absolute right-3 top-3 z-10 rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground"
         >
           <X className="h-4 w-4" />
         </button>
@@ -322,16 +317,15 @@ export function ClarumOtpDialog({
             className="mx-auto mb-5 h-10 w-auto object-contain"
           />
         )}
-        <p
-          className="text-[11px] tracking-[0.24em] uppercase mb-3"
-          style={{ color: "#C4A05A" }}
-        >
+        <p className="mb-3 text-[11px] uppercase tracking-[0.24em] text-primary">
           {eyebrow}
         </p>
-        <h2 className="font-display text-3xl sm:text-4xl leading-tight text-white">
+        <h2 className="font-display text-3xl leading-tight text-foreground sm:text-4xl">
           {title}
         </h2>
-        <p className="mt-3 text-sm leading-relaxed text-white/70">{subtitle}</p>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          {subtitle}
+        </p>
 
         {step === "identifier" ? (
           <form onSubmit={handleIdentifierSubmit} className="mt-6 space-y-3">
@@ -345,25 +339,14 @@ export function ClarumOtpDialog({
                 if (err) setErr(null);
               }}
               placeholder="Email or phone #"
-              className="w-full rounded-lg bg-black/30 px-4 py-3 text-white text-sm outline-none transition-all"
-              style={{ border: "1px solid rgba(255,255,255,0.12)" }}
-              onFocus={(e) => {
-                e.currentTarget.style.borderColor = "#C4A05A";
-                e.currentTarget.style.boxShadow =
-                  "0 0 0 2px rgba(196,160,90,0.35)";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
-                e.currentTarget.style.boxShadow = "none";
-              }}
+              className="w-full rounded-full border border-border bg-background px-5 py-3 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
               disabled={sending}
             />
             {err && <p className="text-xs text-red-400">{err}</p>}
             <button
               type="submit"
               disabled={sending}
-              className="flex w-full items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-semibold transition disabled:opacity-60"
-              style={{ backgroundColor: "#C4A05A", color: "#0F1A2E" }}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-4 py-3.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-primary/90 disabled:opacity-60"
             >
               {sending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -376,22 +359,16 @@ export function ClarumOtpDialog({
           </form>
         ) : (
           <>
-            <p className="mt-2 text-sm leading-relaxed text-white/60">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               We sent a 6-digit code to{" "}
-              <span className="text-white font-medium">{sentToLabel}</span>.
+              <span className="font-medium text-foreground">{sentToLabel}</span>.
             </p>
             {success ? (
               <div className="mt-8 flex flex-col items-center justify-center gap-3 py-8">
-                <div
-                  className="flex h-14 w-14 items-center justify-center rounded-full animate-[clarum-otp-pop_0.4s_ease-out]"
-                  style={{
-                    backgroundColor: "rgba(196,160,90,0.15)",
-                    border: "1px solid #C4A05A",
-                  }}
-                >
-                  <Check className="h-7 w-7" style={{ color: "#C4A05A" }} />
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-primary bg-primary/15 animate-[clarum-otp-pop_0.4s_ease-out]">
+                  <Check className="h-7 w-7 text-primary" />
                 </div>
-                <p className="text-sm text-white/80">
+                <p className="text-sm text-muted-foreground">
                   {handoffBusy ? "Signing you in…" : "Verified"}
                 </p>
               </div>
@@ -427,25 +404,9 @@ export function ClarumOtpDialog({
                         onKeyDown={(e) => onKeyDown(i, e)}
                         disabled={busy || sending}
                         aria-label={`Digit ${i + 1}`}
-                        className="h-12 w-10 sm:h-14 sm:w-12 rounded-lg bg-black/30 text-center font-display text-2xl text-white outline-none transition-all"
-                        style={{
-                          border: `1px solid ${
-                            hasErr
-                              ? "rgba(248,113,113,0.7)"
-                              : "rgba(255,255,255,0.1)"
-                          }`,
-                        }}
-                        onFocus={(e) => {
-                          e.currentTarget.style.borderColor = "#C4A05A";
-                          e.currentTarget.style.boxShadow =
-                            "0 0 0 2px rgba(196,160,90,0.35)";
-                        }}
-                        onBlur={(e) => {
-                          e.currentTarget.style.borderColor = hasErr
-                            ? "rgba(248,113,113,0.7)"
-                            : "rgba(255,255,255,0.1)";
-                          e.currentTarget.style.boxShadow = "none";
-                        }}
+                        className={`h-12 w-10 rounded-lg border bg-background text-center font-display text-2xl text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30 sm:h-14 sm:w-12 ${
+                          hasErr ? "border-red-500/60" : "border-border"
+                        }`}
                       />
                     );
                   })}
@@ -453,17 +414,17 @@ export function ClarumOtpDialog({
 
                 <div className="mt-4 min-h-[20px] text-center text-xs">
                   {sending ? (
-                    <span className="inline-flex items-center gap-2 text-white/60">
+                    <span className="inline-flex items-center gap-2 text-muted-foreground">
                       <Loader2 className="h-3 w-3 animate-spin" /> Sending code…
                     </span>
                   ) : busy ? (
-                    <span className="inline-flex items-center gap-2 text-white/60">
+                    <span className="inline-flex items-center gap-2 text-muted-foreground">
                       <Loader2 className="h-3 w-3 animate-spin" /> Verifying…
                     </span>
                   ) : err ? (
                     <span className="text-red-400">{err}</span>
                   ) : (
-                    <span className="text-white/40">
+                    <span className="text-muted-foreground/70">
                       Code expires in ~10 minutes.{" "}
                       {remaining !== null ? `${remaining} attempts left.` : ""}
                     </span>
@@ -475,13 +436,7 @@ export function ClarumOtpDialog({
                     type="button"
                     onClick={handleResend}
                     disabled={(cooldown > 0 && !expired) || sending || busy}
-                    className="font-medium transition-colors disabled:cursor-not-allowed"
-                    style={{
-                      color:
-                        (cooldown > 0 && !expired) || sending || busy
-                          ? "rgba(255,255,255,0.35)"
-                          : "#C4A05A",
-                    }}
+                    className="font-medium text-primary transition-colors hover:underline disabled:cursor-not-allowed disabled:text-muted-foreground disabled:no-underline"
                   >
                     {sending
                       ? "Sending…"
@@ -494,7 +449,7 @@ export function ClarumOtpDialog({
                   <button
                     type="button"
                     onClick={useDifferent}
-                    className="text-white/45 hover:text-white/70 transition-colors"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
                   >
                     Use a different email or phone
                   </button>
