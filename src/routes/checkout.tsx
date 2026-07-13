@@ -79,6 +79,10 @@ function CheckoutPage() {
     if (typeof window === "undefined") return null;
     try { return sessionStorage.getItem(OTP_VERIFIED_KEY); } catch { return null; }
   });
+  const [verifiedPhone, setVerifiedPhone] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return sessionStorage.getItem(OTP_VERIFIED_PHONE_KEY); } catch { return null; }
+  });
   const [billing, setBilling] = useState<AddressForm>(EMPTY_ADDRESS);
   const [shipSame, setShipSame] = useState(true);
   const [shipping, setShipping] = useState<AddressForm>(EMPTY_ADDRESS);
