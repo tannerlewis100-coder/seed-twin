@@ -1,26 +1,10 @@
 import { useEffect, useState } from "react";
 import { ShieldAlert } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-const RESEARCHER_TYPES = [
-  "Academic / university researcher",
-  "Biotech or pharmaceutical professional",
-  "Contract research organization (CRO)",
-  "Independent / private laboratory researcher",
-];
 
 const STORAGE_KEY = "clarum_age_verified";
 
 export function AgeGate() {
   const [verified, setVerified] = useState<boolean | null>(null);
-  const [researcher, setResearcher] = useState(false);
-  const [researcherType, setResearcherType] = useState<string>("");
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -48,7 +32,7 @@ export function AgeGate() {
         keepalive: true,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          researcherType: researcherType || null,
+          researcherType: null,
           source: "site_entry",
         }),
       }).catch(() => {});
@@ -95,29 +79,12 @@ export function AgeGate() {
             </p>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-              What type of researcher are you?
-            </label>
-            <Select value={researcherType} onValueChange={setResearcherType}>
-              <SelectTrigger className="h-11 w-full rounded-full border-primary/25 bg-black/40 px-4 text-sm text-foreground focus:border-primary focus:ring-primary/40">
-                <SelectValue placeholder="Select researcher type" />
-              </SelectTrigger>
-              <SelectContent>
-                {RESEARCHER_TYPES.map((t) => (
-                  <SelectItem key={t} value={t}>
-                    {t}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
           <label className="flex items-start gap-3 rounded-2xl border border-primary/15 bg-black/30 p-4 text-xs leading-relaxed text-muted-foreground cursor-pointer transition hover:border-primary/30">
             <input
               type="checkbox"
-              checked={researcher}
-              onChange={(e) => setResearcher(e.target.checked)}
+              onChange={(e) => {
+                if (e.target.checked) confirm();
+              }}
               className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
             />
             <span>
@@ -129,8 +96,7 @@ export function AgeGate() {
           <div className="flex flex-col gap-2.5 pt-1">
             <button
               onClick={confirm}
-              disabled={!researcher || !researcherType}
-              className="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-semibold tracking-wide text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
+              className="w-full rounded-full bg-primary px-6 py-3.5 text-sm font-semibold tracking-wide text-primary-foreground shadow-lg shadow-primary/20 transition hover:bg-primary/90"
             >
               Yes, I'm 21 or older
             </button>
