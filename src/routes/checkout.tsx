@@ -25,6 +25,7 @@ import {
 } from "@/components/StripeAttestlyPanel";
 
 const OTP_VERIFIED_KEY = "clarum_checkout_verified_email";
+const OTP_VERIFIED_PHONE_KEY = "clarum_checkout_verified_phone";
 
 const ATTESTLY = "attestly_payments";
 const ALLOWED_GATEWAYS = [
