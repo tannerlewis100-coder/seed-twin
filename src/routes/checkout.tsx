@@ -25,6 +25,7 @@ import {
 } from "@/components/StripeAttestlyPanel";
 
 const OTP_VERIFIED_KEY = "clarum_checkout_verified_email";
+const OTP_VERIFIED_PHONE_KEY = "clarum_checkout_verified_phone";
 
 const ATTESTLY = "attestly_payments";
 const ALLOWED_GATEWAYS = [
@@ -77,6 +78,10 @@ function CheckoutPage() {
   const [verifiedEmail, setVerifiedEmail] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
     try { return sessionStorage.getItem(OTP_VERIFIED_KEY); } catch { return null; }
+  });
+  const [verifiedPhone, setVerifiedPhone] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    try { return sessionStorage.getItem(OTP_VERIFIED_PHONE_KEY); } catch { return null; }
   });
   const [billing, setBilling] = useState<AddressForm>(EMPTY_ADDRESS);
   const [shipSame, setShipSame] = useState(true);
@@ -236,7 +241,7 @@ function CheckoutPage() {
   }, [verifiedEmail]);
 
   const emailLocked = !!verifiedEmail || !!clarumUser;
-  const gateRequired = !clarumUser && !verifiedEmail;
+  const gateRequired = !clarumUser && !verifiedEmail && !verifiedPhone;
 
   // Auto-apply unused welcome coupon once per cart session.
   // Woo's coupon engine validates against billing_address.email in the cart
@@ -730,9 +735,8 @@ function CheckoutPage() {
                     } catch {
                       /* JWT handoff failed — proceed as guest with verified email. */
                     }
-                    const emailForCheckout =
-                      result.channel === "email" ? result.identifier : email;
-                    if (emailForCheckout) {
+                    if (result.channel === "email") {
+                      const emailForCheckout = result.identifier;
                       setVerifiedEmail(emailForCheckout);
                       setEmail(emailForCheckout);
                       try {
@@ -745,6 +749,18 @@ function CheckoutPage() {
                         email: emailForCheckout,
                         token: result.token,
                       });
+                    } else {
+                      // Phone verified — pass the gate but leave the email
+                      // field editable so the customer can enter or change it.
+                      setVerifiedPhone(result.identifier);
+                      try {
+                        sessionStorage.setItem(OTP_VERIFIED_PHONE_KEY, result.identifier);
+                      } catch {
+                        /* ignore */
+                      }
+                      if (!billing.phone) {
+                        setBilling((b) => ({ ...b, phone: result.identifier }));
+                      }
                     }
                   }}
                 />
@@ -808,6 +824,21 @@ function CheckoutPage() {
                             Change
                           </button>
                         )}
+                      </p>
+                    )}
+                    {!emailLocked && verifiedPhone && (
+                      <p className="mt-1.5 text-[11px] text-brand-gold/70">
+                        Phone verified ✓ ({verifiedPhone}) — add or change your email above.{" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVerifiedPhone(null);
+                            try { sessionStorage.removeItem(OTP_VERIFIED_PHONE_KEY); } catch { /* ignore */ }
+                          }}
+                          className="underline hover:text-brand-gold"
+                        >
+                          Use a different phone
+                        </button>
                       </p>
                     )}
                   </Field>
