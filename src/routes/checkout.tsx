@@ -241,7 +241,7 @@ function CheckoutPage() {
   }, [verifiedEmail]);
 
   const emailLocked = !!verifiedEmail || !!clarumUser;
-  const gateRequired = !clarumUser && !verifiedEmail;
+  const gateRequired = !clarumUser && !verifiedEmail && !verifiedPhone;
 
   // Auto-apply unused welcome coupon once per cart session.
   // Woo's coupon engine validates against billing_address.email in the cart
