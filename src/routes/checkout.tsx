@@ -735,9 +735,8 @@ function CheckoutPage() {
                     } catch {
                       /* JWT handoff failed — proceed as guest with verified email. */
                     }
-                    const emailForCheckout =
-                      result.channel === "email" ? result.identifier : email;
-                    if (emailForCheckout) {
+                    if (result.channel === "email") {
+                      const emailForCheckout = result.identifier;
                       setVerifiedEmail(emailForCheckout);
                       setEmail(emailForCheckout);
                       try {
@@ -750,6 +749,18 @@ function CheckoutPage() {
                         email: emailForCheckout,
                         token: result.token,
                       });
+                    } else {
+                      // Phone verified — pass the gate but leave the email
+                      // field editable so the customer can enter or change it.
+                      setVerifiedPhone(result.identifier);
+                      try {
+                        sessionStorage.setItem(OTP_VERIFIED_PHONE_KEY, result.identifier);
+                      } catch {
+                        /* ignore */
+                      }
+                      if (!billing.phone) {
+                        setBilling((b) => ({ ...b, phone: result.identifier }));
+                      }
                     }
                   }}
                 />
