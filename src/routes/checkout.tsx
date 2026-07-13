@@ -826,6 +826,21 @@ function CheckoutPage() {
                         )}
                       </p>
                     )}
+                    {!emailLocked && verifiedPhone && (
+                      <p className="mt-1.5 text-[11px] text-brand-gold/70">
+                        Phone verified ✓ ({verifiedPhone}) — add or change your email above.{" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVerifiedPhone(null);
+                            try { sessionStorage.removeItem(OTP_VERIFIED_PHONE_KEY); } catch { /* ignore */ }
+                          }}
+                          className="underline hover:text-brand-gold"
+                        >
+                          Use a different phone
+                        </button>
+                      </p>
+                    )}
                   </Field>
                 </Section>
 
