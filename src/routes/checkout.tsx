@@ -797,22 +797,12 @@ function CheckoutPage() {
                     <input
                       type="email"
                       value={email}
-                      onChange={(e) => {
-                        const next = e.target.value;
-                        setEmail(next);
-                        if (
-                          verifiedEmail &&
-                          next.trim().toLowerCase() !== verifiedEmail.toLowerCase()
-                        ) {
-                          setVerifiedEmail(null);
-                          try { sessionStorage.removeItem(OTP_VERIFIED_KEY); } catch { /* ignore */ }
-                        }
-                      }}
+                      onChange={(e) => setEmail(e.target.value)}
                       className={inputCls}
                       required
                       autoComplete="email"
                     />
-                    {verifiedEmail && email.trim().toLowerCase() === verifiedEmail.toLowerCase() && (
+                    {verifiedEmail && (
                       <p className="mt-1.5 text-[11px] text-brand-gold/70">
                         Verified ✓ ({verifiedEmail}){" "}
                         <button
