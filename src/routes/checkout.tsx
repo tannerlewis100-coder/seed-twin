@@ -797,30 +797,37 @@ function CheckoutPage() {
                     <input
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        const next = e.target.value;
+                        setEmail(next);
+                        if (
+                          verifiedEmail &&
+                          next.trim().toLowerCase() !== verifiedEmail.toLowerCase()
+                        ) {
+                          setVerifiedEmail(null);
+                          try { sessionStorage.removeItem(OTP_VERIFIED_KEY); } catch { /* ignore */ }
+                        }
+                      }}
                       className={inputCls}
                       required
-                      readOnly={emailLocked}
                       autoComplete="email"
                     />
-                    {emailLocked && (
+                    {verifiedEmail && email.trim().toLowerCase() === verifiedEmail.toLowerCase() && (
                       <p className="mt-1.5 text-[11px] text-brand-gold/70">
-                        Verified ✓{" "}
-                        {verifiedEmail && !clarumUser && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setVerifiedEmail(null);
-                              try { sessionStorage.removeItem(OTP_VERIFIED_KEY); } catch { /* ignore */ }
-                            }}
-                            className="underline hover:text-brand-gold"
-                          >
-                            Change
-                          </button>
-                        )}
+                        Verified ✓ ({verifiedEmail}){" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVerifiedEmail(null);
+                            try { sessionStorage.removeItem(OTP_VERIFIED_KEY); } catch { /* ignore */ }
+                          }}
+                          className="underline hover:text-brand-gold"
+                        >
+                          Change
+                        </button>
                       </p>
                     )}
-                    {!emailLocked && verifiedPhone && (
+                    {verifiedPhone && (
                       <p className="mt-1.5 text-[11px] text-brand-gold/70">
                         Phone verified ✓ ({verifiedPhone}) — add or change your email above.{" "}
                         <button
