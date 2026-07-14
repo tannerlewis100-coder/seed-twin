@@ -235,12 +235,6 @@ function CheckoutPage() {
     }));
   }, [clarumUser]);
 
-  // Lock email to the verified one when guest passed the OTP gate.
-  useEffect(() => {
-    if (verifiedEmail) setEmail(verifiedEmail);
-  }, [verifiedEmail]);
-
-  const emailLocked = !!verifiedEmail || !!clarumUser;
   const gateRequired = !clarumUser && !verifiedEmail && !verifiedPhone;
 
   // Auto-apply unused welcome coupon once per cart session.
@@ -806,27 +800,24 @@ function CheckoutPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       className={inputCls}
                       required
-                      readOnly={emailLocked}
                       autoComplete="email"
                     />
-                    {emailLocked && (
+                    {verifiedEmail && (
                       <p className="mt-1.5 text-[11px] text-brand-gold/70">
-                        Verified ✓{" "}
-                        {verifiedEmail && !clarumUser && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setVerifiedEmail(null);
-                              try { sessionStorage.removeItem(OTP_VERIFIED_KEY); } catch { /* ignore */ }
-                            }}
-                            className="underline hover:text-brand-gold"
-                          >
-                            Change
-                          </button>
-                        )}
+                        Verified ✓ ({verifiedEmail}){" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVerifiedEmail(null);
+                            try { sessionStorage.removeItem(OTP_VERIFIED_KEY); } catch { /* ignore */ }
+                          }}
+                          className="underline hover:text-brand-gold"
+                        >
+                          Change
+                        </button>
                       </p>
                     )}
-                    {!emailLocked && verifiedPhone && (
+                    {verifiedPhone && (
                       <p className="mt-1.5 text-[11px] text-brand-gold/70">
                         Phone verified ✓ ({verifiedPhone}) — add or change your email above.{" "}
                         <button
