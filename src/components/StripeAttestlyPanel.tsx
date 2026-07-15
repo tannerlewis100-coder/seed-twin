@@ -49,29 +49,46 @@ function getStripePromise(pk: string, stripeAccount: string) {
   return p;
 }
 
+export type PaymentContext = {
+  clientSecret: string;
+  returnUrl: string;
+  paymentIntentId: string;
+  orderId: number;
+  orderKey: string;
+};
+
+/**
+ * Called by the panel AFTER a successful `elements.submit()`. Returns the
+ * payment context (clientSecret + return URL + Woo order info) or `null` if
+ * the caller already surfaced an error and the flow should abort.
+ */
+export type GetPaymentContext = () => Promise<PaymentContext | null>;
+
+export type StripePaymentHandler = () => Promise<void>;
+
 type Props = {
   publishableKey: string;
   stripeAccountId: string;
-  clientSecret: string;
-  orderId: number;
-  orderKey: string;
-  returnUrl: string;
-  paymentIntentId: string;
-  onReady: (confirmPayment: StripePaymentHandler | null) => void;
+  amountCents: number;
+  currency?: string;
+  getPaymentContext: GetPaymentContext;
+  onReady: (pay: StripePaymentHandler | null) => void;
   onPaid: (paymentIntentId: string) => void | Promise<void>;
   onError: (msg: string) => void;
 };
-
-export type StripePaymentHandler = () => Promise<void>;
 
 export function StripeAttestlyPanel(props: Props) {
   const stripePromise = useMemo(
     () => getStripePromise(props.publishableKey, props.stripeAccountId),
     [props.publishableKey, props.stripeAccountId],
   );
+  // Deferred PaymentIntent flow: mount Elements with mode/amount/currency and
+  // fetch the clientSecret AFTER `elements.submit()` on Place Order.
   const options = useMemo(
     () => ({
-      clientSecret: props.clientSecret,
+      mode: "payment" as const,
+      amount: Math.max(props.amountCents, 50),
+      currency: (props.currency ?? "usd").toLowerCase(),
       appearance: {
         theme: "night" as const,
         variables: {
@@ -83,7 +100,7 @@ export function StripeAttestlyPanel(props: Props) {
         },
       },
     }),
-    [props.clientSecret],
+    [props.amountCents, props.currency],
   );
   return (
     <Elements stripe={stripePromise} options={options}>
@@ -92,54 +109,73 @@ export function StripeAttestlyPanel(props: Props) {
   );
 }
 
-function PaymentForm({ clientSecret, orderId, orderKey, returnUrl, paymentIntentId, onReady, onPaid, onError }: Props) {
+function PaymentForm({ getPaymentContext, onReady, onPaid, onError }: Props) {
   const stripe = useStripe();
   const elements = useElements();
 
-  const verifyAndFinish = useCallback(async (piId: string) => {
-    try {
-      const res = await fetch("/api/public/attestly/verify-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ paymentIntentId: piId, orderId, orderKey }),
-      });
-      const data = (await res.json()) as { paid?: boolean; error?: string };
-      if (data.paid) {
-        await onPaid(piId);
-      } else {
-        onError(data.error ?? "Payment was not completed. Please try again.");
+  const verifyAndFinish = useCallback(
+    async (piId: string, orderId: number, orderKey: string) => {
+      try {
+        const res = await fetch("/api/public/attestly/verify-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ paymentIntentId: piId, orderId, orderKey }),
+        });
+        const data = (await res.json()) as { paid?: boolean; error?: string };
+        if (data.paid) {
+          await onPaid(piId);
+        } else {
+          onError(data.error ?? "Payment was not completed. Please try again.");
+        }
+      } catch (e) {
+        onError(e instanceof Error ? e.message : "Could not verify payment.");
       }
-    } catch (e) {
-      onError(e instanceof Error ? e.message : "Could not verify payment.");
-    }
-  }, [onError, onPaid, orderId, orderKey]);
+    },
+    [onError, onPaid],
+  );
 
-  const confirmPayment = useCallback(async () => {
+  const runPayFlow = useCallback(async () => {
     if (!stripe || !elements) {
       throw new Error("Secure card form is still loading.");
     }
+
+    // STEP 1 — MUST be the very first thing on the pay click. In Stripe's
+    // deferred-intent flow, `elements.submit()` validates and collects the
+    // payment details before we go async for the intent.
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      onError(submitError.message ?? "Please check your card details.");
+      return;
+    }
+
+    // STEP 2 — Only now do async server work: create the Woo order and the
+    // Stripe PaymentIntent, returning the clientSecret.
+    const ctx = await getPaymentContext();
+    if (!ctx) return; // caller already surfaced any error
+
+    // STEP 3 — Confirm the payment using the freshly-fetched clientSecret.
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
-      clientSecret,
-      confirmParams: { return_url: returnUrl },
+      clientSecret: ctx.clientSecret,
+      confirmParams: { return_url: ctx.returnUrl },
       redirect: "if_required",
     });
     if (error) {
       onError(error.message ?? "Payment failed.");
       return;
     }
-    const piId = paymentIntent?.id ?? paymentIntentId;
-    await verifyAndFinish(piId);
-  }, [clientSecret, elements, onError, paymentIntentId, returnUrl, stripe, verifyAndFinish]);
+    const piId = paymentIntent?.id ?? ctx.paymentIntentId;
+    await verifyAndFinish(piId, ctx.orderId, ctx.orderKey);
+  }, [elements, getPaymentContext, onError, stripe, verifyAndFinish]);
 
   useEffect(() => {
     if (!stripe || !elements) {
       onReady(null);
       return;
     }
-    onReady(confirmPayment);
+    onReady(runPayFlow);
     return () => onReady(null);
-  }, [confirmPayment, elements, onReady, stripe]);
+  }, [runPayFlow, elements, onReady, stripe]);
 
   return (
     <div className="space-y-5">
@@ -150,7 +186,7 @@ function PaymentForm({ clientSecret, orderId, orderKey, returnUrl, paymentIntent
         <ExpressCheckoutElement
           onConfirm={async () => {
             try {
-              await confirmPayment();
+              await runPayFlow();
             } catch (e) {
               onError(e instanceof Error ? e.message : "Payment failed.");
             }
