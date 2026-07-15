@@ -75,7 +75,7 @@ export function CartDrawer() {
   return (
     <Sheet open={isOpen} onOpenChange={(o) => !o && closeCart()}>
       <SheetContent className="bg-brand-forest-deep border-white/10 text-foreground flex flex-col w-full sm:max-w-md p-0">
-        <SheetHeader className="px-6 pt-6 pb-4 border-b border-white/5">
+        <SheetHeader className="shrink-0 px-6 pt-6 pb-4 border-b border-white/5">
           <SheetTitle className="font-display text-xl text-foreground">Your Cart</SheetTitle>
           <SheetDescription className="sr-only">
             Review the items in your cart, adjust quantities, and continue to checkout.
@@ -88,7 +88,7 @@ export function CartDrawer() {
             <p className="text-sm text-foreground/60">Cart is empty.</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-4 space-y-4" style={{ WebkitOverflowScrolling: "touch" }}>
             {items.map((item) => (
               <div key={item.key} className="flex gap-4 pb-4 border-b border-white/5">
                 {item.image && (
@@ -148,7 +148,7 @@ export function CartDrawer() {
         )}
 
         {items.length > 0 && (
-          <div className="border-t border-white/5 px-6 py-5 space-y-4">
+          <div className="shrink-0 border-t border-white/5 px-6 py-5 space-y-4">
             <div className="flex items-start gap-2.5 rounded-lg border border-brand-gold/30 bg-brand-gold/[0.07] px-3 py-2.5">
               <span aria-hidden className="text-base leading-none mt-0.5">🎁</span>
               <p className="text-[12px] leading-snug text-brand-gold/90">

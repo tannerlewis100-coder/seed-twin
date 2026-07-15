@@ -861,9 +861,8 @@ function CheckoutPage() {
                     <Field label="Postcode" required>
                       <input value={billing.postcode} onChange={bindBilling("postcode")} className={inputCls} autoComplete="postal-code" />
                     </Field>
-                    <Field label="Country" required>
-                      <input value={billing.country} onChange={bindBilling("country")} className={inputCls} autoComplete="country" placeholder="US" maxLength={2} />
-                    </Field>
+                     <input type="hidden" value={billing.country} readOnly />
+
                     <Field label="Phone (optional)" className="sm:col-span-2">
                       <input type="tel" value={billing.phone ?? ""} onChange={bindBilling("phone")} className={inputCls} autoComplete="tel" placeholder="(555) 123-4567" />
                     </Field>
@@ -903,9 +902,8 @@ function CheckoutPage() {
                       <Field label="Postcode" required>
                         <input value={shipping.postcode} onChange={bindShipping("postcode")} className={inputCls} />
                       </Field>
-                      <Field label="Country" required>
-                        <input value={shipping.country} onChange={bindShipping("country")} className={inputCls} maxLength={2} />
-                      </Field>
+                      <input type="hidden" value={shipping.country} readOnly />
+
                       <Field label="Phone (optional)" className="sm:col-span-2">
                         <input type="tel" value={shipping.phone ?? ""} onChange={bindShipping("phone")} className={inputCls} placeholder="(555) 123-4567" />
                       </Field>
