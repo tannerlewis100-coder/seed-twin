@@ -148,7 +148,7 @@ export function CartDrawer() {
         )}
 
         {items.length > 0 && (
-          <div className="border-t border-white/5 px-6 py-5 space-y-4">
+          <div className="shrink-0 border-t border-white/5 px-6 py-5 space-y-4">
             <div className="flex items-start gap-2.5 rounded-lg border border-brand-gold/30 bg-brand-gold/[0.07] px-3 py-2.5">
               <span aria-hidden className="text-base leading-none mt-0.5">🎁</span>
               <p className="text-[12px] leading-snug text-brand-gold/90">
