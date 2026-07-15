@@ -236,7 +236,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
       <AnnouncementBar />
       <SiteHeader />
 
-      <main className="relative flex flex-1 items-center justify-center overflow-hidden px-4 py-12 sm:px-6">
+      <main className="relative flex flex-1 items-center justify-center overflow-hidden px-4 py-12 sm:px-6 max-md:min-h-svh">
         <img
           src="/signin-bg.png"
           alt=""
