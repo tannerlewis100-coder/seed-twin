@@ -157,7 +157,12 @@ function PaymentForm({ getPaymentContext, onReady, onPaid, onError }: Props) {
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       clientSecret: ctx.clientSecret,
-      confirmParams: { return_url: ctx.returnUrl },
+      confirmParams: {
+        return_url: ctx.returnUrl,
+        payment_method_data: {
+          billing_details: { address: { country: "US" } },
+        },
+      },
       redirect: "if_required",
     });
     if (error) {
