@@ -1021,16 +1021,14 @@ function CheckoutPage() {
                                         </span>
                                       )}
                                     </label>
-                                    {g === ATTESTLY && paymentMethod === ATTESTLY && stripeSession && stripeReady && (
+                                    {g === ATTESTLY && paymentMethod === ATTESTLY && stripeReady && total > 0 && (
                                       <div id="stripe-payment-panel" className="mt-3">
                                         <StripeAttestlyPanel
                                           publishableKey={attestlyConfig!.publishableKey!}
                                           stripeAccountId={attestlyConfig!.stripeAccountId!}
-                                          clientSecret={stripeSession.clientSecret}
-                                          orderId={stripeSession.orderId}
-                                          orderKey={stripeSession.orderKey}
-                                          paymentIntentId={stripeSession.paymentIntentId}
-                                          returnUrl={`${window.location.origin}/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`}
+                                          amountCents={Math.round(total * 100)}
+                                          currency="usd"
+                                          getPaymentContext={getStripePaymentContext}
                                           onReady={handleStripeReady}
                                           onPaid={handleStripePaid}
                                           onError={handleStripeError}
@@ -1070,7 +1068,7 @@ function CheckoutPage() {
                   disabled={
                     submitting ||
                     cartLoading ||
-                    (paymentMethod === ATTESTLY && !!stripeSession && !stripeConfirmPayment)
+                    (paymentMethod === ATTESTLY && stripeReady && total > 0 && !stripePayHandler)
                   }
                   className="w-full rounded-full bg-brand-gold text-brand-forest font-semibold py-4 hover:bg-brand-gold/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
                 >
@@ -1078,15 +1076,13 @@ function CheckoutPage() {
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Placing order…
                     </>
-                  ) : paymentMethod === ATTESTLY && stripeSession && !stripeConfirmPayment ? (
+                  ) : paymentMethod === ATTESTLY && stripeReady && total > 0 && !stripePayHandler ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" /> Loading secure card form…
                     </>
                   ) : (
                     <>
-                      {paymentMethod === ATTESTLY && !stripeSession
-                        ? "Continue to secure card form"
-                        : "Place order"}
+                      Place order
                       {needsShipping && !shippingKnown ? "" : ` · ${currency}${total.toFixed(2)}`}
                     </>
                   )}
