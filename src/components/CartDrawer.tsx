@@ -75,7 +75,7 @@ export function CartDrawer() {
   return (
     <Sheet open={isOpen} onOpenChange={(o) => !o && closeCart()}>
       <SheetContent className="bg-brand-forest-deep border-white/10 text-foreground flex flex-col w-full sm:max-w-md p-0">
-        <SheetHeader className="px-6 pt-6 pb-4 border-b border-white/5">
+        <SheetHeader className="shrink-0 px-6 pt-6 pb-4 border-b border-white/5">
           <SheetTitle className="font-display text-xl text-foreground">Your Cart</SheetTitle>
           <SheetDescription className="sr-only">
             Review the items in your cart, adjust quantities, and continue to checkout.
