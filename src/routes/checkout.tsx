@@ -1260,8 +1260,10 @@ function CheckoutPage() {
           }}
           onClose={() => {
             setAttestlyDialog(null);
+            const cb = pendingAfterVerifyRef.current;
             pendingAfterVerifyRef.current = null;
             setSubmitting(false);
+            if (cb) cb(null);
           }}
         />
       )}
