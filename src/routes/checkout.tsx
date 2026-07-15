@@ -479,6 +479,125 @@ function CheckoutPage() {
 
 
 
+  // Deferred Stripe flow: fetch a Woo order + PaymentIntent AFTER the panel
+  // has already called `elements.submit()`. Returning `null` signals the panel
+  // to abort — we've already surfaced any error via `setError`.
+  const getStripePaymentContext = useCallback(async (): Promise<PaymentContext | null> => {
+    const billingAddr: WooAddress = { ...billing, email };
+    const shippingAddr: WooAddress = shipSame ? { ...billing, email } : { ...shipping };
+    // Sync customer session so Woo has correct address for tax / shipping.
+    try {
+      await updateCustomer({ billing_address: billingAddr, shipping_address: shippingAddr });
+    } catch {
+      /* non-fatal */
+    }
+
+    const runOrderIntent = async (otpToken: string): Promise<PaymentContext | null> => {
+      try {
+        const lineItems = items
+          .map((it) => ({ id: Number(it.productId), quantity: Number(it.qty) }))
+          .filter((it) => it.id && it.quantity);
+        const shipLine = selectedRate
+          ? { method_title: selectedRate.name, total: String(shippingCost.toFixed(2)) }
+          : null;
+        const orderRes = await fetch("/api/public/woo-create-order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            billing: billingAddr,
+            shipping: shippingAddr,
+            payment_method: ATTESTLY,
+            payment_method_title: "Credit / Debit Card",
+            customer_note: note || undefined,
+            items: lineItems,
+            coupons: allAppliedCoupons,
+            shipping_line: shipLine,
+          }),
+        });
+        const orderData = (await orderRes.json()) as {
+          id?: number;
+          order_key?: string;
+          error?: string;
+        };
+        if (!orderRes.ok || !orderData.id || !orderData.order_key) {
+          setError(orderData.error ?? "Could not create order.");
+          return null;
+        }
+        const intentRes = await fetch("/api/public/attestly/create-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            orderId: orderData.id,
+            orderKey: orderData.order_key,
+            otpToken,
+          }),
+        });
+        const intent = (await intentRes.json()) as {
+          clientSecret?: string;
+          amountCents?: number;
+          error?: string;
+        };
+        if (!intentRes.ok || !intent.clientSecret) {
+          setError(intent.error ?? "Could not initialize card payment.");
+          return null;
+        }
+        const piId = intent.clientSecret.split("_secret_")[0];
+        const ctx: PaymentContext = {
+          clientSecret: intent.clientSecret,
+          paymentIntentId: piId,
+          orderId: orderData.id,
+          orderKey: orderData.order_key,
+          returnUrl: `${window.location.origin}/order-confirmation/${orderData.id}?key=${encodeURIComponent(orderData.order_key)}`,
+        };
+        lastPaymentContextRef.current = { orderId: ctx.orderId, orderKey: ctx.orderKey };
+        return ctx;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Could not initialize card payment.");
+        return null;
+      }
+    };
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const tokenIfValid =
+      attestlyVerified && attestlyVerified.email.toLowerCase() === normalizedEmail
+        ? attestlyVerified.token
+        : null;
+    if (tokenIfValid) return runOrderIntent(tokenIfValid);
+    // Signed-in users have already verified via the sign-in OTP flow.
+    if (clarumUser) return runOrderIntent("");
+
+    // Not verified yet — fire otp/send and open the brand dialog, then await
+    // verification. If the user closes the dialog, we abort the pay flow.
+    try {
+      await fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/otp/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    } catch {
+      /* non-fatal */
+    }
+    const token: string | null = await new Promise<string | null>((resolve) => {
+      pendingAfterVerifyRef.current = (t) => resolve(t);
+      setAttestlyDialog({ email, codeAlreadySent: true });
+    });
+    if (!token) return null;
+    return runOrderIntent(token);
+  }, [
+    allAppliedCoupons,
+    attestlyVerified,
+    billing,
+    clarumUser,
+    email,
+    items,
+    note,
+    selectedRate,
+    shipSame,
+    shipping,
+    shippingCost,
+  ]);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -488,14 +607,22 @@ function CheckoutPage() {
       return;
     }
 
-    if (paymentMethod === ATTESTLY && stripeSession) {
-      if (!stripeConfirmPayment) {
+    // ─── ATTESTLY (deferred Stripe) FLOW ────────────────────────────────
+    // The panel's pay handler runs `elements.submit()` FIRST — synchronously
+    // on click — before any async work (create-order / create-intent). Do
+    // NOT `await` anything else on this branch before calling it.
+    if (paymentMethod === ATTESTLY) {
+      if (attestlyConfigLoading || !stripeReady) {
+        setError("Secure card payment is still loading. Please try again in a moment.");
+        return;
+      }
+      if (!stripePayHandler) {
         setError("Secure card form is still loading.");
         return;
       }
       setSubmitting(true);
       try {
-        await stripeConfirmPayment();
+        await stripePayHandler();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Payment failed.");
       } finally {
@@ -504,19 +631,12 @@ function CheckoutPage() {
       return;
     }
 
-    if (paymentMethod === ATTESTLY && (attestlyConfigLoading || !stripeReady)) {
-      setError("Secure card payment is still loading. Please try again in a moment.");
-      return;
-    }
-
-    setStripeSession(null);
-    setStripeConfirmPayment(null);
     setSubmitting(true);
     try {
       const billingAddr: WooAddress = { ...billing, email };
       const shippingAddr: WooAddress = shipSame ? { ...billing, email } : { ...shipping };
       // Sync customer session so Woo has correct address for tax / shipping
-      // before we create or submit the order.
+      // before we submit the order.
       try {
         await updateCustomer({
           billing_address: billingAddr,
@@ -526,118 +646,7 @@ function CheckoutPage() {
         /* non-fatal */
       }
 
-      // ─── ATTESTLY (card) FLOW ───────────────────────────────────────────
-      // Attestly requires the customer to verify their email with a 6-digit
-      // code before we create the PaymentIntent. If we don't yet have a valid
-      // token for this exact email, open the verification dialog and resume
-      // once verified.
-      if (paymentMethod === ATTESTLY) {
-        const normalizedEmail = email.trim().toLowerCase();
-        const tokenIfValid =
-          attestlyVerified && attestlyVerified.email.toLowerCase() === normalizedEmail
-            ? attestlyVerified.token
-            : null;
 
-        const runAttestly = async (otpToken: string) => {
-          try {
-            const lineItems = items
-              .map((it) => ({ id: Number(it.productId), quantity: Number(it.qty) }))
-              .filter((it) => it.id && it.quantity);
-            const shipLine = selectedRate
-              ? { method_title: selectedRate.name, total: String(shippingCost.toFixed(2)) }
-              : null;
-            const orderRes = await fetch("/api/public/woo-create-order", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email,
-                billing: billingAddr,
-                shipping: shippingAddr,
-                payment_method: ATTESTLY,
-                payment_method_title: "Credit / Debit Card",
-                customer_note: note || undefined,
-                items: lineItems,
-                coupons: allAppliedCoupons,
-                shipping_line: shipLine,
-              }),
-            });
-            const orderData = (await orderRes.json()) as {
-              id?: number;
-              order_key?: string;
-              error?: string;
-            };
-            if (!orderRes.ok || !orderData.id || !orderData.order_key) {
-              setError(orderData.error ?? "Could not create order.");
-              return;
-            }
-
-            const intentRes = await fetch("/api/public/attestly/create-intent", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                orderId: orderData.id,
-                orderKey: orderData.order_key,
-                otpToken,
-              }),
-            });
-            const intent = (await intentRes.json()) as {
-              clientSecret?: string;
-              amountCents?: number;
-              error?: string;
-            };
-            if (!intentRes.ok || !intent.clientSecret) {
-              setError(intent.error ?? "Could not initialize card payment.");
-              return;
-            }
-            const piId = intent.clientSecret.split("_secret_")[0];
-            setStripeSession({
-              orderId: orderData.id,
-              orderKey: orderData.order_key,
-              clientSecret: intent.clientSecret,
-              paymentIntentId: piId,
-              amountCents: intent.amountCents ?? 0,
-            });
-            setTimeout(() => {
-              document.getElementById("stripe-payment-panel")?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-              });
-            }, 80);
-          } catch (err) {
-            setError(err instanceof Error ? err.message : "Could not initialize card payment.");
-          }
-        };
-
-        if (tokenIfValid) {
-          await runAttestly(tokenIfValid);
-          return;
-        }
-
-        // Signed-in users have already verified via the sign-in OTP flow.
-        // Skip the payment modal and proceed without a fresh verify token.
-        if (clarumUser) {
-          await runAttestly("");
-          return;
-        }
-
-
-        // Not verified yet — fire otp/send, then open the brand dialog.
-        try {
-          await fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/otp/send", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email }),
-          });
-        } catch {
-          // Non-fatal — the dialog will surface its own errors and can resend.
-        }
-        pendingAfterVerifyRef.current = (token) => {
-          setSubmitting(true);
-          void runAttestly(token).finally(() => setSubmitting(false));
-        };
-        setAttestlyDialog({ email, codeAlreadySent: true });
-        return;
-      }
 
 
       // ─── NON-CARD FLOW (bank transfer / crypto) ────────────────────────
