@@ -206,7 +206,19 @@ function PaymentForm({ getPaymentContext, onReady, onPaid, onError }: Props) {
       </div>
 
       <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-        <PaymentElement options={{ layout: "tabs" }} />
+        <PaymentElement
+          options={{
+            layout: "tabs",
+            fields: {
+              billingDetails: {
+                address: { country: "never" },
+              },
+            },
+            defaultValues: {
+              billingDetails: { address: { country: "US" } },
+            },
+          }}
+        />
       </div>
     </div>
   );
