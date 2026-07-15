@@ -21,6 +21,7 @@ import { AttestlyVerifyDialog } from "@/components/AttestlyVerifyDialog";
 import {
   StripeAttestlyPanel,
   useAttestlyConfig,
+  type PaymentContext,
   type StripePaymentHandler,
 } from "@/components/StripeAttestlyPanel";
 
@@ -98,18 +99,17 @@ function CheckoutPage() {
     attestlyConfig.publishableKey &&
     attestlyConfig.stripeAccountId
   );
-  const [stripeSession, setStripeSession] = useState<{
-    orderId: number;
-    orderKey: string;
-    clientSecret: string;
-    paymentIntentId: string;
-    amountCents: number;
-  } | null>(null);
-  const [stripeConfirmPayment, setStripeConfirmPayment] = useState<StripePaymentHandler | null>(null);
+  const [stripePayHandler, setStripePayHandler] = useState<StripePaymentHandler | null>(null);
   const handleStripeReady = useCallback((handler: StripePaymentHandler | null) => {
-    setStripeConfirmPayment(handler ? () => handler : null);
+    setStripePayHandler(() => handler);
   }, []);
-  const handleStripeError = useCallback((msg: string) => setError(msg), []);
+  const handleStripeError = useCallback((msg: string) => {
+    setError(msg);
+    setSubmitting(false);
+  }, []);
+  // The most recent (orderId, orderKey) produced by getPaymentContext — used
+  // by the post-payment redirect since the panel only knows the paymentIntentId.
+  const lastPaymentContextRef = useRef<{ orderId: number; orderKey: string } | null>(null);
 
   // Attestly payment-verification OTP (required by the processor before charging).
   const [attestlyVerified, setAttestlyVerified] = useState<{
@@ -121,18 +121,20 @@ function CheckoutPage() {
     codeAlreadySent: boolean;
   } | null>(null);
   // A pending "continue after verified" action so we can resume the pay flow
-  // after the dialog closes with a good token.
-  const pendingAfterVerifyRef = useRef<null | ((token: string) => void)>(null);
+  // after the dialog closes with a good token. It resolves the getPaymentContext
+  // promise so the panel can proceed to confirmPayment.
+  const pendingAfterVerifyRef = useRef<null | ((token: string | null) => void)>(null);
   const handleStripePaid = useCallback(async () => {
-    if (!stripeSession) return;
+    const ctx = lastPaymentContextRef.current;
+    if (!ctx) return;
     clearCartToken();
     try {
       await refresh();
     } catch {
       /* ignore */
     }
-    window.location.href = `/order-confirmation/${stripeSession.orderId}?key=${encodeURIComponent(stripeSession.orderKey)}`;
-  }, [refresh, stripeSession]);
+    window.location.href = `/order-confirmation/${ctx.orderId}?key=${encodeURIComponent(ctx.orderKey)}`;
+  }, [refresh]);
 
   const [rates, setRates] = useState<ShippingRate[]>([]);
   const [selectedRateId, setSelectedRateId] = useState<string>("");
