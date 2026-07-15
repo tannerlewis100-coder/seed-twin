@@ -861,9 +861,8 @@ function CheckoutPage() {
                     <Field label="Postcode" required>
                       <input value={billing.postcode} onChange={bindBilling("postcode")} className={inputCls} autoComplete="postal-code" />
                     </Field>
-                    <Field label="Country" required>
-                      <input value={billing.country} onChange={bindBilling("country")} className={inputCls} autoComplete="country" placeholder="US" maxLength={2} />
-                    </Field>
+                     <input type="hidden" value={billing.country} readOnly />
+
                     <Field label="Phone (optional)" className="sm:col-span-2">
                       <input type="tel" value={billing.phone ?? ""} onChange={bindBilling("phone")} className={inputCls} autoComplete="tel" placeholder="(555) 123-4567" />
                     </Field>
