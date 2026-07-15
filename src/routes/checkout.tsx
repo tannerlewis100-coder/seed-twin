@@ -902,9 +902,8 @@ function CheckoutPage() {
                       <Field label="Postcode" required>
                         <input value={shipping.postcode} onChange={bindShipping("postcode")} className={inputCls} />
                       </Field>
-                      <Field label="Country" required>
-                        <input value={shipping.country} onChange={bindShipping("country")} className={inputCls} maxLength={2} />
-                      </Field>
+                      <input type="hidden" value={shipping.country} readOnly />
+
                       <Field label="Phone (optional)" className="sm:col-span-2">
                         <input type="tel" value={shipping.phone ?? ""} onChange={bindShipping("phone")} className={inputCls} placeholder="(555) 123-4567" />
                       </Field>
