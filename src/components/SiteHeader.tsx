@@ -505,6 +505,31 @@ export function SiteHeader() {
                 {l.label}
               </Link>
             ))}
+
+            {user && (
+              <div className="mt-6">
+                <div className="text-[10.5px] uppercase tracking-[0.22em] text-foreground/40 font-medium mb-2 px-1">
+                  Account
+                </div>
+                <Link
+                  to="/account"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between py-3 border-b border-white/5 text-[17px] text-foreground hover:text-brand-gold transition-colors"
+                >
+                  <span>Your account</span>
+                  <ArrowRight className="h-4 w-4 opacity-50" />
+                </Link>
+                <Link
+                  to="/account/orders"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between py-3 border-b border-white/5 text-[17px] text-foreground hover:text-brand-gold transition-colors"
+                >
+                  <span>Your orders</span>
+                  <ArrowRight className="h-4 w-4 opacity-50" />
+                </Link>
+              </div>
+            )}
+
             <div className="mt-8 flex flex-col gap-3">
               <Link
                 to="/shop"
@@ -534,6 +559,7 @@ export function SiteHeader() {
                 </Link>
               )}
             </div>
+
           </nav>
         </div>
       )}
