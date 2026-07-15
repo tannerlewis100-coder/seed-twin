@@ -88,7 +88,7 @@ export function CartDrawer() {
             <p className="text-sm text-foreground/60">Cart is empty.</p>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-4 space-y-4" style={{ WebkitOverflowScrolling: "touch" }}>
             {items.map((item) => (
               <div key={item.key} className="flex gap-4 pb-4 border-b border-white/5">
                 {item.image && (
