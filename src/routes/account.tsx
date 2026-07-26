@@ -316,6 +316,9 @@ function AccountInfoCard() {
         },
         body: JSON.stringify({ first_name: trimmedFirst, last_name: trimmedLast }),
       });
+      if (res.status === 401 || res.status === 403) {
+        throw new Error("Your session expired. Please sign in again.");
+      }
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.ok === false) {
         throw new Error(data?.message || `Save failed (${res.status})`);
