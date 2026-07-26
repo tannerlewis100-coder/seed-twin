@@ -126,6 +126,7 @@ function RootComponent() {
         <Outlet />
         <PromoPopup />
         <CartDrawer />
+        <CollectEmailDialog />
         <Toaster />
       </CartProvider>
     </ClarumAuthProvider>
