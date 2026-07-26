@@ -3,8 +3,10 @@ import { createFileRoute } from "@tanstack/react-router";
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Accept",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization",
 };
+
+const WP_BASE = "https://admin.clarumpeptides.com/wp-json";
 
 const WC_BASE = "https://admin.clarumpeptides.com/wp-json/wc/v3";
 
