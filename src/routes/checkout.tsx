@@ -15,7 +15,7 @@ import {
   updateCustomer,
   type WooAddress,
 } from "@/lib/woo";
-import { otpLoginApi, useClarumAuth } from "@/lib/clarum-auth";
+import { getToken as getClarumToken, otpLoginApi, useClarumAuth } from "@/lib/clarum-auth";
 import { ClarumOtpDialog, type ClarumOtpResult } from "@/components/ClarumOtpDialog";
 import { AttestlyVerifyDialog } from "@/components/AttestlyVerifyDialog";
 import {
