@@ -355,6 +355,9 @@ function AccountInfoCard() {
         },
         body: JSON.stringify({ subscribed: next }),
       });
+      if (res.status === 401 || res.status === 403) {
+        throw new Error("Your session expired. Please sign in again.");
+      }
       const data = await res.json().catch(() => ({}));
       if (!res.ok || data?.ok === false) {
         throw new Error(data?.message || `Request failed (${res.status})`);
