@@ -150,7 +150,12 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
           } else {
             toast.success("Welcome back");
           }
-          navigate({ to: "/account" });
+          let dest = "/account";
+          if (typeof window !== "undefined") {
+            const r = new URLSearchParams(window.location.search).get("redirect");
+            if (r && r.startsWith("/") && !r.startsWith("//")) dest = r;
+          }
+          navigate({ to: dest });
         } catch (e) {
           setSuccess(false);
           setErr(e instanceof Error ? e.message : "Sign-in failed.");
