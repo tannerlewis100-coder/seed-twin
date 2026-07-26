@@ -124,7 +124,7 @@ function AccountPage() {
 
   useEffect(() => {
     if (!loading && !token) {
-      navigate({ to: "/sign-in" });
+      navigate({ to: "/sign-in", search: { redirect: "/account" } as never });
     }
   }, [loading, token, navigate]);
 
@@ -138,6 +138,12 @@ function AccountPage() {
         const res = await fetch(ORDERS_API, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        if (res.status === 401 || res.status === 403) {
+          if (cancelled) return;
+          signOut();
+          navigate({ to: "/sign-in", search: { redirect: "/account" } as never });
+          return;
+        }
         const json = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(json?.message || `Request failed (${res.status})`);
         if (!cancelled) setOrders(json as OrdersResponse);
@@ -151,7 +157,7 @@ function AccountPage() {
     return () => {
       cancelled = true;
     };
-  }, [token]);
+  }, [token, navigate, signOut]);
 
 
   if (loading || !user) {
