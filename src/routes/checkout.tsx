@@ -24,6 +24,7 @@ import {
   type PaymentContext,
   type StripePaymentHandler,
 } from "@/components/StripeAttestlyPanel";
+import { suggestEmailCorrection } from "@/lib/emailTypo";
 
 const OTP_VERIFIED_KEY = "clarum_checkout_verified_email";
 const OTP_VERIFIED_PHONE_KEY = "clarum_checkout_verified_phone";
@@ -809,6 +810,23 @@ function CheckoutPage() {
                       required
                       autoComplete="email"
                     />
+                    {(() => {
+                      const suggestion = suggestEmailCorrection(email);
+                      if (!suggestion) return null;
+                      return (
+                        <p className="mt-1.5 text-[11px] text-brand-gold/80">
+                          Did you mean{" "}
+                          <button
+                            type="button"
+                            onClick={() => setEmail(suggestion)}
+                            className="underline font-medium hover:text-brand-gold"
+                          >
+                            {suggestion}
+                          </button>
+                          ?
+                        </p>
+                      );
+                    })()}
                     {verifiedEmail && (
                       <p className="mt-1.5 text-[11px] text-brand-gold/70">
                         Verified ✓ ({verifiedEmail}){" "}
