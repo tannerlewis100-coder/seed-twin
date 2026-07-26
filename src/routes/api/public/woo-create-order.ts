@@ -126,6 +126,7 @@ export const Route = createFileRoute("/api/public/woo-create-order")({
           shipping,
           line_items: lineItems,
           customer_note: body.customer_note ?? "",
+          ...(customerId > 0 ? { customer_id: customerId } : {}),
         };
 
         if (body.coupons && body.coupons.length) {
