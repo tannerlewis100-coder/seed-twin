@@ -39,10 +39,17 @@ function statusLabel(s: string): string {
 function OrderStatusPage() {
   const { id, key } = Route.useSearch();
   const [orderIdInput, setOrderIdInput] = useState(id ?? "");
-  const [keyInput, setKeyInput] = useState(key ?? "");
+  const [emailInput, setEmailInput] = useState("");
   const [order, setOrder] = useState<WooOrder | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setInterval(() => setCooldown((c) => (c > 0 ? c - 1 : 0)), 1000);
+    return () => clearInterval(t);
+  }, [cooldown]);
 
   useEffect(() => {
     if (!id || !key) return;
@@ -64,20 +71,39 @@ function OrderStatusPage() {
     };
   }, [id, key]);
 
-  const onLookup = (e: React.FormEvent) => {
+  const onLookup = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanId = orderIdInput.trim().replace(/^#/, "");
-    const cleanKey = keyInput.trim();
-    if (!cleanId || !cleanKey) {
-      setError("Enter both your order number and order key.");
+    const cleanEmail = emailInput.trim();
+    if (!cleanId || !cleanEmail) {
+      setError("Enter both your order number and email address.");
       return;
     }
-    const params = new URLSearchParams({ id: cleanId, key: cleanKey });
-    window.history.replaceState(null, "", `/order-status?${params.toString()}`);
     setError(null);
-    setOrder(null);
-    // trigger effect by mutating URL — but effect keys on search. Reload search:
-    window.location.assign(`/order-status?${params.toString()}`);
+    setLoading(true);
+    try {
+      const res = await fetch("https://admin.clarumpeptides.com/wp-json/clarum/v1/order-lookup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ order_number: cleanId, email: cleanEmail }),
+      });
+      const data = await res.json().catch(() => ({} as any));
+      if (res.status === 200 && data?.id && data?.key) {
+        const params = new URLSearchParams({ id: String(data.id), key: String(data.key) });
+        window.location.assign(`/order-status?${params.toString()}`);
+        return;
+      }
+      if (res.status === 429) {
+        setCooldown(60);
+        setError(data?.message || "Too many attempts.");
+      } else {
+        setError(data?.message || "Order not found.");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Lookup failed.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,7 +116,7 @@ function OrderStatusPage() {
             <p className="text-xs tracking-[0.2em] text-brand-gold/80 uppercase">Guest order</p>
             <h1 className="font-display text-3xl sm:text-5xl mt-2">Track your order</h1>
             <p className="text-sm text-foreground/50 mt-2">
-              Enter your order number and order key from your confirmation email.
+              Enter your order number and the email address you used at checkout.
             </p>
           </div>
 
@@ -107,12 +133,13 @@ function OrderStatusPage() {
                 />
               </div>
               <div>
-                <label className="block text-[11px] uppercase tracking-wider text-foreground/60 mb-1.5">Order key</label>
+                <label className="block text-[11px] uppercase tracking-wider text-foreground/60 mb-1.5">Email address</label>
                 <input
-                  value={keyInput}
-                  onChange={(e) => setKeyInput(e.target.value)}
-                  placeholder="wc_order_..."
-                  className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2.5 font-mono text-sm text-foreground placeholder:text-foreground/30 focus:border-brand-gold/60 focus:outline-none"
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                  placeholder="you@example.com"
+                  type="email"
+                  className="w-full rounded-md border border-white/10 bg-black/30 px-3 py-2.5 text-foreground placeholder:text-foreground/30 focus:border-brand-gold/60 focus:outline-none"
                 />
               </div>
               {error && (
@@ -122,11 +149,11 @@ function OrderStatusPage() {
               )}
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || cooldown > 0}
                 className="inline-flex items-center gap-2 rounded-full bg-brand-gold px-5 py-2.5 text-sm font-semibold text-brand-forest-deep hover:bg-brand-gold/90 disabled:opacity-60"
               >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Search className="h-4 w-4" />}
-                Look up order
+                {cooldown > 0 ? `Try again in ${cooldown}s` : "Look up order"}
               </button>
               <p className="text-[12px] text-foreground/50 pt-2">
                 Have an account?{" "}
@@ -149,6 +176,7 @@ function OrderStatusPage() {
     </div>
   );
 }
+
 
 function OrderCard({ order }: { order: WooOrder }) {
   const currency = order.totals.currency_symbol ?? "$";
