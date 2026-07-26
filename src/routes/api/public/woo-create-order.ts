@@ -69,6 +69,26 @@ export const Route = createFileRoute("/api/public/woo-create-order")({
           return json({ error: "No items" }, 400);
         }
 
+        // Resolve customer_id from the caller's JWT (if signed in). This
+        // ensures the order is attached to their account instead of being a
+        // guest order (customer_id: 0). Guests skip this and continue.
+        let customerId = 0;
+        const bearer = request.headers.get("authorization");
+        if (bearer && /^Bearer\s+/i.test(bearer)) {
+          try {
+            const meRes = await fetch(`${WP_BASE}/clarum/v1/me`, {
+              headers: { Authorization: bearer, Accept: "application/json" },
+            });
+            if (meRes.ok) {
+              const me = (await meRes.json()) as { id?: number };
+              if (typeof me.id === "number" && me.id > 0) customerId = me.id;
+            }
+          } catch {
+            /* non-fatal — fall through as guest */
+          }
+        }
+
+
         // Resolve each cart item id → { product_id, variation_id? }
         const lineItems: Array<{ product_id: number; variation_id?: number; quantity: number }> = [];
         for (const it of body.items) {
