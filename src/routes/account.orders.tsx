@@ -82,7 +82,7 @@ function formatItemsPreview(
 
 
 function OrdersPage() {
-  const { token, loading: authLoading } = useClarumAuth();
+  const { token, loading: authLoading, signOut } = useClarumAuth();
   const navigate = useNavigate();
   const [data, setData] = useState<OrdersResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -90,7 +90,7 @@ function OrdersPage() {
 
   useEffect(() => {
     if (!authLoading && !token) {
-      navigate({ to: "/sign-in" });
+      navigate({ to: "/sign-in", search: { redirect: "/account/orders" } as never });
     }
   }, [authLoading, token, navigate]);
 
@@ -104,6 +104,12 @@ function OrdersPage() {
         const res = await fetch(`${API_BASE}/clarum/v1/me/orders`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        if (res.status === 401 || res.status === 403) {
+          if (cancelled) return;
+          signOut();
+          navigate({ to: "/sign-in", search: { redirect: "/account/orders" } as never });
+          return;
+        }
         const json = await res.json().catch(() => ({}));
         if (!res.ok) throw new Error(json?.message || `Request failed (${res.status})`);
         if (!cancelled) setData(json as OrdersResponse);
@@ -117,7 +123,7 @@ function OrdersPage() {
     return () => {
       cancelled = true;
     };
-  }, [token]);
+  }, [token, navigate, signOut]);
 
   if (authLoading || (loading && !data)) {
     return (
