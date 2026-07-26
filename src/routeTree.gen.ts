@@ -19,6 +19,7 @@ import { Route as ShippingPolicyRouteImport } from './routes/shipping-policy'
 import { Route as ReportAConcernRouteImport } from './routes/report-a-concern'
 import { Route as RefundPolicyRouteImport } from './routes/refund-policy'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as OrderStatusRouteImport } from './routes/order-status'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as FaqRouteImport } from './routes/faq'
@@ -94,6 +95,11 @@ const RefundPolicyRoute = RefundPolicyRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OrderStatusRoute = OrderStatusRouteImport.update({
+  id: '/order-status',
+  path: '/order-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -244,6 +250,7 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/order-status': typeof OrderStatusRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/report-a-concern': typeof ReportAConcernRoute
@@ -282,6 +289,7 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/order-status': typeof OrderStatusRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/report-a-concern': typeof ReportAConcernRoute
@@ -320,6 +328,7 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
+  '/order-status': typeof OrderStatusRoute
   '/privacy': typeof PrivacyRoute
   '/refund-policy': typeof RefundPolicyRoute
   '/report-a-concern': typeof ReportAConcernRoute
@@ -360,6 +369,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/login'
     | '/mcp'
+    | '/order-status'
     | '/privacy'
     | '/refund-policy'
     | '/report-a-concern'
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/login'
     | '/mcp'
+    | '/order-status'
     | '/privacy'
     | '/refund-policy'
     | '/report-a-concern'
@@ -435,6 +446,7 @@ export interface FileRouteTypes {
     | '/faq'
     | '/login'
     | '/mcp'
+    | '/order-status'
     | '/privacy'
     | '/refund-policy'
     | '/report-a-concern'
@@ -474,6 +486,7 @@ export interface RootRouteChildren {
   FaqRoute: typeof FaqRoute
   LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
+  OrderStatusRoute: typeof OrderStatusRoute
   PrivacyRoute: typeof PrivacyRoute
   RefundPolicyRoute: typeof RefundPolicyRoute
   ReportAConcernRoute: typeof ReportAConcernRoute
@@ -569,6 +582,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/order-status': {
+      id: '/order-status'
+      path: '/order-status'
+      fullPath: '/order-status'
+      preLoaderRoute: typeof OrderStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -790,6 +810,7 @@ const rootRouteChildren: RootRouteChildren = {
   FaqRoute: FaqRoute,
   LoginRoute: LoginRoute,
   McpRoute: McpRoute,
+  OrderStatusRoute: OrderStatusRoute,
   PrivacyRoute: PrivacyRoute,
   RefundPolicyRoute: RefundPolicyRoute,
   ReportAConcernRoute: ReportAConcernRoute,

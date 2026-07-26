@@ -342,6 +342,15 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
                     </>
                   )}
                 </p>
+                <p className="text-center text-[12px] text-foreground/45">
+                  Ordered as a guest?{" "}
+                  <Link
+                    to="/order-status"
+                    className="text-brand-gold hover:underline underline-offset-4"
+                  >
+                    Look up your order
+                  </Link>
+                </p>
               </form>
             ) : (
               <div className="mt-8 space-y-5">
