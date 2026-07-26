@@ -210,6 +210,8 @@ type Ctx = {
   signOut: () => void;
   refresh: () => Promise<void>;
   updateUser: (patch: Partial<ClarumUser>) => void;
+  needsEmail: boolean;
+  dismissEmailPrompt: () => void;
 };
 
 const ClarumAuthCtx = createContext<Ctx | null>(null);
@@ -218,6 +220,7 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
   const [token, setTok] = useState<string | null>(() => getToken());
   const [user, setUser] = useState<ClarumUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const [needsEmail, setNeedsEmail] = useState(false);
 
   const refresh = useCallback(async () => {
     const t = getToken();
@@ -227,9 +230,6 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       return;
     }
-    // Skip /me entirely if the JWT is already expired — Woo returns 403 which
-    // the browser logs as a failed-resource error. Treat expired token as
-    // signed-out.
     if (isJwtExpired(t)) {
       setToken(null);
       setTok(null);
@@ -242,8 +242,6 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
       setTok(t);
       setUser(me);
     } catch (err) {
-      // 401/403/expired — silently treat as signed-out. Real network errors
-      // (5xx, offline) propagate through finally.
       const msg = err instanceof Error ? err.message : "";
       if (/401|403|unauthor|expired|invalid/i.test(msg)) {
         setToken(null);
@@ -260,10 +258,12 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
     setTok(newToken);
     if (prefetched) {
       setUser(prefetched);
+      if (!prefetched.email) setNeedsEmail(true);
     }
     try {
       const me = await fetchMe(newToken);
       setUser(me);
+      setNeedsEmail(!me.email);
     } catch {
       /* ignore */
     }
@@ -273,11 +273,15 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
     setToken(null);
     setTok(null);
     setUser(null);
+    setNeedsEmail(false);
   }, []);
 
   const updateUser = useCallback((patch: Partial<ClarumUser>) => {
     setUser((prev) => (prev ? { ...prev, ...patch } : prev));
+    if (patch.email) setNeedsEmail(false);
   }, []);
+
+  const dismissEmailPrompt = useCallback(() => setNeedsEmail(false), []);
 
   useEffect(() => {
     captureUtmFromUrl();
@@ -285,7 +289,19 @@ export function ClarumAuthProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
 
   return (
-    <ClarumAuthCtx.Provider value={{ user, token, loading, setSession, signOut, refresh, updateUser }}>
+    <ClarumAuthCtx.Provider
+      value={{
+        user,
+        token,
+        loading,
+        setSession,
+        signOut,
+        refresh,
+        updateUser,
+        needsEmail,
+        dismissEmailPrompt,
+      }}
+    >
       {children}
     </ClarumAuthCtx.Provider>
   );
@@ -296,3 +312,4 @@ export function useClarumAuth(): Ctx {
   if (!ctx) throw new Error("useClarumAuth must be used inside ClarumAuthProvider");
   return ctx;
 }
+
