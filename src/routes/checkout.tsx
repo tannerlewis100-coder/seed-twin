@@ -15,7 +15,7 @@ import {
   updateCustomer,
   type WooAddress,
 } from "@/lib/woo";
-import { otpLoginApi, useClarumAuth } from "@/lib/clarum-auth";
+import { getToken as getClarumToken, otpLoginApi, useClarumAuth } from "@/lib/clarum-auth";
 import { ClarumOtpDialog, type ClarumOtpResult } from "@/components/ClarumOtpDialog";
 import { AttestlyVerifyDialog } from "@/components/AttestlyVerifyDialog";
 import {
@@ -500,9 +500,13 @@ function CheckoutPage() {
         const shipLine = selectedRate
           ? { method_title: selectedRate.name, total: String(shippingCost.toFixed(2)) }
           : null;
+        const jwt = getClarumToken();
         const orderRes = await fetch("/api/public/woo-create-order", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(jwt ? { Authorization: `Bearer ${jwt}` } : {}),
+          },
           body: JSON.stringify({
             email,
             billing: billingAddr,
