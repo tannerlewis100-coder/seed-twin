@@ -147,13 +147,22 @@ function OrderConfirmationPage() {
             </>
           )}
 
-          <div className="mt-10 flex items-center justify-center gap-3">
+          <div className="mt-10 flex items-center justify-center gap-3 flex-wrap">
             <Link
               to="/shop"
               className="rounded-full bg-brand-gold text-brand-forest font-semibold px-6 py-2.5 hover:bg-brand-gold/90"
             >
               Continue shopping
             </Link>
+            {key && (
+              <Link
+                to="/order-status"
+                search={{ id: String(orderId), key }}
+                className="rounded-full border border-brand-gold/50 px-6 py-2.5 text-sm text-brand-gold hover:bg-brand-gold/10"
+              >
+                Track your order
+              </Link>
+            )}
             <Link
               to="/contact"
               className="rounded-full border border-white/15 px-6 py-2.5 text-sm text-foreground/80 hover:border-white/30"
