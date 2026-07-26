@@ -24,6 +24,7 @@ import {
   type PaymentContext,
   type StripePaymentHandler,
 } from "@/components/StripeAttestlyPanel";
+import { suggestEmailCorrection } from "@/lib/emailTypo";
 
 const OTP_VERIFIED_KEY = "clarum_checkout_verified_email";
 const OTP_VERIFIED_PHONE_KEY = "clarum_checkout_verified_phone";
