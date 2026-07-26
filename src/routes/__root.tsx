@@ -5,6 +5,7 @@ import { AgeGate } from "@/components/AgeGate";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/CartDrawer";
 import { ClarumAuthProvider } from "@/lib/clarum-auth";
+import { CollectEmailDialog } from "@/components/CollectEmailDialog";
 
 import appCss from "../styles.css?url";
 
