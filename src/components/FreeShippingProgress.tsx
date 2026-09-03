@@ -5,10 +5,23 @@ type Props = {
   subtotal: number;
   /** Wrap in a subtle rounded container (cart) vs. bare block (product page). */
   boxed?: boolean;
+  /** Copy shown when the cart is empty (subtotal is 0). Defaults to the "away from" line. */
+  emptyMessage?: string;
+  /** Copy shown once the threshold is met. */
+  unlockedMessage?: string;
+  /** Tailwind height class for the bar. */
+  barClassName?: string;
   className?: string;
 };
 
-export function FreeShippingProgress({ subtotal, boxed = false, className = "" }: Props) {
+export function FreeShippingProgress({
+  subtotal,
+  boxed = false,
+  emptyMessage,
+  unlockedMessage = "🎉 You've unlocked free shipping!",
+  barClassName = "h-1.5",
+  className = "",
+}: Props) {
   const value = Math.max(0, subtotal);
   const unlocked = value >= FREE_SHIPPING_THRESHOLD;
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - value);
@@ -22,16 +35,20 @@ export function FreeShippingProgress({ subtotal, boxed = false, className = "" }
     >
       <p className="text-[12px] leading-snug text-foreground/70">
         {unlocked ? (
-          <span className="text-brand-gold">🎉 You've unlocked free shipping!</span>
+          <span className="text-brand-gold">{unlockedMessage}</span>
+        ) : value === 0 && emptyMessage ? (
+          <>{emptyMessage}</>
         ) : (
           <>
-            Only <span className="font-semibold text-foreground">${remaining.toFixed(2)}</span> away
-            from free shipping!
+            Only{" "}
+            <span className="font-semibold text-brand-gold">${remaining.toFixed(2)}</span> away from
+            free shipping!
           </>
         )}
       </p>
+
       <div
-        className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+        className={`mt-2 ${barClassName} w-full overflow-hidden rounded-full bg-black/40 ring-1 ring-inset ring-white/5`}
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={FREE_SHIPPING_THRESHOLD}
