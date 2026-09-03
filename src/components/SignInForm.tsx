@@ -346,6 +346,7 @@ export function SignInForm({ mode }: { mode: SignInMode }) {
                   Ordered as a guest?{" "}
                   <Link
                     to="/order-status"
+                    search={{ id: "", key: "" }}
                     className="text-brand-gold hover:underline underline-offset-4"
                   >
                     Look up your order
