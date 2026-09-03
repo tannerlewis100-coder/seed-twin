@@ -184,6 +184,14 @@ function ShopPage() {
 
         <section className="bg-card border-b border-white/5">
           <div className="mx-auto max-w-7xl px-6 py-12">
+            <FreeShippingProgress
+              subtotal={cartSubtotal}
+              emptyMessage="Free US shipping on research orders $150+"
+              unlockedMessage="🎉 Free shipping unlocked!"
+              barClassName="h-2"
+              className="mb-8 rounded-2xl border border-white/[0.07] bg-white/[0.04] px-5 py-4"
+            />
+
             {status === "loading" && (
               <div className="flex flex-col items-center justify-center py-20 text-foreground/50">
                 <Loader2 className="h-6 w-6 animate-spin text-brand-gold mb-3" />
