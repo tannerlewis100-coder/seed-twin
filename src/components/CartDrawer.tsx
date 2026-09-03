@@ -4,6 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Minus, Plus, Trash2, ShoppingBag, X } from "lucide-react";
 import { useState } from "react";
 import { applyCoupon, removeCoupon } from "@/lib/woo";
+import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 
 const FREE_SHIPPING_THRESHOLD = 150;
 const CRYPTO_COUPON = "CRYPTO5";
@@ -89,6 +90,7 @@ export function CartDrawer() {
           </div>
         ) : (
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 py-4 space-y-4" style={{ WebkitOverflowScrolling: "touch" }}>
+            <FreeShippingProgress subtotal={discountedSubtotal} boxed />
             {items.map((item) => (
               <div key={item.key} className="flex gap-4 pb-4 border-b border-white/5">
                 {item.image && (

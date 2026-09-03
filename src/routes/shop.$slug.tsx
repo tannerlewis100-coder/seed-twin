@@ -5,6 +5,7 @@ import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import RelatedProducts from "@/components/RelatedProducts";
 import { useCart } from "@/lib/cart";
+import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { variantVialImage } from "@/lib/vialImages";
 import {
   decodeEntities,
@@ -154,7 +155,7 @@ function ProductPage() {
   const [loadingVars, setLoadingVars] = useState(false);
   const [activeVarId, setActiveVarId] = useState<number | null>(null);
   const [added, setAdded] = useState(false);
-  const { addItem, loading: cartLoading } = useCart();
+  const { addItem, loading: cartLoading, subtotal: cartSubtotal } = useCart();
 
   useEffect(() => {
     let cancelled = false;
@@ -354,7 +355,9 @@ function ProductBody({
   added: boolean;
   activeVar: WooProduct | null;
 }) {
+  const { subtotal: cartSubtotal } = useCart();
   const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
+
   const wooImg = firstImage(display) ?? firstImage(product);
   const vial = variantVialImage({
     name: product.name,
@@ -476,10 +479,16 @@ function ProductBody({
             )}
           </div>
 
+          <FreeShippingProgress
+            className="mt-4"
+            subtotal={cartSubtotal > 0 ? cartSubtotal : price}
+          />
+
           <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-brand-gold/90">
             <span aria-hidden>🎁</span>
             <span>Every order ships with a free 3ml BAC water.</span>
           </p>
+
 
           <p className="mt-4 text-[11px] text-foreground/40">
             For in vitro laboratory research only. Not for human or veterinary use.
