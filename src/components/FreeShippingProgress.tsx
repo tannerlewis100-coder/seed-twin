@@ -48,7 +48,7 @@ export function FreeShippingProgress({
       </p>
 
       <div
-        className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10"
+        className={`mt-2 ${barClassName} w-full overflow-hidden rounded-full bg-black/40 ring-1 ring-inset ring-white/5`}
         role="progressbar"
         aria-valuemin={0}
         aria-valuemax={FREE_SHIPPING_THRESHOLD}
