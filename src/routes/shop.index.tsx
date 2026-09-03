@@ -12,8 +12,8 @@ import { variantVialImage } from "@/lib/vialImages";
 import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
 export const Route = createFileRoute("/shop/")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    category: typeof search.category === "string" ? search.category : "",
+  validateSearch: (search: Record<string, unknown>): { category?: string } => ({
+    category: typeof search.category === "string" && search.category ? search.category : undefined,
   }),
   component: ShopPage,
   head: () => ({
