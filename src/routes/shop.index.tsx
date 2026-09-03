@@ -8,6 +8,8 @@ import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import ProductDetailModal from "@/components/ProductDetailModal";
 
+import { FreeShippingProgress } from "@/components/FreeShippingProgress";
+import { useCart } from "@/lib/cart";
 import { variantVialImage } from "@/lib/vialImages";
 import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
