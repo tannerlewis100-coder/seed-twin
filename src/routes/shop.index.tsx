@@ -12,6 +12,9 @@ import { variantVialImage } from "@/lib/vialImages";
 import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
 
 export const Route = createFileRoute("/shop/")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    category: typeof search.category === "string" ? search.category : "",
+  }),
   component: ShopPage,
   head: () => ({
     meta: [
@@ -35,7 +38,8 @@ function ShopPage() {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [errMsg, setErrMsg] = useState<string>("");
 
-  const [activeCat, setActiveCat] = useState("All");
+  const { category: categoryParam } = Route.useSearch();
+  const [activeCat, setActiveCat] = useState(categoryParam || "All");
   const [query, setQuery] = useState("");
   const [activeProduct, setActiveProduct] = useState<WooProduct | null>(null);
 
