@@ -5,6 +5,7 @@ import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import RelatedProducts from "@/components/RelatedProducts";
 import { useCart } from "@/lib/cart";
+import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { variantVialImage } from "@/lib/vialImages";
 import {
   decodeEntities,
@@ -154,7 +155,7 @@ function ProductPage() {
   const [loadingVars, setLoadingVars] = useState(false);
   const [activeVarId, setActiveVarId] = useState<number | null>(null);
   const [added, setAdded] = useState(false);
-  const { addItem, loading: cartLoading } = useCart();
+  const { addItem, loading: cartLoading, subtotal: cartSubtotal } = useCart();
 
   useEffect(() => {
     let cancelled = false;
