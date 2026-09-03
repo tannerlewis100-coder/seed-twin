@@ -3,6 +3,7 @@ import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { Check, Loader2, ShoppingCart, ArrowLeft, FileText } from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import RelatedProducts from "@/components/RelatedProducts";
 import { useCart } from "@/lib/cart";
 import { variantVialImage } from "@/lib/vialImages";
 import {
@@ -316,6 +317,8 @@ function ProductPage() {
             activeVar={activeVar}
           />
         )}
+
+        {status === "ready" && product && <RelatedProducts product={product} />}
       </main>
       <SiteFooter />
     </div>

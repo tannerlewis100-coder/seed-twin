@@ -332,6 +332,7 @@ function ActiveCard({ order }: { order: OrderRow }) {
           <Link
             to="/order-confirmation/$orderId"
             params={{ orderId: String(order.id) }}
+            search={{ key: "" }}
             className="mt-2 inline-block text-[12px] text-brand-gold hover:underline"
           >
             View details →
