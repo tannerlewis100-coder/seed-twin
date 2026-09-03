@@ -36,6 +36,7 @@ export const Route = createFileRoute("/shop/")({
 });
 
 function ShopPage() {
+  const { subtotal: cartSubtotal } = useCart();
   const [products, setProducts] = useState<WooProduct[]>([]);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [errMsg, setErrMsg] = useState<string>("");
