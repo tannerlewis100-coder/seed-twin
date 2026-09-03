@@ -355,7 +355,9 @@ function ProductBody({
   added: boolean;
   activeVar: WooProduct | null;
 }) {
+  const { subtotal: cartSubtotal } = useCart();
   const cat = decodeEntities(product.categories?.[0]?.name) || "Research";
+
   const wooImg = firstImage(display) ?? firstImage(product);
   const vial = variantVialImage({
     name: product.name,
