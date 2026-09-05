@@ -273,43 +273,17 @@ const VARIANT_IMAGE_OVERRIDES: Record<string, string> = {
   "reconstitution-water|3ml": bacWater,
 };
 
+// Always prefer the image returned by the WooCommerce API (product images[0]
+// or the selected variation image). Local bundled artwork is only a last-resort
+// placeholder when the API has no image at all.
 export function variantVialImage({
-  name,
-  slug,
-  size,
   fallbackSrc,
 }: {
-  name: string;
+  name?: string;
   slug?: string;
   size?: string | null;
   fallbackSrc?: string;
 }): string {
-  if (slug && size) {
-    const override = VARIANT_IMAGE_OVERRIDES[`${slug}|${size.trim()}`];
-    if (override) return override;
-  }
-  const normalizedSize = size ? normalizeImageToken(size) : null;
-  const unitlessBlendSize = size
-    ? normalizeImageToken(size.replace(/\b(mg|ml|iu|mcg|ug|g)\b/gi, ""))
-    : null;
-  const sizedLocal =
-    slug && normalizedSize ? productImageByFileName(`${slug}-${normalizedSize}.png`) : null;
-  const sizedBlendLocal =
-    slug && unitlessBlendSize ? productImageByFileName(`${slug}-${unitlessBlendSize}.png`) : null;
-  const forced = forcedVialImage(name, slug);
-  const exactLocal = slug ? productImageByFileName(`${slug}.png`) : null;
-  const ruleLocal = vialImageFor(name, slug);
-  const hasRuleMatch = ruleLocal !== vialDefault;
-  const slugPrefixLocal = productImageBySlugPrefix(slug);
-
-  return (
-    sizedLocal ??
-    sizedBlendLocal ??
-    forced ??
-    exactLocal ??
-    (hasRuleMatch ? ruleLocal : null) ??
-    slugPrefixLocal ??
-    fallbackSrc ??
-    ruleLocal
-  );
+  return fallbackSrc || vialDefault;
 }
+
