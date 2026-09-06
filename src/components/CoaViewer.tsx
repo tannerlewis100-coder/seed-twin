@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Download, ExternalLink, X, ZoomIn } from "lucide-react";
 import type { CoaRecord } from "@/data/coaLibrary";
 
 /**
- * Renders the complete supplier certificate document, page by page, exactly as
- * issued. No redrawing, no cropping — page images are straight renders of the
- * signed PDF, with the original verification page and PDF as fallbacks.
+ * Renders the supplier certificate. Inline preview shows only the first page;
+ * the full multi-page document opens in an overlay. No redrawing, no cropping.
  */
 export function CoaDocument({
   record,
@@ -15,32 +14,52 @@ export function CoaDocument({
   productLabel: string;
 }) {
   const [lightboxPage, setLightboxPage] = useState<number | null>(null);
+  const pageCount = record.pages.length;
+  const firstPage = record.pages[0];
+
+  useEffect(() => {
+    if (lightboxPage === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightboxPage(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxPage]);
 
   return (
     <div>
-      <div className="space-y-3">
-        {record.pages.map((src, i) => (
-          <button
-            key={src}
-            type="button"
-            onClick={() => setLightboxPage(i)}
-            className="group/img relative block w-full overflow-hidden rounded-2xl border border-white/10 bg-white cursor-zoom-in"
-          >
-            <img
-              src={src}
-              alt={`${productLabel} — Certificate of Analysis, batch ${record.batch}, page ${i + 1} of ${record.pages.length}`}
-              loading="lazy"
-              className="w-full h-auto"
-            />
-            <span className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover/img:opacity-100 transition-opacity bg-black/75 text-white text-xs font-medium px-4 py-2 rounded-lg backdrop-blur-sm flex items-center gap-1.5">
-              <ZoomIn className="h-3.5 w-3.5" />
-              Page {i + 1} of {record.pages.length} — tap to enlarge
-            </span>
-          </button>
-        ))}
-      </div>
+      {firstPage && (
+        <button
+          type="button"
+          onClick={() => setLightboxPage(0)}
+          className="group/img relative block w-full overflow-hidden rounded-2xl border border-white/10 bg-white cursor-zoom-in"
+        >
+          <img
+            src={firstPage}
+            alt={`${productLabel} — Certificate of Analysis, batch ${record.batch}, page 1 of ${pageCount}`}
+            loading="lazy"
+            className="w-full h-auto"
+          />
+          <span className="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 opacity-0 group-hover/img:opacity-100 transition-opacity bg-black/75 text-white text-xs font-medium px-4 py-2 rounded-lg backdrop-blur-sm flex items-center gap-1.5">
+            <ZoomIn className="h-3.5 w-3.5" />
+            {pageCount > 1
+              ? `View full report · ${pageCount} pages`
+              : "View full report · 1 page"}
+          </span>
+        </button>
+      )}
 
       <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setLightboxPage(0)}
+          className="inline-flex items-center gap-2 rounded-full border border-brand-gold/40 text-brand-gold text-xs font-medium px-4 py-2 hover:bg-brand-gold/10 transition-colors"
+        >
+          <ZoomIn className="h-3.5 w-3.5" />
+          {pageCount > 1
+            ? `View full report · ${pageCount} pages`
+            : "View full report · 1 page"}
+        </button>
         <a
           href={record.verifyUrl}
           target="_blank"
@@ -60,6 +79,7 @@ export function CoaDocument({
           Download signed PDF
         </a>
       </div>
+
 
       {lightboxPage !== null && (
         <div
