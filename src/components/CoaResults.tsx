@@ -18,12 +18,9 @@ export function coaRows(record: CoaRecord): CoaRow[] {
   }));
 }
 
-/** Certificate-level decision. Never a blanket PASS when the report doesn't state one. */
-export function decisionLabel(record: CoaRecord): { text: string; tone: "pass" | "neutral" } {
-  const d = (record.overallDecision ?? "").toLowerCase();
-  if (d === "pass") return { text: "Pass", tone: "pass" };
-  if (d) return { text: record.overallDecision as string, tone: "neutral" };
-  return { text: "Results reported", tone: "neutral" };
+/** Certificate-level badge. Describes document availability only, never assay outcomes. */
+export function decisionLabel(_record: CoaRecord): { text: string; tone: "pass" | "neutral" } {
+  return { text: "Report available", tone: "neutral" };
 }
 
 export function CoaDecisionBadge({ record }: { record: CoaRecord }) {
