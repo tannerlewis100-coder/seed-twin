@@ -149,9 +149,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
       className="group/card snap-start shrink-0 w-[78%] sm:w-auto flex flex-col rounded-3xl overflow-hidden bg-brand-forest-deep border border-white/5 hover:border-brand-gold/40 transition-all duration-500 hover:-translate-y-1 shadow-xl"
     >
       <div className="relative bg-[#0a0a0a] flex items-center justify-center p-6 h-56">
-        <span className="absolute top-4 left-4 z-10 text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-2.5 py-1 rounded-full">
-          ≥99% Purity
-        </span>
+
         <img
           src={vial}
           alt={`${product.name} vial`}
