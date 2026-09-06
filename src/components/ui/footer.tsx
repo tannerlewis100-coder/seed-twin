@@ -176,10 +176,10 @@ export default function StickyFooter() {
                     <img src={clarumLogo} alt="Clarum Research Peptides" className="h-16 md:h-20 w-auto object-contain drop-shadow-[0_0_24px_rgba(212,175,55,0.35)]" />
                   </Link>
               <p className="max-w-md text-sm text-foreground/55 leading-relaxed">
-                Independently tested research peptides. Five-panel third-party
-                report on every batch, all public, no login required. For
-                researchers who won't take "trust me" for an answer.
+                Research peptides with public supplier certificates where
+                available. View each batch report for its methods and results.
               </p>
+
                 </motion.div>
                 {sections.map((s) => (
                   <NavSection key={s.title} title={s.title} links={s.links} />
