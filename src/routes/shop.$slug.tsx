@@ -78,16 +78,10 @@ function sumBlendDose(raw: string): string {
   return `${nums.reduce((a, b) => a + b, 0)}${unit}`;
 }
 
-import { coaData, getCoa } from "@/data/coa";
 import { allPeptides, type Peptide } from "@/data/peptides";
-
-const FALLBACK_PANEL: Array<{ label: string; value: string }> = [
-  { label: "Identity (λmax)", value: "Match to reference" },
-  { label: "Percent Purity", value: "NLT 98%" },
-  { label: "Heavy Metals", value: "<20 ppb" },
-  { label: "Microbial (TAMC / TYMC)", value: "Within spec" },
-  { label: "Quantitative Assay", value: "Beer-Lambert" },
-];
+import { coaForSlug, slugToSku, type CoaStatus } from "@/data/coaLibrary";
+import { CoaAttribution, CoaDecisionBadge, CoaResultRow, coaRows } from "@/components/CoaResults";
+import { CoaDocument, CoaPendingPanel, CoaUnavailablePanel } from "@/components/CoaViewer";
 
 /** Find the peptide entry matching the product base slug + selected size. */
 function findPeptide(baseSlug: string, size?: string): Peptide | null {
@@ -108,43 +102,30 @@ function findPeptide(baseSlug: string, size?: string): Peptide | null {
   );
 }
 
-function buildPanel(
+/**
+ * Resolve the certificate for this product + selected strength by exact supplier
+ * SKU. Never approximate: unmatched items report as unavailable.
+ */
+function resolveCoa(
   productSlug: string,
   variantSize?: string,
-): {
-  rows: Array<{ label: string; value: string }>;
-  meta: { batch: string; test_date: string; assay?: string } | null;
-  deepLinkSlug: string | null;
-} {
-  const peptide = findPeptide(productSlug, variantSize);
-  if (peptide) {
-    return {
-      meta: { batch: peptide.batch, test_date: peptide.coa.date, assay: peptide.coa.assay },
-      deepLinkSlug: peptide.slug,
-      rows: [
-        { label: "Identity (λmax)", value: "Match to reference" },
-        { label: "Percent Purity", value: peptide.purity },
-        { label: "Heavy Metals", value: peptide.coa.heavyMetals },
-        { label: "Microbial (TAMC / TYMC)", value: `${peptide.coa.tamc} / ${peptide.coa.tymc}` },
-        { label: "Quantitative Assay", value: peptide.coa.assay },
-      ],
-    };
+): { status: CoaStatus; deepLinkSlug: string | null; sku: string | null } {
+  const sizeKey = (variantSize ?? "").toLowerCase().replace(/\s+/g, "");
+  const candidates = [
+    sizeKey ? `${productSlug}-${sizeKey}` : null,
+    productSlug,
+    findPeptide(productSlug, variantSize)?.slug ?? null,
+  ].filter((s): s is string => Boolean(s));
+
+  for (const slug of candidates) {
+    const status = coaForSlug(slug);
+    if (status.state !== "unavailable") {
+      return { status, deepLinkSlug: slug, sku: slugToSku[slug] ?? null };
+    }
   }
-  // Fallback to the base COA dataset
-  const coa = getCoa(productSlug);
-  if (!coa) return { rows: FALLBACK_PANEL, meta: null, deepLinkSlug: null };
-  return {
-    meta: { batch: coa.batch, test_date: coa.test_date, assay: coa.assay },
-    deepLinkSlug: productSlug,
-    rows: [
-      { label: "Identity (λmax)", value: "Match to reference" },
-      { label: "Percent Purity", value: coa.purity },
-      { label: "Heavy Metals", value: coa.heavy_metals },
-      { label: "Microbial (TAMC / TYMC)", value: coa.microbial },
-      { label: "Quantitative Assay", value: coa.assay },
-    ],
-  };
+  return { status: { state: "unavailable" }, deepLinkSlug: candidates[0] ?? null, sku: null };
 }
+
 
 function ProductPage() {
   const { slug } = Route.useParams();
@@ -496,10 +477,9 @@ function ProductBody({
         </div>
       </div>
 
-      {/* Test panel — only render when COA data exists */}
+      {/* Certificate of Analysis — driven by the current supplier record */}
       {(() => {
-        const { rows, meta, deepLinkSlug } = buildPanel(product.slug, currentVariantSize);
-        if (!meta) return null;
+        const { status, deepLinkSlug, sku } = resolveCoa(product.slug, currentVariantSize);
         const coaLibraryHref = deepLinkSlug
           ? `/coa-library#coa-${deepLinkSlug}`
           : "/coa-library";
@@ -523,56 +503,68 @@ function ProductBody({
             url: `https://clarumpeptides.com/shop/${product.slug}`,
           },
         };
+        const rows = status.state === "published" ? coaRows(status.record) : [];
         return (
-          <section className="mt-10 rounded-3xl border border-brand-gold/15 bg-card p-8">
+          <section className="mt-10 rounded-3xl border border-brand-gold/15 bg-card p-6 sm:p-8">
             <script
               type="application/ld+json"
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
             />
-            <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
+            <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
               <div>
                 <p className="text-[10px] uppercase tracking-[0.25em] text-brand-gold font-semibold mb-1">
                   Certificate of Analysis
                 </p>
                 <h2 className="font-display text-2xl">Independent third-party batch report</h2>
+                {sku && (
+                  <p className="text-[11px] text-foreground/40 mt-1">Supplier SKU {sku}</p>
+                )}
               </div>
-              <a
-                href={coaLibraryHref}
-                className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-gold-light transition-colors"
-              >
-                <FileText className="h-4 w-4" /> Download batch COA
-              </a>
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {rows.map((row) => (
-                <div
-                  key={row.label}
-                  className="rounded-2xl border border-white/5 bg-black/30 px-5 py-4"
+              <div className="flex items-center gap-3 flex-wrap">
+                {status.state === "published" && <CoaDecisionBadge record={status.record} />}
+                <a
+                  href={coaLibraryHref}
+                  className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-gold-light transition-colors"
                 >
-                  <p className="text-[10px] uppercase tracking-wider text-foreground/40 mb-1">
-                    {row.label}
-                  </p>
-                  <p className="text-sm text-foreground flex items-center gap-2">
-                    <span className="w-4 h-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-[9px] text-emerald-400">
-                      ✓
-                    </span>
-                    {row.value}
-                  </p>
-                </div>
-              ))}
+                  <FileText className="h-4 w-4" /> Open in COA Library
+                </a>
+              </div>
             </div>
 
-            <p className="mt-6 text-[11px] text-foreground/50">
-              Batch {meta.batch} · Tested {meta.test_date} · {coaData.lab}
-            </p>
-            <p className="mt-2 text-[11px] text-foreground/40">
-              Tested by an independent third-party analytical lab. Report shown is for the current shipping batch.
-            </p>
+            {status.state === "published" ? (
+              <>
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {rows.map((row) => (
+                    <div
+                      key={row.label}
+                      className="rounded-2xl border border-white/5 bg-black/30"
+                    >
+                      <CoaResultRow row={row} />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6">
+                  <CoaDocument
+                    record={status.record}
+                    productLabel={decodeEntities(product.name)}
+                  />
+                </div>
+
+                <div className="mt-4">
+                  <CoaAttribution record={status.record} />
+                </div>
+              </>
+            ) : status.state === "pending" ? (
+              <CoaPendingPanel sku={status.sku} productName={status.productName} />
+            ) : (
+              <CoaUnavailablePanel />
+            )}
           </section>
         );
       })()}
+
     </>
   );
 }
