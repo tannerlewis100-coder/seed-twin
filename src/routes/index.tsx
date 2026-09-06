@@ -154,7 +154,7 @@ function Hero() {
               transition={{ delay: allWords.length * 0.05 + 0.35, duration: 0.6 }}
               className="mt-8 text-[14px] text-[#777]"
             >
-              Identity · Purity · Label-Claim Assay · Heavy Metals · Microbial & Yeast/Mold
+              Purity · Label-Claim Assay · Microbial & Heavy Metals where reported
             </motion.div>
           </div>
 
