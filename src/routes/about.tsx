@@ -129,7 +129,7 @@ function AboutPage() {
                   </span>
                 </div>
                 <h2 className="font-display text-3xl lg:text-4xl text-foreground mb-7 leading-tight">
-                  <RevealText text="So we sent every batch out for the full panel." />
+                  <RevealText text="So we send every batch out for independent testing." />
                 </h2>
                 <RevealOnScroll as="div" delay={300} className="space-y-5 text-foreground/60 leading-[1.8]">
                   <p>
@@ -137,10 +137,11 @@ function AboutPage() {
                     trust-me attitude felt insulting to anyone reading the report.
                   </p>
                   <p>
-                    An independent third-party analytical lab runs the full panel on every batch:
-                    identity (UV/Vis λmax), percent purity (NLT 98%), quantitative label-claim
-                    assay, heavy metals (NMT 150 ppb), and microbial & yeast/mold (TAMC + TYMC).
-                    Same panel, every time.
+                    An independent third-party analytical lab tests every batch. Purity and a
+                    quantitative label-claim assay are standard. Depending on the compound and the
+                    report, that testing also covers identity, heavy metals and microbial
+                    screening. Each certificate lists exactly which methods were run and what they
+                    returned, so read the report for the batch you're buying.
                   </p>
                   <p>
                     Then we publish the full results. No login. No paywall. Every Certificate of

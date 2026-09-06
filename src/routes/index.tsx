@@ -18,6 +18,8 @@ import {
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
+import { coaForSlug } from "@/data/coaLibrary";
+import { CoaDecisionBadge, coaRows } from "@/components/CoaResults";
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
@@ -152,7 +154,7 @@ function Hero() {
               transition={{ delay: allWords.length * 0.05 + 0.35, duration: 0.6 }}
               className="mt-8 text-[14px] text-[#777]"
             >
-              Identity · Purity · Label-Claim Assay · Heavy Metals · Microbial & Yeast/Mold
+              Purity · Label-Claim Assay · Microbial & Heavy Metals where reported
             </motion.div>
           </div>
 
@@ -650,43 +652,56 @@ function CoaTeaser() {
           </Button>
         </div>
         <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {previews.map((p, i) => (
-            <RevealOnScroll
-              key={p.slug}
-              delay={i * 100}
-              className={i % 2 === 1 ? "sm:translate-y-10" : ""}
-            >
-              <Card className="bg-zinc-950 border-white/10 rounded-2xl shadow-none hover:border-brand-gold/30 transition-colors duration-300">
-                <CardContent className="p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 text-[11px] text-foreground/50 uppercase tracking-[0.18em]">
-                      <FileText className="h-3.5 w-3.5" /> COA · {p.batch}
+          {previews.map((p, i) => {
+            const status = coaForSlug(p.slug);
+            const record = status.state === "published" ? status.record : null;
+            const rows = record ? coaRows(record).slice(0, 4) : [];
+            return (
+              <RevealOnScroll
+                key={p.slug}
+                delay={i * 100}
+                className={i % 2 === 1 ? "sm:translate-y-10" : ""}
+              >
+                <Card className="bg-zinc-950 border-white/10 rounded-2xl shadow-none hover:border-brand-gold/30 transition-colors duration-300">
+                  <CardContent className="p-5">
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <div className="flex items-center gap-2 text-[11px] text-foreground/50 uppercase tracking-[0.18em] truncate">
+                        <FileText className="h-3.5 w-3.5 shrink-0" /> COA · {record?.batch ?? "—"}
+                      </div>
+                      {record ? (
+                        <CoaDecisionBadge record={record} />
+                      ) : (
+                        <Badge className="bg-white/5 text-foreground/40 hover:bg-white/5 border border-white/10 rounded-full text-[10px] uppercase tracking-wider font-semibold">
+                          Pending
+                        </Badge>
+                      )}
                     </div>
-                    <Badge className="bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/10 border border-emerald-500/20 rounded-full text-[10px] uppercase tracking-wider font-semibold">
-                      Pass
-                    </Badge>
-                  </div>
-                  <div className="font-display text-[20px] text-foreground tracking-[-0.01em]">
-                    {p.name}
-                  </div>
-                  <div className="text-[13px] text-foreground/50 mb-4">{p.size}</div>
-                  <Separator className="bg-white/[0.08] mb-4" />
-                  <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[12px]">
-                    <dt className="text-foreground/45">Percent Purity</dt>
-                    <dd className="text-foreground/90 text-right tabular-nums font-medium">
-                      {p.purity}
-                    </dd>
-                    <dt className="text-foreground/45">Identity (λmax)</dt>
-                    <dd className="text-foreground/90 text-right">Match</dd>
-                    <dt className="text-foreground/45">Heavy Metals</dt>
-                    <dd className="text-foreground/90 text-right">{p.coa.heavyMetals}</dd>
-                    <dt className="text-foreground/45">Microbial & Yeast/Mold</dt>
-                    <dd className="text-foreground/90 text-right">Pass</dd>
-                  </dl>
-                </CardContent>
-              </Card>
-            </RevealOnScroll>
-          ))}
+                    <div className="font-display text-[20px] text-foreground tracking-[-0.01em]">
+                      {p.name}
+                    </div>
+                    <div className="text-[13px] text-foreground/50 mb-4">{p.size}</div>
+                    <Separator className="bg-white/[0.08] mb-4" />
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[12px]">
+                      {rows.map((row) => (
+                        <div key={row.label} className="contents">
+                          <dt className="text-foreground/45">{row.label}</dt>
+                          <dd className="text-foreground/90 text-right tabular-nums font-medium">
+                            {row.value}
+                          </dd>
+                        </div>
+                      ))}
+                      {rows.length === 0 && (
+                        <dd className="col-span-2 text-foreground/40">
+                          Report pending for this batch.
+                        </dd>
+                      )}
+                    </dl>
+                  </CardContent>
+                </Card>
+              </RevealOnScroll>
+            );
+          })}
+
         </div>
       </div>
     </section>

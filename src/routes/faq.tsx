@@ -73,15 +73,15 @@ const groups: Group[] = [
     items: [
       {
         q: "How do I read a Certificate of Analysis (COA)?",
-        a: "A COA includes the name of the compound, batch numbers, and the results of every test in the panel. Ours show qualitative identity (UV/Vis λmax match), percent purity (NLT 98%), quantitative label-claim assay (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold counts (TAMC and TYMC). All tested by an independent third-party lab.",
+        a: "A COA lists the compound, the batch number, the methods the lab ran and what each one returned. Ours typically show percent purity and a quantitative label-claim assay, and, depending on the compound, identity, heavy metals and microbial screening. Panels vary from report to report, so the certificate in the library is the record — anything a report doesn't cover is shown as Not reported.",
       },
       {
         q: "What does the microbial and mold testing cover?",
-        a: "Every batch is tested by an independent third-party lab and screened with TAMC (Total Aerobic Microbial Count, spec NMT 1,000 CFU) and TYMC (Total Yeast & Mold Count, spec NMT 100 CFU). Many vendors skip microbial testing entirely. The full results are published for every batch.",
+        a: "Every batch is tested by an independent third-party lab. Microbial screening is either a culture count (TAMC / TYMC) or a PCR screen, and the certificate reports it in the lab's own wording. Whatever was run, the full result is published with the batch.",
       },
       {
         q: "What makes Clarum's testing different from other vendors?",
-        a: "This is where most vendors stop. Every batch is tested by an independent third-party analytical lab — qualitative ID by UV/Vis λmax, percent purity by correlation coefficient (NLT 98%), a Beer-Lambert quantitative assay confirming the vial actually contains the labeled amount (NLT 95% of label), total heavy metals (NMT 150 ppb), and microbial & yeast/mold (TAMC + TYMC). All results are uploaded to the publicly accessible COA library before shipment.",
+        a: "This is where most vendors stop. Every batch goes to an independent third-party analytical lab for purity and a quantitative assay confirming the vial contains the labeled amount, plus identity, heavy metals or microbial screening as the report covers. The signed certificate is uploaded to the public COA library before shipment, methods and all.",
       },
       {
         q: "Can I see the COA before I purchase?",
