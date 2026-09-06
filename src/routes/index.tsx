@@ -18,6 +18,8 @@ import {
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
+import { coaForSlug } from "@/data/coaLibrary";
+import { CoaDecisionBadge, coaRows } from "@/components/CoaResults";
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
