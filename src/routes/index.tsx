@@ -49,24 +49,25 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Clarum — Batch-Tested Research Peptides with Full COAs" },
+      { title: "Clarum — Research Peptides with Public Batch Reports" },
       {
         name: "description",
         content:
-          "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab. Free U.S. shipping over $150.",
+          "Research peptides with public, independent third-party batch reports where available. Published purity results are 99% or higher where reported. Free U.S. shipping over $150.",
       },
-      { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
+      { property: "og:title", content: "Clarum — Research Peptides with Public Batch Reports" },
       {
         property: "og:description",
-        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
+        content: "Research peptides with public, independent third-party batch reports where available. Some reports are pending or unavailable.",
       },
       { property: "og:url", content: "https://clarumpeptides.com/" },
       { property: "og:image", content: "https://clarumpeptides.com/og-image.png" },
-      { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
+      { name: "twitter:title", content: "Clarum — Research Peptides with Public Batch Reports" },
       {
         name: "twitter:description",
-        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
+        content: "Research peptides with public, independent third-party batch reports where available. Some reports are pending or unavailable.",
       },
+
       { name: "twitter:image", content: "https://clarumpeptides.com/og-image.png" },
     ],
     links: [
@@ -313,11 +314,11 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Every batch is tested by an independent third-party lab across
-              the full panel: identity, percent purity, quantitative
-              label-claim assay, heavy metals, and microbial & yeast/mold.
-              Pull the batch report before checkout — or after. We don't
-              mind.
+              Supplier batch reports from independent third-party labs are
+              published here where available. Methods and panels vary by
+              report, and some reports are pending or unavailable. Pull the
+              batch report before checkout — or after. We don't mind.
+
             </RevealOnScroll>
             <Button
               asChild
@@ -412,10 +413,11 @@ function FeaturedProducts() {
 
 function QualityCollage() {
   const checks = [
-    "Batch-specific COA, not a generic certificate recycled across runs",
-    "Full analytical panel on every single batch we ship",
-    "Independent third-party lab. Same panel on every run.",
+    "Batch-specific COAs, not a generic certificate recycled across runs",
+    "Analytical panels vary by report — read the batch report you're buying",
+    "Independent third-party labs, with the methods listed on each report",
     "Public COA library. No login. No email gate.",
+
   ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
@@ -487,8 +489,9 @@ function QualityCollage() {
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
             "Third-party tested" is the phrase every vendor uses. Almost none of
-            them publish the actual numbers. We do. Every batch ships with a
-            Certificate of Analysis you can pull up before you break the seal.
+            them publish the actual numbers. We do — the batch reports we have
+            are public, and pending or unavailable ones are labelled as such.
+
           </RevealOnScroll>
           <ul className="mt-8 space-y-4">
             {checks.map((item, i) => (
@@ -533,7 +536,7 @@ const testingPanels = [
     icon: FlaskConical,
     num: "02",
     title: "Percent Purity",
-    desc: "Correlation-coefficient purity, spec NLT 98%. You see the exact percentage, not a range.",
+    desc: "Published purity results are 99% or higher where reported. Testing methods and specifications vary; check the individual batch report.",
   },
   {
     icon: Atom,
@@ -567,17 +570,18 @@ function HowTested() {
             How it's tested
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Every batch,\nindependently verified."} />
+            <RevealText text={"Independently\ntested batches."} />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            We don't grade our own homework. Each batch is tested by an
-            independent third-party analytical lab — identity, percent purity,
-            heavy metals, microbial, and quantitative assay. The full report
-            is public, batch number and all. No login, no redacted results.
+            We don't grade our own homework. Batches are tested by independent
+            third-party analytical labs, and the reports we have are published
+            in full, batch number and all. Methods vary by report, and some
+            reports are pending or unavailable. No login, no redacted results.
+
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
@@ -703,15 +707,16 @@ function CoaTeaser() {
             COA Library
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Every batch.\nPublic record."} />
+            <RevealText text={"Batch reports.\nPublic record."} />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-md"
           >
-            Browse the certificate of analysis for every batch we've ever
-            shipped. No login. No email gate. Just data.
+            Browse the certificates of analysis we have on file, with pending
+            and unavailable reports marked. No login. No email gate. Just data.
+
           </RevealOnScroll>
           <Button
             asChild
@@ -796,8 +801,10 @@ function FinalCta() {
           delay={250}
           className="mt-6 sm:mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
         >
-          Every batch we've shipped since launch is up in the library. Open it,
-          search a batch number, and check the numbers yourself.
+          Every batch report we have is up in the library, with pending and
+          unavailable ones labelled. Open it, search a batch number, and check
+          the numbers yourself.
+
         </RevealOnScroll>
         <div className="mt-9 sm:mt-11 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3">
           <Button
