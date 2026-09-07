@@ -6,9 +6,27 @@ const read = (p: string) => readFileSync(p, "utf8");
 describe("promotional purity copy", () => {
   it("homepage stats band promotes 99%+ reported purity, not 98%", () => {
     const src = read("src/routes/index.tsx");
-    expect(src).toContain('["99%+", "Reported Purity"]');
+    expect(src).toContain('stat: "99%+"');
+    expect(src).toContain('label: "Reported Purity"');
     expect(src).not.toContain('["≥98%"');
   });
+
+  it("homepage banner drops catalog counts and 100% COA coverage claims", () => {
+    const src = read("src/routes/index.tsx");
+    expect(src).not.toContain('"70+"');
+    expect(src).not.toContain("COA Documented");
+    expect(src).not.toContain("Tests Per Batch");
+    expect(src).toContain("/coa-library");
+    expect(src).toContain("View current products, sizes and availability.");
+    expect(src).toContain("View available COAs and report status.");
+  });
+
+  it("about page stats do not claim 100% of batches tested", () => {
+    const src = read("src/routes/about.tsx");
+    expect(src).not.toContain("Batches tested");
+    expect(src).not.toContain("Panels per batch");
+  });
+
 
   it("homepage carries the qualification next to the promotional claim", () => {
     const src = read("src/routes/index.tsx");

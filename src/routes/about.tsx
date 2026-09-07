@@ -33,11 +33,11 @@ const panels = [
 ];
 
 const stats = [
-  { k: "5", v: "Panels per batch" },
-  { k: "100%", v: "Batches tested" },
+  { k: "99%+", v: "Reported purity" },
   { k: "0", v: "Paywalls on COAs" },
   { k: "QR", v: "On every vial" },
 ];
+
 
 function AboutPage() {
   return (
