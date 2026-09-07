@@ -49,24 +49,25 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Clarum — Batch-Tested Research Peptides with Full COAs" },
+      { title: "Clarum — Research Peptides with Public Batch Reports" },
       {
         name: "description",
         content:
-          "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab. Free U.S. shipping over $150.",
+          "Research peptides with public, independent third-party batch reports where available. Published purity results are 99% or higher where reported. Free U.S. shipping over $150.",
       },
-      { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
+      { property: "og:title", content: "Clarum — Research Peptides with Public Batch Reports" },
       {
         property: "og:description",
-        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
+        content: "Research peptides with public, independent third-party batch reports where available. Some reports are pending or unavailable.",
       },
       { property: "og:url", content: "https://clarumpeptides.com/" },
       { property: "og:image", content: "https://clarumpeptides.com/og-image.png" },
-      { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
+      { name: "twitter:title", content: "Clarum — Research Peptides with Public Batch Reports" },
       {
         name: "twitter:description",
-        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
+        content: "Research peptides with public, independent third-party batch reports where available. Some reports are pending or unavailable.",
       },
+
       { name: "twitter:image", content: "https://clarumpeptides.com/og-image.png" },
     ],
     links: [
