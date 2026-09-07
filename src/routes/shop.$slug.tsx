@@ -563,26 +563,14 @@ function CoaPanel({
         onToggle={() => setOpen((o) => !o)}
         label="Certificate of Analysis"
         sublabel={
-          <>
-            <span className="block font-display text-xl sm:text-2xl text-foreground">
-              Independent third-party batch report
-            </span>
+          <span className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+            <span className="sm:hidden">{statusBadge}</span>
             {supplierSku && (
-              <span className="block text-[11px] text-foreground/40 mt-1">
-                Supplier SKU {supplierSku}
-              </span>
+              <span className="text-[11px] text-foreground/40">Supplier SKU {supplierSku}</span>
             )}
-          </>
+          </span>
         }
-        right={
-          status.state === "published" ? (
-            <CoaDecisionBadge record={status.record} />
-          ) : (
-            <span className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full border border-white/15 text-foreground/50">
-              {status.state === "pending" ? "Report pending" : "Report unavailable"}
-            </span>
-          )
-        }
+        right={<span className="hidden sm:block">{statusBadge}</span>}
       >
         <div className="mb-6">
           <a
