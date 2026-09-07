@@ -468,6 +468,7 @@ function Index() {
       <main>
         <Hero />
         <FeaturedProducts />
+        <QualityCollage />
         <BatchReports />
       </main>
       <SiteFooter />
