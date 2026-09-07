@@ -210,56 +210,6 @@ function Hero() {
 }
 
 
-/* ---------------- Stats band ---------------- */
-
-export const PURITY_QUALIFIER =
-  "Across current COAs with published purity results. See individual batch reports; some reports are pending or unavailable.";
-
-const trustFacts = [
-  {
-    stat: "99%+",
-    label: "Reported Purity",
-    desc: PURITY_QUALIFIER,
-    to: "/coa-library" as const,
-  },
-  {
-    stat: "Shop",
-    label: "Explore the Catalog",
-    desc: "View current products, sizes and availability.",
-    to: "/shop" as const,
-  },
-  {
-    stat: "COAs",
-    label: "Batch Reports",
-    desc: "View available COAs and report status.",
-    to: "/coa-library" as const,
-  },
-];
-
-function StatsBand() {
-  return (
-    <section className="bg-brand-forest-deep border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 md:py-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
-        {trustFacts.map((f, i) => (
-          <RevealOnScroll key={f.label} delay={i * 80} className="text-center sm:text-left">
-            <Link to={f.to} className="group block">
-              <div className="font-display text-3xl md:text-4xl text-brand-gold tracking-[-0.02em]">
-                {f.stat}
-              </div>
-              <div className="text-[11px] uppercase tracking-[0.2em] text-foreground/70 mt-1.5 group-hover:text-brand-gold transition-colors">
-                {f.label}
-              </div>
-              <p className="mt-2 text-[12px] leading-[1.6] text-foreground/45 max-w-sm mx-auto sm:mx-0">
-                {f.desc}
-              </p>
-            </Link>
-          </RevealOnScroll>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 
 
 /* ---------------- Featured products (4-up shadcn Card grid) ---------------- */
