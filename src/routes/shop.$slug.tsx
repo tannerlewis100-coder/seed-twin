@@ -7,6 +7,15 @@ import RelatedProducts from "@/components/RelatedProducts";
 import { useCart } from "@/lib/cart";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { variantVialImage } from "@/lib/vialImages";
+import { Disclosure } from "@/components/Disclosure";
+import {
+  COA_INITIALLY_OPEN,
+  INFO_SECTIONS,
+  buildSpecRows,
+  initialSectionState,
+  type InfoSectionId,
+  type SpecRow,
+} from "@/lib/productInfo";
 import {
   decodeEntities,
   fetchClarumProduct,
@@ -347,10 +356,13 @@ function ProductBody({
     fallbackSrc: wooImg,
   });
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
-  const description =
-    stripHtml(product.description) || stripHtml(product.short_description) || "";
+  const shortText = stripHtml(product.short_description) || "";
+  const longText = stripHtml(product.description) || "";
+  const description = shortText || longText;
+  const detailText = longText || shortText;
   const inStock = display.is_in_stock && display.is_purchasable;
   const batch = display.sku || product.sku;
+
 
   return (
     <>
@@ -477,20 +489,14 @@ function ProductBody({
         </div>
       </div>
 
-      {/* Certificate of Analysis — driven by the current supplier record */}
+      {/* Certificate of Analysis — collapsed by default, driven by the current supplier record */}
       {(() => {
-        const { status, deepLinkSlug, sku } = resolveCoa(product.slug, currentVariantSize);
-        const coaLibraryHref = deepLinkSlug
-          ? `/coa-library#coa-${deepLinkSlug}`
-          : "/coa-library";
-        // JSON-LD Product schema for this product detail page
         const ld = {
           "@context": "https://schema.org",
           "@type": "Product",
           name: decodeEntities(product.name),
           image: wooImg ? [wooImg] : undefined,
-          description:
-            stripHtml(product.description) || stripHtml(product.short_description) || undefined,
+          description: longText || shortText || undefined,
           sku: display.sku || product.sku || undefined,
           brand: { "@type": "Brand", name: "Clarum Peptides" },
           offers: {
@@ -503,68 +509,189 @@ function ProductBody({
             url: `https://clarumpeptides.com/shop/${product.slug}`,
           },
         };
-        const rows = status.state === "published" ? coaRows(status.record) : [];
+        const { status, deepLinkSlug, sku } = resolveCoa(product.slug, currentVariantSize);
         return (
-          <section className="mt-10 rounded-3xl border border-brand-gold/15 bg-card p-6 sm:p-8">
+          <>
             <script
               type="application/ld+json"
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }}
             />
-            <div className="flex items-start justify-between mb-6 flex-wrap gap-4">
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.25em] text-brand-gold font-semibold mb-1">
-                  Certificate of Analysis
-                </p>
-                <h2 className="font-display text-2xl">Independent third-party batch report</h2>
-                {sku && (
-                  <p className="text-[11px] text-foreground/40 mt-1">Supplier SKU {sku}</p>
-                )}
-              </div>
-              <div className="flex items-center gap-3 flex-wrap">
-                {status.state === "published" && <CoaDecisionBadge record={status.record} />}
-                <a
-                  href={coaLibraryHref}
-                  className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-gold-light transition-colors"
-                >
-                  <FileText className="h-4 w-4" /> Open in COA Library
-                </a>
-              </div>
-            </div>
-
-            {status.state === "published" ? (
-              <>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {rows.map((row) => (
-                    <div
-                      key={row.label}
-                      className="rounded-2xl border border-white/5 bg-black/30"
-                    >
-                      <CoaResultRow row={row} />
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6">
-                  <CoaDocument
-                    record={status.record}
-                    productLabel={decodeEntities(product.name)}
-                  />
-                </div>
-
-                <div className="mt-4">
-                  <CoaAttribution record={status.record} />
-                </div>
-              </>
-            ) : status.state === "pending" ? (
-              <CoaPendingPanel sku={status.sku} productName={status.productName} />
-            ) : (
-              <CoaUnavailablePanel />
-            )}
-          </section>
+            <CoaPanel
+              key={`${product.slug}-${currentVariantSize ?? ""}`}
+              status={status}
+              supplierSku={sku}
+              coaLibraryHref={deepLinkSlug ? `/coa-library#coa-${deepLinkSlug}` : "/coa-library"}
+              productLabel={decodeEntities(product.name)}
+            />
+            <ProductInfoAccordions
+              key={`info-${product.slug}-${currentVariantSize ?? ""}`}
+              description={detailText}
+              specs={buildSpecRows({
+                sku: display.sku || product.sku,
+                size: currentVariantSize ?? null,
+                attributes: display.attributes ?? product.attributes ?? [],
+                coaBatch: status.state === "published" ? status.record.batch : null,
+              })}
+            />
+          </>
         );
       })()}
-
     </>
+  );
+}
+
+function CoaPanel({
+  status,
+  supplierSku,
+  coaLibraryHref,
+  productLabel,
+}: {
+  status: CoaStatus;
+  supplierSku: string | null;
+  coaLibraryHref: string;
+  productLabel: string;
+}) {
+  const [open, setOpen] = useState(COA_INITIALLY_OPEN);
+  const rows = status.state === "published" ? coaRows(status.record) : [];
+
+  return (
+    <section className="mt-10">
+      <Disclosure
+        variant="panel"
+        open={open}
+        onToggle={() => setOpen((o) => !o)}
+        label="Certificate of Analysis"
+        sublabel={
+          <>
+            <span className="block font-display text-xl sm:text-2xl text-foreground">
+              Independent third-party batch report
+            </span>
+            {supplierSku && (
+              <span className="block text-[11px] text-foreground/40 mt-1">
+                Supplier SKU {supplierSku}
+              </span>
+            )}
+          </>
+        }
+        right={
+          status.state === "published" ? (
+            <CoaDecisionBadge record={status.record} />
+          ) : (
+            <span className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full border border-white/15 text-foreground/50">
+              {status.state === "pending" ? "Report pending" : "Report unavailable"}
+            </span>
+          )
+        }
+      >
+        <div className="mb-6">
+          <a
+            href={coaLibraryHref}
+            className="inline-flex items-center gap-2 text-xs font-semibold text-brand-gold hover:text-brand-gold-light transition-colors"
+          >
+            <FileText className="h-4 w-4" /> Open in COA Library
+          </a>
+        </div>
+
+        {status.state === "published" ? (
+          <>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {rows.map((row) => (
+                <div key={row.label} className="rounded-2xl border border-white/5 bg-black/30">
+                  <CoaResultRow row={row} />
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6">
+              <CoaDocument record={status.record} productLabel={productLabel} />
+            </div>
+
+            <div className="mt-4">
+              <CoaAttribution record={status.record} />
+            </div>
+          </>
+        ) : status.state === "pending" ? (
+          <CoaPendingPanel sku={status.sku} productName={status.productName} />
+        ) : (
+          <CoaUnavailablePanel />
+        )}
+      </Disclosure>
+    </section>
+  );
+}
+
+function ProductInfoAccordions({
+  description,
+  specs,
+}: {
+  description: string;
+  specs: SpecRow[];
+}) {
+  const [openMap, setOpenMap] = useState(initialSectionState);
+  const toggle = (id: InfoSectionId) =>
+    setOpenMap((m) => ({ ...m, [id]: !m[id] }));
+
+  return (
+    <section className="mt-12">
+      {INFO_SECTIONS.map((section) => (
+        <Disclosure
+          key={section.id}
+          open={openMap[section.id]}
+          onToggle={() => toggle(section.id)}
+          label={section.label}
+        >
+          {section.id === "description" &&
+            (description ? (
+              <p className="leading-relaxed whitespace-pre-line">{description}</p>
+            ) : (
+              <p className="text-foreground/50">No description provided for this item.</p>
+            ))}
+
+          {section.id === "specifications" &&
+            (specs.length > 0 ? (
+              <dl className="divide-y divide-white/5">
+                {specs.map((row) => (
+                  <div key={`${row.label}-${row.value}`} className="flex gap-6 py-2.5">
+                    <dt className="w-40 shrink-0 text-[11px] uppercase tracking-wider text-foreground/45">
+                      {row.label}
+                    </dt>
+                    <dd className="min-w-0 text-foreground/80">{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              <p className="text-foreground/50">No specifications listed for this item.</p>
+            ))}
+
+          {section.id === "shipping" && (
+            <div className="space-y-3 leading-relaxed">
+              <p>
+                Shipping is a flat $12.00 for standard delivery anywhere in the continental US.
+                Orders over $150 ship free.
+              </p>
+              <p>
+                Full terms, delivery timelines and return eligibility are listed on our policy
+                pages.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-1">
+                <Link
+                  to="/shipping-policy"
+                  className="text-brand-gold hover:text-brand-gold-light underline underline-offset-4"
+                >
+                  Shipping policy
+                </Link>
+                <Link
+                  to="/refund-policy"
+                  className="text-brand-gold hover:text-brand-gold-light underline underline-offset-4"
+                >
+                  Refund policy
+                </Link>
+              </div>
+            </div>
+          )}
+        </Disclosure>
+      ))}
+    </section>
   );
 }
