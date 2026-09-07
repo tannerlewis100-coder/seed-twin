@@ -240,6 +240,29 @@ function StatsBand() {
 
 function FeaturedProducts() {
   const featured = featuredPeptides.slice(0, 4);
+  const [liveProducts, setLiveProducts] = useState<WooProduct[] | null>(null);
+  const [priceStatus, setPriceStatus] = useState<"loading" | "ready" | "error">(
+    "loading",
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchProducts()
+      .then((products) => {
+        if (cancelled) return;
+        setLiveProducts(products);
+        setPriceStatus("ready");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setLiveProducts(null);
+        setPriceStatus("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
 
   return (
     <section className="bg-background border-b border-white/[0.08]">
