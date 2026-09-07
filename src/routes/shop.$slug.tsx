@@ -554,6 +554,14 @@ function CoaPanel({
 }) {
   const [open, setOpen] = useState(COA_INITIALLY_OPEN);
   const rows = status.state === "published" ? coaRows(status.record) : [];
+  const statusBadge =
+    status.state === "published" ? (
+      <CoaDecisionBadge record={status.record} />
+    ) : (
+      <span className="text-[10px] uppercase tracking-wider font-bold px-3 py-1 rounded-full border border-white/15 text-foreground/50">
+        {status.state === "pending" ? "Report pending" : "Report unavailable"}
+      </span>
+    );
 
   return (
     <section className="mt-10">
