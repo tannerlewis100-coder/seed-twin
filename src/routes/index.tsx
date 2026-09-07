@@ -1,5 +1,9 @@
 import type React from "react";
+import { useEffect, useState } from "react";
+import { fetchProducts, type WooProduct } from "@/lib/woo";
+import { featuredPriceFor, formatFeaturedPrice } from "@/lib/featuredPricing";
 import { createFileRoute, Link } from "@tanstack/react-router";
+
 import { motion } from "framer-motion";
 import heroVials from "@/assets/hero-vials.png";
 import {
@@ -240,6 +244,29 @@ function StatsBand() {
 
 function FeaturedProducts() {
   const featured = featuredPeptides.slice(0, 4);
+  const [liveProducts, setLiveProducts] = useState<WooProduct[] | null>(null);
+  const [priceStatus, setPriceStatus] = useState<"loading" | "ready" | "error">(
+    "loading",
+  );
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchProducts()
+      .then((products) => {
+        if (cancelled) return;
+        setLiveProducts(products);
+        setPriceStatus("ready");
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setLiveProducts(null);
+        setPriceStatus("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
 
   return (
     <section className="bg-background border-b border-white/[0.08]">
@@ -318,12 +345,34 @@ function FeaturedProducts() {
                     <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
                       Shop Now
                     </div>
-                    <p className="mt-4 text-xs text-foreground/60">
-                      Starting at{" "}
-                      <span className="text-foreground/90 font-semibold">
-                        ${p.price.toFixed(2)}
-                      </span>
-                    </p>
+                    {(() => {
+                      const live = featuredPriceFor(liveProducts, p.slug);
+                      if (live) {
+                        return (
+                          <p className="mt-4 text-xs text-foreground/60">
+                            {live.isRange ? "Starting at " : ""}
+                            <span className="text-foreground/90 font-semibold">
+                              {formatFeaturedPrice(live)}
+                            </span>
+                          </p>
+                        );
+                      }
+                      if (priceStatus === "loading") {
+                        return (
+                          <p className="mt-4 text-xs text-foreground/60">
+                            <span className="inline-block h-3 w-20 rounded-full bg-white/10 align-middle" />
+                          </p>
+                        );
+                      }
+                      return (
+                        <p className="mt-4 text-xs text-foreground/60">
+                          <span className="text-foreground/90 font-semibold">
+                            View pricing
+                          </span>
+                        </p>
+                      );
+                    })()}
+
                   </div>
                 </Link>
               </RevealOnScroll>
