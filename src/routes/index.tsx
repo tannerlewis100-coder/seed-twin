@@ -218,27 +218,36 @@ const heroStats = [
   ["70+", "Compounds"],
   ["5", "Tests Per Batch"],
   ["100%", "COA Documented"],
-  ["≥98%", "Percent Purity"],
+  ["99%+", "Reported Purity"],
 ];
+
+export const PURITY_QUALIFIER =
+  "Across current COAs with published purity results. See individual batch reports; some reports are pending or unavailable.";
 
 function StatsBand() {
   return (
     <section className="bg-brand-forest-deep border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 md:py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
-        {heroStats.map(([num, label], i) => (
-          <RevealOnScroll key={label} delay={i * 80} className="text-center md:text-left">
-            <div className="font-display text-3xl md:text-4xl text-brand-gold tracking-[-0.02em]">
-              {num}
-            </div>
-            <div className="text-[11px] uppercase tracking-[0.2em] text-foreground/55 mt-1.5">
-              {label}
-            </div>
-          </RevealOnScroll>
-        ))}
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 md:py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {heroStats.map(([num, label], i) => (
+            <RevealOnScroll key={label} delay={i * 80} className="text-center md:text-left">
+              <div className="font-display text-3xl md:text-4xl text-brand-gold tracking-[-0.02em]">
+                {num}
+              </div>
+              <div className="text-[11px] uppercase tracking-[0.2em] text-foreground/55 mt-1.5">
+                {label}
+              </div>
+            </RevealOnScroll>
+          ))}
+        </div>
+        <p className="mt-6 text-[12px] leading-[1.6] text-foreground/45 max-w-2xl text-center md:text-left mx-auto md:mx-0">
+          {PURITY_QUALIFIER}
+        </p>
       </div>
     </section>
   );
 }
+
 
 /* ---------------- Featured products (4-up shadcn Card grid) ---------------- */
 
