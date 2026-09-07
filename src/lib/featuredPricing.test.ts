@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   featuredPriceFor,
@@ -70,5 +71,21 @@ describe("unavailable pricing data", () => {
   it("never invents a zero price", () => {
     const broken = [makeProduct("nad", "0")];
     expect(featuredPriceFor(broken, "nad-500mg")).toBeNull();
+  });
+});
+
+describe("homepage featured cards use the live catalog", () => {
+  const src = readFileSync(
+    new URL("../routes/index.tsx", import.meta.url),
+    "utf8",
+  );
+
+  it("does not render the static peptides.ts price", () => {
+    expect(src).not.toMatch(/\$\{?\s*p\.price\.toFixed/);
+  });
+
+  it("resolves prices through the shared WooCommerce helper", () => {
+    expect(src).toMatch(/featuredPriceFor/);
+    expect(src).toMatch(/fetchProducts/);
   });
 });
