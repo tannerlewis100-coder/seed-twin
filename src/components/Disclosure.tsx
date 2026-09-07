@@ -51,7 +51,7 @@ export function Disclosure({
             className={
               variant === "row"
                 ? "block text-[11px] uppercase tracking-[0.22em] font-semibold text-foreground/80"
-                : "block text-[10px] uppercase tracking-[0.25em] font-semibold text-brand-gold"
+                : "block font-display text-base sm:text-lg text-foreground"
             }
           >
             {label}
