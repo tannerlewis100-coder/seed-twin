@@ -1,5 +1,9 @@
 import type React from "react";
+import { useEffect, useState } from "react";
+import { fetchProducts, type WooProduct } from "@/lib/woo";
+import { featuredPriceFor, formatFeaturedPrice } from "@/lib/featuredPricing";
 import { createFileRoute, Link } from "@tanstack/react-router";
+
 import { motion } from "framer-motion";
 import heroVials from "@/assets/hero-vials.png";
 import {
