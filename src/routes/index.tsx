@@ -129,7 +129,7 @@ function Hero() {
               transition={{ delay: allWords.length * 0.05 + 0.1, duration: 0.5 }}
               className="mt-6 text-[18px] leading-[1.6] text-[#A0A0A0] max-w-[480px]"
             >
-              Every batch tested by an independent third-party lab across 5 assays. Every report published the week it ships.
+              Independent third-party lab testing, with the batch reports published for you to read. Panels vary by report.
             </motion.p>
 
             <motion.div
