@@ -46,7 +46,7 @@ describe("featured pricing shares the Shop WooCommerce source", () => {
     ["nad-500mg", "$189.99"],
     ["mots-c-10mg", "$109.99"],
     ["bpc-157-5mg", "$59.99"],
-  ])("%s shows the current catalog minimum", (slug, expected) => {
+  ])("%s shows the current catalog minimum", (slug: string, expected: string) => {
     const price = featuredPriceFor(catalog, slug);
     expect(price).not.toBeNull();
     expect(formatFeaturedPrice(price!)).toBe(expected);
