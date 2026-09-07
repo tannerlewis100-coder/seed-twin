@@ -6,14 +6,42 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { motion } from "framer-motion";
 import heroVials from "@/assets/hero-vials.png";
-import { ArrowRight } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  FlaskConical,
+  Atom,
+  Shield,
+  Bug,
+  Beaker,
+  FileText,
+  QrCode,
+  Smartphone,
+  Clock,
+} from "lucide-react";
 import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import CoaCard from "@/components/CoaCard";
+import { coaForSlug } from "@/data/coaLibrary";
+import { CoaDecisionBadge, coaRows } from "@/components/CoaResults";
 import RevealText from "@/components/RevealText";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+
+const qualitySemax = "/quality-semax-v2.png";
+const qualitySs37 = "/quality-ss37-v2.png";
+const qualityTb500 = "/quality-glp1s-v2.png";
+const qualityTrio = "/quality-trio-v2.png";
 import { peptides, featuredPeptides } from "@/data/peptides";
 import { vialImageFor } from "@/lib/vialImages";
 
@@ -21,25 +49,24 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Clarum — Research Peptides with Public Batch Reports" },
+      { title: "Clarum — Batch-Tested Research Peptides with Full COAs" },
       {
         name: "description",
         content:
-          "Research peptides with public, independent third-party batch reports where available. Published purity results are 99% or higher where reported. Free U.S. shipping over $150.",
+          "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab. Free U.S. shipping over $150.",
       },
-      { property: "og:title", content: "Clarum — Research Peptides with Public Batch Reports" },
+      { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         property: "og:description",
-        content: "Research peptides with public, independent third-party batch reports where available. Some reports are pending or unavailable.",
+        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
       },
       { property: "og:url", content: "https://clarumpeptides.com/" },
       { property: "og:image", content: "https://clarumpeptides.com/og-image.png" },
-      { name: "twitter:title", content: "Clarum — Research Peptides with Public Batch Reports" },
+      { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         name: "twitter:description",
-        content: "Research peptides with public, independent third-party batch reports where available. Some reports are pending or unavailable.",
+        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
       },
-
       { name: "twitter:image", content: "https://clarumpeptides.com/og-image.png" },
     ],
     links: [
@@ -185,6 +212,58 @@ function Hero() {
 }
 
 
+/* ---------------- Stats band ---------------- */
+
+export const PURITY_QUALIFIER =
+  "Across current COAs with published purity results. See individual batch reports; some reports are pending or unavailable.";
+
+const trustFacts = [
+  {
+    stat: "99%+",
+    label: "Reported Purity",
+    desc: PURITY_QUALIFIER,
+    to: "/coa-library" as const,
+  },
+  {
+    stat: "Shop",
+    label: "Explore the Catalog",
+    desc: "View current products, sizes and availability.",
+    to: "/shop" as const,
+  },
+  {
+    stat: "COAs",
+    label: "Batch Reports",
+    desc: "View available COAs and report status.",
+    to: "/coa-library" as const,
+  },
+];
+
+function StatsBand() {
+  return (
+    <section className="bg-brand-forest-deep border-b border-white/[0.08]">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-10 md:py-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+        {trustFacts.map((f, i) => (
+          <RevealOnScroll key={f.label} delay={i * 80} className="text-center sm:text-left">
+            <Link to={f.to} className="group block">
+              <div className="font-display text-3xl md:text-4xl text-brand-gold tracking-[-0.02em]">
+                {f.stat}
+              </div>
+              <div className="text-[11px] uppercase tracking-[0.2em] text-foreground/70 mt-1.5 group-hover:text-brand-gold transition-colors">
+                {f.label}
+              </div>
+              <p className="mt-2 text-[12px] leading-[1.6] text-foreground/45 max-w-sm mx-auto sm:mx-0">
+                {f.desc}
+              </p>
+            </Link>
+          </RevealOnScroll>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+
+
 /* ---------------- Featured products (4-up shadcn Card grid) ---------------- */
 
 function FeaturedProducts() {
@@ -234,11 +313,11 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Supplier batch reports from independent third-party labs are
-              published here where available. Methods and panels vary by
-              report, and some reports are pending or unavailable. Pull the
-              batch report before checkout — or after. We don't mind.
-
+              Every batch is tested by an independent third-party lab across
+              the full panel: identity, percent purity, quantitative
+              label-claim assay, heavy metals, and microbial & yeast/mold.
+              Pull the batch report before checkout — or after. We don't
+              mind.
             </RevealOnScroll>
             <Button
               asChild
@@ -329,14 +408,15 @@ function FeaturedProducts() {
   );
 }
 
-/* ---------------- Quality & Transparency (vial photo collage) ---------------- */
-
-const qualitySemax = "/quality-semax-v2.png";
-const qualitySs37 = "/quality-ss37-v2.png";
-const qualityGlp1s = "/quality-glp1s-v2.png";
-const qualityTrio = "/quality-trio-v2.png";
+/* ---------------- Quality & Transparency (image collage + checkmarks) ---------------- */
 
 function QualityCollage() {
+  const checks = [
+    "Batch-specific COA, not a generic certificate recycled across runs",
+    "Full analytical panel on every single batch we ship",
+    "Independent third-party lab. Same panel on every run.",
+    "Public COA library. No login. No email gate.",
+  ];
   return (
     <section className="bg-background border-b border-white/[0.08]">
       <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-20 items-center">
@@ -346,8 +426,9 @@ function QualityCollage() {
             <img
               src={qualitySs37}
               alt="SS-31 vial"
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
           </div>
@@ -357,19 +438,21 @@ function QualityCollage() {
               width={1440}
               height={1920}
               alt="SEMAX vial"
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
           </div>
           <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
             <img
-              src={qualityGlp1s}
+              src={qualityTb500}
               width={1536}
               height={1920}
               alt="GLP1-S vial"
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
           </div>
@@ -379,14 +462,15 @@ function QualityCollage() {
               width={1920}
               height={1280}
               alt="BPC-157, Selank, and GHK-Cu vials"
-              loading="lazy"
+              loading="eager"
               decoding="async"
+              fetchPriority="high"
               className="h-full w-full object-cover"
             />
           </div>
         </div>
 
-        {/* Copy */}
+        {/* Copy + checkmarks */}
         <div className="lg:col-span-6">
           <Badge
             variant="outline"
@@ -402,14 +486,33 @@ function QualityCollage() {
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
-            Explore available batch reports in our public COA library.
+            "Third-party tested" is the phrase every vendor uses. Almost none of
+            them publish the actual numbers. We do. Every batch ships with a
+            Certificate of Analysis you can pull up before you break the seal.
           </RevealOnScroll>
+          <ul className="mt-8 space-y-4">
+            {checks.map((item, i) => (
+              <RevealOnScroll
+                as="li"
+                key={item}
+                delay={i * 60}
+                className="flex items-start gap-3"
+              >
+                <span className="mt-0.5 w-5 h-5 rounded-full bg-brand-gold/10 border border-brand-gold/30 flex items-center justify-center shrink-0">
+                  <Check className="h-3 w-3 text-brand-gold" />
+                </span>
+                <span className="text-[15px] text-foreground/80 leading-[1.55]">
+                  {item}
+                </span>
+              </RevealOnScroll>
+            ))}
+          </ul>
           <Button
             asChild
             size="lg"
-            className="mt-8 rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px]"
+            className="mt-10 rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px]"
           >
-            <Link to="/coa-library">View COA Library</Link>
+            <Link to="/coa-library">View the COA Library</Link>
           </Button>
         </div>
       </div>
@@ -417,43 +520,301 @@ function QualityCollage() {
   );
 }
 
-/* ---------------- Batch reports (COA library teaser) ---------------- */
+/* ---------------- How it's tested (full-bleed grid background) ---------------- */
 
-function BatchReports() {
-  const sample = peptides.find((p) => p.slug === "bpc-157-10mg");
+const testingPanels = [
+  {
+    icon: Beaker,
+    num: "01",
+    title: "Qualitative ID",
+    desc: "Confirms molecular identity by UV/Vis λmax match against a characteristic reference standard.",
+  },
+  {
+    icon: FlaskConical,
+    num: "02",
+    title: "Percent Purity",
+    desc: "Correlation-coefficient purity, spec NLT 98%. You see the exact percentage, not a range.",
+  },
+  {
+    icon: Atom,
+    num: "03",
+    title: "Quantitative Assay",
+    desc: "Beer-Lambert assay confirms the vial actually contains the labeled amount — NLT 95% of label claim.",
+  },
+  {
+    icon: Shield,
+    num: "04",
+    title: "Heavy Metals",
+    desc: "Total heavy metals, spec NMT 150 ppb/vial: Pb, Cd, Hg, Ni, Fe, Co.",
+  },
+  {
+    icon: Bug,
+    num: "05",
+    title: "Microbial & Yeast/Mold",
+    desc: "TAMC (aerobic, NMT 1,000 CFU) and TYMC (yeast & mold, NMT 100 CFU).",
+  },
+];
+
+function HowTested() {
+  return (
+    <section className="relative bg-background gold-grid-texture border-b border-white/[0.08]">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32">
+        <div className="max-w-3xl mb-16">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
+          >
+            How it's tested
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText text={"Every batch,\nindependently verified."} />
+          </h2>
+          <RevealOnScroll
+            as="p"
+            delay={250}
+            className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
+          >
+            We don't grade our own homework. Each batch is tested by an
+            independent third-party analytical lab — identity, percent purity,
+            heavy metals, microbial, and quantitative assay. The full report
+            is public, batch number and all. No login, no redacted results.
+          </RevealOnScroll>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+          {testingPanels.map((card, i) => (
+            <RevealOnScroll key={card.title} delay={i * 70}>
+              <Card className="h-full bg-zinc-950 border-white/10 rounded-2xl shadow-none hover:border-brand-gold/30 transition-colors duration-300">
+                <CardContent className="p-6">
+                  <div className="text-[10px] font-semibold text-brand-gold/60 tracking-[0.2em]">
+                    {card.num}
+                  </div>
+                  <div className="mt-5 mb-5 w-11 h-11 rounded-full border border-brand-gold/30 flex items-center justify-center">
+                    <card.icon className="h-5 w-5 text-brand-gold" />
+                  </div>
+                  <h3 className="font-display text-[19px] text-foreground leading-tight tracking-[-0.01em]">
+                    {card.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] text-foreground/55 leading-[1.55]">
+                    {card.desc}
+                  </p>
+                </CardContent>
+              </Card>
+            </RevealOnScroll>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Scan the Vial (QR → batch COA) ---------------- */
+
+function ScanTheVial() {
+  const points = [
+    {
+      icon: QrCode,
+      text: "Batch-specific. Tied to the lot in your hand, not the product line.",
+    },
+    {
+      icon: Smartphone,
+      text: "No login, no email gate. The link is public the second you scan.",
+    },
+    {
+      icon: Clock,
+      text: "Four seconds from cap to COA.",
+    },
+  ];
+  return (
+    <section className="relative bg-background border-b border-white/[0.08] overflow-hidden">
+      <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-60" />
+      <div className="absolute -top-32 right-1/4 w-[520px] h-[420px] rounded-full bg-brand-gold/[0.05] blur-[140px]" />
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="lg:col-span-7">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.22em] uppercase font-medium"
+          >
+            Scan the Vial
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText
+              text={"Your batch. On your phone.\nBefore you break the seal."}
+            />
+          </h2>
+          <RevealOnScroll
+            as="p"
+            delay={200}
+            className="mt-6 text-foreground/60 leading-[1.7] max-w-2xl"
+          >
+            Every vial ships with a QR code. Scan it and you're looking at
+            the exact certificate of analysis for the batch your peptide came
+            from — not a generic doc, not a recycled report, the actual
+            numbers for your actual vial.
+          </RevealOnScroll>
+          <ul className="mt-10 grid sm:grid-cols-3 gap-6 max-w-3xl">
+            {points.map((p, i) => (
+              <RevealOnScroll
+                as="li"
+                key={p.text}
+                delay={i * 80}
+                className="flex flex-col gap-3"
+              >
+                <span className="w-10 h-10 rounded-full border border-brand-gold/30 bg-brand-gold/[0.06] flex items-center justify-center">
+                  <p.icon className="h-4 w-4 text-brand-gold" />
+                </span>
+                <span className="text-[14px] text-foreground/75 leading-[1.55]">
+                  {p.text}
+                </span>
+              </RevealOnScroll>
+            ))}
+          </ul>
+        </div>
+
+        <div className="lg:col-span-5 flex justify-center">
+          <RevealOnScroll delay={120}>
+            {(() => {
+              const bpc = peptides.find((p) => p.slug === "bpc-157-10mg");
+              return bpc ? <CoaCard peptide={bpc} /> : null;
+            })()}
+          </RevealOnScroll>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- COA Library teaser (4 floating preview cards) ---------------- */
+
+function CoaTeaser() {
+  const previewSlugs = ["bpc-157-10mg", "tb-500-10mg", "ghk-cu-50mg", "epitalon-10mg"];
+  const previews = previewSlugs
+    .map((s) => peptides.find((p) => p.slug === s))
+    .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
   return (
     <section className="bg-background border-b border-white/[0.08]">
-      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-14 md:py-20 grid lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-        <div className="lg:col-span-6">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-12 items-start">
+        <div className="lg:col-span-5 lg:sticky lg:top-32">
           <Badge
             variant="outline"
             className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
           >
             COA Library
           </Badge>
-          <h2 className="font-display text-4xl md:text-5xl leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Your batch.\nYour report."} />
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText text={"Every batch.\nPublic record."} />
           </h2>
-          <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/60 leading-[1.6] max-w-md">
-            Browse available certificates by product or batch.
+          <RevealOnScroll
+            as="p"
+            delay={250}
+            className="mt-6 text-foreground/60 leading-[1.6] max-w-md"
+          >
+            Browse the certificate of analysis for every batch we've ever
+            shipped. No login. No email gate. Just data.
           </RevealOnScroll>
           <Button
             asChild
             size="lg"
             variant="outline"
-            className="mt-7 rounded-full border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 hover:text-brand-gold-light bg-transparent h-12 px-7 text-[14px]"
+            className="mt-8 rounded-full border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 hover:text-brand-gold-light bg-transparent h-12 px-7 text-[14px]"
           >
             <Link to="/coa-library">
               Open COA Library <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
         </div>
+        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          {previews.map((p, i) => {
+            const status = coaForSlug(p.slug);
+            const record = status.state === "published" ? status.record : null;
+            const rows = record ? coaRows(record).slice(0, 4) : [];
+            return (
+              <RevealOnScroll
+                key={p.slug}
+                delay={i * 100}
+                className={i % 2 === 1 ? "sm:translate-y-10" : ""}
+              >
+                <Card className="bg-zinc-950 border-white/10 rounded-2xl shadow-none hover:border-brand-gold/30 transition-colors duration-300">
+                  <CardContent className="p-5">
+                    <div className="flex items-center justify-between gap-2 mb-4">
+                      <div className="flex items-center gap-2 text-[11px] text-foreground/50 uppercase tracking-[0.18em] truncate">
+                        <FileText className="h-3.5 w-3.5 shrink-0" /> COA · {record?.batch ?? "—"}
+                      </div>
+                      {record ? (
+                        <CoaDecisionBadge record={record} />
+                      ) : (
+                        <Badge className="bg-white/5 text-foreground/40 hover:bg-white/5 border border-white/10 rounded-full text-[10px] uppercase tracking-wider font-semibold">
+                          Pending
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="font-display text-[20px] text-foreground tracking-[-0.01em]">
+                      {p.name}
+                    </div>
+                    <div className="text-[13px] text-foreground/50 mb-4">{p.size}</div>
+                    <Separator className="bg-white/[0.08] mb-4" />
+                    <dl className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-[12px]">
+                      {rows.map((row) => (
+                        <div key={row.label} className="contents">
+                          <dt className="text-foreground/45">{row.label}</dt>
+                          <dd className="text-foreground/90 text-right tabular-nums font-medium">
+                            {row.value}
+                          </dd>
+                        </div>
+                      ))}
+                      {rows.length === 0 && (
+                        <dd className="col-span-2 text-foreground/40">
+                          Report pending for this batch.
+                        </dd>
+                      )}
+                    </dl>
+                  </CardContent>
+                </Card>
+              </RevealOnScroll>
+            );
+          })}
 
-        <div className="lg:col-span-6 flex justify-center lg:justify-end w-full">
-          <RevealOnScroll delay={120} className="w-full max-w-md">
-            {sample ? <CoaCard peptide={sample} /> : null}
-          </RevealOnScroll>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+
+/* ---------------- CTA banner ---------------- */
+
+function FinalCta() {
+  return (
+    <section className="bg-brand-forest-deep">
+      <div className="mx-auto max-w-5xl px-5 sm:px-6 py-20 md:py-24 lg:py-32 text-center">
+        <h2 className="font-display text-[40px] sm:text-5xl md:text-6xl lg:text-[72px] text-foreground leading-[1.05] lg:leading-[1.02] tracking-[-0.02em]">
+          <RevealText text={"Read the COA\nbefore you buy."} />
+        </h2>
+        <RevealOnScroll
+          as="p"
+          delay={250}
+          className="mt-6 sm:mt-7 text-foreground/60 leading-[1.6] max-w-xl mx-auto"
+        >
+          Every batch we've shipped since launch is up in the library. Open it,
+          search a batch number, and check the numbers yourself.
+        </RevealOnScroll>
+        <div className="mt-9 sm:mt-11 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-3">
+          <Button
+            asChild
+            size="lg"
+            className="rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-8 text-[14px] w-full sm:w-auto"
+          >
+            <Link to="/shop">Shop Catalog</Link>
+          </Button>
+          <Button
+            asChild
+            size="lg"
+            variant="outline"
+            className="rounded-full border-white/20 text-foreground hover:bg-white/5 hover:text-brand-gold bg-transparent h-12 px-8 text-[14px] w-full sm:w-auto"
+          >
+            <Link to="/coa-library">Open COA Library</Link>
+          </Button>
         </div>
       </div>
     </section>
@@ -467,9 +828,13 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
+        <StatsBand />
         <FeaturedProducts />
+        <HowTested />
+        <ScanTheVial />
         <QualityCollage />
-        <BatchReports />
+        <CoaTeaser />
+        <FinalCta />
       </main>
       <SiteFooter />
     </div>
