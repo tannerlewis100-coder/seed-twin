@@ -33,7 +33,7 @@ describe("homepage structure after simplification", () => {
 
   it("combined section has one heading, one sentence and one COA library link", () => {
     const s = src();
-    expect(s).toContain("Your batch. Your report.");
+    expect(s).toContain("Your batch.\\nYour report.");
     expect(s).toContain("Browse available certificates by product or batch.");
     expect(s).toContain("Open COA Library");
   });
