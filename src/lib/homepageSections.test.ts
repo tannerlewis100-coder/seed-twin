@@ -11,7 +11,6 @@ describe("homepage structure after simplification", () => {
       "trustFacts",
       "function HowTested",
       "testingPanels",
-      "function QualityCollage",
       "function FinalCta",
       "function CoaTeaser",
       "function ScanTheVial",
@@ -22,7 +21,7 @@ describe("homepage structure after simplification", () => {
 
   it("renders hero, featured products, one combined report section, then footer", () => {
     const s = src();
-    const order = ["<Hero />", "<FeaturedProducts />", "<BatchReports />", "<SiteFooter />"];
+    const order = ["<Hero />", "<FeaturedProducts />", "<QualityCollage />", "<BatchReports />", "<SiteFooter />"];
     let last = -1;
     for (const token of order) {
       const at = s.indexOf(token);
@@ -44,5 +43,20 @@ describe("homepage structure after simplification", () => {
     expect(s).toContain("CoaCard");
     expect(s).toContain("featuredPriceFor");
     expect(s).toContain("formatFeaturedPrice");
+  });
+
+  it("restores the quality vial photo section with all four original photos", () => {
+    const s = src();
+    for (const img of [
+      "/quality-ss37-v2.png",
+      "/quality-semax-v2.png",
+      "/quality-glp1s-v2.png",
+      "/quality-trio-v2.png",
+    ]) {
+      expect(s).toContain(img);
+    }
+    expect(s).toContain("Receipts,\\nnot claims.");
+    expect(s).toContain("Explore available batch reports in our public COA library.");
+    expect(s).toContain("View COA Library");
   });
 });

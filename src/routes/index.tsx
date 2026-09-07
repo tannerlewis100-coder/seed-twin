@@ -329,6 +329,94 @@ function FeaturedProducts() {
   );
 }
 
+/* ---------------- Quality & Transparency (vial photo collage) ---------------- */
+
+const qualitySemax = "/quality-semax-v2.png";
+const qualitySs37 = "/quality-ss37-v2.png";
+const qualityGlp1s = "/quality-glp1s-v2.png";
+const qualityTrio = "/quality-trio-v2.png";
+
+function QualityCollage() {
+  return (
+    <section className="bg-background border-b border-white/[0.08]">
+      <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-10 py-16 md:py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-20 items-center">
+        {/* Image collage */}
+        <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
+            <img
+              src={qualitySs37}
+              alt="SS-31 vial"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
+            <img
+              src={qualitySemax}
+              width={1440}
+              height={1920}
+              alt="SEMAX vial"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
+            <img
+              src={qualityGlp1s}
+              width={1536}
+              height={1920}
+              alt="GLP1-S vial"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="aspect-[3/4] overflow-hidden rounded-2xl border border-white/[0.08]">
+            <img
+              src={qualityTrio}
+              width={1920}
+              height={1280}
+              alt="BPC-157, Selank, and GHK-Cu vials"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Copy */}
+        <div className="lg:col-span-6">
+          <Badge
+            variant="outline"
+            className="border-brand-gold/30 text-brand-gold bg-transparent rounded-full px-3 py-1 mb-5 text-[11px] tracking-[0.18em] uppercase font-medium"
+          >
+            Quality &amp; Transparency
+          </Badge>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-[52px] leading-[1.05] text-foreground tracking-[-0.02em]">
+            <RevealText text={"Receipts,\nnot claims."} />
+          </h2>
+          <RevealOnScroll
+            as="p"
+            delay={250}
+            className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
+          >
+            Explore available batch reports in our public COA library.
+          </RevealOnScroll>
+          <Button
+            asChild
+            size="lg"
+            className="mt-8 rounded-full bg-brand-gold text-brand-forest hover:bg-brand-gold-light h-12 px-7 text-[14px]"
+          >
+            <Link to="/coa-library">View COA Library</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------- Batch reports (COA library teaser) ---------------- */
 
 function BatchReports() {
@@ -380,6 +468,7 @@ function Index() {
       <main>
         <Hero />
         <FeaturedProducts />
+        <QualityCollage />
         <BatchReports />
       </main>
       <SiteFooter />
