@@ -828,13 +828,11 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
-        <StatsBand />
+        <HomeMarquee />
         <FeaturedProducts />
         <HowTested />
         <ScanTheVial />
         <QualityCollage />
-        <CoaTeaser />
-        <FinalCta />
       </main>
       <SiteFooter />
     </div>
