@@ -55,9 +55,19 @@ describe("homepage marquee", () => {
     );
   });
 
-  it("respects reduced motion and offers a pause control", () => {
+  it("respects reduced motion and pauses on hover/focus without a button", () => {
     expect(marquee).toContain("prefers-reduced-motion: reduce");
-    expect(marquee).toContain("Pause highlights ticker");
+    expect(marquee).not.toContain("Pause highlights ticker");
+    expect(marquee).not.toContain("<button");
+    expect(marquee).toContain("onMouseEnter");
+    expect(marquee).toContain("onFocus");
+    expect(marquee).toContain("tabIndex={0}");
     expect(marquee).toContain('aria-hidden={hidden ? "true" : undefined}');
   });
+
+  it("uses brand gold text and wider spacing", () => {
+    expect(marquee).toContain("text-brand-gold");
+    expect(marquee).toContain("px-10 sm:px-14");
+  });
+
 });
