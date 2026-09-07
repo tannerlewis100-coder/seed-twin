@@ -45,6 +45,11 @@ describe("promotional purity copy", () => {
   it("preserves original lab spec thresholds of NLT 98%", () => {
     expect(read("src/routes/about.tsx")).toContain("NLT 98%");
     expect(read("src/components/SiteHeader.tsx")).toContain("NLT 98% per batch.");
-    expect(read("src/routes/index.tsx")).toContain("spec NLT 98%");
+    // Homepage educational prose is not a COA record: it must not quote a 98% spec
+    expect(read("src/routes/index.tsx")).not.toContain("spec NLT 98%");
+    expect(read("src/routes/index.tsx")).toContain(
+      "Published purity results are 99% or higher where reported. Testing methods and specifications vary; check the individual batch report.",
+    );
+
   });
 });
