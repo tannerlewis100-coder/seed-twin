@@ -179,7 +179,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
           <button
             type="button"
             onClick={onAdd}
-            disabled={busy}
+            disabled={busy || unavailable || simpleUnavailable}
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-forest border border-white/10 px-4 py-2 text-xs font-medium text-foreground hover:bg-brand-gold hover:text-brand-forest hover:border-brand-gold transition-colors disabled:opacity-60"
           >
             {busy ? (
@@ -187,7 +187,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
             ) : added ? (
               <Check className="h-3.5 w-3.5" />
             ) : null}
-            {added ? "Added" : "Add to cart"}
+            {unavailable || simpleUnavailable ? "Unavailable" : added ? "Added" : "Add to cart"}
           </button>
         </div>
       </div>
