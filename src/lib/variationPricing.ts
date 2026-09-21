@@ -55,7 +55,13 @@ export function formatStartingPrice(price: StartingPrice): string {
 /* ---------------------------------------------------------------- cache --- */
 
 const resolved = new Map<number, StartingPrice>();
+const resolvedVariant = new Map<number, CardVariant>();
 const inflight = new Map<number, Promise<StartingPrice>>();
+
+/** The advertised variation for a parent, once its variations have resolved. */
+export function peekCardVariant(parentId: number): CardVariant | null {
+  return resolvedVariant.get(parentId) ?? null;
+}
 
 let active = 0;
 const queue: Array<() => void> = [];
