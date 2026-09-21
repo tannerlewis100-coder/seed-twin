@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { LegalPage, LegalH2 } from "@/components/LegalPage";
 
 export const Route = createFileRoute("/shipping-policy")({
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/shipping-policy")({
 
 function ShippingPolicyPage() {
   return (
-    <LegalPage eyebrow="Legal" title="Shipping Policy" lastUpdated="May 23, 2026">
+    <LegalPage eyebrow="Legal" title="Shipping Policy" lastUpdated="September 21, 2026">
       <LegalH2>1. Shipping Destinations</LegalH2>
       <p>
         We currently ship within the United States. We do not ship to: Hawaii, Alaska, U.S.
@@ -84,12 +84,21 @@ function ShippingPolicyPage() {
 
       <LegalH2>9. Package Inspection</LegalH2>
       <p>
-        Inspect your package within 48 hours of delivery. If contents are damaged or incorrect,
-        contact{" "}
+        Please inspect your package on arrival. If contents are damaged or incorrect, contact{" "}
         <a className="text-brand-gold hover:underline" href="mailto:clarumpeps@gmail.com">
           clarumpeps@gmail.com
         </a>{" "}
-        within 48 hours with photos. See our Refund Policy for available remedies.
+        promptly with your order number and photos of the item and packaging. See our{" "}
+        <Link className="text-brand-gold hover:underline" to="/refund-policy">
+          Refund Policy
+        </Link>{" "}
+        for how we review order issues. All sales are final; we do not accept returns or
+        exchanges for change of mind.
+      </p>
+      <p>
+        Nothing in this policy limits any rights or remedies required by applicable law; where
+        applicable law grants you rights, those rights prevail over any conflicting limitation
+        stated here.
       </p>
 
       <LegalH2>10. Signatures and Discreet Packaging</LegalH2>
