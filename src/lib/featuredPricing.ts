@@ -17,16 +17,24 @@ export type FeaturedPrice = {
 };
 
 /** Resolve live pricing for a featured slug. Returns null when unmatched. */
+export function featuredProductFor(
+  products: WooProduct[] | null | undefined,
+  slug: string,
+): WooProduct | null {
+  if (!products || products.length === 0) return null;
+  const target = wooSlugForFeatured(slug);
+  return (
+    products.find((p) => p.slug === target) ??
+    products.find((p) => p.slug === slug) ??
+    null
+  );
+}
+
 export function featuredPriceFor(
   products: WooProduct[] | null | undefined,
   slug: string,
 ): FeaturedPrice | null {
-  if (!products || products.length === 0) return null;
-  const target = wooSlugForFeatured(slug);
-  const match =
-    products.find((p) => p.slug === target) ??
-    products.find((p) => p.slug === slug) ??
-    null;
+  const match = featuredProductFor(products, slug);
   if (!match) return null;
   const { min, max } = productPrice(match);
   if (!Number.isFinite(min) || min <= 0) return null;
