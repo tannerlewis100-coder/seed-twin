@@ -10,9 +10,9 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { useCart } from "@/lib/cart";
-import { variantVialImage } from "@/lib/vialImages";
-import { decodeEntities, fetchProducts, firstImage, type WooProduct } from "@/lib/woo";
-import { useStartingPrice } from "@/components/StartingPriceLabel";
+import { displayProductName } from "@/lib/productNames";
+import { decodeEntities, fetchProducts, type WooProduct } from "@/lib/woo";
+import { CardVial, useStartingPrice } from "@/components/StartingPriceLabel";
 
 export const Route = createFileRoute("/shop/")({
   validateSearch: (search: Record<string, unknown>): { category?: string } => ({
