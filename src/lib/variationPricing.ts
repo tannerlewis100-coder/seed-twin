@@ -1,5 +1,8 @@
-import { fetchVariations, productPrice, type WooProduct } from "@/lib/woo";
-import { isVariantAvailable } from "@/lib/variantSelection";
+import { fetchVariations, getVariationSize, productPrice, type WooProduct } from "@/lib/woo";
+import { cheapestAvailableVariant, isVariantAvailable } from "@/lib/variantSelection";
+
+/** The variation a card advertises: cheapest purchasable one. */
+export type CardVariant = { sku: string | null; size: string | null };
 
 /**
  * Advertised "from" price for a card. `unknown` means we have not resolved the
