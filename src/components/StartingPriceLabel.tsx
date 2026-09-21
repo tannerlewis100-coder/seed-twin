@@ -3,6 +3,7 @@ import type { WooProduct } from "@/lib/woo";
 import {
   formatStartingPrice,
   loadStartingPrice,
+  peekCardVariant,
   peekStartingPrice,
   startingPriceForSimple,
   type StartingPrice,
