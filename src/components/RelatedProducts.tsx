@@ -10,7 +10,6 @@ import {
   fetchProducts,
   fetchVariations,
   firstImage,
-  productPrice,
   type WooProduct,
 } from "@/lib/woo";
 
