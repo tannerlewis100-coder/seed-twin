@@ -46,21 +46,24 @@ export const Route = createFileRoute("/shop/$slug")({
     }
   },
   component: ProductPage,
-  head: ({ params }) => ({
+  head: ({ params }) => {
+    const name = displayProductName(humanize(params.slug), params.slug);
+    return {
     meta: [
-      { title: `${humanize(params.slug)} — Research Peptide | CLARUM` },
+      { title: `${name} — Research Peptide | CLARUM` },
       {
         name: "description",
-        content: `Buy ${humanize(params.slug)} — research peptide with independent lab reports published by batch. For in vitro laboratory research only.`,
+        content: `Buy ${name} — research peptide with independent lab reports published by batch. For in vitro laboratory research only.`,
       },
-      { property: "og:title", content: `${humanize(params.slug)} | CLARUM` },
+      { property: "og:title", content: `${name} | CLARUM` },
       {
         property: "og:description",
-        content: `${humanize(params.slug)} research peptide. Batch-specific results, publicly available.`,
+        content: `${name} research peptide. Batch-specific results, publicly available.`,
       },
     ],
     links: [{ rel: "canonical", href: `/shop/${params.slug}` }],
-  }),
+    };
+  },
 });
 
 // Format a product slug for SEO metadata without auto-title-casing or
