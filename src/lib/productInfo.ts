@@ -36,10 +36,30 @@ export function buildInfoSections(_input: {
  * Specifications come only from verified WooCommerce data plus the matched
  * certificate. Empty values are dropped — nothing is inferred or invented.
  */
+/**
+ * Supplier records whose backend attributes contradict the published
+ * certificate (B12 backend "1ml" vs a 10mL labelled vial and 10mL COA; the 4X
+ * and 8X blends list per-vial totals against a per-mL concentration COA).
+ * Until the backend is authoritatively corrected we render no attribute rows
+ * for these SKUs rather than publishing a value we know is disputed.
+ */
+export const ATTRIBUTE_CONFLICT_SKUS = ["YPB.251", "YPB.268", "YPB.267"] as const;
+
+function isConflicted(sku?: string | null): boolean {
+  if (!sku) return false;
+  const token = sku.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  return ATTRIBUTE_CONFLICT_SKUS.some((s) => s.replace(/[^A-Z0-9]/g, "") === token);
+}
+
 export function buildSpecRows(input: {
   sku?: string | null;
   size?: string | null;
-  attributes?: Array<{ name?: string | null; value?: string | null; option?: string | null }>;
+  attributes?: Array<{
+    name?: string | null;
+    value?: string | null;
+    option?: string | null;
+    terms?: Array<{ name?: string | null }> | null;
+  }>;
   coaBatch?: string | null;
 }): SpecRow[] {
   const rows: SpecRow[] = [];
