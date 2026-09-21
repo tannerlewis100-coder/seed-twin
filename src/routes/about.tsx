@@ -144,9 +144,10 @@ function AboutPage() {
                     you're buying.
                   </p>
                   <p>
-                    Then we publish the results we have. No login. No paywall. The certificates in
-                    our library are batch-specific and linked via a QR code on the vial. If you
-                    want to read the report before you buy, you can.
+                    Then we publish the results we have. No login. No paywall. Published
+                    certificates are batch-specific, and the vial QR code takes you to the
+                    reports available for that batch. Match the lot number before reviewing
+                    results.
                   </p>
                 </RevealOnScroll>
               </div>

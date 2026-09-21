@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Check, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { variantVialImage } from "@/lib/vialImages";
+import { cheapestAvailableVariant, isVariantAvailable } from "@/lib/variantSelection";
 import {
   decodeEntities,
   fetchProducts,
@@ -117,19 +118,20 @@ function RelatedCard({ product }: { product: WooProduct }) {
     try {
       if (product.type === "variable" && (product.variations?.length ?? 0) > 0) {
         const vars = await fetchVariations(product.id);
-        const cheapest = [...vars].sort(
-          (a, b) => Number(a.prices.price) - Number(b.prices.price),
-        )[0];
-        if (cheapest) {
-          await addItem({
-            id: cheapest.id,
-            quantity: 1,
-            variation: (cheapest.attributes ?? []).map((a) => ({
-              attribute: a.name,
-              value: a.value ?? a.option ?? "",
-            })),
-          });
+        const pick = cheapestAvailableVariant(vars);
+        if (!pick) {
+          // Nothing purchasable: never silently add a different or dead size.
+          setUnavailable(true);
+          return;
         }
+        await addItem({
+          id: pick.id,
+          quantity: 1,
+          variation: (pick.attributes ?? []).map((a) => ({
+            attribute: a.name,
+            value: a.value ?? a.option ?? "",
+          })),
+        });
       } else {
         await addItem({ id: product.id, quantity: 1 });
       }
