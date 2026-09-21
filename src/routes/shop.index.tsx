@@ -11,7 +11,8 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { useCart } from "@/lib/cart";
 import { variantVialImage } from "@/lib/vialImages";
-import { decodeEntities, fetchProducts, firstImage, productPrice, type WooProduct } from "@/lib/woo";
+import { decodeEntities, fetchProducts, firstImage, type WooProduct } from "@/lib/woo";
+import { useStartingPrice } from "@/components/StartingPriceLabel";
 
 export const Route = createFileRoute("/shop/")({
   validateSearch: (search: Record<string, unknown>): { category?: string } => ({
@@ -217,8 +218,6 @@ function ShopPage() {
                 </p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {visible.map((p, i) => {
-                    const price = productPrice(p);
-                    const hasRange = price.min !== price.max;
                     const wooImg = firstImage(p);
                     const vial = variantVialImage({
                       sku: p.sku,
@@ -298,12 +297,7 @@ function ShopPage() {
                             <div className="mx-auto w-fit rounded-full bg-brand-forest border border-white/10 px-10 py-3 text-foreground text-sm font-medium group-hover/card:bg-brand-gold group-hover/card:text-brand-forest group-hover/card:border-brand-gold transition-colors">
                               View Details
                             </div>
-                            <p className="mt-4 text-xs text-foreground/60">
-                              {hasRange ? "From " : ""}
-                              <span className="text-foreground/90 font-semibold">
-                                ${price.min.toFixed(2)}
-                              </span>
-                            </p>
+                            <CatalogPrice product={p} />
                           </div>
                         </a>
                       </RevealOnScroll>
@@ -332,5 +326,17 @@ function ShopPage() {
         onOpenChange={(o) => !o && closeProduct()}
       />
     </div>
+  );
+}
+
+function CatalogPrice({ product }: { product: WooProduct }) {
+  const { ref, label } = useStartingPrice(product);
+  return (
+    <p
+      ref={ref as React.RefObject<HTMLParagraphElement>}
+      className="mt-4 text-xs text-foreground/60"
+    >
+      <span className="text-foreground/90 font-semibold">{label}</span>
+    </p>
   );
 }
