@@ -77,7 +77,7 @@ const groups: Group[] = [
       },
       {
         q: "What does the microbial and mold testing cover?",
-        a: "It depends on the report. Microbial screening may be a culture-based count or a DNA-based screen, and these are different methods that answer different questions. Each certificate states the method and result in the lab's own wording, and neither is a sterility claim.",
+        a: "It depends on the report. Microbial screening may be a culture-based count or a DNA-based screen, and these are different methods that answer different questions. Each certificate states the method and result in the lab's own wording, and neither method should be read as more than it reports.",
       },
       {
         q: "What makes Clarum's testing different from other vendors?",
