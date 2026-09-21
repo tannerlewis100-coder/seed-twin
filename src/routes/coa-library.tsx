@@ -18,13 +18,13 @@ export const Route = createFileRoute("/coa-library")({
       {
         name: "description",
         content:
-          "Search Clarum's public COA library by product, SKU or batch. Each entry links the original third-party certificate for the current supplied batch.",
+          "Search Clarum's public COA library by product, SKU or batch. Reports are published where available and panels vary by batch.",
       },
       { property: "og:title", content: "COA Library | CLARUM" },
       {
         property: "og:description",
         content:
-          "Batch-specific Certificates of Analysis for every research compound we sell — searchable by name, SKU or batch.",
+          "Batch-specific Certificates of Analysis, published where available. Searchable by name, SKU or batch. Panels vary by batch.",
       },
     ],
   }),
