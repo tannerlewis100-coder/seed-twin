@@ -62,7 +62,8 @@ export const Route = createFileRoute("/shop/$slug")({
       },
     ],
     links: [{ rel: "canonical", href: `/shop/${params.slug}` }],
-  }),
+    };
+  },
 });
 
 // Format a product slug for SEO metadata without auto-title-casing or
