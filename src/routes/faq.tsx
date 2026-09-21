@@ -99,7 +99,7 @@ const groups: Group[] = [
       },
       {
         q: "How are products shipped and stored?",
-        a: "The product is delivered using insulated packaging with proper temperature control measures. It is recommended that the lyophilized peptides be stored at -20°C for optimal storage.",
+        a: "Orders ship in discreet protective packaging. Lyophilized peptides are stable at room temperature in transit; on arrival, store them at -20\u00b0C. Full details are in our Shipping Policy at /shipping-policy.",
       },
     ],
   },

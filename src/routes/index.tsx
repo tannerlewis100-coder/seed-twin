@@ -51,7 +51,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Independently tested research peptides with public, batch-specific lab reports. Panels vary by batch — see each COA. Free U.S. shipping over $150.",
+          "Independently tested research peptides with public, batch-specific lab reports. Panels vary by batch — see each COA. Free continental U.S. shipping on orders $150 or more.",
       },
       { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
       {

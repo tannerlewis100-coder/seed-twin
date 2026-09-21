@@ -40,7 +40,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Independently tested research peptides with public, batch-specific lab reports. Panels vary by batch — see each COA. Free U.S. shipping over $150.",
+          "Independently tested research peptides with public, batch-specific lab reports. Panels vary by batch — see each COA. Free continental U.S. shipping on orders $150 or more.",
       },
       { name: "author", content: "Clarum Peptides" },
       { name: "google-site-verification", content: "ae0hIMBxZwn8c3qXOrzHE8_B_ISHPQJRjm_fi4bOItY" },

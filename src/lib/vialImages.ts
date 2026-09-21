@@ -1,4 +1,5 @@
 import vialDefault from "@/assets/vial/vial-1.png";
+import { skuForSlugSize } from "@/data/coaLibrary";
 import blend4x from "@/assets/products/blend-4x.png";
 import blend8x from "@/assets/products/blend-8x.png";
 import ss31 from "@/assets/products/ss31-10mg.png";
@@ -273,17 +274,128 @@ const VARIANT_IMAGE_OVERRIDES: Record<string, string> = {
   "reconstitution-water|3ml": bacWater,
 };
 
-// Always prefer the image returned by the WooCommerce API (product images[0]
-// or the selected variation image). Local bundled artwork is only a last-resort
-// placeholder when the API has no image at all.
+// Exact supplier SKU -> the bundled photo whose printed label matches that
+// strength. WooCommerce serves the parent image for every variation, so without
+// this map a 20mg vial shows the 5mg photo. Never guess: a SKU with no matching
+// asset falls back to the API image, then to the neutral placeholder vial.
+const SKU_IMAGE_FILES: Record<string, string> = {
+  "YPB.209": "glp3-rt-10mg.png",
+  "YPB.210": "glp3-rt-20mg.png",
+  "YPB.234": "glp3-rt-30mg.png",
+  "YPB.235": "glp3-rt-40mg.png",
+  "YPB.236": "glp3-rt-50mg.png",
+  "YPB.287": "glp3-rt-60mg.png",
+  "YPB.203": "glp2-tz-10mg.png",
+  "YPB.204": "glp2-tz-20mg.png",
+  "YPB.205": "glp2-tz-30mg.png",
+  "YPB.206": "glp2-tz-40mg.png",
+  "YPB.207": "glp2-tz-50mg.png",
+  "YPB.208": "glp2-tz-60mg.png",
+  "YPB.200": "glp1-s-10mg.png",
+  "YPB.201": "glp1-s-20mg.png",
+  "YPB.202": "glp1-s-30mg.png",
+  "YPB.225": "bac-water-3ml.png",
+  "YPB.226": "bac-water-10ml.png",
+  "YPB.251": "b12-10ml.png",
+  "YPB.268": "blend-4x.png",
+  "YPB.267": "blend-8x.png",
+  "YPB.264": "klow-blend.png",
+  "YPB.218": "glow-blend.png",
+  "YPB.238": "cjc-ipa-blend.png",
+  "YPB.216": "bpc157-tb500-5mg.png",
+  "YPB.217": "bpc157-tb500-20mg.png",
+  "YPB.266": "kisspeptin-10mg.png",
+  "YPB.274": "pt141-10mg.png",
+  "YPB.283": "glutathione-600mg.png",
+  "YPB.259": "glutathione-1500mg.png",
+  "YPB.223": "nad-500mg.png",
+  "YPB.224": "nad-1000mg.png",
+  "YPB.243": "slu-pp-332-5mg.png",
+  "YPB.278": "survodutide-10mg.png",
+  "YPB.269": "mazdutide-100mg.png",
+  "YPB.241": "cagrilintide-10mg.png",
+  "YPB.250": "aicar-50mg.png",
+  "YPB.248": "aod9604-5mg.png",
+  "YPB.242": "5amino1mq-5mg.png",
+  "YPB.247": "5amino1mq-50mg.png",
+  "YPB.281": "vip10-10mg.png",
+  "YPB.265": "kpv-10mg.png",
+  "YPB.231": "ta1-10mg.png",
+  "YPB.280": "thymalin-10mg.png",
+  "YPB.275": "pnc27-10mg.png",
+  "YPB.270": "melanotan2-10mg.png",
+  "YPB.272": "snap8-10mg.png",
+  "YPB.221": "ghkcu-50mg.png",
+  "YPB.222": "ghkcu-100mg.png",
+  "YPB.252": "dsip-5mg.png",
+  "YPB.230": "dsip-15mg.png",
+  "YPB.228": "selank-10mg.png",
+  "YPB.229": "semax-10mg.png",
+  "YPB.273": "pinealon-20mg.png",
+  "YPB.255": "foxo4-10mg.png",
+  "YPB.245": "ss31-10mg.png",
+  "YPB.246": "ss31-50mg.png",
+  "YPB.227": "motsc-10mg.png",
+  "YPB.271": "motsc-40mg.png",
+  "YPB.253": "epitalon-10mg.png",
+  "YPB.254": "epitalon-50mg.png",
+  "YPB.232": "na-epitalon-5mg.png",
+  "YPB.249": "ace031-1mg.png",
+  "YPB.233": "gdf8-1mg.png",
+  "YPB.286": "igfdes-0-1mg.png",
+  "YPB.285": "igf1lr3-0-1mg.png",
+  "YPB.262": "igf1lr3-1mg.png",
+  "YPB.258": "hmg-75iu.png",
+  "YPB.256": "hcg-10000iu.png",
+  "YPB.261": "hexarelin-5mg.png",
+  "YPB.282": "ghrp6-5mg.png",
+  "YPB.257": "ghrp6-10mg.png",
+  "YPB.279": "tesamorelin-10mg.png",
+  "YPB.288": "tesamorelin-20mg.png",
+  "YPB.263": "ipamorelin-10mg.png",
+  "YPB.220": "cjc-with-dac-5mg.png",
+  "YPB.219": "cjc-no-dac-10mg.png",
+  "YPB.211": "sermorelin-10mg.png",
+  "YPB.277": "ara290-10mg.png",
+  "YPB.244": "ll37-5mg.png",
+  "YPB.214": "tb500-5mg.png",
+  "YPB.215": "tb500-10mg.png",
+  "YPB.212": "bpc157-5mg.png",
+  "YPB.213": "bpc157-10mg.png",
+  "YPB.237": "bpc157-20mg.png",
+};
+
+export function productImageForSku(sku?: string | null): string | null {
+  if (!sku) return null;
+  const token = sku.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const m = token.match(/^([A-Z]+)(\d+)$/);
+  const normalized = m ? `${m[1]}.${m[2]}` : token;
+  const file = SKU_IMAGE_FILES[normalized];
+  return file ? PRODUCT_IMAGE_BY_FILE[file] ?? null : null;
+}
+
+/**
+ * Single resolver used by the PDP, quick view, catalogue, cart and related
+ * cards. Order: exact-SKU asset -> explicit slug+strength asset -> the image
+ * WooCommerce returned -> neutral placeholder. We never attach a photo whose
+ * printed strength differs from the selected variant.
+ */
 export function variantVialImage({
+  sku,
+  slug,
+  size,
   fallbackSrc,
 }: {
+  sku?: string | null;
   name?: string;
   slug?: string;
   size?: string | null;
   fallbackSrc?: string;
 }): string {
+  const bySku = productImageForSku(sku);
+  if (bySku) return bySku;
+  const aliasSku = skuForSlugSize(slug, size);
+  const byAlias = productImageForSku(aliasSku);
+  if (byAlias) return byAlias;
   return fallbackSrc || vialDefault;
 }
-

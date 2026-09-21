@@ -24,7 +24,7 @@ export const Route = createFileRoute("/shop/")({
       {
         name: "description",
         content:
-          "Browse Clarum's catalog of batch-tested research peptides. Every product ships with a public Certificate of Analysis. For in vitro laboratory research use only.",
+          "Browse Clarum's catalog of research peptides. Batch reports are published where available — panels vary by batch. For in vitro laboratory research use only.",
       },
       { property: "og:title", content: "Shop Research Peptides | CLARUM" },
       {
@@ -133,8 +133,8 @@ function ShopPage() {
               <RevealText text="Research Peptides" />
             </h1>
             <RevealOnScroll as="p" delay={200} className="mt-5 text-foreground/55 max-w-xl mx-auto">
-              Independent lab reports, published by batch. Panels vary by batch —
-              tap a card to read the current report.
+              Independent lab reports, published by batch. Panels vary by batch.
+              Explore sizes and availability.
             </RevealOnScroll>
           </div>
         </section>
@@ -189,7 +189,7 @@ function ShopPage() {
           <div className="mx-auto max-w-7xl px-6 py-12">
             <FreeShippingProgress
               subtotal={cartSubtotal}
-              emptyMessage="Free US shipping on research orders $150+"
+              emptyMessage="Free continental US shipping on research orders $150+"
               unlockedMessage="🎉 Free shipping unlocked!"
               barClassName="h-2"
               className="mb-8 rounded-2xl border border-white/[0.07] bg-white/[0.04] px-5 py-4"
@@ -221,6 +221,7 @@ function ShopPage() {
                     const hasRange = price.min !== price.max;
                     const wooImg = firstImage(p);
                     const vial = variantVialImage({
+                      sku: p.sku,
                       name: p.name,
                       slug: p.slug,
                       fallbackSrc: wooImg,

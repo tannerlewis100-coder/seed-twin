@@ -103,6 +103,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
     .trim();
   const strength = strengthOf(product);
   const vial = variantVialImage({
+    sku: product.sku,
     name: product.name,
     slug: product.slug,
     fallbackSrc: firstImage(product),

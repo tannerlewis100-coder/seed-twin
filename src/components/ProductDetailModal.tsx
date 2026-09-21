@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useCart } from "@/lib/cart";
-import { Check, Loader2, ShoppingCart } from "lucide-react";
+import { Check, FileText, Loader2, ShoppingCart } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { variantVialImage } from "@/lib/vialImages";
 import {
   decodeEntities,
@@ -145,6 +146,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
 
   const wooImg = firstImage(display) ?? firstImage(product);
   const vial = variantVialImage({
+    sku: display.sku || product.sku,
     name: product.name,
     slug: product.slug,
     size: activeVar ? sizeById[activeVar.id] ?? getVariationSize(activeVar) ?? labelFor(activeVar) : undefined,
@@ -267,6 +269,15 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
                 </button>
               )}
             </div>
+
+            <Link
+              to="/shop/$slug"
+              params={{ slug: product.slug }}
+              onClick={() => onOpenChange(false)}
+              className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-foreground/55 hover:text-brand-gold transition-colors underline-offset-4 hover:underline"
+            >
+              <FileText className="h-3.5 w-3.5" /> View product &amp; COA
+            </Link>
 
             <p className="mt-3 inline-flex items-center gap-1.5 text-[11px] text-brand-gold/90">
               <span aria-hidden>🎁</span>
