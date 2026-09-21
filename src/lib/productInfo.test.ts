@@ -84,8 +84,12 @@ describe("simple-product attribute terms", () => {
           { name: "Appearance", terms: [{ name: "lyophilized powder" }] },
         ],
       });
-      expect(rows.map((r) => r.label)).toEqual(["SKU"]);
+      // B12 publishes the verified volume/form; 4X and 8X stay attribute-free.
+      expect(rows.map((r) => r.label)).toEqual(
+        sku === "YPB.251" ? ["SKU", "Volume", "Form"] : ["SKU"],
+      );
       expect(JSON.stringify(rows)).not.toContain("1ml");
+      expect(JSON.stringify(rows)).not.toContain("powder");
     }
   });
 });

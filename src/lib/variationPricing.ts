@@ -1,5 +1,8 @@
-import { fetchVariations, productPrice, type WooProduct } from "@/lib/woo";
-import { isVariantAvailable } from "@/lib/variantSelection";
+import { fetchVariations, getVariationSize, productPrice, type WooProduct } from "@/lib/woo";
+import { cheapestAvailableVariant, isVariantAvailable } from "@/lib/variantSelection";
+
+/** The variation a card advertises: cheapest purchasable one. */
+export type CardVariant = { sku: string | null; size: string | null };
 
 /**
  * Advertised "from" price for a card. `unknown` means we have not resolved the
@@ -52,7 +55,13 @@ export function formatStartingPrice(price: StartingPrice): string {
 /* ---------------------------------------------------------------- cache --- */
 
 const resolved = new Map<number, StartingPrice>();
+const resolvedVariant = new Map<number, CardVariant>();
 const inflight = new Map<number, Promise<StartingPrice>>();
+
+/** The advertised variation for a parent, once its variations have resolved. */
+export function peekCardVariant(parentId: number): CardVariant | null {
+  return resolvedVariant.get(parentId) ?? null;
+}
 
 let active = 0;
 const queue: Array<() => void> = [];
@@ -95,6 +104,17 @@ export function loadStartingPrice(parentId: number): Promise<StartingPrice> {
       if (!variants || variants.length === 0) return { state: "unknown" };
       const price = startingPriceFromVariants(variants);
       resolved.set(parentId, price);
+      try {
+        const pick = cheapestAvailableVariant(variants);
+        if (pick) {
+          resolvedVariant.set(parentId, {
+            sku: pick.sku ?? null,
+            size: getVariationSize(pick) ?? null,
+          });
+        }
+      } catch {
+        /* image resolution is best-effort; pricing must still cache */
+      }
       return price;
     } catch {
       return { state: "unknown" };
@@ -111,6 +131,7 @@ export function loadStartingPrice(parentId: number): Promise<StartingPrice> {
 /** Test helper. */
 export function __resetStartingPriceCache() {
   resolved.clear();
+  resolvedVariant.clear();
   inflight.clear();
   queue.length = 0;
   active = 0;

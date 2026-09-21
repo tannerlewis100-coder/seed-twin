@@ -51,6 +51,36 @@ function isConflicted(sku?: string | null): boolean {
   return ATTRIBUTE_CONFLICT_SKUS.some((s) => s.replace(/[^A-Z0-9]/g, "") === token);
 }
 
+/**
+ * Specs we publish from the supplier's own current catalogue and the batch
+ * report instead of the disputed backend attributes. B12 (YPB.251) only: the
+ * supplier catalogue and the report both state a 10 mL liquid vial.
+ */
+const SPEC_OVERRIDES: Record<string, Array<[string, string]>> = {
+  "YPB.251": [
+    ["Volume", "10 mL"],
+    ["Form", "Liquid solution"],
+  ],
+};
+
+export const B12_DESCRIPTION =
+  "B12 research solution supplied in a 10 mL vial. See the linked batch report for available analytical results.";
+
+function specOverridesFor(sku?: string | null): Array<[string, string]> | null {
+  if (!sku) return null;
+  const token = sku.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  for (const [key, rows] of Object.entries(SPEC_OVERRIDES)) {
+    if (key.replace(/[^A-Z0-9]/g, "") === token) return rows;
+  }
+  return null;
+}
+
+export function descriptionOverrideFor(sku?: string | null): string | null {
+  if (!sku) return null;
+  const token = sku.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  return token === "YPB251" ? B12_DESCRIPTION : null;
+}
+
 export function buildSpecRows(input: {
   sku?: string | null;
   size?: string | null;
@@ -77,6 +107,12 @@ export function buildSpecRows(input: {
 
   push("SKU", input.sku);
   const conflicted = isConflicted(input.sku);
+  const overrides = specOverridesFor(input.sku);
+  if (overrides) {
+    for (const [label, value] of overrides) push(label, value);
+    push("Report batch", input.coaBatch);
+    return rows;
+  }
   if (!conflicted) push("Strength", input.size);
 
   if (!conflicted) {

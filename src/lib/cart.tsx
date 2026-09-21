@@ -16,6 +16,7 @@ import {
   type WooCart,
 } from "./woo";
 import { cartLineImage } from "./vialImages";
+import { displayProductName } from "./productNames";
 
 export type CartItem = {
   key: string;
@@ -56,7 +57,7 @@ function mapCart(cart: WooCart): { items: CartItem[]; subtotal: number; count: n
     return {
       key: it.key,
       productId: it.id,
-      name: it.name,
+      name: displayProductName(it.name),
       size,
       qty: it.quantity,
       price: fromMinor(it.prices.price, it.prices.currency_minor_unit),

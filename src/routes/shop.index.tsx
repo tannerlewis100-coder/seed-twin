@@ -10,9 +10,9 @@ import ProductDetailModal from "@/components/ProductDetailModal";
 
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { useCart } from "@/lib/cart";
-import { variantVialImage } from "@/lib/vialImages";
-import { decodeEntities, fetchProducts, firstImage, type WooProduct } from "@/lib/woo";
-import { useStartingPrice } from "@/components/StartingPriceLabel";
+import { displayProductName } from "@/lib/productNames";
+import { decodeEntities, fetchProducts, type WooProduct } from "@/lib/woo";
+import { CardVial, useStartingPrice } from "@/components/StartingPriceLabel";
 
 export const Route = createFileRoute("/shop/")({
   validateSearch: (search: Record<string, unknown>): { category?: string } => ({
@@ -218,20 +218,16 @@ function ShopPage() {
                 </p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {visible.map((p, i) => {
-                    const wooImg = firstImage(p);
-                    const vial = variantVialImage({
-                      sku: p.sku,
-                      name: p.name,
-                      slug: p.slug,
-                      fallbackSrc: wooImg,
-                    });
                     const rawCat = p.categories?.[0]?.name ?? "Research";
                     const cat = decodeEntities(rawCat)
                       .replace(/\s*&.*$/, "")
                       .trim();
-                    const displayName = decodeEntities(p.name)
-                      .replace(/\s*[—–-]\s.*$/, "")
-                      .trim();
+                    const displayName = displayProductName(
+                      decodeEntities(p.name)
+                        .replace(/\s*[—–-]\s.*$/, "")
+                        .trim(),
+                      p.slug,
+                    );
                     const sizeCount = p.variations?.length ?? 0;
                     const doseMatch = `${p.name} ${p.slug}`.match(
                       /(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|ug|g)\b/i,
@@ -284,11 +280,9 @@ function ShopPage() {
                           </h3>
 
                           <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
-                            <img
-                              src={vial}
-                              alt={`${p.name} vial`}
-                              loading="lazy"
-                              draggable={false}
+                            <CardVial
+                              product={p}
+                              alt={`${displayName} vial`}
                               className="h-56 w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
                             />
                           </div>

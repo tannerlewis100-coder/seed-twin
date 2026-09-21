@@ -5,6 +5,8 @@ import { AnnouncementBar, SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import RelatedProducts from "@/components/RelatedProducts";
 import { useCart } from "@/lib/cart";
+import { displayProductName } from "@/lib/productNames";
+import { descriptionOverrideFor } from "@/lib/productInfo";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { variantVialImage } from "@/lib/vialImages";
 import { pickInitialVariantId, sortVariantsByStrength } from "@/lib/variantSelection";
@@ -340,8 +342,9 @@ function ProductBody({
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
   const shortText = stripHtml(product.short_description) || "";
   const longText = stripHtml(product.description) || "";
-  const description = shortText || longText;
-  const detailText = longText || shortText;
+  const descOverride = descriptionOverrideFor(display.sku || product.sku);
+  const description = descOverride || shortText || longText;
+  const detailText = descOverride || longText || shortText;
   const inStock = display.is_in_stock && display.is_purchasable;
   const batch = display.sku || product.sku;
 
@@ -353,7 +356,7 @@ function ProductBody({
           <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-40" />
           <img
             src={vial}
-            alt={`${product.name} vial`}
+            alt={`${displayProductName(product.name, product.slug)} vial`}
             draggable={false}
             className="relative h-96 w-auto max-w-full object-contain select-none"
           />
@@ -364,7 +367,7 @@ function ProductBody({
             {cat}
           </span>
           <h1 className="font-display text-3xl md:text-4xl mt-3 leading-tight">
-            {decodeEntities(product.name)}
+            {displayProductName(decodeEntities(product.name), product.slug)}
           </h1>
           {batch && <p className="text-xs text-foreground/50 mt-2">SKU {batch}</p>}
 
@@ -476,7 +479,7 @@ function ProductBody({
         const ld = {
           "@context": "https://schema.org",
           "@type": "Product",
-          name: decodeEntities(product.name),
+          name: displayProductName(decodeEntities(product.name), product.slug),
           image: wooImg ? [wooImg] : undefined,
           description: longText || shortText || undefined,
           sku: display.sku || product.sku || undefined,
@@ -508,7 +511,7 @@ function ProductBody({
               status={status}
               supplierSku={sku}
               coaLibraryHref={deepLinkSlug ? `/coa-library#coa-${deepLinkSlug}` : "/coa-library"}
-              productLabel={decodeEntities(product.name)}
+              productLabel={displayProductName(decodeEntities(product.name), product.slug)}
             />
             <ProductInfoAccordions
               key={`info-${product.slug}-${currentVariantSize ?? ""}`}

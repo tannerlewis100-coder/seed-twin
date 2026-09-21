@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type { WooProduct } from "@/lib/woo";
+import { DEFAULT_VIAL, variantVialImage } from "@/lib/vialImages";
 import {
   formatStartingPrice,
   loadStartingPrice,
+  peekCardVariant,
   peekStartingPrice,
   startingPriceForSimple,
   type StartingPrice,
@@ -65,5 +67,45 @@ export function useStartingPrice(product: WooProduct) {
     };
   }, [product, product.id, isVariable]);
 
-  return { ref, price, label: formatStartingPrice(price) };
+  const variant = isVariable ? peekCardVariant(product.id) : null;
+  const sku = isVariable ? variant?.sku ?? null : product.sku ?? null;
+  // Unresolved variable products advertise no vial yet: a neutral vial, never
+  // an image of a size we haven't confirmed is the one being priced.
+  const vial =
+    isVariable && !variant
+      ? DEFAULT_VIAL
+      : variantVialImage({
+          sku,
+          name: product.name,
+          slug: product.slug,
+          size: variant?.size ?? undefined,
+        });
+
+  return { ref, price, vial, label: formatStartingPrice(price) };
+}
+
+/**
+ * Card vial image. Resolves through the same exact-SKU map as the PDP, using
+ * the cheapest in-stock variation already resolved for card pricing.
+ */
+export function CardVial({
+  product,
+  alt,
+  className,
+}: {
+  product: WooProduct;
+  alt: string;
+  className?: string;
+}) {
+  const { ref, vial } = useStartingPrice(product);
+  return (
+    <img
+      ref={ref as React.RefObject<HTMLImageElement>}
+      src={vial}
+      alt={alt}
+      loading="lazy"
+      draggable={false}
+      className={className}
+    />
+  );
 }
