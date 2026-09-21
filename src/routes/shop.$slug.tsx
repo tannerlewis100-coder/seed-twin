@@ -7,6 +7,7 @@ import RelatedProducts from "@/components/RelatedProducts";
 import { useCart } from "@/lib/cart";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { variantVialImage } from "@/lib/vialImages";
+import { pickInitialVariantId, sortVariantsByStrength } from "@/lib/variantSelection";
 import { Disclosure } from "@/components/Disclosure";
 import {
   COA_INITIALLY_OPEN,
@@ -164,9 +165,13 @@ function ProductPage() {
                 return size !== "20mg/20mg" && size !== "40mg";
               })
             : vars;
-        const sorted = [...filtered].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
+        const labelOf = (v: WooProduct) => {
+          const raw = map[v.id] ?? getVariationSize(v) ?? "";
+          return raw && raw.toLowerCase() !== "any" ? sumBlendDose(raw) : v.name;
+        };
+        const sorted = sortVariantsByStrength(filtered, labelOf);
         setVariations(sorted);
-        setActiveVarId(sorted[0]?.id ?? null);
+        setActiveVarId(pickInitialVariantId(sorted));
         setSizeById(map);
       })
       .catch((e) => console.error("Failed to load variations:", e))
