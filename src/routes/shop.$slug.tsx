@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import RelatedProducts from "@/components/RelatedProducts";
 import { useCart } from "@/lib/cart";
 import { displayProductName } from "@/lib/productNames";
+import { descriptionOverrideFor } from "@/lib/productInfo";
 import { FreeShippingProgress } from "@/components/FreeShippingProgress";
 import { variantVialImage } from "@/lib/vialImages";
 import { pickInitialVariantId, sortVariantsByStrength } from "@/lib/variantSelection";
@@ -341,8 +342,9 @@ function ProductBody({
   const price = fromMinor(display.prices.price, display.prices.currency_minor_unit);
   const shortText = stripHtml(product.short_description) || "";
   const longText = stripHtml(product.description) || "";
-  const description = shortText || longText;
-  const detailText = longText || shortText;
+  const descOverride = descriptionOverrideFor(display.sku || product.sku);
+  const description = descOverride || shortText || longText;
+  const detailText = descOverride || longText || shortText;
   const inStock = display.is_in_stock && display.is_purchasable;
   const batch = display.sku || product.sku;
 
