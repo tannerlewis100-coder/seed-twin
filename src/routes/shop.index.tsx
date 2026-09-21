@@ -284,11 +284,9 @@ function ShopPage() {
                           </h3>
 
                           <div className="relative z-10 flex-1 flex items-center justify-center w-full mt-2 mb-4">
-                            <img
-                              src={vial}
-                              alt={`${p.name} vial`}
-                              loading="lazy"
-                              draggable={false}
+                            <CardVial
+                              product={p}
+                              alt={`${displayName} vial`}
                               className="h-56 w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
                             />
                           </div>
