@@ -111,11 +111,31 @@ describe("strength-specific vial imagery", () => {
     expect(productImageForSku("YPB.219")).toContain("cjc-no-dac");
   });
 
-  it("falls back safely when no SKU asset exists", () => {
+  it("never uses the backend image when no SKU asset exists", () => {
     expect(variantVialImage({ sku: "YPB.999", fallbackSrc: "https://cdn/x.png" })).toBe(
-      "https://cdn/x.png",
+      DEFAULT_VIAL,
     );
     expect(variantVialImage({ sku: "YPB.999" })).toBe(DEFAULT_VIAL);
+  });
+
+  it("uses the consistent WebP set for every mapped SKU", () => {
+    for (const sku of ["YPB.216", "YPB.217", "YPB.251", "YPB.285", "YPB.262"]) {
+      const url = productImageForSku(sku);
+      expect(url, sku).toBeTruthy();
+      expect(url, sku).toMatch(/\.webp/);
+    }
+  });
+
+  it("keeps the Wolverine blend strengths distinct and the IGF sizes distinct", () => {
+    expect(productImageForSku("YPB.216")).toContain("bpc157-tb500-5mg");
+    expect(productImageForSku("YPB.217")).toContain("bpc157-tb500-20mg");
+    expect(productImageForSku("YPB.285")).toContain("igf1lr3-0-1mg");
+    expect(productImageForSku("YPB.262")).toContain("igf1lr3-1mg");
+    expect(productImageForSku("YPB.262")).not.toContain("0-1mg");
+  });
+
+  it("maps B12 to the 10ml liquid vial", () => {
+    expect(productImageForSku("YPB.251")).toContain("b12-10ml");
   });
 
   it("prefers the strength-specific asset over the inherited parent image", () => {
