@@ -653,8 +653,9 @@ function ProductInfoAccordions({
                 Orders of $150 or more ship free (continental U.S.).
               </p>
               <p>
-                Full terms, delivery timelines and return eligibility are listed on our policy
-                pages.
+                All sales are final — no returns or exchanges for change of mind. If an order
+                arrives damaged, incorrect or missing, contact us promptly and we will review
+                it. Delivery timelines and full terms are on our policy pages.
               </p>
               <div className="flex flex-wrap gap-4 pt-1">
                 <Link

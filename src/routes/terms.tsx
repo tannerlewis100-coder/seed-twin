@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { LegalPage, LegalH2 } from "@/components/LegalPage";
 
 export const Route = createFileRoute("/terms")({
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/terms")({
 
 function TermsPage() {
   return (
-    <LegalPage eyebrow="Legal" title="Terms of Service" lastUpdated="May 23, 2026">
+    <LegalPage eyebrow="Legal" title="Terms of Service" lastUpdated="September 21, 2026">
       <p>
         Welcome to Clarum, operated by TLSEVEN LLC ("Clarum," "we," "us," or "our"), a Texas
         limited liability company with its principal address at 17350 State Hwy 249, Ste 220
@@ -78,10 +78,16 @@ function TermsPage() {
         right to refuse or cancel any order at our sole discretion.
       </p>
 
-      <LegalH2>7. No Refunds or Returns</LegalH2>
+      <LegalH2>7. All Sales Final</LegalH2>
       <p>
-        ALL SALES ARE FINAL. We do not accept returns, exchanges, or refunds under any
-        circumstances. See our Refund Policy for full details.
+        All sales are final. We do not accept returns or exchanges for change of mind,
+        including unopened or unused products. If an order arrives damaged or incorrect, or
+        does not arrive, contact us promptly — see our{" "}
+        <Link className="text-brand-gold hover:underline" to="/refund-policy">
+          Refund Policy
+        </Link>{" "}
+        for how we handle order issues. Nothing here limits any rights or remedies required by
+        applicable law.
       </p>
 
       <LegalH2>8. Shipping and Risk of Loss</LegalH2>
