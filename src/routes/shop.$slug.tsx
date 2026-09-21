@@ -88,7 +88,7 @@ function sumBlendDose(raw: string): string {
 }
 
 import { allPeptides, type Peptide } from "@/data/peptides";
-import { coaForSlug, slugToSku, type CoaStatus } from "@/data/coaLibrary";
+import { resolveCoaForProduct, type CoaStatus } from "@/data/coaLibrary";
 import { CoaAttribution, CoaDecisionBadge, CoaResultRow, coaRows } from "@/components/CoaResults";
 import { CoaDocument, CoaPendingPanel, CoaUnavailablePanel } from "@/components/CoaViewer";
 
@@ -110,31 +110,6 @@ function findPeptide(baseSlug: string, size?: string): Peptide | null {
     ) ?? null
   );
 }
-
-/**
- * Resolve the certificate for this product + selected strength by exact supplier
- * SKU. Never approximate: unmatched items report as unavailable.
- */
-function resolveCoa(
-  productSlug: string,
-  variantSize?: string,
-): { status: CoaStatus; deepLinkSlug: string | null; sku: string | null } {
-  const sizeKey = (variantSize ?? "").toLowerCase().replace(/\s+/g, "");
-  const candidates = [
-    sizeKey ? `${productSlug}-${sizeKey}` : null,
-    productSlug,
-    findPeptide(productSlug, variantSize)?.slug ?? null,
-  ].filter((s): s is string => Boolean(s));
-
-  for (const slug of candidates) {
-    const status = coaForSlug(slug);
-    if (status.state !== "unavailable") {
-      return { status, deepLinkSlug: slug, sku: slugToSku[slug] ?? null };
-    }
-  }
-  return { status: { state: "unavailable" }, deepLinkSlug: candidates[0] ?? null, sku: null };
-}
-
 
 function ProductPage() {
   const { slug } = Route.useParams();
@@ -212,6 +187,7 @@ function ProductPage() {
     for (const v of variations) {
       const size = sizeById[v.id] ?? getVariationSize(v);
       const url = variantVialImage({
+        sku: v.sku || product.sku,
         name: product.name,
         slug: product.slug,
         size: size ?? undefined,
@@ -350,6 +326,7 @@ function ProductBody({
 
   const wooImg = firstImage(display) ?? firstImage(product);
   const vial = variantVialImage({
+    sku: display.sku || product.sku,
     name: product.name,
     slug: product.slug,
     size: currentVariantSize,
@@ -509,7 +486,11 @@ function ProductBody({
             url: `https://clarumpeptides.com/shop/${product.slug}`,
           },
         };
-        const { status, deepLinkSlug, sku } = resolveCoa(product.slug, currentVariantSize);
+        const { status, deepLinkSlug, sku } = resolveCoaForProduct({
+          sku: display.sku || product.sku,
+          slug: product.slug,
+          size: currentVariantSize,
+        });
         return (
           <>
             <script
@@ -664,7 +645,7 @@ function ProductInfoAccordions({
             <div className="space-y-3 leading-relaxed">
               <p>
                 Shipping is a flat $12.00 for standard delivery anywhere in the continental US.
-                Orders over $150 ship free.
+                Orders of $150 or more ship free (continental U.S.).
               </p>
               <p>
                 Full terms, delivery timelines and return eligibility are listed on our policy

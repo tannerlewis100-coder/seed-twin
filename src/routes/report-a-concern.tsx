@@ -19,7 +19,7 @@ export const Route = createFileRoute("/report-a-concern")({
       {
         property: "og:description",
         content:
-          "How to report misuse, abuse, or illegal content. Email clarumpeptides@gmail.com.",
+          "How to report misuse, abuse, or illegal content. Email clarumpeps@gmail.com.",
       },
       { property: "og:url", content: "https://clarumpeptides.com/report-a-concern" },
     ],
@@ -66,10 +66,10 @@ function ReportAConcernPage() {
                     To report a concern about a product, listing, or content on this site,
                     email{" "}
                     <a
-                      href="mailto:clarumpeptides@gmail.com"
+                      href="mailto:clarumpeps@gmail.com"
                       className="text-brand-gold hover:underline"
                     >
-                      clarumpeptides@gmail.com
+                      clarumpeps@gmail.com
                     </a>
                     . We acknowledge all reports and resolve illegal-content complaints
                     within 7 business days.
@@ -80,10 +80,10 @@ function ReportAConcernPage() {
 
             <div className="text-center">
               <a
-                href="mailto:clarumpeptides@gmail.com"
+                href="mailto:clarumpeps@gmail.com"
                 className="inline-flex items-center gap-2 rounded-full border border-brand-gold/50 text-brand-gold px-8 py-4 text-sm font-medium hover:bg-brand-gold/10 transition-colors"
               >
-                <Mail className="h-4 w-4" /> Email clarumpeptides@gmail.com
+                <Mail className="h-4 w-4" /> Email clarumpeps@gmail.com
               </a>
             </div>
           </div>

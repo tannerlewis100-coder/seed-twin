@@ -145,6 +145,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
 
   const wooImg = firstImage(display) ?? firstImage(product);
   const vial = variantVialImage({
+    sku: display.sku || product.sku,
     name: product.name,
     slug: product.slug,
     size: activeVar ? sizeById[activeVar.id] ?? getVariationSize(activeVar) ?? labelFor(activeVar) : undefined,
