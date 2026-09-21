@@ -218,20 +218,16 @@ function ShopPage() {
                 </p>
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                   {visible.map((p, i) => {
-                    const wooImg = firstImage(p);
-                    const vial = variantVialImage({
-                      sku: p.sku,
-                      name: p.name,
-                      slug: p.slug,
-                      fallbackSrc: wooImg,
-                    });
                     const rawCat = p.categories?.[0]?.name ?? "Research";
                     const cat = decodeEntities(rawCat)
                       .replace(/\s*&.*$/, "")
                       .trim();
-                    const displayName = decodeEntities(p.name)
-                      .replace(/\s*[—–-]\s.*$/, "")
-                      .trim();
+                    const displayName = displayProductName(
+                      decodeEntities(p.name)
+                        .replace(/\s*[—–-]\s.*$/, "")
+                        .trim(),
+                      p.slug,
+                    );
                     const sizeCount = p.variations?.length ?? 0;
                     const doseMatch = `${p.name} ${p.slug}`.match(
                       /(\d+(?:\.\d+)?)\s*(mg|ml|iu|mcg|µg|ug|g)\b/i,
