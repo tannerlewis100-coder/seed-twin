@@ -4,12 +4,12 @@ import { Check, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { variantVialImage } from "@/lib/vialImages";
 import { cheapestAvailableVariant, isVariantAvailable } from "@/lib/variantSelection";
+import { useStartingPrice } from "@/components/StartingPriceLabel";
 import {
   decodeEntities,
   fetchProducts,
   fetchVariations,
   firstImage,
-  productPrice,
   type WooProduct,
 } from "@/lib/woo";
 
@@ -101,7 +101,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
   const simpleUnavailable =
     product.type !== "variable" && !isVariantAvailable(product);
 
-  const price = productPrice(product);
+  const { ref: priceRef, price: starting, label: priceLabel } = useStartingPrice(product);
   const cat = decodeEntities(product.categories?.[0]?.name ?? "Research")
     .replace(/\s*&.*$/, "")
     .trim();
@@ -173,13 +173,16 @@ function RelatedCard({ product }: { product: WooProduct }) {
         </h3>
 
         <div className="mt-auto pt-5 flex items-center justify-between gap-3">
-          <span className="text-sm font-semibold text-foreground/90">
-            {price.min !== price.max ? "From " : ""}${price.min.toFixed(2)}
+          <span
+            ref={priceRef as React.RefObject<HTMLSpanElement>}
+            className="text-sm font-semibold text-foreground/90"
+          >
+            {priceLabel}
           </span>
           <button
             type="button"
             onClick={onAdd}
-            disabled={busy || unavailable || simpleUnavailable}
+            disabled={busy || unavailable || simpleUnavailable || starting.state === "unavailable"}
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-forest border border-white/10 px-4 py-2 text-xs font-medium text-foreground hover:bg-brand-gold hover:text-brand-forest hover:border-brand-gold transition-colors disabled:opacity-60"
           >
             {busy ? (
@@ -187,7 +190,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
             ) : added ? (
               <Check className="h-3.5 w-3.5" />
             ) : null}
-            {unavailable || simpleUnavailable ? "Unavailable" : added ? "Added" : "Add to cart"}
+            {unavailable || simpleUnavailable || starting.state === "unavailable" ? "Unavailable" : added ? "Added" : "Add to cart"}
           </button>
         </div>
       </div>

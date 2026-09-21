@@ -85,7 +85,9 @@ describe("homepage featured cards use the live catalog", () => {
   });
 
   it("resolves prices through the shared WooCommerce helper", () => {
-    expect(src).toMatch(/featuredPriceFor/);
+    expect(src).toMatch(/featuredProductFor/);
+    // Home cards advertise the cheapest in-stock size, not the parent range.
+    expect(src).toMatch(/useStartingPrice/);
     expect(src).toMatch(/fetchProducts/);
   });
 });

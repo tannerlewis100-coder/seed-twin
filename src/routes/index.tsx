@@ -1,7 +1,8 @@
 import type React from "react";
 import { useEffect, useState } from "react";
 import { fetchProducts, type WooProduct } from "@/lib/woo";
-import { featuredPriceFor, formatFeaturedPrice } from "@/lib/featuredPricing";
+import { featuredProductFor } from "@/lib/featuredPricing";
+import { useStartingPrice } from "@/components/StartingPriceLabel";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { motion } from "framer-motion";
@@ -316,29 +317,17 @@ function FeaturedProducts() {
                       Shop Now
                     </div>
                     {(() => {
-                      const live = featuredPriceFor(liveProducts, p.slug);
-                      if (live) {
-                        return (
-                          <p className="mt-4 text-xs text-foreground/60">
-                            {live.isRange ? "Starting at " : ""}
-                            <span className="text-foreground/90 font-semibold">
-                              {formatFeaturedPrice(live)}
-                            </span>
-                          </p>
-                        );
-                      }
-                      if (priceStatus === "loading") {
-                        return (
-                          <p className="mt-4 text-xs text-foreground/60">
-                            <span className="inline-block h-3 w-20 rounded-full bg-white/10 align-middle" />
-                          </p>
-                        );
-                      }
+                      const match = featuredProductFor(liveProducts, p.slug);
+                      if (match) return <FeaturedPrice product={match} />;
                       return (
                         <p className="mt-4 text-xs text-foreground/60">
-                          <span className="text-foreground/90 font-semibold">
-                            View pricing
-                          </span>
+                          {priceStatus === "loading" ? (
+                            <span className="inline-block h-3 w-20 rounded-full bg-white/10 align-middle" />
+                          ) : (
+                            <span className="text-foreground/90 font-semibold">
+                              View pricing
+                            </span>
+                          )}
                         </p>
                       );
                     })()}
@@ -647,5 +636,17 @@ function Index() {
       </main>
       <SiteFooter />
     </div>
+  );
+}
+
+function FeaturedPrice({ product }: { product: WooProduct }) {
+  const { ref, label } = useStartingPrice(product);
+  return (
+    <p
+      ref={ref as React.RefObject<HTMLParagraphElement>}
+      className="mt-4 text-xs text-foreground/60"
+    >
+      <span className="text-foreground/90 font-semibold">{label}</span>
+    </p>
   );
 }
