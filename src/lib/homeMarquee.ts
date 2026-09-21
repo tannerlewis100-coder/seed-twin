@@ -1,5 +1,5 @@
 export const MARQUEE_MESSAGES = [
-  "Free shipping over $150",
+  "Free shipping $150+",
   "Public COA Library",
   "Research Use Only",
 ] as const;

@@ -42,7 +42,7 @@ describe("homepage section removals", () => {
 describe("homepage marquee", () => {
   it("has the exact three messages", () => {
     expect([...MARQUEE_MESSAGES]).toEqual([
-      "Free shipping over $150",
+      "Free shipping $150+",
       "Public COA Library",
       "Research Use Only",
     ]);

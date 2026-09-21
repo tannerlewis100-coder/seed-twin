@@ -189,7 +189,7 @@ function ShopPage() {
           <div className="mx-auto max-w-7xl px-6 py-12">
             <FreeShippingProgress
               subtotal={cartSubtotal}
-              emptyMessage="Free US shipping on research orders $150+"
+              emptyMessage="Free continental US shipping on research orders $150+"
               unlockedMessage="🎉 Free shipping unlocked!"
               barClassName="h-2"
               className="mb-8 rounded-2xl border border-white/[0.07] bg-white/[0.04] px-5 py-4"
