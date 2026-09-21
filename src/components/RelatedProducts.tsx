@@ -101,18 +101,11 @@ function RelatedCard({ product }: { product: WooProduct }) {
   const simpleUnavailable =
     product.type !== "variable" && !isVariantAvailable(product);
 
-  const { ref: priceRef, price: starting, label: priceLabel } = useStartingPrice(product);
+  const { ref: priceRef, price: starting, label: priceLabel, vial } = useStartingPrice(product);
   const cat = decodeEntities(product.categories?.[0]?.name ?? "Research")
     .replace(/\s*&.*$/, "")
     .trim();
   const strength = strengthOf(product);
-  const vial = variantVialImage({
-    sku: product.sku,
-    name: product.name,
-    slug: product.slug,
-    fallbackSrc: firstImage(product),
-  });
-
   const onAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -158,7 +151,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
 
         <img
           src={vial}
-          alt={`${product.name} vial`}
+          alt={`${displayProductName(product.name, product.slug)} vial`}
           loading="lazy"
           draggable={false}
           className="h-full w-auto max-w-full object-contain select-none drop-shadow-2xl transition-transform duration-700 group-hover/card:scale-105"
@@ -168,7 +161,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
       <div className="flex flex-col flex-1 p-5">
         <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-brand-gold">{cat}</p>
         <h3 className="mt-2 font-display text-lg text-foreground leading-tight">
-          {baseName(product)}
+          {displayProductName(baseName(product), product.slug)}
           {strength ? ` – ${strength}` : ""}
         </h3>
 
