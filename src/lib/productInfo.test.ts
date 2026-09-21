@@ -84,7 +84,7 @@ describe("simple-product attribute terms", () => {
           { name: "Appearance", terms: [{ name: "lyophilized powder" }] },
         ],
       });
-      expect(rows.map((r) => r.label)).toEqual(["SKU"]);
+      expect(rows.map((r) => r.label)).toEqual(["SKU", "Volume", "Form"]);
       expect(JSON.stringify(rows)).not.toContain("1ml");
     }
   });
