@@ -1,4 +1,6 @@
-import vialDefault from "@/assets/vial/vial-1.png";
+// Neutral placeholder: Clarum vial with a blank label (no product name or
+// strength). Used while variation data is pending or unknown.
+import vialDefault from "@/assets/vial/clarum-vial-neutral.png";
 import { skuForSlugSize } from "@/data/coaLibrary";
 
 export const DEFAULT_VIAL = vialDefault;
