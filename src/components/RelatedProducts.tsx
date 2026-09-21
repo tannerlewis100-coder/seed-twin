@@ -2,14 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Check, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
-import { variantVialImage } from "@/lib/vialImages";
+import { displayProductName } from "@/lib/productNames";
 import { cheapestAvailableVariant, isVariantAvailable } from "@/lib/variantSelection";
 import { useStartingPrice } from "@/components/StartingPriceLabel";
 import {
   decodeEntities,
   fetchProducts,
   fetchVariations,
-  firstImage,
   type WooProduct,
 } from "@/lib/woo";
 
