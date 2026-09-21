@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { useCart } from "@/lib/cart";
+import { displayProductName } from "@/lib/productNames";
 import { Check, FileText, Loader2, ShoppingCart } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { variantVialImage } from "@/lib/vialImages";
@@ -161,9 +162,9 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl bg-brand-forest-deep border-white/10 text-foreground p-0 overflow-hidden">
         <VisuallyHidden.Root>
-          <DialogTitle>{decodeEntities(product.name)}</DialogTitle>
+          <DialogTitle>{displayProductName(decodeEntities(product.name), product.slug)}</DialogTitle>
           <DialogDescription>
-            Product details, available sizes, and add-to-cart for {decodeEntities(product.name)}.
+            Product details, available sizes, and add-to-cart for {displayProductName(decodeEntities(product.name), product.slug)}.
           </DialogDescription>
         </VisuallyHidden.Root>
         <div className="grid md:grid-cols-2">
@@ -172,7 +173,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
             <div className="absolute inset-0 gold-line-texture pointer-events-none opacity-40" />
             <img
               src={vial}
-              alt={`${product.name} vial`}
+              alt={`${displayProductName(product.name, product.slug)} vial`}
               draggable={false}
               className="h-80 w-auto max-w-full object-contain select-none"
             />
@@ -183,7 +184,7 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
             <span className="text-[10px] uppercase tracking-wider font-bold bg-brand-gold/90 text-brand-forest px-3 py-1 rounded-full">
               {cat}
             </span>
-            <h2 className="font-display text-2xl md:text-3xl mt-3 leading-tight">{decodeEntities(product.name)}</h2>
+            <h2 className="font-display text-2xl md:text-3xl mt-3 leading-tight">{displayProductName(decodeEntities(product.name), product.slug)}</h2>
             {display.sku && (
               <p className="text-xs text-foreground/50 mt-2">SKU {display.sku}</p>
             )}
