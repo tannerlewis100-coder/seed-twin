@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { WooProduct } from "@/lib/woo";
+import { DEFAULT_VIAL, variantVialImage } from "@/lib/vialImages";
 import {
   formatStartingPrice,
   loadStartingPrice,
