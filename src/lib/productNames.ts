@@ -6,7 +6,7 @@
  */
 const WOLVERINE_DISPLAY = "Wolverine Blend — BPC-157 / TB-500";
 
-const WOLVERINE_MATCH = /wolverine|bpc-?\s*157\s*[\/+&]\s*tb-?\s*500/i;
+const WOLVERINE_MATCH = /wolverine|bpc-?\s*157\s*[\/+&-]\s*tb-?\s*500/i;
 
 /** True for the standalone blend product, not for KLOW / GLOW multi-blends. */
 function isWolverineBlend(name: string, slug?: string | null): boolean {
