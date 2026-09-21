@@ -154,7 +154,7 @@ function ShopMenu() {
             <Sparkles className="h-3 w-3" /> Verified
           </div>
           <div className="text-[13px] text-foreground/80 mt-1 leading-snug">
-            Every batch independently tested.
+            Independent lab reports, by batch.
           </div>
           <Link
             to="/coa-library"
@@ -170,15 +170,15 @@ function ShopMenu() {
 
 function CoaMenu() {
   const rows: Row[] = [
-    { to: "/coa-library", title: "All Batch Reports", desc: "Every COA, every compound.", icon: FileCheck },
-    { to: "/coa-library", title: "Percent Purity", desc: "NLT 98% per batch.", icon: Beaker },
-    { to: "/coa-library", title: "Identity & Assay", desc: "λmax match + label-claim assay.", icon: Microscope },
-    { to: "/coa-library", title: "Heavy Metals & Microbial", desc: "The tests most vendors skip.", icon: ShieldCheck },
+    { to: "/coa-library", title: "All Batch Reports", desc: "Browse by product, SKU or batch.", icon: FileCheck },
+    { to: "/coa-library", title: "Purity", desc: "As reported on each COA.", icon: Beaker },
+    { to: "/coa-library", title: "Identity & Content", desc: "As listed on each report.", icon: Microscope },
+    { to: "/coa-library", title: "Heavy Metals & Microbial", desc: "Shown where included.", icon: ShieldCheck },
   ];
   return (
     <div className="grid grid-cols-[1fr_220px] gap-2 p-3 w-[600px]">
       <div>
-        <ColumnLabel>Test Panels</ColumnLabel>
+        <ColumnLabel>Batch Reports</ColumnLabel>
         <div className="flex flex-col">
           {rows.map((r) => (
             <MenuRow key={r.title} row={r} />
@@ -192,9 +192,9 @@ function CoaMenu() {
           <QuickLink to="/about">How it's tested</QuickLink>
         </div>
         <div className="mt-auto mx-2 mt-3 text-[11.5px] text-foreground/45 leading-snug">
-          Full panel
+          Panels vary
           <br />
-          on every batch
+          by batch
         </div>
       </div>
     </div>
@@ -204,8 +204,8 @@ function CoaMenu() {
 function AboutMenu() {
   const rows: Row[] = [
     { to: "/about", title: "Our Story", desc: "Why we built Clarum.", icon: BookOpen },
-    { to: "/about", title: "The Test Panel", desc: "What's tested on every batch.", icon: Microscope },
-    { to: "/about", title: "How It's Tested", desc: "The full analytical standard.", icon: ShieldCheck },
+    { to: "/about", title: "What's Tested", desc: "What the reports cover.", icon: Microscope },
+    { to: "/about", title: "How It's Tested", desc: "How reports are published.", icon: ShieldCheck },
     { to: "/contact", title: "Contact", desc: "Questions about a batch?", icon: Mail },
   ];
   return (
