@@ -73,19 +73,19 @@ const groups: Group[] = [
     items: [
       {
         q: "How do I read a Certificate of Analysis (COA)?",
-        a: "A COA lists the compound, the batch number, the methods the lab ran and what each one returned. Ours typically show percent purity and a quantitative label-claim assay, and, depending on the compound, identity, heavy metals and microbial screening. Panels vary from report to report, so the certificate in the library is the record — anything a report doesn't cover is shown as Not reported.",
+        a: "A COA lists the compound, the batch number, the methods the lab ran and what each one returned. Panels vary by batch: a report may cover identity, purity, measured content, heavy metals or microbial screening. The certificate in the library is the record — anything a report doesn't cover is shown as Not reported.",
       },
       {
         q: "What does the microbial and mold testing cover?",
-        a: "Every batch is tested by an independent third-party lab. Microbial screening is either a culture count (TAMC / TYMC) or a PCR screen, and the certificate reports it in the lab's own wording. Whatever was run, the full result is published with the batch.",
+        a: "It depends on the report. Microbial screening may be a culture-based count or a DNA-based screen, and these are different methods that answer different questions. Each certificate states the method and result in the lab's own wording, and neither method should be read as more than it reports.",
       },
       {
         q: "What makes Clarum's testing different from other vendors?",
-        a: "This is where most vendors stop. Every batch goes to an independent third-party analytical lab for purity and a quantitative assay confirming the vial contains the labeled amount, plus identity, heavy metals or microbial screening as the report covers. The signed certificate is uploaded to the public COA library before shipment, methods and all.",
+        a: "We publish the supplier-provided independent laboratory reports we receive, available per batch, with the methods listed. Panels vary by batch, so we don't claim a single fixed panel. Read the certificate for the batch you're buying in the public COA library.",
       },
       {
         q: "Can I see the COA before I purchase?",
-        a: "Yes, our entire library of COA documents is accessible to you without having to log in. You have an opportunity to confirm the test results of any batch of products.",
+        a: "Yes. The COA library is public, no login required, so you can read the report for a batch before ordering. Where a report isn't yet available, the library says so.",
       },
     ],
   },

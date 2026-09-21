@@ -51,19 +51,19 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab. Free U.S. shipping over $150.",
+          "Independently tested research peptides with public, batch-specific lab reports. Panels vary by batch — see each COA. Free U.S. shipping over $150.",
       },
       { property: "og:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         property: "og:description",
-        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
+        content: "Independently tested research peptides with public, batch-specific lab reports. Panels vary by batch — see each COA.",
       },
       { property: "og:url", content: "https://clarumpeptides.com/" },
       { property: "og:image", content: "https://clarumpeptides.com/og-image.png" },
       { name: "twitter:title", content: "Clarum — Batch-Tested Research Peptides" },
       {
         name: "twitter:description",
-        content: "Independently tested research peptides with full, public batch reports. Every batch verified by an independent third-party lab.",
+        content: "Independently tested research peptides with public, batch-specific lab reports. Panels vary by batch — see each COA.",
       },
       { name: "twitter:image", content: "https://clarumpeptides.com/og-image.png" },
     ],
@@ -261,11 +261,9 @@ function FeaturedProducts() {
               delay={120}
               className="text-foreground/60 leading-[1.6] max-w-md"
             >
-              Every batch is tested by an independent third-party lab across
-              the full panel: identity, percent purity, quantitative
-              label-claim assay, heavy metals, and microbial & yeast/mold.
-              Pull the batch report before checkout — or after. We don't
-              mind.
+              Independent lab reports. Panels vary by batch — each certificate
+              lists the methods that were run and what they returned. Pull the
+              batch report before checkout, or after. We don't mind.
             </RevealOnScroll>
             <Button
               asChild
@@ -361,8 +359,8 @@ function FeaturedProducts() {
 function QualityCollage() {
   const checks = [
     "Batch-specific COA, not a generic certificate recycled across runs",
-    "Full analytical panel on every single batch we ship",
-    "Independent third-party lab. Same panel on every run.",
+    "Batch-specific results. Publicly available.",
+    "Independent lab reports. Panels vary by batch.",
     "Public COA library. No login. No email gate.",
   ];
   return (
@@ -435,8 +433,8 @@ function QualityCollage() {
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
             "Third-party tested" is the phrase every vendor uses. Almost none of
-            them publish the actual numbers. We do. Every batch ships with a
-            Certificate of Analysis you can pull up before you break the seal.
+            them publish the actual numbers. We do. Batch-specific results, publicly
+            available — read the report before you break the seal.
           </RevealOnScroll>
           <ul className="mt-8 space-y-4">
             {checks.map((item, i) => (
@@ -474,32 +472,32 @@ const testingPanels = [
   {
     icon: Beaker,
     num: "01",
-    title: "Qualitative ID",
-    desc: "Confirms molecular identity by UV/Vis λmax match against a characteristic reference standard.",
+    title: "Identity",
+    desc: "Identifies the compound in the submitted sample.",
   },
   {
     icon: FlaskConical,
     num: "02",
-    title: "Percent Purity",
-    desc: "Correlation-coefficient purity, spec NLT 98%. You see the exact percentage, not a range.",
+    title: "Purity",
+    desc: "Reports purity using the method listed on the COA.",
   },
   {
     icon: Atom,
     num: "03",
-    title: "Quantitative Assay",
-    desc: "Beer-Lambert assay confirms the vial actually contains the labeled amount — NLT 95% of label claim.",
+    title: "Content",
+    desc: "Reports measured quantity where available.",
   },
   {
     icon: Shield,
     num: "04",
     title: "Heavy Metals",
-    desc: "Total heavy metals, spec NMT 150 ppb/vial: Pb, Cd, Hg, Ni, Fe, Co.",
+    desc: "Results shown where included in the report.",
   },
   {
     icon: Bug,
     num: "05",
-    title: "Microbial & Yeast/Mold",
-    desc: "TAMC (aerobic, NMT 1,000 CFU) and TYMC (yeast & mold, NMT 100 CFU).",
+    title: "Microbial Screening",
+    desc: "Method and results listed on each applicable COA.",
   },
 ];
 
@@ -515,17 +513,21 @@ function HowTested() {
             How it's tested
           </Badge>
           <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
-            <RevealText text={"Every batch,\nindependently verified."} />
+            <RevealText text="Independent testing. Public batch reports." />
           </h2>
           <RevealOnScroll
             as="p"
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-xl"
           >
-            We don't grade our own homework. Each batch is tested by an
-            independent third-party analytical lab — identity, percent purity,
-            heavy metals, microbial, and quantitative assay. The full report
-            is public, batch number and all. No login, no redacted results.
+            See each COA for methods and results.
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="p"
+            delay={320}
+            className="mt-4 text-brand-gold text-[13px] uppercase tracking-[0.18em] font-semibold"
+          >
+            Panels vary by batch.
           </RevealOnScroll>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">

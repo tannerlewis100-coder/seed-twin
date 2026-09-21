@@ -18,22 +18,22 @@ export const Route = createFileRoute("/about")({
       { property: "og:title", content: "About Clarum — Built on Transparency" },
       {
         property: "og:description",
-        content: "Our story, our values, and the analytical testing standard behind every batch.",
+        content: "Our story, our values, and the independent lab reports we publish by batch.",
       },
     ],
   }),
 });
 
 const panels = [
-  { icon: Beaker, title: "Qualitative ID", desc: "UV/Vis λmax match" },
-  { icon: FlaskConical, title: "Percent Purity", desc: "NLT 98%" },
-  { icon: Atom, title: "Quantitative Assay", desc: "NLT 95% of label claim" },
-  { icon: Shield, title: "Heavy Metals", desc: "NMT 150 ppb total" },
-  { icon: Bug, title: "Microbial & Yeast/Mold", desc: "TAMC + TYMC" },
+  { icon: Beaker, title: "Identity", desc: "Identifies the compound in the submitted sample." },
+  { icon: FlaskConical, title: "Purity", desc: "Reports purity using the method listed on the COA." },
+  { icon: Atom, title: "Content", desc: "Reports measured quantity where available." },
+  { icon: Shield, title: "Heavy Metals", desc: "Results shown where included in the report." },
+  { icon: Bug, title: "Microbial Screening", desc: "Method and results listed on each applicable COA." },
 ];
 
 const stats = [
-  { k: "99%+", v: "Reported purity" },
+  { k: "Public", v: "Batch reports" },
   { k: "0", v: "Paywalls on COAs" },
   { k: "QR", v: "On every vial" },
 ];
@@ -129,7 +129,7 @@ function AboutPage() {
                   </span>
                 </div>
                 <h2 className="font-display text-3xl lg:text-4xl text-foreground mb-7 leading-tight">
-                  <RevealText text="So we send every batch out for independent testing." />
+                  <RevealText text="So we publish the lab reports we receive." />
                 </h2>
                 <RevealOnScroll as="div" delay={300} className="space-y-5 text-foreground/60 leading-[1.8]">
                   <p>
@@ -137,16 +137,16 @@ function AboutPage() {
                     trust-me attitude felt insulting to anyone reading the report.
                   </p>
                   <p>
-                    An independent third-party analytical lab tests every batch. Purity and a
-                    quantitative label-claim assay are standard. Depending on the compound and the
-                    report, that testing also covers identity, heavy metals and microbial
-                    screening. Each certificate lists exactly which methods were run and what they
-                    returned, so read the report for the batch you're buying.
+                    Our supplier commissions independent laboratory reports, available per batch.
+                    Panels vary by batch: a report may cover identity, purity, measured content,
+                    heavy metals or microbial screening. Each certificate lists exactly which
+                    methods were run and what they returned, so read the report for the batch
+                    you're buying.
                   </p>
                   <p>
-                    Then we publish the full results. No login. No paywall. Every Certificate of
-                    Analysis is public, batch-specific, and linked via a QR code on the vial. If
-                    you want to verify what you're buying before you buy it, you can.
+                    Then we publish the results we have. No login. No paywall. The certificates in
+                    our library are batch-specific and linked via a QR code on the vial. If you
+                    want to read the report before you buy, you can.
                   </p>
                 </RevealOnScroll>
               </div>
@@ -162,7 +162,7 @@ function AboutPage() {
                 Methodology
               </span>
               <h2 className="font-display text-3xl lg:text-5xl text-foreground mt-2">
-                <RevealText text="The Test Panel" />
+                <RevealText text="What The Reports Cover" />
               </h2>
             </div>
             <div className="border-t border-white/10">
@@ -204,7 +204,7 @@ function AboutPage() {
               as="p"
               className="font-display italic text-3xl md:text-5xl text-foreground leading-[1.2]"
             >
-              Every batch is independently tested, and every report is published.
+              Batch-specific results. Publicly available.
             </RevealOnScroll>
             <div className="mt-6 text-[11px] uppercase tracking-[0.3em] text-brand-gold/70">
               — Clarum

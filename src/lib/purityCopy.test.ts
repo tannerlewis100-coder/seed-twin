@@ -30,9 +30,12 @@ describe("promotional purity copy", () => {
     }
   });
 
-  it("preserves original lab spec thresholds of NLT 98%", () => {
-    expect(read("src/routes/about.tsx")).toContain("NLT 98%");
-    expect(read("src/components/SiteHeader.tsx")).toContain("NLT 98% per batch.");
-    expect(read("src/routes/index.tsx")).toContain("spec NLT 98%");
+  it("keeps original COA report specs in the report data, not in marketing copy", () => {
+    // Marketing pages no longer assert universal NLT 98% specs...
+    for (const f of ["src/routes/about.tsx", "src/components/SiteHeader.tsx", "src/routes/index.tsx"]) {
+      expect(read(f)).not.toContain("NLT 98%");
+    }
+    // ...while the original certificate data remains untouched.
+    expect(read("src/data/coaLibrary.ts")).toContain("99.85");
   });
 });
