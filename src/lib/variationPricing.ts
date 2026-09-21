@@ -94,6 +94,13 @@ export function loadStartingPrice(parentId: number): Promise<StartingPrice> {
       const variants = await fetchVariations(parentId);
       if (!variants || variants.length === 0) return { state: "unknown" };
       const price = startingPriceFromVariants(variants);
+      const pick = cheapestAvailableVariant(variants);
+      if (pick) {
+        resolvedVariant.set(parentId, {
+          sku: pick.sku ?? null,
+          size: getVariationSize(pick) ?? null,
+        });
+      }
       resolved.set(parentId, price);
       return price;
     } catch {
