@@ -4867,3 +4867,174 @@ export function formatTestedAt(iso: string): string {
 }
 
 export { NOT_REPORTED };
+
+// ---------------------------------------------------------------------------
+// Exact supplier-SKU resolution.
+//
+// Every catalogue item (simple product or variation) carries a supplier SKU in
+// WooCommerce, so the SKU is the ONLY primary key we resolve certificates by.
+// Slug+strength aliases below are an explicit, unambiguous secondary lookup for
+// callers that have no SKU at hand. An unknown SKU resolves to "unavailable" —
+// it must never fall through to a different strength's report.
+// ---------------------------------------------------------------------------
+
+/** "ypb217", " ypb.217 " -> "YPB.217". Returns null for empty input. */
+export function normalizeSku(raw?: string | null): string | null {
+  if (!raw) return null;
+  const token = raw.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!token) return null;
+  const m = token.match(/^([A-Z]+)(\d+)$/);
+  return m ? `${m[1]}.${m[2]}` : token;
+}
+
+const publishedByNormalizedSku = new Map(
+  coaRecords.map((r) => [normalizeSku(r.sku)!, r] as const),
+);
+const pendingByNormalizedSku = new Map(
+  Object.entries(pendingSkus).map(([sku, name]) => [normalizeSku(sku)!, name] as const),
+);
+
+/** Resolve by exact supplier SKU only. No approximation, ever. */
+export function coaForProductSku(rawSku?: string | null): CoaStatus {
+  const sku = normalizeSku(rawSku);
+  if (!sku) return { state: "unavailable" };
+  const record = publishedByNormalizedSku.get(sku);
+  if (record) return { state: "published", record };
+  const productName = pendingByNormalizedSku.get(sku);
+  if (productName) return { state: "pending", sku, productName };
+  return { state: "unavailable" };
+}
+
+function normalizeStrength(size?: string | null): string {
+  return (size ?? "")
+    .toLowerCase()
+    .replace(/&nbsp;/g, " ")
+    .replace(/\s+/g, "")
+    .replace(/\//g, "-")
+    .replace(/(\d)\s*(mg|ml|iu|mcg|ug|g)/g, "$1$2");
+}
+
+/** Store slug (+ strength for variable products) -> exact supplier SKU. */
+export const skuBySlugStrength: Record<string, string> = {
+  "glp-3-rt|10mg": "YPB.209",
+  "glp-3-rt|20mg": "YPB.210",
+  "glp-3-rt|30mg": "YPB.234",
+  "glp-3-rt|40mg": "YPB.235",
+  "glp-3-rt|50mg": "YPB.236",
+  "glp-3-rt|60mg": "YPB.287",
+  "glp-2-tz|10mg": "YPB.203",
+  "glp-2-tz|20mg": "YPB.204",
+  "glp-2-tz|30mg": "YPB.205",
+  "glp-2-tz|40mg": "YPB.206",
+  "glp-2-tz|50mg": "YPB.207",
+  "glp-2-tz|60mg": "YPB.208",
+  "glp-1-s|10mg": "YPB.200",
+  "glp-1-s|20mg": "YPB.201",
+  "glp-1-s|30mg": "YPB.202",
+  "reconstitution-water|3ml": "YPB.225",
+  "reconstitution-water|10ml": "YPB.226",
+  "b12": "YPB.251",
+  "4x-blend-mic|120mg": "YPB.268",
+  "8x-blend-lipotropic|196mg": "YPB.267",
+  "klow-blend-ghk-cu-kpv-bpc-157-tb-500": "YPB.264",
+  "glow-blend-ghk-cu-bpc-157-tb-500": "YPB.218",
+  "2x-blend-cjc-ipamorelin": "YPB.238",
+  "bpc-157-tb-500-blend|5mg-5mg": "YPB.216",
+  "bpc-157-tb-500-blend|10mg-10mg": "YPB.217",
+  "kisspeptin": "YPB.266",
+  "pt-141": "YPB.274",
+  "glutathione|600mg": "YPB.283",
+  "glutathione|1500mg": "YPB.259",
+  "nad|500mg": "YPB.223",
+  "nad|1000mg": "YPB.224",
+  "slu-pp-332": "YPB.243",
+  "survodutide": "YPB.278",
+  "mazdutide": "YPB.269",
+  "cagrilintide": "YPB.241",
+  "aicar": "YPB.250",
+  "aod-9604": "YPB.248",
+  "5-amino-1mq|5mg": "YPB.242",
+  "5-amino-1mq|50mg": "YPB.247",
+  "vip10": "YPB.281",
+  "kpv-lysine-proline-valine": "YPB.265",
+  "thymosin-alpha-1": "YPB.231",
+  "thymalin": "YPB.280",
+  "pnc-27": "YPB.275",
+  "melanotan-2": "YPB.270",
+  "snap-8": "YPB.272",
+  "ghk-cu|50mg": "YPB.221",
+  "ghk-cu|100mg": "YPB.222",
+  "dsip|5mg": "YPB.252",
+  "dsip|15mg": "YPB.230",
+  "selank": "YPB.228",
+  "semax": "YPB.229",
+  "pinealon": "YPB.273",
+  "foxo4": "YPB.255",
+  "ss-31|10mg": "YPB.245",
+  "ss-31|50mg": "YPB.246",
+  "mots-c|10mg": "YPB.227",
+  "mots-c|40mg": "YPB.271",
+  "epitalon|10mg": "YPB.253",
+  "epitalon|50mg": "YPB.254",
+  "n-acetyl-epitalon-amidate": "YPB.232",
+  "ace-031": "YPB.249",
+  "gdf-8": "YPB.233",
+  "igf-des": "YPB.286",
+  "igf-1-lr3|0-1mg": "YPB.285",
+  "igf-1-lr3|1mg": "YPB.262",
+  "hmg": "YPB.258",
+  "hcg": "YPB.256",
+  "hexarelin-acetate": "YPB.261",
+  "ghrp-6-acetate|5mg": "YPB.282",
+  "ghrp-6-acetate|10mg": "YPB.257",
+  "tesamorelin|10mg": "YPB.279",
+  "tesamorelin|20mg": "YPB.288",
+  "ipamorelin": "YPB.263",
+  "cjc-1295-with-dac": "YPB.220",
+  "cjc-1295-without-dac": "YPB.219",
+  "sermorelin": "YPB.211",
+  "ara-290": "YPB.277",
+  "ll-37": "YPB.244",
+  "tb-500|5mg": "YPB.214",
+  "tb-500|10mg": "YPB.215",
+  "bpc-157|5mg": "YPB.212",
+  "bpc-157|10mg": "YPB.213",
+  "bpc-157|20mg": "YPB.237",
+};
+
+export function skuForSlugSize(slug?: string | null, size?: string | null): string | null {
+  if (!slug) return null;
+  const key = slug.toLowerCase();
+  const strength = normalizeStrength(size);
+  if (strength) {
+    const hit = skuBySlugStrength[`${key}|${strength}`];
+    if (hit) return hit;
+    // "5mg/5mg" style blends also appear as "5mg-5mg" in the catalogue.
+    const collapsed = strength.replace(/-/g, "");
+    for (const [alias, sku] of Object.entries(skuBySlugStrength)) {
+      const [aliasSlug, aliasSize] = alias.split("|");
+      if (aliasSlug === key && (aliasSize ?? "").replace(/-/g, "") === collapsed) return sku;
+    }
+    return null;
+  }
+  return skuBySlugStrength[key] ?? null;
+}
+
+/** Library anchor slug for a SKU, so PDP deep links land on the right card. */
+const librarySlugBySku = new Map(
+  Object.entries(slugToSku).map(([slug, sku]) => [normalizeSku(sku)!, slug] as const),
+);
+
+export function resolveCoaForProduct(input: {
+  sku?: string | null;
+  slug?: string | null;
+  size?: string | null;
+}): { status: CoaStatus; sku: string | null; deepLinkSlug: string | null } {
+  const exact = normalizeSku(input.sku) ?? skuForSlugSize(input.slug, input.size);
+  if (!exact) return { status: { state: "unavailable" }, sku: null, deepLinkSlug: null };
+  return {
+    status: coaForProductSku(exact),
+    sku: exact,
+    deepLinkSlug: librarySlugBySku.get(exact) ?? null,
+  };
+}
