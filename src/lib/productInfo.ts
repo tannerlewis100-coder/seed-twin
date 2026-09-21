@@ -77,6 +77,12 @@ export function buildSpecRows(input: {
 
   push("SKU", input.sku);
   const conflicted = isConflicted(input.sku);
+  const overrides = specOverridesFor(input.sku);
+  if (overrides) {
+    for (const [label, value] of overrides) push(label, value);
+    push("Report batch", input.coaBatch);
+    return rows;
+  }
   if (!conflicted) push("Strength", input.size);
 
   if (!conflicted) {
