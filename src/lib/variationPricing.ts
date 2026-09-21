@@ -127,6 +127,7 @@ export function loadStartingPrice(parentId: number): Promise<StartingPrice> {
 /** Test helper. */
 export function __resetStartingPriceCache() {
   resolved.clear();
+  resolvedVariant.clear();
   inflight.clear();
   queue.length = 0;
   active = 0;
