@@ -43,6 +43,8 @@ const qualityTb500 = "/quality-glp1s-v2.png";
 const qualityTrio = "/quality-trio-v2.png";
 import { peptides, featuredPeptides } from "@/data/peptides";
 import { vialImageFor } from "@/lib/vialImages";
+import { displayProductName } from "@/lib/productNames";
+import { CardVial } from "@/components/StartingPriceLabel";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -280,7 +282,9 @@ function FeaturedProducts() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {featured.map((p, i) => {
+            const match = featuredProductFor(liveProducts, p.slug);
             const vial = vialImageFor(p.name, p.slug);
+            const cardName = displayProductName(p.name, p.slug);
             return (
               <RevealOnScroll key={p.slug} delay={i * 80}>
                 <Link
@@ -297,18 +301,26 @@ function FeaturedProducts() {
 
                   {/* Title */}
                   <h3 className="relative z-10 mt-16 font-display text-2xl md:text-3xl text-foreground leading-tight max-w-[85%] min-h-[4rem] flex items-center justify-center">
-                    {p.name}
+                    {cardName}
                   </h3>
 
                   {/* Vial visual */}
                   <div className="relative z-10 flex-1 flex items-center justify-center w-full my-4">
-                    <img
-                      src={vial}
-                      alt={`${p.name} vial`}
-                      loading="lazy"
-                      draggable={false}
-                      className="h-56 w-auto max-w-full object-contain select-none transition-transform duration-700 group-hover/card:scale-105 drop-shadow-2xl"
-                    />
+                    {match ? (
+                      <CardVial
+                        product={match}
+                        alt={`${cardName} vial`}
+                        className="h-56 w-auto max-w-full object-contain select-none transition-transform duration-700 group-hover/card:scale-105 drop-shadow-2xl"
+                      />
+                    ) : (
+                      <img
+                        src={vial}
+                        alt={`${cardName} vial`}
+                        loading="lazy"
+                        draggable={false}
+                        className="h-56 w-auto max-w-full object-contain select-none transition-transform duration-700 group-hover/card:scale-105 drop-shadow-2xl"
+                      />
+                    )}
                   </div>
 
                   {/* Shop Now button */}
@@ -317,7 +329,6 @@ function FeaturedProducts() {
                       Shop Now
                     </div>
                     {(() => {
-                      const match = featuredProductFor(liveProducts, p.slug);
                       if (match) return <FeaturedPrice product={match} />;
                       return (
                         <p className="mt-4 text-xs text-foreground/60">
