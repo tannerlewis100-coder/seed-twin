@@ -97,6 +97,9 @@ function RelatedCard({ product }: { product: WooProduct }) {
   const { addItem, openCart } = useCart();
   const [busy, setBusy] = useState(false);
   const [added, setAdded] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  const simpleUnavailable =
+    product.type !== "variable" && !isVariantAvailable(product);
 
   const price = productPrice(product);
   const cat = decodeEntities(product.categories?.[0]?.name ?? "Research")
