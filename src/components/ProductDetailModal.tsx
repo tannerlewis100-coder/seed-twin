@@ -5,6 +5,7 @@ import { useCart } from "@/lib/cart";
 import { Check, FileText, Loader2, ShoppingCart } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { variantVialImage } from "@/lib/vialImages";
+import { pickInitialVariantId, sortVariantsByStrength } from "@/lib/variantSelection";
 import {
   decodeEntities,
   fetchClarumProduct,
@@ -60,9 +61,12 @@ export default function ProductDetailModal({ product, open, onOpenChange }: Prop
                 return size !== "20mg/20mg" && size !== "40mg";
               })
             : vars;
-        const sorted = [...filtered].sort((a, b) => Number(a.prices.price) - Number(b.prices.price));
+        const sorted = sortVariantsByStrength(
+          filtered,
+          (v) => map[v.id] ?? getVariationSize(v) ?? v.name,
+        );
         setVariations(sorted);
-        setActiveVarId(sorted[0]?.id ?? null);
+        setActiveVarId(pickInitialVariantId(sorted));
         setSizeById(map);
       })
       .catch((e) => console.error("Failed to load variations:", e))

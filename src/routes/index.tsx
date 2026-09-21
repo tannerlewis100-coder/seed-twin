@@ -252,7 +252,7 @@ function FeaturedProducts() {
               The Catalog
             </Badge>
             <h2 className="font-display text-4xl md:text-5xl lg:text-[56px] leading-[1.05] text-foreground tracking-[-0.02em]">
-              <RevealText text={"Verified purity\nstarts in the vial."} />
+              <RevealText text={"Research\nstarts in the vial."} />
             </h2>
           </div>
           <div className="lg:col-span-5 lg:pb-3">
@@ -432,9 +432,8 @@ function QualityCollage() {
             delay={250}
             className="mt-6 text-foreground/60 leading-[1.6] max-w-lg"
           >
-            "Third-party tested" is the phrase every vendor uses. Almost none of
-            them publish the actual numbers. We do. Batch-specific results, publicly
-            available — read the report before you break the seal.
+            Read the published results for yourself. Available supplier batch
+            reports, in one public library.
           </RevealOnScroll>
           <ul className="mt-8 space-y-4">
             {checks.map((item, i) => (
@@ -596,10 +595,8 @@ function ScanTheVial() {
             delay={200}
             className="mt-6 text-foreground/60 leading-[1.7] max-w-2xl"
           >
-            Every vial ships with a QR code. Scan it and you're looking at
-            the exact certificate of analysis for the batch your peptide came
-            from — not a generic doc, not a recycled report, the actual
-            numbers for your actual vial.
+            Use the vial QR code to access available batch reports. Match the
+            lot number before reviewing results.
           </RevealOnScroll>
           <ul className="mt-10 grid sm:grid-cols-3 gap-6 max-w-3xl">
             {points.map((p, i) => (

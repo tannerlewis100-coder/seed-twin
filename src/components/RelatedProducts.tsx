@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Check, Loader2 } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { variantVialImage } from "@/lib/vialImages";
+import { cheapestAvailableVariant, isVariantAvailable } from "@/lib/variantSelection";
 import {
   decodeEntities,
   fetchProducts,
@@ -96,6 +97,9 @@ function RelatedCard({ product }: { product: WooProduct }) {
   const { addItem, openCart } = useCart();
   const [busy, setBusy] = useState(false);
   const [added, setAdded] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
+  const simpleUnavailable =
+    product.type !== "variable" && !isVariantAvailable(product);
 
   const price = productPrice(product);
   const cat = decodeEntities(product.categories?.[0]?.name ?? "Research")
@@ -117,19 +121,20 @@ function RelatedCard({ product }: { product: WooProduct }) {
     try {
       if (product.type === "variable" && (product.variations?.length ?? 0) > 0) {
         const vars = await fetchVariations(product.id);
-        const cheapest = [...vars].sort(
-          (a, b) => Number(a.prices.price) - Number(b.prices.price),
-        )[0];
-        if (cheapest) {
-          await addItem({
-            id: cheapest.id,
-            quantity: 1,
-            variation: (cheapest.attributes ?? []).map((a) => ({
-              attribute: a.name,
-              value: a.value ?? a.option ?? "",
-            })),
-          });
+        const pick = cheapestAvailableVariant(vars);
+        if (!pick) {
+          // Nothing purchasable: never silently add a different or dead size.
+          setUnavailable(true);
+          return;
         }
+        await addItem({
+          id: pick.id,
+          quantity: 1,
+          variation: (pick.attributes ?? []).map((a) => ({
+            attribute: a.name,
+            value: a.value ?? a.option ?? "",
+          })),
+        });
       } else {
         await addItem({ id: product.id, quantity: 1 });
       }
@@ -174,7 +179,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
           <button
             type="button"
             onClick={onAdd}
-            disabled={busy}
+            disabled={busy || unavailable || simpleUnavailable}
             className="inline-flex items-center gap-1.5 rounded-full bg-brand-forest border border-white/10 px-4 py-2 text-xs font-medium text-foreground hover:bg-brand-gold hover:text-brand-forest hover:border-brand-gold transition-colors disabled:opacity-60"
           >
             {busy ? (
@@ -182,7 +187,7 @@ function RelatedCard({ product }: { product: WooProduct }) {
             ) : added ? (
               <Check className="h-3.5 w-3.5" />
             ) : null}
-            {added ? "Added" : "Add to cart"}
+            {unavailable || simpleUnavailable ? "Unavailable" : added ? "Added" : "Add to cart"}
           </button>
         </div>
       </div>
