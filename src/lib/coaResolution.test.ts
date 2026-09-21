@@ -5,7 +5,7 @@ import {
   resolveCoaForProduct,
   skuForSlugSize,
 } from "@/data/coaLibrary";
-import { productImageForSku, variantVialImage, DEFAULT_VIAL } from "@/lib/vialImages";
+import { cartLineImage, productImageForSku, variantVialImage, DEFAULT_VIAL } from "@/lib/vialImages";
 
 describe("COA resolution by exact supplier SKU", () => {
   it("resolves the BPC-157/TB-500 blend 10mg/10mg to YPB.217, never YPB.216", () => {
@@ -126,5 +126,38 @@ describe("strength-specific vial imagery", () => {
       fallbackSrc: "https://cdn/bpc157-5mg.png",
     });
     expect(url).toContain("bpc157-20mg");
+  });
+});
+
+describe("cart line images resolve by the variation's own SKU", () => {
+  it("shows the 50mg photo for 5-Amino-1MQ 50mg even when the store returns the 5mg parent image", () => {
+    const url = cartLineImage({
+      sku: "YPB.247",
+      name: "5-Amino-1MQ",
+      size: "50mg",
+      fallbackSrc: "https://admin.clarumpeptides.com/wp-content/uploads/2026/06/5amino1mq-5mg.png",
+    });
+    expect(url).toContain("5amino1mq-50mg");
+    expect(url).not.toContain("5amino1mq-5mg");
+  });
+
+  it("shows the 20mg photo for BPC-157 20mg in the cart", () => {
+    const url = cartLineImage({
+      sku: "YPB.237",
+      name: "BPC-157",
+      size: "20mg",
+      fallbackSrc: "https://admin.clarumpeptides.com/wp-content/uploads/2026/06/bpc157-5mg.png",
+    });
+    expect(url).toContain("bpc157-20mg");
+  });
+
+  it("falls back to the neutral vial, never a different strength, when no asset matches", () => {
+    const url = cartLineImage({
+      sku: "YPB.999",
+      name: "Unknown Compound",
+      size: "50mg",
+      fallbackSrc: "https://cdn/unknown-5mg.png",
+    });
+    expect(url).toBe(DEFAULT_VIAL);
   });
 });

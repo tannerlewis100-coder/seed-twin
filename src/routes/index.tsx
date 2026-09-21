@@ -47,7 +47,7 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Clarum — Batch-Tested Research Peptides with Full COAs" },
+      { title: "Clarum — Research Peptides & Batch Reports" },
       {
         name: "description",
         content:

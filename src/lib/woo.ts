@@ -196,6 +196,7 @@ export type WooProduct = {
 export type WooCartItem = {
   key: string;
   id: number;
+  sku?: string;
   quantity: number;
   name: string;
   short_description: string;

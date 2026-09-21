@@ -397,5 +397,36 @@ export function variantVialImage({
   const aliasSku = skuForSlugSize(slug, size);
   const byAlias = productImageForSku(aliasSku);
   if (byAlias) return byAlias;
+  // A strength was selected but we have no asset for it: the inherited store
+  // image belongs to the parent (usually a different strength), so show the
+  // neutral vial rather than a photo with the wrong number printed on it.
+  if (size && String(size).trim()) return vialDefault;
   return fallbackSrc || vialDefault;
+}
+
+function slugifyName(name?: string | null): string | undefined {
+  if (!name) return undefined;
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Cart/checkout line image. Cart rows only carry the variation's SKU, name and
+ * the chosen attribute values, so resolve through the same exact-SKU map and
+ * never fall back to the parent product photo for a variation.
+ */
+export function cartLineImage(input: {
+  sku?: string | null;
+  name?: string | null;
+  size?: string | null;
+  fallbackSrc?: string;
+}): string {
+  return variantVialImage({
+    sku: input.sku,
+    slug: slugifyName(input.name),
+    size: input.size,
+    fallbackSrc: input.fallbackSrc,
+  });
 }

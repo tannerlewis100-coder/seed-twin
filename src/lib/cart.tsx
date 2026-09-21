@@ -15,6 +15,7 @@ import {
   updateCartItem,
   type WooCart,
 } from "./woo";
+import { cartLineImage } from "./vialImages";
 
 export type CartItem = {
   key: string;
@@ -50,15 +51,20 @@ type CartCtx = {
 const Ctx = createContext<CartCtx | null>(null);
 
 function mapCart(cart: WooCart): { items: CartItem[]; subtotal: number; count: number } {
-  const items: CartItem[] = cart.items.map((it) => ({
-    key: it.key,
-    productId: it.id,
-    name: it.name,
-    size: it.variation?.map((v) => v.value).filter(Boolean).join(" / ") ?? "",
-    qty: it.quantity,
-    price: fromMinor(it.prices.price, it.prices.currency_minor_unit),
-    image: it.images?.[0]?.src,
-  }));
+  const items: CartItem[] = cart.items.map((it) => {
+    const size = it.variation?.map((v) => v.value).filter(Boolean).join(" / ") ?? "";
+    return {
+      key: it.key,
+      productId: it.id,
+      name: it.name,
+      size,
+      qty: it.quantity,
+      price: fromMinor(it.prices.price, it.prices.currency_minor_unit),
+      // Resolve by the variation's own supplier SKU — the store returns the
+      // parent product photo, which can print a different strength.
+      image: cartLineImage({ sku: it.sku, name: it.name, size, fallbackSrc: it.images?.[0]?.src }),
+    };
+  });
   // Subtotal is items only — NEVER include shipping (drawer shows shipping
   // on its own row and only after a rate is known).
   const minor = cart.totals.currency_minor_unit;
