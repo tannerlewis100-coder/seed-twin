@@ -56,7 +56,7 @@ describe("terms section 7 matches the refund policy", () => {
   it("links to the refund policy and preserves legal rights", () => {
     const src = terms();
     expect(src).toMatch(/\/refund-policy/);
-    expect(src).toMatch(/required by applicable law/i);
+    expect(src).toMatch(/required by\s+applicable law/i);
   });
 
   it("keeps unrelated sections intact", () => {
@@ -84,7 +84,7 @@ describe("shipping policy section 9", () => {
   });
 
   it("says applicable law prevails over conflicting limitations", () => {
-    expect(shipping()).toMatch(/required by applicable law/i);
+    expect(shipping()).toMatch(/required by\s+applicable law/i);
   });
 });
 
