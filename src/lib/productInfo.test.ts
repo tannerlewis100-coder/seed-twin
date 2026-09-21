@@ -65,3 +65,27 @@ describe("product detail collapsible sections", () => {
     expect(rows.filter((r) => r.value === "5mg")).toHaveLength(1);
   });
 });
+
+describe("simple-product attribute terms", () => {
+  it("renders the strength from an attribute term when there is no variation size", () => {
+    const rows = buildSpecRows({
+      sku: "YPB.266",
+      attributes: [{ name: "Size", terms: [{ name: "10mg" }] }],
+    });
+    expect(rows).toContainEqual({ label: "Strength", value: "10mg" });
+  });
+
+  it("suppresses disputed backend attributes for B12, 4X and 8X", () => {
+    for (const sku of ["YPB.251", "YPB.268", "YPB.267"]) {
+      const rows = buildSpecRows({
+        sku,
+        attributes: [
+          { name: "Size", terms: [{ name: sku === "YPB.251" ? "1ml" : "120mg" }] },
+          { name: "Appearance", terms: [{ name: "lyophilized powder" }] },
+        ],
+      });
+      expect(rows.map((r) => r.label)).toEqual(["SKU"]);
+      expect(JSON.stringify(rows)).not.toContain("1ml");
+    }
+  });
+});

@@ -76,14 +76,26 @@ export function buildSpecRows(input: {
   };
 
   push("SKU", input.sku);
-  push("Strength", input.size);
+  const conflicted = isConflicted(input.sku);
+  if (!conflicted) push("Strength", input.size);
 
-  for (const attr of input.attributes ?? []) {
-    const name = (attr?.name ?? "").trim();
-    const value = (attr?.value ?? attr?.option ?? "").trim();
-    if (!name || !value) continue;
-    if (/^(size|strength)$/i.test(name)) continue;
-    push(name, value);
+  if (!conflicted) {
+    for (const attr of input.attributes ?? []) {
+      const name = (attr?.name ?? "").trim();
+      const terms = (attr?.terms ?? [])
+        .map((t) => (t?.name ?? "").trim())
+        .filter(Boolean)
+        .join(", ");
+      const value = (attr?.value ?? attr?.option ?? "").trim() || terms;
+      if (!name || !value) continue;
+      if (/^(size|strength)$/i.test(name)) {
+        // Simple products carry their strength as an attribute term; variable
+        // products already pushed the selected variation strength above.
+        if (!input.size) push("Strength", value);
+        continue;
+      }
+      push(name, value);
+    }
   }
 
   push("Report batch", input.coaBatch);
