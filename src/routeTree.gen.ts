@@ -35,6 +35,7 @@ import { Route as ShopSlugRouteImport } from './routes/shop.$slug'
 import { Route as OrderReceivedOrderIdRouteImport } from './routes/order-received.$orderId'
 import { Route as OrderPayOrderIdRouteImport } from './routes/order-pay.$orderId'
 import { Route as OrderConfirmationOrderIdRouteImport } from './routes/order-confirmation.$orderId'
+import { Route as ApiCoasDotjsonRouteImport } from './routes/api/coas[.]json'
 import { Route as AccountOrdersRouteImport } from './routes/account.orders'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -178,6 +179,11 @@ const OrderConfirmationOrderIdRoute =
     path: '/order-confirmation/$orderId',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiCoasDotjsonRoute = ApiCoasDotjsonRouteImport.update({
+  id: '/api/coas.json',
+  path: '/api/coas.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AccountOrdersRoute = AccountOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
@@ -264,6 +270,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account/orders': typeof AccountOrdersRoute
+  '/api/coas.json': typeof ApiCoasDotjsonRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account/orders': typeof AccountOrdersRoute
+  '/api/coas.json': typeof ApiCoasDotjsonRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -342,6 +350,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/account/orders': typeof AccountOrdersRoute
+  '/api/coas.json': typeof ApiCoasDotjsonRoute
   '/order-confirmation/$orderId': typeof OrderConfirmationOrderIdRoute
   '/order-pay/$orderId': typeof OrderPayOrderIdRoute
   '/order-received/$orderId': typeof OrderReceivedOrderIdRoute
@@ -383,6 +392,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/account/orders'
+    | '/api/coas.json'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -421,6 +431,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/account/orders'
+    | '/api/coas.json'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -460,6 +471,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/account/orders'
+    | '/api/coas.json'
     | '/order-confirmation/$orderId'
     | '/order-pay/$orderId'
     | '/order-received/$orderId'
@@ -499,6 +511,7 @@ export interface RootRouteChildren {
   TermsRoute: typeof TermsRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  ApiCoasDotjsonRoute: typeof ApiCoasDotjsonRoute
   OrderConfirmationOrderIdRoute: typeof OrderConfirmationOrderIdRoute
   OrderPayOrderIdRoute: typeof OrderPayOrderIdRoute
   OrderReceivedOrderIdRoute: typeof OrderReceivedOrderIdRoute
@@ -696,6 +709,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrderConfirmationOrderIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/coas.json': {
+      id: '/api/coas.json'
+      path: '/api/coas.json'
+      fullPath: '/api/coas.json'
+      preLoaderRoute: typeof ApiCoasDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/orders': {
       id: '/account/orders'
       path: '/orders'
@@ -824,6 +844,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  ApiCoasDotjsonRoute: ApiCoasDotjsonRoute,
   OrderConfirmationOrderIdRoute: OrderConfirmationOrderIdRoute,
   OrderPayOrderIdRoute: OrderPayOrderIdRoute,
   OrderReceivedOrderIdRoute: OrderReceivedOrderIdRoute,
